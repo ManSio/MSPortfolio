@@ -19,6 +19,8 @@ export function useMetrics(): MetricsState {
     let cancelled = false;
 
     async function load() {
+      // Snapshot first — it's the guaranteed fallback for both GitHub and Dev.to
+      const fallback = await loadFallbackSnapshot().catch(() => null);
       try {
         const [user, repos, devto] = await Promise.all([
           getGithubUser(),
@@ -26,6 +28,8 @@ export function useMetrics(): MetricsState {
           getDevToArticles('mansio').catch(() => []),
         ]);
         if (cancelled) return;
+        // If Dev.to is rate-limited/blocked in this browser, keep the snapshot's articles
+        const articles = devto.length > 0 ? devto : (fallback?.devto ?? []);
         const live: MetricsSnapshot = {
           fetchedAt: new Date().toISOString(),
           source: 'live',
@@ -37,11 +41,10 @@ export function useMetrics(): MetricsState {
           },
           repos: repos as GithubRepoMetric[],
           npm: [],
-          devto,
+          devto: articles,
         };
         setState({ status: 'live', snapshot: live });
       } catch {
-        const fallback = await loadFallbackSnapshot();
         if (cancelled) return;
         if (fallback) {
           setState({ status: 'fallback', snapshot: fallback });
