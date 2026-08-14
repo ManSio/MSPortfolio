@@ -4,7 +4,7 @@
 // (e.g. pure static GitHub Pages without the server running).
 
 import { TOOLS, getTool } from './mcp-tools';
-import { MCP_ENDPOINT } from './config';
+import { CHAT_ENDPOINT, MCP_ENDPOINT } from './config';
 
 export type McpMode = 'live' | 'local';
 
@@ -105,7 +105,7 @@ export async function callChat(
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
   apiKey: string,
 ): Promise<ChatResponse> {
-  const res = await fetch(`${MCP_ENDPOINT}/chat`, {
+  const res = await fetch(CHAT_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages, apiKey }),
