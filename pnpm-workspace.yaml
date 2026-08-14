@@ -1,3 +1,8 @@
-# pnpm settings (pnpm 10+ canonical location)
-onlyBuiltDependencies:
-  - esbuild
+# pnpm workspace + settings (pnpm 11 canonical location)
+packages:
+  - "."
+
+# pnpm 11: allow postinstall for esbuild (vite dependency). Without approval,
+# fresh installs fail with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  esbuild: true
