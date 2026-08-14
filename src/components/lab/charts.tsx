@@ -14,6 +14,123 @@ export interface DonutSegment {
   color: string;
 }
 
+export interface LinePoint {
+  x: number;
+  y: number;
+}
+
+export interface LineSeries {
+  label: string;
+  color: string;
+  points: LinePoint[];
+}
+
+/** Multi-series SVG line chart with axes, grid, points and a hover legend. */
+export function LineChart({
+  series,
+  width = 560,
+  height = 220,
+  xLabel = 'load (×)',
+  yLabel = 'latency (ms)',
+  yPad = 1.15,
+}: {
+  series: LineSeries[];
+  width?: number;
+  height?: number;
+  xLabel?: string;
+  yLabel?: string;
+  yPad?: number;
+}) {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const allPoints = series.flatMap((s) => s.points);
+  const maxX = Math.max(...allPoints.map((p) => p.x), 1);
+  const maxY = Math.max(...allPoints.map((p) => p.y), 1) * yPad;
+  const padL = 44;
+  const padR = 14;
+  const padT = 14;
+  const padB = 28;
+  const innerW = width - padL - padR;
+  const innerH = height - padT - padB;
+  const x = (v: number) => padL + (v / maxX) * innerW;
+  const y = (v: number) => padT + innerH - (v / maxY) * innerH;
+
+  const path = (pts: LinePoint[]) =>
+    pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${x(p.x).toFixed(1)},${y(p.y).toFixed(1)}`).join(' ');
+
+  // 5 horizontal grid lines with tick labels
+  const gridLines = Array.from({ length: 5 }, (_, i) => {
+    const v = (maxY / 4) * i;
+    return { v, y: y(v) };
+  });
+  const xTicks = [...new Set(allPoints.map((p) => p.x))].sort((a, b) => a - b);
+
+  return (
+    <div>
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full rounded-lg border border-line bg-surface-2/40" role="img" aria-label={`${yLabel} vs ${xLabel}`}>
+        {/* grid + y labels */}
+        {gridLines.map((g, i) => (
+          <g key={i}>
+            <line x1={padL} y1={g.y} x2={width - padR} y2={g.y} stroke="var(--color-line)" strokeDasharray="3 4" opacity="0.6" />
+            <text x={padL - 6} y={g.y + 3} textAnchor="end" className="fill-faint" fontSize="9" fontFamily="var(--font-mono)">
+              {Math.round(g.v)}
+            </text>
+          </g>
+        ))}
+        {/* axes */}
+        <line x1={padL} y1={padT} x2={padL} y2={height - padB} stroke="var(--color-line)" />
+        <line x1={padL} y1={height - padB} x2={width - padR} y2={height - padB} stroke="var(--color-line)" />
+        {/* series */}
+        {series.map((s) => (
+          <g key={s.label}>
+            <path
+              d={path(s.points)}
+              fill="none"
+              stroke={s.color}
+              strokeWidth={hovered === s.label ? 3 : 2}
+              strokeLinecap="round"
+              opacity={hovered === null || hovered === s.label ? 1 : 0.3}
+              style={{ transition: 'stroke-width 0.2s ease, opacity 0.2s ease' }}
+            />
+            {s.points.map((p, i) => (
+              <circle key={i} cx={x(p.x)} cy={y(p.y)} r="3" fill={s.color} opacity={hovered === null || hovered === s.label ? 1 : 0.3}>
+                <title>{`${s.label}: ${p.y.toFixed(0)}ms at ${p.x}×`}</title>
+              </circle>
+            ))}
+          </g>
+        ))}
+        {/* x ticks */}
+        {xTicks.map((t) => (
+          <text key={t} x={x(t)} y={height - padB + 14} textAnchor="middle" className="fill-faint" fontSize="9" fontFamily="var(--font-mono)">
+            ×{t}
+          </text>
+        ))}
+        <text x={width - padR} y={height - 6} textAnchor="end" className="fill-paper" opacity="0.5" fontSize="10" fontFamily="var(--font-mono)">
+          {xLabel}
+        </text>
+        <text x={10} y={padT - 2} className="fill-paper" opacity="0.5" fontSize="10" fontFamily="var(--font-mono)">
+          {yLabel}
+        </text>
+      </svg>
+      {/* hover legend */}
+      <div className="mt-2 flex flex-wrap gap-3">
+        {series.map((s) => (
+          <button
+            key={s.label}
+            onMouseEnter={() => setHovered(s.label)}
+            onMouseLeave={() => setHovered(null)}
+            className={`flex items-center gap-1.5 rounded px-1 py-0.5 font-mono text-[11px] transition-colors ${
+              hovered === s.label ? 'bg-surface-2 text-paper' : 'text-faint'
+            }`}
+          >
+            <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
+            {s.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** Ring/donut chart with a center total. Pure SVG, viewBox-scaled. */
 export function Donut({ segments, size = 180, thickness = 26, centerLabel }: { segments: DonutSegment[]; size?: number; thickness?: number; centerLabel?: string }) {
   const total = segments.reduce((s, x) => s + x.value, 0);

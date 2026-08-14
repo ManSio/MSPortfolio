@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-14 23:50] — Lab #/lab v5: кривые нагрузки (load curves) из движка simulate_architecture
+**Status:** ✅ Fixed
+**Root Cause:** — (запрос владельца: «добавить ещё визуализаций — кривые нагрузки на LabPage»)
+**Fix:** (1) `LineChart` — универсальный dependency-free SVG (multi-series p50/p95, оси, сетка, точки с tooltip, hover-legend). (2) Секция «09 · load curves» на LabPage: переключатели project × scenario, кривые из `runSimulation` — ТОТ ЖЕ движок, что MCP-тул simulate_architecture (single source of truth), + панель findings сценария. (3) Тесты 47/47 (SSR 9 секций), typecheck, build 98.51 KB gzip (+1.2 KB).
+**Guard:** runSimulation — чистый, без сети; ARCHITECTURES/SCENARIOS уже экспортированы.
+**Pattern:** NEW
+
 ## [2026-08-14 23:30] — Live-валидация /chat: агент отвечает фактами по всем проектам (mscodebase/gemma)
 **Status:** ✅ Fixed (live)
 **Root Cause:** — (закрыт открытый вопрос бэклога «/chat тестировать? (расход квоты)» — владелец дал команду)

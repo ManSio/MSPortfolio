@@ -140,6 +140,7 @@ describe('lab data integrity', () => {
       '06 · known issues',
       '07 · tests',
       '08 · dependencies',
+      '09 · load curves',
       'All projects',
       'get_experiments',
       'get_diary',

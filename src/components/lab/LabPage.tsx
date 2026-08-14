@@ -5,11 +5,12 @@ import knownIssuesData from '../../data/lab/known-issues.json';
 import testSuitesData from '../../data/lab/test-suites.json';
 import projectsData from '../../data/projects.json';
 import { loadFallbackSnapshot } from '../../lib/api';
+import { ARCHITECTURES, runSimulation, SCENARIOS } from '../../lib/mcp-tools';
 import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project, CommitEntry } from '../../lib/types';
 import { Badge } from '../ui/Badge';
 import { Card, CardHeader } from '../ui/Card';
 import { MetricCard } from '../metrics/MetricCard';
-import { BarList, Donut, StackedBar, type DonutSegment } from './charts';
+import { BarList, Donut, LineChart, StackedBar, type DonutSegment, type LineSeries } from './charts';
 
 const experiments = (experimentsData as { experiments: Experiment[]; negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] }).experiments;
 const negativeResults = (experimentsData as { negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] }).negativeResults;
@@ -525,6 +526,108 @@ export function LabPage() {
           </table>
         </div>
       </section>
+
+      {/* ── Load curves ──────────────────────────────────────── */}
+      <LoadCurves />
     </main>
   );
+}
+
+/** Degradation curves from the same simulation engine as simulate_architecture. */
+function LoadCurves() {
+  const [projectId, setProjectId] = useState<string>(Object.keys(ARCHITECTURES)[0]);
+  const [scenario, setScenario] = useState<string>(SCENARIOS[0].id);
+
+  const curves = useMemo(() => buildCurves(projectId, scenario), [projectId, scenario]);
+  const sim = useMemo(() => {
+    const model = ARCHITECTURES[projectId];
+    if (!model) return null;
+    return runSimulation(model, scenario);
+  }, [projectId, scenario]);
+  const scenarioDef = SCENARIOS.find((s) => s.id === scenario)!;
+
+  return (
+    <section className="pt-16 sm:pt-20">
+      <div className="reveal">
+        <p className="font-mono text-xs tracking-widest text-accent uppercase">09 · load curves</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Watch latency degrade under load</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted">
+          The same engine the <span className="font-mono">simulate_architecture</span> MCP tool exposes — real p50/p95
+          percentiles per load step, per project, per failure scenario.
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[240px_1fr]">
+        <div className="space-y-4">
+          <div>
+            <p className="mb-2 font-mono text-[11px] text-faint">project</p>
+            <div className="flex flex-wrap gap-1.5">
+              {Object.keys(ARCHITECTURES).map((id) => (
+                <button
+                  key={id}
+                  onClick={() => setProjectId(id)}
+                  className={`inline-flex min-h-9 items-center rounded-full border px-3 text-xs transition-all duration-200 hover:-translate-y-0.5 ${
+                    id === projectId ? 'border-accent/60 bg-accent/10 text-accent' : 'border-line text-muted hover:border-accent/40'
+                  }`}
+                >
+                  {projectName(id)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="mb-2 font-mono text-[11px] text-faint">scenario</p>
+            <div className="space-y-1.5">
+              {SCENARIOS.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setScenario(s.id)}
+                  className={`block w-full rounded-lg border p-2.5 text-left transition-all duration-200 ${
+                    s.id === scenario ? 'border-accent/60 bg-accent/5' : 'border-line hover:border-accent/40'
+                  }`}
+                >
+                  <p className="text-xs font-semibold text-paper">{s.label}</p>
+                  <p className="mt-0.5 text-[11px] leading-snug text-faint">{s.description}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <Card className="glass-card p-5">
+            <LineChart series={curves} />
+          </Card>
+          {sim?.findings.length ? (
+            <Card className="glass-card mt-4 p-4">
+              <p className="font-mono text-xs text-accent">{scenarioDef.label} — findings</p>
+              <ul className="mt-2 space-y-1 text-sm text-muted">
+                {sim.findings.map((f, i) => (
+                  <li key={i}>• {f}</li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function buildCurves(projectId: string, scenario: string): LineSeries[] {
+  const model = ARCHITECTURES[projectId];
+  if (!model) return [];
+  const { points } = runSimulation(model, scenario);
+  return [
+    {
+      label: 'p50',
+      color: 'var(--color-accent)',
+      points: points.map((p) => ({ x: p.load, y: p.p50 })),
+    },
+    {
+      label: 'p95',
+      color: '#f59e0b',
+      points: points.map((p) => ({ x: p.load, y: p.p95 })),
+    },
+  ];
 }
