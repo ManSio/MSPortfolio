@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T11:56:49.930Z",
+  "fetchedAt": "2026-08-14T12:09:18.879Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T11:46:16Z",
+      "pushedAt": "2026-08-14T11:56:55Z",
       "language": "TypeScript"
     },
     {
@@ -143,13 +143,6 @@
     }
   ],
   "commits": [
-    {
-      "repo": "MSPortfolio",
-      "sha": "61daa5311d",
-      "date": "2026-08-14T11:32:11Z",
-      "message": "feat: failure events in simulator, antipattern museum, terminal mode",
-      "author": "ManSio"
-    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "eb59bf4b02",
