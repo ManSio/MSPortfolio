@@ -1,0 +1,52 @@
+{
+  "principles": [
+    {
+      "id": "fail-closed",
+      "title": "Fail-closed by default",
+      "statement": "When the system can't verify a condition, it must refuse rather than guess. Authorization, cache misses and unknown tool intents all default to 'no'.",
+      "example": "In mscodebase-intelligence, a missing index returns a structured error to the agent instead of an empty result — the agent must not confuse 'nothing found' with 'index empty'.",
+      "abTest": "If we returned empty results on index-miss: agents would silently produce 'no results' for every query until the index rebuilt — a 30-minute silent outage instead of an immediate actionable error.",
+      "evidence": "mscodebase-intelligence: watchdog + reindex recovery paths surface explicit statuses"
+    },
+    {
+      "id": "async-first",
+      "title": "Async-first I/O, offload CPU",
+      "statement": "I/O-bound work lives on the async loop; CPU-bound work is offloaded with explicit progress reporting. No blocking calls on the request path.",
+      "example": "The MCP tool server is fully async; reindex runs as a background task with progress notifications so the agent can poll instead of timing out.",
+      "abTest": "A sync reindex inside a tool call would blow the MCP request timeout on large repos — the async split is what makes 100k-file codebases viable.",
+      "evidence": "mscodebase-intelligence architecture (async MCP server, background jobs)"
+    },
+    {
+      "id": "single-write-path",
+      "title": "Single write path for derived state",
+      "statement": "Any state that is derived from other state (indexes, caches, fused rankings) is written through one code path. No ad-hoc mutations.",
+      "example": "Hybrid search keeps a vector index and a BM25 index consistent because both are updated by the same ingestion pipeline.",
+      "abTest": "Two ad-hoc update sites would drift: vector index fresh, BM25 stale → fusion ranks garbage without any visible error.",
+      "evidence": "mscodebase-intelligence: hybrid index consistency"
+    },
+    {
+      "id": "measure-not-assume",
+      "title": "Measure, don't assume",
+      "statement": "Performance and reliability claims come from benchmarks with a command line, a thread count and raw output — not from architecture diagrams.",
+      "example": "Every concurrency change in mscodebase-intelligence ships with a stress test that verifies both 'no exceptions' and 'correct input → correct output'.",
+      "abTest": "Lock→pool refactors without content-correctness stress tests have historically passed '0 errors' while silently cross-wiring results.",
+      "evidence": "mscodebase-intelligence test suite: N=2 and N=8 concurrency stress tests"
+    },
+    {
+      "id": "self-healing",
+      "title": "Autonomous self-healing",
+      "statement": "Where recovery is deterministic, the system does it itself: watchdogs, reindex triggers, stale-state cleanup. Humans only get involved for decisions, not for chores.",
+      "example": "MSCodeBase Intelligence detects a corrupted/stale index and schedules a reindex automatically while serving from the last-good snapshot.",
+      "abTest": "A human-paged reindex flow means the tool is down on a Friday night until someone notices — unacceptable for a developer tool.",
+      "evidence": "mscodebase-intelligence: autonomous self-healing workflows"
+    },
+    {
+      "id": "agent-agnostic",
+      "title": "Agent-agnostic surfaces",
+      "statement": "Tooling speaks protocols (MCP), not personalities. One server, consumed by Claude Code, Cursor, Copilot or any future agent.",
+      "example": "InfraWise ships a single MCP server that works across every major coding agent.",
+      "abTest": "IDE-specific plugins would multiply maintenance by N and make the tool useless the day a new IDE appears.",
+      "evidence": "infrawise: MCP server for Claude Code, Cursor and Copilot"
+    }
+  ]
+}

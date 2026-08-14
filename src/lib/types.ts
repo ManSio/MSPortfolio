@@ -1,0 +1,132 @@
+// Shared types matching src/data/*.json
+
+export interface Profile {
+  name: string;
+  role: string;
+  location: string;
+  summary: string;
+}
+
+export interface DecisionLogEntry {
+  decision: string;
+  alternatives: string[];
+  reason: string;
+  tradeoff: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  repo: string;
+  url: string;
+  language: string;
+  stack: string[];
+  stars: number;
+  forks: number;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  decisionLog: DecisionLogEntry[];
+  metrics: { type: string };
+}
+
+export interface ProjectsData {
+  owner: string;
+  profile: Profile;
+  projects: Project[];
+}
+
+export interface Principle {
+  id: string;
+  title: string;
+  statement: string;
+  example: string;
+  abTest: string;
+  evidence: string;
+}
+
+export interface PrinciplesData {
+  principles: Principle[];
+}
+
+export interface TimelineEvent {
+  date: string;
+  title: string;
+  decision: string;
+  link?: string;
+}
+
+export interface TimelineData {
+  events: TimelineEvent[];
+}
+
+// ── Live metrics (from GitHub/npm/Dev.to APIs or static fallback) ──
+
+export interface GithubRepoMetric {
+  name: string;
+  stars: number;
+  forks: number;
+  openIssues: number;
+  pushedAt: string;
+  language: string | null;
+}
+
+export interface MetricsSnapshot {
+  fetchedAt: string;
+  source: 'live' | 'fallback';
+  user: {
+    login: string;
+    publicRepos: number;
+    followers: number;
+    following: number;
+  } | null;
+  repos: GithubRepoMetric[];
+  npm: { package: string; downloads: number }[];
+  devto: { title: string; readingTimeMinutes: number; url: string }[];
+}
+
+// ── MCP tools ──
+
+export interface MCPTool {
+  name: string;
+  description: string;
+  /** JSON Schema (draft 2020-12) describing tool input. */
+  inputSchema: Record<string, unknown>;
+  execute(args: Record<string, unknown>): Promise<unknown>;
+}
+
+export interface StackMatch {
+  skill: string;
+  matched: boolean;
+  evidence: string;
+}
+
+export interface StackAnalysis {
+  requiredSkills: string[];
+  matched: StackMatch[];
+  coverage: number; // 0..1
+  verdict: string;
+}
+
+export interface SimPoint {
+  load: number; // x baseline
+  p50: number; // ms
+  p95: number; // ms
+  throughput: number; // req/s
+  bottleneck: string;
+}
+
+export interface SimScenario {
+  id: string;
+  label: string;
+  description: string;
+}
+
+export interface SimulationResult {
+  projectId: string;
+  scenario: string;
+  scenarioLabel: string;
+  points: SimPoint[];
+  findings: string[];
+  recommendation: string;
+}

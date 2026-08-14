@@ -1,0 +1,33 @@
+{
+  "events": [
+    {
+      "date": "2026-08",
+      "title": "MSPortfolio: the portfolio that is also an MCP server",
+      "decision": "Built a portfolio whose CV is machine-readable via MCP and whose claims are backed by live metrics and a browser agent-loop demo.",
+      "link": "https://github.com/ManSio/MSPortfolio"
+    },
+    {
+      "date": "2026",
+      "title": "InfraWise: AWS analysis as MCP",
+      "decision": "Exposed AWS infrastructure introspection (DynamoDB, Lambda, SQS, SNS, S3, API Gateway, databases, Kafka, IaC drift) through a single agent-agnostic MCP server.",
+      "link": "https://github.com/ManSio/infrawise"
+    },
+    {
+      "date": "2026",
+      "title": "MSCodeBase Intelligence: hybrid search for code",
+      "decision": "Chose LanceDB + BM25 hybrid search over SQLite FTS5/Elasticsearch for an embedded, zero-ops, memory-safe code search MCP server for Zed.",
+      "link": "https://github.com/ManSio/mscodebase-intelligence"
+    },
+    {
+      "date": "2026",
+      "title": "Gemma Agent: memory-first assistant",
+      "decision": "Designed the Telegram assistant around extracted memory (flat token cost) instead of full-transcript replay.",
+      "link": "https://github.com/ManSio/gemma_agent"
+    },
+    {
+      "date": "2014",
+      "title": "Joined GitHub as ManSio",
+      "decision": "Started the public engineering record that this portfolio verifies live."
+    }
+  ]
+}

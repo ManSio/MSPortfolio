@@ -1,0 +1,135 @@
+{
+  "owner": "ManSio",
+  "profile": {
+    "name": "Mikhail",
+    "role": "AI / Backend Engineer",
+    "location": "Remote-friendly",
+    "summary": "Builds MCP-native tooling and AI infrastructure. Two production MCP servers: codebase intelligence for Zed and AWS infrastructure analysis."
+  },
+  "projects": [
+    {
+      "id": "mscodebase-intelligence",
+      "name": "MSCodeBase Intelligence",
+      "repo": "ManSio/mscodebase-intelligence",
+      "url": "https://github.com/ManSio/mscodebase-intelligence",
+      "language": "Python",
+      "stack": ["Python", "MCP", "LanceDB", "BM25", "RAG", "Zed"],
+      "stars": 2,
+      "forks": 0,
+      "tagline": "Intelligent codebase search & indexing for Zed",
+      "description": "Async MCP server featuring LanceDB/BM25 hybrid search, multi-bucket RAG, and autonomous self-healing workflows. High-performance, memory-safe, production-ready codebase intelligence.",
+      "highlights": [
+        "Hybrid search (vector + BM25) with fused ranking",
+        "Multi-bucket RAG over code entities",
+        "Autonomous self-healing: watchdog + reindex recovery",
+        "Memory-safe indexing pipeline (no leaks under load)"
+      ],
+      "decisionLog": [
+        {
+          "decision": "LanceDB over plain SQLite FTS for embeddings",
+          "alternatives": ["SQLite FTS5", "Elasticsearch", "pgvector"],
+          "reason": "Embedded vector store with zero-ops deployment; FTS5 tokenization breaks Russian stemming relevance.",
+          "tradeoff": "LanceDB API surface changes between minor versions — pinned with rationale."
+        },
+        {
+          "decision": "Async MCP server (single process, async loop)",
+          "alternatives": ["Multi-process workers", "Thread pool"],
+          "reason": "MCP tool calls are I/O-bound; async keeps memory flat and avoids GIL contention for the index path.",
+          "tradeoff": "CPU-bound reindex must be offloaded to a background task with progress events."
+        },
+        {
+          "decision": "Hybrid search instead of vector-only",
+          "alternatives": ["Embeddings only", "BM25 only"],
+          "reason": "Exact identifier matches beat fuzzy vector recall for code; fusion gives both.",
+          "tradeoff": "Two indexes to keep consistent — resolved by a single write path."
+        }
+      ],
+      "metrics": { "type": "github" }
+    },
+    {
+      "id": "infrawise",
+      "name": "InfraWise",
+      "repo": "ManSio/infrawise",
+      "url": "https://github.com/ManSio/infrawise",
+      "language": "TypeScript",
+      "stack": ["MCP", "AWS", "DynamoDB", "Lambda", "SQS", "SNS", "S3", "API Gateway", "PostgreSQL", "MySQL", "MongoDB", "Kafka", "IaC"],
+      "stars": 1,
+      "forks": 0,
+      "tagline": "MCP server for AWS infrastructure analysis",
+      "description": "Analyzes AWS infrastructure — DynamoDB, Lambda, SQS, SNS, S3, API Gateway, PostgreSQL, MySQL, MongoDB, Kafka & IaC drift. Works with Claude Code, Cursor, and GitHub Copilot.",
+      "highlights": [
+        "Multi-service AWS topology introspection via MCP",
+        "IaC drift detection",
+        "Agent-agnostic: works in Claude Code, Cursor, Copilot"
+      ],
+      "decisionLog": [
+        {
+          "decision": "Agent-agnostic MCP surface (not tied to one IDE)",
+          "alternatives": ["IDE plugin", "CLI-only"],
+          "reason": "One MCP server is consumable by every major coding agent; zero install per IDE.",
+          "tradeoff": "MCP protocol versioning churn must be tracked."
+        }
+      ],
+      "metrics": { "type": "github" }
+    },
+    {
+      "id": "gemma_agent",
+      "name": "Gemma Agent",
+      "repo": "ManSio/gemma_agent",
+      "url": "https://github.com/ManSio/gemma_agent",
+      "language": "Python",
+      "stack": ["Python", "Telegram", "LLM", "Agents"],
+      "stars": 2,
+      "forks": 0,
+      "tagline": "Telegram assistant for a small trusted circle",
+      "description": "Telegram assistant with memory, routing, and tools when needed — built for a small trusted circle, not as a Google Gemma product.",
+      "highlights": [
+        "Persistent memory across sessions",
+        "Intent routing before tool dispatch",
+        "Tool use gated by permission scope"
+      ],
+      "decisionLog": [
+        {
+          "decision": "Memory as first-class state, not chat context stuffing",
+          "alternatives": ["Full transcript replay"],
+          "reason": "Transcripts grow unbounded and dilute signal; extracted memory keeps token cost flat.",
+          "tradeoff": "Memory summarization can drop context — mitigated by key-based retrieval."
+        }
+      ],
+      "metrics": { "type": "github" }
+    },
+    {
+      "id": "msp-portfolio",
+      "name": "MSPortfolio (this site)",
+      "repo": "ManSio/MSPortfolio",
+      "url": "https://github.com/ManSio/MSPortfolio",
+      "language": "TypeScript",
+      "stack": ["React", "TypeScript", "Vite", "Tailwind", "MCP", "Fastify"],
+      "stars": 0,
+      "forks": 0,
+      "tagline": "The MCP-native portfolio you are reading right now",
+      "description": "A portfolio that is simultaneously a static dashboard, an MCP server about its owner's experience, and an interactive proof-of-work engine.",
+      "highlights": [
+        "MCP server endpoint: any AI agent can query the CV",
+        "Browser agent-loop demo showing tool calls live",
+        "Live metrics with freshness + static fallback",
+        "Architecture simulator with break-it scenarios"
+      ],
+      "decisionLog": [
+        {
+          "decision": "One repo: static site + MCP server, shared data files",
+          "alternatives": ["Two repos", "MCP hosted on separate infra"],
+          "reason": "Single source of truth for projects.json; deploy MCP where a process can run (local / Worker / Space), site on GitHub Pages.",
+          "tradeoff": "GitHub Pages cannot host the MCP process itself — documented in server/README.md."
+        },
+        {
+          "decision": "Browser-side agent demo instead of hosted LLM chat",
+          "alternatives": ["Vercel AI SDK + LLM key", "Serverless function"],
+          "reason": "Static hosting has no backend and secrets; showing raw tool calls proves the work better than an opaque LLM answer.",
+          "tradeoff": "No free-form dialogue — mitigated by intent-matched canned dialogues."
+        }
+      ],
+      "metrics": { "type": "github" }
+    }
+  ]
+}
