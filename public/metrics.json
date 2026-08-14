@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T15:07:02.252Z",
+  "fetchedAt": "2026-08-14T16:05:56.405Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,11 +9,19 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T15:09:50Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T14:30:12Z",
+      "pushedAt": "2026-08-14T15:07:09Z",
       "language": "TypeScript"
     },
     {
@@ -23,14 +31,6 @@
       "openIssues": 0,
       "pushedAt": "2026-08-14T14:20:00Z",
       "language": "HTML"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T13:04:03Z",
-      "language": "Python"
     },
     {
       "name": "ManSio",
@@ -162,6 +162,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "34b32129c3",
+      "date": "2026-08-14T15:08:00Z",
+      "message": "fix(reranker): grader mutation hardening — NaN/Inf rejection, index contract, duplicate decline (evalmut transfer)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "286f902bae",
+      "date": "2026-08-14T13:35:20Z",
+      "message": "feat(1L): live-arm Day 1 — 100 verdicts via opencode deepseek-v4-flash-free, dedup merge fix, EXPERIMENTS_LOG entry (live vs proxy: unknown 0→80%, false_accept 0→10%)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "2de6f49772",
+      "date": "2026-08-14T13:00:32Z",
+      "message": "docs(1L): free-tier limit measured (~3 calls/window) — feasibility constraint + options",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "MSPortfolio",
       "sha": "723226384e",
       "date": "2026-08-14T14:29:46Z",
@@ -188,27 +209,6 @@
       "date": "2026-08-14T13:30:34Z",
       "message": "feat: llms.txt for agent discovery (points to MCP portfolio)",
       "author": "ManSio"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "2de6f49772",
-      "date": "2026-08-14T13:00:32Z",
-      "message": "docs(1L): free-tier limit measured (~3 calls/window) — feasibility constraint + options",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "330f8522c5",
-      "date": "2026-08-14T12:53:22Z",
-      "message": "feat(1L): live-arm rate-limit resilience — delay, 429 backoff, --resume progress across free-tier windows",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "028182a53e",
-      "date": "2026-08-14T12:44:41Z",
-      "message": "feat(1L): live-arm via OpenCode Big Pickle (Zen) — opencode CLI driver + api fallback, honest no-key exit 2",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio",
