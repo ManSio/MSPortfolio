@@ -73,6 +73,13 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 20:30] — get_articles не показывал новую статью (Varnish-кэш dev.to)
+**Status:** ✅ Fixed (live)
+**Root Cause:** dev.to отдаёт `/api/articles?username=...` через многослойный Varnish; после публикации статьи устаревшая копия живёт в кэше и отдаётся части egress'ов (CF, GH Actions — 5 статей; мой IP — 6). Доказательства: локальный пробник с тем же кодом давал 6; `cache: no-store` и cache-buster-параметр не помогали (Varnish нормализует неизвестные query-параметры); заголовки `Via: heroku-router, varnish, varnish` + `X-Cache: MISS, HIT`.
+**Fix:** реальный API-параметр `state=published` меняет ключ Varnish-кэша → свежие данные. Проверено live: воркер отдаёт 6 статей, новая первой. Применено и в update-metrics.ts (CI-снапшот).
+**Guard:** live-проверка get_articles; смоук tools/call get_articles уже в CI.
+**Pattern:** P-002-вариант (три гипотезы подряд до подтверждения — кэш CF → URL-ключ CDN → egress; финальный корень на стороне dev.to)
+
 ## [2026-08-14 20:00] — Analytics Engine включён и привязан; авто-деплой токеном закрыт
 **Status:** ✅ Fixed (live)
 **Root Cause:** — (owner actions закрыты)

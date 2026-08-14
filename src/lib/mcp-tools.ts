@@ -248,7 +248,13 @@ export const TOOLS: MCPTool[] = [
     annotations: { readOnlyHint: true, openWorldHint: true },
     async execute() {
       try {
-        const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6', {
+        // dev.to serves /api/articles list endpoints through layered Varnish
+        // caches that can lag after publication for some egresses. `state` is a
+        // real API param, so it changes the Varnish cache key — unlike ad-hoc
+        // params, which Varnish normalizes away. cache:no-store + UA header
+        // cover the CF-side cache and the 403-on-headerless-fetch case.
+        const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6&state=published', {
+          cache: 'no-store',
           // dev.to rejects headerless fetches from datacenter egress (403); the
           // CI snapshot script already proves a UA header makes it through.
           headers: { 'User-Agent': 'msp-portfolio-server' },
@@ -434,7 +440,10 @@ const METRICS_SNAPSHOT_URL = 'https://mansio.github.io/MSPortfolio/metrics.json'
 /** Fetches the committed metrics snapshot. Returns null on any failure. */
 async function fetchCommittedMetrics(): Promise<MetricsSnapshot | null> {
   try {
-    const res = await fetch(METRICS_SNAPSHOT_URL, { signal: AbortSignal.timeout(8000) });
+    const res = await fetch(METRICS_SNAPSHOT_URL, {
+      cache: 'no-store', // never serve a stale snapshot from the subrequest cache
+      signal: AbortSignal.timeout(8000),
+    });
     if (!res.ok) return null;
     return (await res.json()) as MetricsSnapshot;
   } catch {

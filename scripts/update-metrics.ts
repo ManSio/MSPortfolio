@@ -28,7 +28,9 @@ const [user, repos] = await Promise.all([
   gh(`/users/${OWNER}/repos?per_page=100&sort=updated`),
 ]);
 
-// Dev.to articles (public API, no auth).
+// Dev.to articles (public API, no auth). `state=published` is a real API
+// param that changes the Varnish cache key — the plain list endpoint can serve
+// stale copies for some egresses after publication.
 let devto: {
   id?: number;
   title: string;
@@ -43,7 +45,7 @@ let devto: {
   readable_publish_date?: string;
 }[] = [];
 try {
-  const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
+  const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6&state=published', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
   if (res.ok) devto = (await res.json()) as typeof devto;
 } catch {
   devto = [];
