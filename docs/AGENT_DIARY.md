@@ -58,3 +58,15 @@
 **Fix:** `wrangler login` (пользователь, браузер) → поддомен `mansio-dev.workers.dev` (CLI `subdomain` в v4 нет, зарегистрирован через REST API: PUT /accounts/{id}/workers/subdomain) → `wrangler deploy` → **https://msp-portfolio.mansio-dev.workers.dev/mcp**. Демо на сайте подключено к живому endpoint (`src/lib/config.ts` MCP_ENDPOINT), CORS разрешает GH Pages + localhost, CI-джоба `smoke` проверяет публичный endpoint с чистого раннера (health + tools/list) — success. Локальная песочница не может достучаться до workers.dev (TLS SEC_E_ILLEGAL_MESSAGE) — это ограничение окружения, публичная доступность подтверждена раннером.
 **Guard:** CI smoke на живой endpoint; бандл проверяется `wrangler deploy --dry-run` + смоук собранного index.js.
 **Pattern:** NEW
+
+## [2026-08-14 14:30] — Blog (dev.to), vitest, CI auto-deploy worker, LLM-чат
+**Status:** ✅ Fixed
+**Root Cause:** —
+**Fix:**
+1. Blog-раздел: карточки статей dev.to (обложки/теги/реакции), live+fallback+CI refresh, MCP-тул get_articles (7 тулов).
+2. Vitest: 15 тестов (тулы MCP + интенты). Тесты поймали реальные дыры матчера: `мыслишь`/`вакансию`/`stack` не матчились — исправлено; несуществующее поле bottleneck в тесте — исправлено.
+3. CI: deploy-worker job (авто-деплой Workers при CLOUDFLARE_API_TOKEN; секреты в `if` запрещены — прокси через env CF_TOKEN); CLOUDFLARE_ACCOUNT_ID установлен; прогон тестов добавлен в deploy.
+4. LLM-чат: worker /chat (OpenRouter agent loop с заземлением на тулы), BYOK + серверный ключ; смоук проверяет chatConfigured.
+**Инцидент:** при rebase потерялся T3.md (delete в коммите) — восстановлен из HEAD~1 (80211c0).
+**Guard:** тесты в CI; T3.md — Danger Zone.
+**Pattern:** NEW

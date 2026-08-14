@@ -38,6 +38,9 @@ jobs:
       - name: Type-check server
         run: npx tsc -p server/tsconfig.json
 
+      - name: Unit tests
+        run: pnpm test
+
       - name: Build
         run: pnpm build
 
