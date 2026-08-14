@@ -83,6 +83,13 @@ body {
   background: transparent;
 }
 
+/* Unified keyboard focus for every interactive element */
+:where(button, a, input, summary, [role='button']):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 /* ── Ambient gradient blobs (what the glass blurs) ──
    Radial gradients, not filter:blur — giant blurs on fixed elements can
    trigger black-screen GPU compositing bugs on some Windows drivers. */

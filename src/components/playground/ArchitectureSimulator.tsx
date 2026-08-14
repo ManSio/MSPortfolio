@@ -46,7 +46,7 @@ export function ArchitectureSimulator() {
             <button
               key={id}
               onClick={() => setProjectId(id)}
-              className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+              className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-sm transition-colors ${
                 id === projectId ? 'border-accent/60 bg-accent/10 text-accent' : 'border-line text-muted hover:border-accent/40'
               }`}
             >
@@ -85,7 +85,7 @@ export function ArchitectureSimulator() {
             <button
               key={s.id}
               onClick={() => setScenario(s.id)}
-              className={`rounded-lg border p-3 text-left transition-colors ${
+              className={`inline-flex min-h-11 items-center rounded-lg border p-3 text-left transition-colors ${
                 s.id === scenario ? 'border-accent/60 bg-accent/5' : 'border-line hover:border-accent/40'
               }`}
             >

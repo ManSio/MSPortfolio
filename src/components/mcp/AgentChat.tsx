@@ -253,7 +253,7 @@ export function AgentChat() {
               key={q}
               disabled={busy}
               onClick={() => void run(q)}
-              className="rounded-full border border-line px-3 py-1 text-xs text-muted transition-colors hover:border-accent/60 hover:text-accent disabled:opacity-40"
+              className="inline-flex min-h-11 items-center rounded-full border border-line px-3 text-xs text-muted transition-colors hover:border-accent/60 hover:text-accent disabled:opacity-40"
             >
               {q}
             </button>

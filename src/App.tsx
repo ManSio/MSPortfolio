@@ -29,7 +29,7 @@ function ThemeToggle({ dark, toggle }: { dark: boolean; toggle: () => void }) {
     <button
       onClick={toggle}
       aria-label="Toggle theme"
-      className="rounded-lg border border-line px-2.5 py-1.5 text-sm transition-colors hover:border-accent/60"
+      className="inline-flex min-h-10 items-center rounded-lg border border-line px-2.5 text-sm transition-colors hover:border-accent/60"
     >
       {dark ? '☀' : '☾'}
     </button>
