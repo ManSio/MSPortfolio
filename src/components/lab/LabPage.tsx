@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import experimentsData from '../../data/lab/experiments.json';
 import diaryData from '../../data/lab/diary.json';
 import knownIssuesData from '../../data/lab/known-issues.json';
 import testSuitesData from '../../data/lab/test-suites.json';
 import projectsData from '../../data/projects.json';
-import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project } from '../../lib/types';
+import { loadFallbackSnapshot } from '../../lib/api';
+import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project, CommitEntry } from '../../lib/types';
 import { Badge } from '../ui/Badge';
 import { Card, CardHeader } from '../ui/Card';
 import { MetricCard } from '../metrics/MetricCard';
@@ -44,6 +45,11 @@ function projectName(id: string): string {
   return projects.find((p) => p.id === id)?.name ?? id;
 }
 
+/** GitHub repo name for a project (project.repo = 'Owner/name'). */
+function repoName(p: Project): string {
+  return p.repo.split('/')[1] ?? p.repo;
+}
+
 function verdictSegments(list: Experiment[]): DonutSegment[] {
   const counts = { confirmed: 0, refuted: 0, partial: 0 };
   for (const e of list) counts[e.verdict]++;
@@ -77,9 +83,27 @@ function stackMatrix() {
   return { techs, projects };
 }
 
+/** Commits per project from the hourly metrics snapshot (same source as get_commit_history). */
+function useCommits() {
+  const [commits, setCommits] = useState<CommitEntry[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    loadFallbackSnapshot()
+      .then((snap) => {
+        if (!cancelled && snap?.commits) setCommits(snap.commits);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return commits;
+}
+
 export function LabPage() {
   const { techs, projects: projs } = stackMatrix();
   const [project, setProject] = useState<string>(ALL);
+  const commits = useCommits();
 
   const scoped = useMemo(() => {
     const isAll = project === ALL;
@@ -90,8 +114,30 @@ export function LabPage() {
     };
   }, [project]);
 
+  const scopedCommits = useMemo(() => {
+    if (!commits) return null;
+    if (project === ALL) return commits;
+    const proj = projects.find((p) => p.id === project);
+    if (!proj) return [];
+    const name = repoName(proj);
+    return commits.filter((c) => c.repo.toLowerCase() === name.toLowerCase());
+  }, [commits, project]);
+
+  const commitCounts = useMemo(() => {
+    if (!commits) return [];
+    return projects
+      .map((p) => ({
+        label: p.name,
+        value: commits.filter((c) => c.repo.toLowerCase() === repoName(p).toLowerCase()).length,
+        sub: repoName(p),
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [commits]);
+
   const tabs = [ALL, ...projects.map((p) => p.id)];
   const status = diaryStatus(scoped.diary);
+  const hasLabData = project === ALL || scoped.experiments.length > 0 || scoped.diary.length > 0 || scoped.issues.length > 0;
+  const projectHasNoLab = project !== ALL && !hasLabData;
 
   return (
     <main id="top" className="mx-auto max-w-5xl px-5 pb-16">
@@ -108,22 +154,23 @@ export function LabPage() {
             <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">this portfolio</span>
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            Every claim on the front page is backed by a logged experiment, a diary entry, or a test. This page is the
-            machine-readable projection of those logs — the same data the MCP tools{' '}
-            <span className="font-mono text-accent">get_experiments</span>, <span className="font-mono text-accent">get_diary</span> and{' '}
-            <span className="font-mono text-accent">get_known_issues</span> expose to agents.
+            Every claim on the front page is backed by a logged experiment, a diary entry, a test, or a commit. This
+            page is the machine-readable projection of those logs — the same data the MCP tools{' '}
+            <span className="font-mono text-accent">get_experiments</span>, <span className="font-mono text-accent">get_diary</span>,{' '}
+            <span className="font-mono text-accent">get_known_issues</span> and <span className="font-mono text-accent">get_commit_history</span>{' '}
+            expose to agents.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard label="Experiments" value={String(scoped.experiments.length)} hint="hypothesis → command → verdict" tone="accent" />
-            <MetricCard label="Diary entries" value={String(scoped.diary.length)} hint="incidents, root causes, guards" />
-            <MetricCard label="Known issues" value={String(scoped.issues.length)} hint="open debt with temperature" />
+            <MetricCard label="Experiments" value={String(experiments.length)} hint="lab-wide · hypothesis → verdict" tone="accent" />
+            <MetricCard label="Diary entries" value={String(diary.length)} hint="lab-wide · incidents, guards" />
+            <MetricCard label="Known issues" value={String(issues.length)} hint="lab-wide · open debt" />
             <MetricCard label="Tests" value={String(testTotal)} hint={`${suites.length} suites`} />
           </div>
         </div>
       </section>
 
       {/* ── Project filter ───────────────────────────────────── */}
-      <div className="reveal -mt-2 mb-10 flex flex-wrap gap-2">
+      <div className="reveal -mt-2 mb-10 flex flex-wrap items-center gap-2">
         {tabs.map((id) => (
           <button
             key={id}
@@ -135,6 +182,9 @@ export function LabPage() {
             {id === ALL ? 'All projects' : projectName(id)}
           </button>
         ))}
+        <span className="ml-auto hidden text-xs text-faint sm:block">
+          {project === ALL ? 'full lab' : `showing ${projectName(project)}`}
+        </span>
       </div>
 
       {/* ── Decision logs per project ────────────────────────── */}
@@ -148,7 +198,7 @@ export function LabPage() {
           </p>
         </div>
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {projs.map((p) => (
+          {(project === ALL ? projs : projs.filter((p) => p.id === project)).map((p) => (
             <div key={p.id} className="reveal">
               <Card className="glass-card flex h-full flex-col p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.25)]">
                 <p className="font-mono text-[11px] text-accent">{p.id}</p>
@@ -163,7 +213,7 @@ export function LabPage() {
                 <div className="mt-4 space-y-3 border-t border-line pt-3">
                   {p.decisionLog.map((d, i) => (
                     <div key={i} className="group">
-                      <p className="text-sm font-medium text-paper group-hover:text-accent transition-colors">▸ {d.decision}</p>
+                      <p className="text-sm font-medium text-paper transition-colors group-hover:text-accent">▸ {d.decision}</p>
                       <p className="mt-1 text-xs leading-relaxed text-faint">
                         <span className="text-muted">considered: </span>
                         {d.alternatives.join(' · ')}
@@ -185,171 +235,230 @@ export function LabPage() {
         </div>
       </section>
 
-      {/* ── Experiments ──────────────────────────────────────── */}
+      {/* ── Commit log per project ───────────────────────────── */}
       <section className="pt-16 sm:pt-20">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">02 · experiments</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Hypotheses, commands, verdicts</h2>
-        </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr]">
-          <Card className="glass-card self-start p-5 transition-all duration-300 hover:border-accent/30">
-            <CardHeader>
-              <span className="text-sm font-semibold">Verdict distribution</span>
-            </CardHeader>
-            <Donut segments={verdictSegments(scoped.experiments)} centerLabel="experiments" />
-          </Card>
-
-          <div className="space-y-4">
-            {scoped.experiments.map((e) => (
-              <Card key={e.id} className="glass-card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-mono text-[11px] text-faint">
-                      {e.date} · {e.id}
-                      {e.project ? <span className="ml-2 text-accent">#{projectName(e.project)}</span> : null}
-                    </p>
-                    <h3 className="mt-0.5 font-semibold text-paper">{e.title}</h3>
-                  </div>
-                  <Badge tone={VERDICT_TONES[e.verdict]}>{VERDICT_LABELS[e.verdict]}</Badge>
-                </div>
-                <details className="group mt-3">
-                  <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">
-                    hypothesis · command · raw result
-                  </summary>
-                  <div className="mt-3 space-y-3 text-sm">
-                    <div>
-                      <p className="font-mono text-[11px] text-faint">hypothesis</p>
-                      <p className="mt-0.5 leading-relaxed text-muted">{e.hypothesis}</p>
-                    </div>
-                    <div>
-                      <p className="font-mono text-[11px] text-faint">command</p>
-                      <pre className="mt-0.5 overflow-x-auto rounded-lg border border-line bg-surface-2/60 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre-wrap text-paper">{e.command}</pre>
-                    </div>
-                    <div>
-                      <p className="font-mono text-[11px] text-faint">raw result</p>
-                      <p className="mt-0.5 leading-relaxed text-muted">{e.result}</p>
-                    </div>
-                    <div className="border-t border-line pt-2">
-                      <span className="font-mono text-[11px] text-accent">finding: </span>
-                      <span className="text-muted">{e.finding}</span>
-                    </div>
-                  </div>
-                </details>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Negative results ─────────────────────────────────── */}
-      <section className="pt-16 sm:pt-20">
-        <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-amber-600 uppercase dark:text-amber-400">03 · do not repeat</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Negative results</h2>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">02 · commit log</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">What was shipped, per project</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted">
-            Approaches that were tried and failed — recorded so a future agent or the owner never re-runs them.
+            From <span className="font-mono">public/metrics.json</span> — the hourly CI snapshot behind{' '}
+            <span className="font-mono">get_commit_history</span>. Every project has its own commits here.
           </p>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {negativeResults.map((n) => (
-            <Card key={n.attempt} className="glass-card border-red-500/25 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-red-500/50">
-              <p className="font-mono text-[11px] text-faint">{n.date} · {n.ref}</p>
-              <h3 className="mt-1 text-sm font-semibold text-paper">{n.attempt}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                <span className="text-red-500/90 dark:text-red-400/90">why it failed: </span>
-                {n.whyFailed}
-              </p>
-            </Card>
-          ))}
+
+        {commitCounts.length > 0 ? (
+          <Card className="glass-card mt-8 p-5">
+            <BarList data={commitCounts} />
+          </Card>
+        ) : null}
+
+        <div className="mt-6 space-y-2">
+          {scopedCommits === null ? (
+            <p className="text-sm text-faint">loading commit snapshot…</p>
+          ) : scopedCommits.length === 0 ? (
+            <p className="text-sm text-faint">no commits in the snapshot for this project.</p>
+          ) : (
+            scopedCommits.map((c) => (
+              <div key={c.sha} className="glass-card group flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-lg border px-3 py-2 text-sm transition-colors hover:border-accent/40">
+                <span className="font-mono text-[10px] text-accent">{c.repo}</span>
+                <span className="font-mono text-[10px] text-faint">{c.date.slice(0, 10)}</span>
+                <span className="min-w-0 flex-1 truncate text-muted transition-colors group-hover:text-paper">{c.message}</span>
+                <span className="font-mono text-[10px] text-faint">{c.sha}</span>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
-      {/* ── Diary ────────────────────────────────────────────── */}
-      <section className="pt-16 sm:pt-20">
-        <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">04 · the diary</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Incidents, root causes, guards</h2>
-        </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr]">
-          <div className="space-y-4">
-            <Card className="glass-card p-5 transition-all duration-300 hover:border-accent/30">
-              <CardHeader>
-                <span className="text-sm font-semibold">Status</span>
-              </CardHeader>
-              <Donut segments={status} centerLabel="entries" />
-            </Card>
-            <Card className="glass-card p-5 transition-all duration-300 hover:border-accent/30">
-              <CardHeader>
-                <span className="text-sm font-semibold">Patterns</span>
-              </CardHeader>
-              <BarList data={patternCounts(scoped.diary)} />
-            </Card>
+      {/* ── Experiments ──────────────────────────────────────── */}
+      {scoped.experiments.length > 0 ? (
+        <section className="pt-16 sm:pt-20">
+          <div className="reveal">
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">03 · experiments</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Hypotheses, commands, verdicts</h2>
           </div>
 
-          <div className="space-y-3">
-            {[...scoped.diary].reverse().map((d) => (
-              <Card key={d.date + d.title} className="glass-card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-mono text-[11px] text-faint">
-                      {d.date}
-                      {d.project ? <span className="ml-2 text-accent">#{projectName(d.project)}</span> : null}
-                    </p>
-                    <h3 className="mt-0.5 font-semibold text-paper">{d.title}</h3>
+          <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr]">
+            <Card className="glass-card self-start p-5 transition-all duration-300 hover:border-accent/30">
+              <CardHeader>
+                <span className="text-sm font-semibold">Verdict distribution</span>
+              </CardHeader>
+              <Donut segments={verdictSegments(scoped.experiments)} centerLabel="experiments" />
+            </Card>
+
+            <div className="space-y-4">
+              {scoped.experiments.map((e) => (
+                <Card key={e.id} className="glass-card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-mono text-[11px] text-faint">
+                        {e.date} · {e.id}
+                        {e.project ? <span className="ml-2 text-accent">#{projectName(e.project)}</span> : null}
+                      </p>
+                      <h3 className="mt-0.5 font-semibold text-paper">{e.title}</h3>
+                    </div>
+                    <Badge tone={VERDICT_TONES[e.verdict]}>{VERDICT_LABELS[e.verdict]}</Badge>
                   </div>
-                  <div className="flex gap-1.5">
-                    <Badge tone={d.status === 'fixed' ? 'success' : 'warn'}>{d.status}</Badge>
-                    <Badge>{d.pattern}</Badge>
-                  </div>
-                </div>
-                <details className="group mt-2">
-                  <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">root cause · fix · guard</summary>
-                  <div className="mt-3 space-y-2 text-sm">
-                    <p className="leading-relaxed text-muted"><span className="text-faint">root cause: </span>{d.rootCause}</p>
-                    <p className="leading-relaxed text-muted"><span className="text-faint">fix: </span>{d.fix}</p>
-                    <p className="leading-relaxed text-muted"><span className="text-faint">guard: </span>{d.guard}</p>
-                  </div>
-                </details>
+                  <details className="group mt-3">
+                    <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">
+                      hypothesis · command · raw result
+                    </summary>
+                    <div className="mt-3 space-y-3 text-sm">
+                      <div>
+                        <p className="font-mono text-[11px] text-faint">hypothesis</p>
+                        <p className="mt-0.5 leading-relaxed text-muted">{e.hypothesis}</p>
+                      </div>
+                      <div>
+                        <p className="font-mono text-[11px] text-faint">command</p>
+                        <pre className="mt-0.5 overflow-x-auto rounded-lg border border-line bg-surface-2/60 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre-wrap text-paper">{e.command}</pre>
+                      </div>
+                      <div>
+                        <p className="font-mono text-[11px] text-faint">raw result</p>
+                        <p className="mt-0.5 leading-relaxed text-muted">{e.result}</p>
+                      </div>
+                      <div className="border-t border-line pt-2">
+                        <span className="font-mono text-[11px] text-accent">finding: </span>
+                        <span className="text-muted">{e.finding}</span>
+                      </div>
+                    </div>
+                  </details>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── Negative results ─────────────────────────────────── */}
+      {project === ALL ? (
+        <section className="pt-16 sm:pt-20">
+          <div className="reveal">
+            <p className="font-mono text-xs tracking-widest text-amber-600 uppercase dark:text-amber-400">04 · do not repeat</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Negative results</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted">
+              Approaches that were tried and failed — recorded so a future agent or the owner never re-runs them.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {negativeResults.map((n) => (
+              <Card key={n.attempt} className="glass-card border-red-500/25 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-red-500/50">
+                <p className="font-mono text-[11px] text-faint">{n.date} · {n.ref}</p>
+                <h3 className="mt-1 text-sm font-semibold text-paper">{n.attempt}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  <span className="text-red-500/90 dark:text-red-400/90">why it failed: </span>
+                  {n.whyFailed}
+                </p>
               </Card>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
+
+      {/* ── Diary ────────────────────────────────────────────── */}
+      {scoped.diary.length > 0 ? (
+        <section className="pt-16 sm:pt-20">
+          <div className="reveal">
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">05 · the diary</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Incidents, root causes, guards</h2>
+          </div>
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr]">
+            <div className="space-y-4">
+              <Card className="glass-card p-5 transition-all duration-300 hover:border-accent/30">
+                <CardHeader>
+                  <span className="text-sm font-semibold">Status</span>
+                </CardHeader>
+                <Donut segments={status} centerLabel="entries" />
+              </Card>
+              <Card className="glass-card p-5 transition-all duration-300 hover:border-accent/30">
+                <CardHeader>
+                  <span className="text-sm font-semibold">Patterns</span>
+                </CardHeader>
+                <BarList data={patternCounts(scoped.diary)} />
+              </Card>
+            </div>
+
+            <div className="space-y-3">
+              {[...scoped.diary].reverse().map((d) => (
+                <Card key={d.date + d.title} className="glass-card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-mono text-[11px] text-faint">
+                        {d.date}
+                        {d.project ? <span className="ml-2 text-accent">#{projectName(d.project)}</span> : null}
+                      </p>
+                      <h3 className="mt-0.5 font-semibold text-paper">{d.title}</h3>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <Badge tone={d.status === 'fixed' ? 'success' : 'warn'}>{d.status}</Badge>
+                      <Badge>{d.pattern}</Badge>
+                    </div>
+                  </div>
+                  <details className="group mt-2">
+                    <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">root cause · fix · guard</summary>
+                    <div className="mt-3 space-y-2 text-sm">
+                      <p className="leading-relaxed text-muted"><span className="text-faint">root cause: </span>{d.rootCause}</p>
+                      <p className="leading-relaxed text-muted"><span className="text-faint">fix: </span>{d.fix}</p>
+                      <p className="leading-relaxed text-muted"><span className="text-faint">guard: </span>{d.guard}</p>
+                    </div>
+                  </details>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* ── Known issues ─────────────────────────────────────── */}
-      <section className="pt-16 sm:pt-20">
-        <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">05 · known issues</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Open debt, with temperature</h2>
-        </div>
-        <div className="mt-8 space-y-3">
-          {scoped.issues.map((i) => (
-            <Card key={i.id} className="glass-card p-4 transition-all duration-300 hover:border-accent/40">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-mono text-[11px] text-accent">
-                    {i.id}
-                    {i.project ? <span className="ml-2 text-faint">#{projectName(i.project)}</span> : null}
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">{i.problem}</p>
+      {scoped.issues.length > 0 ? (
+        <section className="pt-16 sm:pt-20">
+          <div className="reveal">
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">06 · known issues</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Open debt, with temperature</h2>
+          </div>
+          <div className="mt-8 space-y-3">
+            {scoped.issues.map((i) => (
+              <Card key={i.id} className="glass-card p-4 transition-all duration-300 hover:border-accent/40">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-mono text-[11px] text-accent">
+                      {i.id}
+                      {i.project ? <span className="ml-2 text-faint">#{projectName(i.project)}</span> : null}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">{i.problem}</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <Badge tone={i.temperature === 'watching' ? 'warn' : 'default'}>{i.temperature}</Badge>
+                    <Badge tone={i.status.includes('Fixed') ? 'success' : i.status.includes('Fix in code') ? 'warn' : 'default'}>{i.status}</Badge>
+                  </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <Badge tone={i.temperature === 'watching' ? 'warn' : 'default'}>{i.temperature}</Badge>
-                  <Badge tone={i.status.includes('Fixed') ? 'success' : i.status.includes('Fix in code') ? 'warn' : 'default'}>{i.status}</Badge>
-                </div>
-              </div>
-              {i.deadline ? <p className="mt-2 font-mono text-xs text-faint">deadline: {i.deadline}</p> : null}
-            </Card>
-          ))}
-        </div>
-      </section>
+                {i.deadline ? <p className="mt-2 font-mono text-xs text-faint">deadline: {i.deadline}</p> : null}
+              </Card>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── Honest note for projects without lab logs ────────── */}
+      {projectHasNoLab ? (
+        <section className="pt-16 sm:pt-20">
+          <div className="reveal">
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">03 · lab logs</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">No lab pages for this project</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted">
+              The portfolio lab (<span className="font-mono">get_experiments</span> · <span className="font-mono">get_diary</span> ·{' '}
+              <span className="font-mono">get_known_issues</span>) documents the build of this portfolio itself. Other
+              projects keep their evidence in their own repositories — see their decision log (01) and commit history
+              (02) above, or query <span className="font-mono">get_commit_history</span> for the live snapshot.
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       {/* ── Tests ────────────────────────────────────────────── */}
       <section className="pt-16 sm:pt-20">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">06 · tests</p>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">07 · tests</p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">The suites behind the claims</h2>
         </div>
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -380,14 +489,14 @@ export function LabPage() {
       {/* ── Dependencies ─────────────────────────────────────── */}
       <section className="pt-16 sm:pt-20">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">07 · dependencies</p>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">08 · dependencies</p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Project × technology matrix</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted">
             The same single source of truth (<span className="font-mono">src/data/projects.json</span>) that feeds{' '}
             <span className="font-mono">get_projects</span> and <span className="font-mono">analyze_stack</span>.
           </p>
         </div>
-        <div className="mt-8 overflow-x-auto rounded-xl border border-line bg-surface/70 glass-card">
+        <div className="glass-card mt-8 overflow-x-auto rounded-xl border border-line bg-surface/70">
           <table className="w-full min-w-[560px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line">

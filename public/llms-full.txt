@@ -86,10 +86,11 @@
 
 ## Lab (evidence trail)
 
-The `#/lab` page renders the diaries, experiments, known issues and test suites from the same JSON files that feed the MCP tools (`get_experiments`, `get_diary`, `get_known_issues`), with a per-project filter and decision logs:
+The `#/lab` page renders the diaries, experiments, known issues, test suites and **commit logs** from the same JSON/snapshot files that feed the MCP tools (`get_experiments`, `get_diary`, `get_known_issues`, `get_commit_history`), with a per-project filter:
 
 - 7 experiments with hypothesis → command → verdict (5 confirmed, 1 partial, 1 refuted) + 3 negative results
 - 19 diary entries (incidents, root causes, fixes, guards)
-- 10 known issues (KI-001..KI-011) with status and temperature
+- 11 known issues (KI-001..KI-011) with status and temperature
 - 4 test suites / 47 tests
-- Per-project decision logs (considered → chosen → why → cost) for every project
+- Per-project decision logs (considered → chosen → why → cost) and commit logs (from the hourly metrics snapshot)
+- Projects without lab logs (mscodebase-intelligence, gemma_agent) show an honest note — their evidence is decision log + commit history

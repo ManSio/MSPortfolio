@@ -24,11 +24,11 @@
     {
       "file": "tests/lab.test.ts",
       "name": "Lab data integrity + SSR render",
-      "tests": 6,
-      "covers": "Experiment completeness/verdicts, negative results refs, diary completeness/statuses, KI ids/temperatures, test-suite sum = total, LabPage server-side render with all six sections",
+      "tests": 7,
+      "covers": "Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, test-suite sum = total, LabPage SSR (7 sections + filter), EN-only projections",
       "updatedAt": "2026-08-14"
     }
   ],
-  "total": 46,
+  "total": 47,
   "updatedAt": "2026-08-14"
 }

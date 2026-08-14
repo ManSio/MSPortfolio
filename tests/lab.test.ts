@@ -127,27 +127,28 @@ describe('lab data integrity', () => {
     }
   });
 
-  it('LabPage renders server-side with all seven sections + project filter', () => {
+  it('LabPage renders server-side with all sections + project filter', () => {
     const html = renderToStaticMarkup(createElement(LabPage));
-    // Hero + 7 numbered sections (decision logs, experiments, negative results, diary, known issues, tests, dependencies)
+    // Hero + numbered sections (decision logs, commit log, experiments, negative results, diary, known issues, tests, dependencies)
     for (const needle of [
       'The evidence trail',
       '01 · decision logs',
-      '02 · experiments',
-      '03 · do not repeat',
-      '04 · the diary',
-      '05 · known issues',
-      '06 · tests',
-      '07 · dependencies',
+      '02 · commit log',
+      '03 · experiments',
+      '04 · do not repeat',
+      '05 · the diary',
+      '06 · known issues',
+      '07 · tests',
+      '08 · dependencies',
       'All projects',
       'get_experiments',
       'get_diary',
       'get_known_issues',
+      'get_commit_history',
     ]) {
       expect(html).toContain(needle);
     }
     // Every experiment, diary entry and known issue is present in the DOM
-    // Every experiment and diary entry is present in the DOM (short slice avoids HTML-escaped apostrophes)
     const exps = (experimentsData as { experiments: Experiment[] }).experiments;
     for (const e of exps) expect(html).toContain(e.title.slice(0, 20));
     const entries = (diaryData as { entries: DiaryEntry[] }).entries;
