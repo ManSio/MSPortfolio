@@ -32,7 +32,7 @@ namespace_id = "3002"
 # the dashboard 2026-08-14; the dataset auto-creates on the first write.
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
-dataset = "msprof"
+dataset = "msp_portfolio"
 
 # Agent counter (see worker /mcp/stats): daily + total tool invocations.
 # Created 2026-08-14 via `wrangler kv namespace create MCP_STATS`.
