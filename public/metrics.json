@@ -1,12 +1,53 @@
 {
-  "fetchedAt": "2026-08-14T06:36:42.000Z",
+  "fetchedAt": "2026-08-14T08:25:48.896Z",
   "source": "fallback",
-  "user": { "login": "ManSio", "publicRepos": 5, "followers": 53, "following": 64 },
+  "user": {
+    "login": "ManSio",
+    "publicRepos": 6,
+    "followers": 53,
+    "following": 65
+  },
   "repos": [
-    { "name": "MSPortfolio", "stars": 0, "forks": 0, "openIssues": 0, "pushedAt": "2026-08-14T06:36:42Z", "language": null },
-    { "name": "mscodebase-intelligence", "stars": 2, "forks": 0, "openIssues": 0, "pushedAt": "2026-08-14T06:18:28Z", "language": "Python" },
-    { "name": "ManSio", "stars": 1, "forks": 0, "openIssues": 0, "pushedAt": "2026-08-08T12:53:38Z", "language": null },
-    { "name": "gemma_agent", "stars": 2, "forks": 0, "openIssues": 11, "pushedAt": "2026-08-05T08:34:20Z", "language": "Python" }
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T08:25:17Z",
+      "language": "TypeScript"
+    },
+    {
+      "name": "ManSio.github.io",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T07:43:46Z",
+      "language": "HTML"
+    },
+    {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T06:18:28Z",
+      "language": "Python"
+    },
+    {
+      "name": "ManSio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-08T12:53:38Z",
+      "language": null
+    },
+    {
+      "name": "gemma_agent",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 11,
+      "pushedAt": "2026-08-05T08:34:20Z",
+      "language": "Python"
+    }
   ],
   "npm": [],
   "devto": [
