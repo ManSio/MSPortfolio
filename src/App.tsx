@@ -21,6 +21,7 @@ const NAV = [
   ['simulator', 'Simulator'],
   ['agent', 'Agent'],
   ['timeline', 'Timeline'],
+  ['contact', 'Contact'],
 ] as const;
 
 function ThemeToggle({ dark, toggle }: { dark: boolean; toggle: () => void }) {
@@ -167,6 +168,28 @@ export default function App() {
         {/* ── Timeline ───────────────────────────────────────── */}
         <Section id="timeline" kicker="07 · the record" title="Engineering decision timeline">
           <Timeline />
+        </Section>
+
+        {/* ── Contact ────────────────────────────────────────── */}
+        <Section id="contact" kicker="08 · the ask" title="Let's talk">
+          <div className="reveal glass mx-auto max-w-2xl rounded-xl p-8 text-center">
+            <p className="leading-relaxed text-muted">
+              If you're building <span className="text-paper">AI infrastructure, agent tooling or MCP servers</span> —
+              I'd love to hear what you're working on.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <a href="https://www.linkedin.com/in/ManSio" target="_blank" rel="noreferrer">
+                <Button variant="accent">Let's talk on LinkedIn ↗</Button>
+              </a>
+              <a href="https://github.com/ManSio/MSPortfolio" target="_blank" rel="noreferrer">
+                <Button variant="outline">Fork this portfolio ↗</Button>
+              </a>
+            </div>
+            <p className="mt-6 font-mono text-xs text-faint">
+              or query the portfolio directly:{' '}
+              <span className="text-accent">claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp</span>
+            </p>
+          </div>
         </Section>
       </main>
 
