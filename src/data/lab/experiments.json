@@ -76,6 +76,39 @@
       "result": "limiter=present on all requests, but limit_result=true on ALL 15 (with limit=10) → 429 never fired. Earlier: 320-burst with limit=300 → 0×429. Deploy accepts the binding, the runtime does not enforce.",
       "verdict": "refuted",
       "finding": "Rate Limiting API is NOT enforced on the current plan (likely requires Workers Paid). Bindings stay — they start enforcing on upgrade; code is fail-open."
+    },
+    {
+      "id": "exp-8",
+      "date": "2026-07-08",
+      "project": "mscodebase-intelligence",
+      "title": "ONNX migration: replace the external LM Studio process with a local ONNX Runtime",
+      "hypothesis": "A local ONNX Runtime can replace LM Studio (external process) for embeddings and reranking — full autonomy, no manual setup, no HTTP dependency on port 1234.",
+      "command": "intel_get_runtime_status while port 1234 closed → observed provider: lm_studio (hardcoded); replaced the hardcoded provider string in intelligence_layer.py with a real port probe; migrated embedding + reranker calls to ONNX Runtime.",
+      "result": "7 critical bugs fixed during the migration; all 50 tools run in ONNX mode (v2.7.0). The status API had a HARDCODED 'lm_studio' provider — after the port probe it reports the truth.",
+      "verdict": "confirmed",
+      "finding": "A hardcoded provider status lies about the real runtime. The fix (port probe) was the root cause of the false 'lm_studio' state — see docs/en/investigations/ONNX_SESSION_REPORT.md."
+    },
+    {
+      "id": "exp-9",
+      "date": "2026-07-05",
+      "project": "mscodebase-intelligence",
+      "title": "LSP investigation: a custom Python LSP cannot register in Zed 1.9.0 (Windows)",
+      "hypothesis": "A pygls-based custom LSP can be registered in Zed and provide inlay hints / autocomplete / code actions in the editor.",
+      "command": "python lsp_main.py standalone (starts fine, accepts stdio) → register 'mscodebase-lsp' in settings.json → observe the MCP log while opening .py files.",
+      "result": "Zed never started the custom LSP. settings.json can only override parameters of ALREADY KNOWN LSPs — it cannot register new language server names. Re-verified on Zed 1.14.2 (2026-08-06): only a Rust/WASM zed_extension_api wrapper can register a language server. LSP→MCP bridge deprecated; the writer (lsp_main.py) was removed 2026-07-20.",
+      "verdict": "refuted",
+      "finding": "Editor LSP registration requires a Rust+WASM extension, not a Python/pygls server. Replacement: LspClient spawning basedpyright as a subprocess → 3 MCP tools (lsp_find_references / lsp_find_definition / lsp_document_symbols). See docs/en/investigations/LSP_WONTFIX.md."
+    },
+    {
+      "id": "exp-10",
+      "date": "2026-06-05",
+      "project": "gemma_agent",
+      "title": "Production evidence: measured metrics for a Telegram + OpenRouter bot (3-8 users)",
+      "hypothesis": "Real production data (tokens, latency, cost) can be measured and published honestly — method: pain → metric → fix → new snapshot — so reviewers do not have to trust README badges alone.",
+      "command": "jsonl telemetry (turns.jsonl, llm_usage.jsonl) + weekly aggregation scripts; public repo export on 2026-06-06; period 2026-05-02 → 2026-06-05.",
+      "result": "2779+ pytest cases, CI on every PR; report documents measured tokens/latency/cost with explicit caveats (PRODUCTION_EVIDENCE_REPORT.md). Public GitHub export date (2026-06-06) ≠ production start (2026-05-02).",
+      "verdict": "confirmed",
+      "finding": "Public GitHub date ≠ project age. Reviewers must not equate 'repo created on GitHub' with 'project born yesterday' — production ran for a month before the export."
     }
   ],
   "negativeResults": [

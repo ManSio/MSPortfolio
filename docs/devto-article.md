@@ -189,7 +189,7 @@ The smoke job is the important one: the endpoint is a product, not a demo, and C
 - `tools/list` responds in **~100ms** (health: ~97ms).
 - `simulate_architecture` at 20× load, search architecture: **p95 239ms** (load spike), **401ms** (node loss), **301ms** (cold cache). Under node loss the circuit breaker trips at ×10; the design absorbs the spike otherwise.
 - The endpoint now serves **12 tools**, all read-only-annotated, and a live counter tracks how many MCP queries it serves per day.
-- A lab page (`#/lab`) renders the diaries, experiments and test suites from the same JSON files the tools read — `get_experiments` (7 experiments, 5 confirmed / 1 partial / 1 refuted), `get_diary` (19 entries), `get_known_issues` (KI-001..010). The evidence behind every claim is a URL you can open, not a bullet point.
+- A lab page (`#/lab`) renders the diaries, experiments and test suites from the same JSON files the tools read — `get_experiments` (10 experiments, 7 confirmed / 1 partial / 2 refuted, across projects), `get_diary` (23 entries), `get_known_issues` (KI-001..015). The evidence behind every claim is a URL you can open, not a bullet point.
 - `get_articles` fetches live Dev.to data (`source: live`); the CI smoke exercises a real `tools/call`, not just `tools/list`.
 - An antipattern museum (`get_antipatterns`) turns the build's own mistakes — a forked repo claimed as mine, a JSON-Schema 500, a silently-broken live source, a cancelled fire-and-forget — into honest lessons.
 

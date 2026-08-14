@@ -181,6 +181,46 @@
       "pattern": "NEW"
     },
     {
+      "date": "2026-07-08",
+      "project": "mscodebase-intelligence",
+      "title": "ONNX migration: 7 critical bugs fixed while moving off LM Studio",
+      "status": "fixed",
+      "rootCause": "LM Studio is an external process requiring manual startup/setup; the status API hardcoded 'lm_studio' as the provider, so it lied when port 1234 was closed.",
+      "fix": "Replaced the hardcoded provider string with a real port probe; migrated embeddings + reranking to a local ONNX Runtime. All 50 tools work in ONNX mode (v2.7.0).",
+      "guard": "intel_get_runtime_status now reflects the real runtime; docs/en/investigations/ONNX_SESSION_REPORT.md.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-07-05",
+      "project": "mscodebase-intelligence",
+      "title": "LSP investigation: custom Python LSP cannot register in Zed (WONTFIX)",
+      "status": "fixed",
+      "rootCause": "Zed settings.json can only override KNOWN LSPs — it cannot register a new language server name; a pygls-based server is never started (verified on Zed 1.9.0 and 1.14.2).",
+      "fix": "WONTFIX the editor LSP. Deprecated the LSP→MCP bridge (writer lsp_main.py removed 2026-07-20); replaced with LspClient spawning basedpyright as a subprocess → 3 MCP tools (lsp_find_references / lsp_find_definition / lsp_document_symbols).",
+      "guard": "docs/en/investigations/LSP_WONTFIX.md; re-verified on Zed 1.14.2 (2026-08-06).",
+      "pattern": "P-002-variant"
+    },
+    {
+      "date": "2026-06-06",
+      "project": "gemma_agent",
+      "title": "Public GitHub export date ≠ production start date",
+      "status": "fixed",
+      "rootCause": "The repo was exported publicly on 2026-06-06, but production ran since 2026-05-02 — an external reviewer could mistake the export date for the project's age.",
+      "fix": "docs/HONEST_POSITIONING.md documents the timeline explicitly: public export ≠ project born yesterday; production metrics cover 2026-05-02 → 2026-06-05.",
+      "guard": "PRODUCTION_EVIDENCE_REPORT.md ties measured numbers to git-verifiable artifacts.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-06-05",
+      "project": "gemma_agent",
+      "title": "Memory retrieval is a substring stub (self-assessed 4/10)",
+      "status": "partial",
+      "rootCause": "Default memory retrieval is substring-based — simple but weak for semantic recall; the maintainer self-assessed it 4/10 and recommends Mem0 for production-grade retrieval.",
+      "fix": "Documented honestly in HONEST_POSITIONING.md (self-assessed scores table); option to plug a Mem0 server for real retrieval.",
+      "guard": "Honest positioning doc keeps the gap visible for humans and tools.",
+      "pattern": "NEW"
+    },
+    {
       "date": "2026-08-14 15:30",
       "project": "msp-portfolio",
       "title": "SDK v2 supports annotations.readOnlyHint (verified via tsc)",

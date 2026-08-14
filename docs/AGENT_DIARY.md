@@ -2,6 +2,16 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-14 23:00] — Lab #/lab v4: реальные данные по всем проектам (mscodebase/gemma из их репозиториев)
+**Status:** ✅ Fixed
+**Root Cause:** — (запрос владельца: «да» на добавление реальных записей по mscodebase/gemma; раньше lab-секции были только про MSPortfolio)
+**Fix:** Собраны REAL-данные из публичных репозиториев через GitHub API (Verified):
+- **mscodebase-intelligence**: exp-8 (ONNX-миграция с LM Studio, 7 критических багов, хардкод lm_studio → порт-проверка), exp-9 (LSP investigation — WONTFIX в Zed, решение basedpyright subprocess → 3 тула), diary ×2 (ONNX-фикс, LSP-bridge deprecation), KI-012 (LSP WONTFIX), KI-013 (LanceDB pin).
+- **gemma_agent**: exp-10 (production evidence 2026-05, метрики токенов/латентности/стоимости, публичный экспорт ≠ возраст проекта), diary ×2 (export date ≠ prod date, memory stub 4/10), KI-014 (memory substring stub), KI-015 (название историческое, не Google Gemma).
+- Итог: эксперименты 7→10 (7 confirmed / 1 partial / 2 refuted), дневник 19→23, KI 11→15.
+**Guard:** данные собраны с публичных эндпоинтов (не выдуманы); docs/en/investigations/*.md и HONEST_POSITIONING.md — первоисточники.
+**Pattern:** NEW
+
 ## [2026-08-14 22:30] — Lab #/lab v3: commit-log per project + честные пустые состояния (фикс «0 для mscodebase»)
 **Status:** ✅ Fixed
 **Root Cause:** владелец выбрал проект mscodebase-intelligence — секции экспериментов/дневника/KI показывали «0» (лаборатория документирует только сборку MSPortfolio), пустые карточки выглядели как сломанный UI; hero показывал «Tests 46», а реально lab.test.ts = 7 → сумма 47.

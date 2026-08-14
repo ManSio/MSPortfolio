@@ -109,6 +109,46 @@
       "deadline": null,
       "owner": "owner",
       "link": "src/data/lab/"
+    },
+    {
+      "id": "KI-012",
+      "project": "mscodebase-intelligence",
+      "problem": "Custom Python LSP cannot register in Zed (settings.json only overrides KNOWN LSPs). WONTFIX on Zed — full editor LSP support requires a Rust+WASM zed_extension_api wrapper. Mitigation: LspClient (basedpyright subprocess) → 3 MCP tools.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "docs/en/investigations/LSP_WONTFIX.md"
+    },
+    {
+      "id": "KI-013",
+      "project": "mscodebase-intelligence",
+      "problem": "LanceDB API surface changes between minor versions — the pin must be verified against the exact installed version before every bump.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "decision log (LanceDB over SQLite FTS)"
+    },
+    {
+      "id": "KI-014",
+      "project": "gemma_agent",
+      "problem": "Default memory retrieval is a substring stub (self-assessed 4/10) — weak for semantic recall; Mem0 server recommended for production-grade retrieval.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "docs/HONEST_POSITIONING.md"
+    },
+    {
+      "id": "KI-015",
+      "project": "gemma_agent",
+      "problem": "Repository name 'gemma_agent' is historical — refers to the project, not Google DeepMind Gemma. Must be explained to avoid confusion.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "docs/HONEST_POSITIONING.md"
     }
   ]
 }
