@@ -41,13 +41,15 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
-      - name: Build
-        run: pnpm build
-
       - name: Refresh metrics snapshot
+        # Runs BEFORE build so the deployed dist/ ships the fresh snapshot
+        # (commits, dev.to, GitHub metrics) instead of the previous one.
         run: node scripts/update-metrics.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: pnpm build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
