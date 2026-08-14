@@ -3,7 +3,6 @@ import { composeAnswer, matchIntent, QUICK_QUESTIONS, type Intent } from '../../
 import { callLocalTool, callMcpTool, probeMcpEndpoint, type McpMode } from '../../lib/mcp-client';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
 import { LiveDot } from '../metrics/MetricCard';
 
 type Frame =
@@ -80,8 +79,8 @@ export function AgentChat() {
   }
 
   return (
-    <Card className="flex h-[560px] flex-col p-0">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
+    <div className="flex h-[560px] flex-col overflow-hidden rounded-xl border border-line bg-surface/70 backdrop-blur-sm">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
         <div className="flex items-center gap-2">
           <LiveDot />
           <span className="font-mono text-sm font-semibold">agent-loop</span>
@@ -92,7 +91,7 @@ export function AgentChat() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="trace-scroll flex-1 space-y-3 overflow-y-auto px-4 py-4 font-mono text-[13px] leading-relaxed">
+      <div ref={scrollRef} className="trace-scroll min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4 font-mono text-[13px] leading-relaxed">
         {frames.map((f, i) => {
           if (f.kind === 'user') {
             return (
@@ -141,7 +140,7 @@ export function AgentChat() {
         ) : null}
       </div>
 
-      <div className="border-t border-line p-3">
+      <div className="shrink-0 border-t border-line p-3">
         <div className="mb-3 flex flex-wrap gap-2">
           {QUICK_QUESTIONS.map((q) => (
             <button
@@ -173,6 +172,6 @@ export function AgentChat() {
           </Button>
         </form>
       </div>
-    </Card>
+    </div>
   );
 }
