@@ -185,3 +185,76 @@ export interface Antipattern {
   lesson: string;
   tag: string;
 }
+
+// ── Lab page: diaries, experiments, known issues, test suites ──
+
+export type ExperimentVerdict = 'confirmed' | 'refuted' | 'partial';
+
+export interface Experiment {
+  id: string;
+  date: string;
+  title: string;
+  hypothesis: string;
+  command: string;
+  result: string;
+  verdict: ExperimentVerdict;
+  finding: string;
+}
+
+export interface NegativeResult {
+  attempt: string;
+  whyFailed: string;
+  date: string;
+  ref: string;
+}
+
+export interface ExperimentsData {
+  experiments: Experiment[];
+  negativeResults: NegativeResult[];
+}
+
+export type DiaryStatus = 'fixed' | 'partial';
+
+export interface DiaryEntry {
+  date: string;
+  title: string;
+  status: DiaryStatus;
+  rootCause: string;
+  fix: string;
+  guard: string;
+  pattern: string;
+}
+
+export interface DiaryData {
+  entries: DiaryEntry[];
+}
+
+export type IssueTemperature = 'stable' | 'watching';
+
+export interface KnownIssue {
+  id: string;
+  problem: string;
+  status: string;
+  temperature: IssueTemperature;
+  deadline: string | null;
+  owner: string;
+  link: string;
+}
+
+export interface KnownIssuesData {
+  issues: KnownIssue[];
+}
+
+export interface TestSuite {
+  file: string;
+  name: string;
+  tests: number;
+  covers: string;
+  updatedAt: string;
+}
+
+export interface TestSuitesData {
+  suites: TestSuite[];
+  total: number;
+  updatedAt: string;
+}

@@ -1,0 +1,94 @@
+{
+  "issues": [
+    {
+      "id": "KI-001",
+      "problem": "MCP-сервер нельзя хостить на GitHub Pages (статический хостинг) — требуется процесс-хост (Docker/Workers/локально).",
+      "status": "Открыто (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "server/README.md"
+    },
+    {
+      "id": "KI-002",
+      "problem": "CORS: браузерное демо против удалённого /mcp требует явного ALLOWED_ORIGINS (secure-default: 403).",
+      "status": "Открыто (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "server/README.md"
+    },
+    {
+      "id": "KI-003",
+      "problem": "Локально браузерное демо ходит на /mcp через vite-proxy; на проде (без запущенного сервера) автоматически переключается на local engine.",
+      "status": "Открыто (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/lib/mcp-client.ts"
+    },
+    {
+      "id": "KI-004",
+      "problem": "Vite-скрипт pnpm lint (oxlint) — 0 warnings; аннотация CI про Node 20 deprecation у actions/checkout@v4 — косметика.",
+      "status": "Открыто",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": ".github/workflows/deploy.yml"
+    },
+    {
+      "id": "KI-005",
+      "problem": "OG-превью кэшируется соцсетями (X/LinkedIn/Telegram): после деплоя первый share может показывать старое превью — сброс через validator'ы.",
+      "status": "Открыто (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "index.html (og:image)"
+    },
+    {
+      "id": "KI-006",
+      "problem": "get_articles падал: dev.to → 403 с воркера (с обычного IP 200). Фикс в коде: UA-заголовок + fallback на committed снапшот metrics.json. Проверено экспериментом (source: live, 5 статей). Live-подтверждение — после деплоя.",
+      "status": "Фикс в коде, ждёт деплоя",
+      "temperature": "watching",
+      "deadline": "после пуша",
+      "owner": "owner",
+      "link": "mcp-tools.ts"
+    },
+    {
+      "id": "KI-007",
+      "problem": "Публичный /mcp без rate limiting. Реализовано в коде ([[ratelimits]] 300/60 + CHAT 30/60), но ЭМПИРИЧЕСКИ НЕ ПРИМЕНЯЕТСЯ на текущем тарифе: limit() возвращает success всегда. Вероятно, требует Workers Paid.",
+      "status": "Код готов, enforcement не активен",
+      "temperature": "watching",
+      "deadline": "решение владельца (апгрейд/принять риск)",
+      "owner": "owner",
+      "link": "wrangler.toml"
+    },
+    {
+      "id": "KI-008",
+      "problem": "simulate_architecture: llm_saturation не влиял на не-LLM модели, но выдавал «LLM generation dominates». Исправлено: честный finding «no LLM stage» + тест.",
+      "status": "Исправлено + тест",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "mcp-tools.ts"
+    },
+    {
+      "id": "KI-009",
+      "problem": "Драфт статьи: пример «I know Kubernetes» противоречит живому analyze_stack (matched:false, evidence в стеке проектов нет).",
+      "status": "Открыто (решение владельца)",
+      "temperature": "watching",
+      "deadline": "до публикации статьи",
+      "owner": "owner",
+      "link": "драфт статьи (§1)"
+    },
+    {
+      "id": "KI-010",
+      "problem": "Agent counter (KV calls:*) — eventually consistent и приблизительный (get+put не атомарен). Приемлемо для демо-метрики «запросов сегодня».",
+      "status": "Открыто (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "worker/index.ts (/mcp/stats)"
+    }
+  ]
+}

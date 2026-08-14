@@ -9,7 +9,10 @@ import projectsData from '../data/projects.json' with { type: 'json' };
 import principlesData from '../data/principles.json' with { type: 'json' };
 import timelineData from '../data/timeline.json' with { type: 'json' };
 import antipatternsData from '../data/antipatterns.json' with { type: 'json' };
-import type { Antipattern, MCPTool, MetricsSnapshot, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis } from './types.js';
+import experimentsData from '../data/lab/experiments.json' with { type: 'json' };
+import diaryData from '../data/lab/diary.json' with { type: 'json' };
+import knownIssuesData from '../data/lab/known-issues.json' with { type: 'json' };
+import type { Antipattern, DiaryEntry, ExperimentsData, KnownIssue, MCPTool, MetricsSnapshot, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis } from './types.js';
 
 const projects = (projectsData as ProjectsData).projects;
 const principles = (principlesData as { principles: Principle[] }).principles;
@@ -421,6 +424,35 @@ export const TOOLS: MCPTool[] = [
         events,
         recommendation,
       } satisfies SimulationResult;
+    },
+  },
+  {
+    name: 'get_experiments',
+    description: "Get the owner's engineering experiments — hypothesis, command, raw result and verdict (confirmed/refuted/partial) for each. Use it to answer 'what did you measure' or 'show me an experiment you ran'. Includes negative results (approaches that failed). Read-only, closed world.",
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute() {
+      return experimentsData as ExperimentsData;
+    },
+  },
+  {
+    name: 'get_diary',
+    description: "Get the owner's engineering diary — incidents, root causes, fixes and guards, each tagged with a pattern (NEW vs recurring). Use it to answer 'what broke and how did you fix it' or 'show your hardest debugging session'. Read-only, closed world.",
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute() {
+      const list = (diaryData as { entries: DiaryEntry[] }).entries;
+      return { count: list.length, entries: list };
+    },
+  },
+  {
+    name: 'get_known_issues',
+    description: "Get the owner's known-issues board — open debt with status, temperature (stable/watching) and deadlines. Use it to answer 'what's still broken' or 'what are you working on'. Read-only, closed world.",
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute() {
+      const list = (knownIssuesData as { issues: KnownIssue[] }).issues;
+      return { count: list.length, issues: list };
     },
   },
 ];

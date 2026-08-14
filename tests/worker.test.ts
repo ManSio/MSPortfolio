@@ -33,12 +33,12 @@ function postMcp(env: Env, body: unknown, headers: Record<string, string> = {}) 
 }
 
 describe('worker /mcp integration', () => {
-  it('tools/list exposes 7 tools with readOnlyHint annotations', async () => {
+  it('tools/list exposes 12 tools with readOnlyHint annotations', async () => {
     const res = await postMcp(makeEnv(), { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(res.status).toBe(200);
     const payload = ssePayload(await res.text());
     const tools = payload.result.tools as Array<{ name: string; annotations?: { readOnlyHint?: boolean; openWorldHint?: boolean } }>;
-    expect(tools).toHaveLength(9);
+    expect(tools).toHaveLength(12);
     for (const t of tools) {
       expect(t.annotations?.readOnlyHint, `readOnlyHint missing on ${t.name}`).toBe(true);
     }

@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-14 21:00] — Lab page #/lab: лаборатория из дневников, экспериментов и тестов + 3 MCP-тула
+**Status:** ✅ Fixed
+**Root Cause:** — (feature по запросу владельца: «сделаем отдельную страничку со всеми данными и экспериментами, с графиками и зависимостями»)
+**Fix:** (1) `src/data/lab/*.json` — машиночитаемые проекции EXPERIMENTS_LOG (7 экспериментов + 3 отрицательных), AGENT_DIARY (19 записей), KNOWN_ISSUES (10 KI), тест-сьютов (3/36). (2) Страница `#/lab` (`src/components/lab/LabPage.tsx` + dependency-free SVG `charts.tsx`: Donut/BarList/StackedBar — без библиотек, бандл +16KB gzip). (3) Хэш-роутинг в App.tsx (`#/lab` vs якоря секций; nav «Lab»). (4) MCP-тулы `get_experiments`/`get_diary`/`get_known_issues` (12 тулов всего) — агенты теперь могут отвечать «какие эксперименты ты проводил», «что сломалось и как чинил», «что ещё открыто» фактами. (5) Интенты RU/EN + QUICK_QUESTION + composeAnswer. (6) Тесты 45/45 (lab.test.ts 5 новых + mcp-tools +4), typecheck, build OK (95.62 KB gzip).
+**Guard:** `tests/lab.test.ts` валидирует целостность lab-данных (вердикты, id, суммы тестов) — JSON-проекции не расходятся молча с кодом. KI-011 (синхронизация markdown↔JSON).
+**Pattern:** NEW
+
 ## [2026-08-14 09:30] — Создание MSPortfolio (MCP-Native Portfolio)
 **Status:** ✅ Fixed
 **Root Cause:** — (новая инициатива, не инцидент)

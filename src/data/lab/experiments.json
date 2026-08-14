@@ -1,0 +1,94 @@
+{
+  "experiments": [
+    {
+      "id": "exp-1",
+      "date": "2026-08-14",
+      "title": "MCP-сервер на @modelcontextprotocol/server@2 + Fastify поднимается без build-step",
+      "hypothesis": "Node 24 нативно запускает TS (type-stripping); официальный @modelcontextprotocol/fastify + toNodeHandler(createMcpHandler(factory)) отвечает на tools/list, tools/call, initialize по Streamable HTTP; JSON Schema в registerTool принимать НЕ будет — нужен z.fromJSONSchema.",
+      "command": "node server/index.ts → curl -X POST /mcp (tools/list / tools/call / initialize) → проба z.fromJSONSchema (.zod-probe.mjs).",
+      "result": "tools/list: 6 тулов; tools/call get_projects(filter=mcp): 2 проекта; initialize: protocolVersion 2025-11-25; raw JSON Schema → HTTP 500 на КАЖДОМ запросе; z.fromJSONSchema → PARSE_OK true INVALID_CAUGHT true → фикс.",
+      "verdict": "confirmed",
+      "finding": "registerTool не принимает сырую JSON Schema; конвертация z.fromJSONSchema обязательна."
+    },
+    {
+      "id": "exp-2",
+      "date": "2026-08-14",
+      "title": "Сервер переживает adversarial-запросы и 8 параллельных вызовов без смешивания результатов",
+      "hypothesis": "Валидация JSON-RPC (400 на мусор), DNS-rebinding защита (403 на чужой Origin), параллельные вызовы возвращают СВОЙ результат по фильтру.",
+      "command": "7 атак (malformed JSON, unknown method, bad protocol version, unknown tool, missing args, CORS preflight, evil origin) + 8 параллельных tools/call с проверкой содержимого.",
+      "result": "400 / -32601 / 400 / -32602 / validation error / 403 / 403; concurrency PASS=8/8 (mscodebase для filter=mcp, infrawise для filter=aws, без перекрёста). Сервер жив после всех атак (health OK).",
+      "verdict": "confirmed",
+      "finding": "CORS-preflight легитимного origin → 403 при пустом ALLOWED_ORIGINS — сознательный secure-default (fail-closed)."
+    },
+    {
+      "id": "exp-3",
+      "date": "2026-08-14 15:00",
+      "title": "Живой MCP-эндпоинт отвечает на tools/list/tools/call и отдаёт числа, совпадающие с симуляцией в коде",
+      "hypothesis": "health/tools/list = 200; simulate_architecture на живом эндпоинте = результат runSimulation в mcp-tools.ts; get_articles возвращает статьи dev.to.",
+      "command": "curl к https://msp-portfolio.mansio-dev.workers.dev (health, tools/list, tools/call × 4 сценария simulate_architecture, get_articles, analyze_stack) + python-бург 20× /mcp/health.",
+      "result": "health 97ms; simulate_architecture p95@20x: load_spike 238.5 / node_loss 400.9 / cache_cold 301.4 / llm_saturation 238.5 (=load_spike — no-op на не-LLM); get_articles 403 от dev.to (БАГ); analyze_stack coverage 0.75; бург curl-UA 200×20 (rate limit отсутствует); бург Python-urllib 403×20 (bot-protection).",
+      "verdict": "partial",
+      "finding": "Числа симулятора совпали с кодом; get_articles опровергнут (403). Дефекты: KI-006 (get_articles), KI-007 (rate limit), KI-008 (llm_saturation no-op)."
+    },
+    {
+      "id": "exp-4",
+      "date": "2026-08-14 15:30",
+      "title": "SDK v2 registerTool принимает annotations.readOnlyHint",
+      "hypothesis": "tsc без ошибок при { annotations: { readOnlyHint: true } } в опциях registerTool.",
+      "command": "Временная правка worker/index.ts → npx tsc -p worker/tsconfig.json → revert.",
+      "result": "Command executed successfully (0 ошибок), правка откачена.",
+      "verdict": "confirmed",
+      "finding": "Спецификация MCP 2026-07-28 (tools.md) вводит поле annotations; SDK v2 типизирует readOnlyHint — можно документировать read-only тулы нативно."
+    },
+    {
+      "id": "exp-5",
+      "date": "2026-08-14 16:00",
+      "title": "get_articles чинится UA-заголовком; возвращаются реальные статьи",
+      "hypothesis": "get_articles.execute() с headers User-Agent возвращает live-статьи (source: live), а не 403.",
+      "command": "node .tmp/probe_articles.ts (реальный fetch на dev.to с фиксом UA).",
+      "result": "source: live, count: 5 — реальные заголовки. public/metrics.json содержит 5 статей (CI-снапшот с UA-заголовком с GH Actions IP работает) → дифференциатор — UA, не IP-блок.",
+      "verdict": "confirmed",
+      "finding": "KI-006 закрыт в коде; live-подтверждение с CF-egress после деплоя."
+    },
+    {
+      "id": "exp-6",
+      "date": "2026-08-14 16:10",
+      "title": "Интеграционные тесты воркера покрывают rate limit, CORS, adversarial и конкуренцию",
+      "hypothesis": "tests/worker.test.ts (12 тестов): 429 на лимит (MCP и CHAT), health без лимита, security-заголовки, CORS allow/deny, malformed JSON → 400, unknown tool/method → error, 8 параллельных tools/call с проверкой корректности фильтра; SDK v2 сериализует annotations в tools/list.",
+      "command": "pnpm test (3 файла) + pnpm typecheck + pnpm build.",
+      "result": "29/29 passed; typecheck чистый; build OK (252.60 KB JS, gzip 79.19 KB).",
+      "verdict": "confirmed",
+      "finding": "Rate limit даёт 429, CORS fail-closed, adversarial отклоняются (400/-32602), конкуренция 8/8 без перекрёста, readOnlyHint/openWorldHint видны в tools/list."
+    },
+    {
+      "id": "exp-7",
+      "date": "2026-08-14 17:00",
+      "title": "CF Rate Limiting API binding применяется на аккаунте",
+      "hypothesis": "после деплоя [[ratelimits]] (limit=10/60) бург POST /mcp даст 429 после ~10 запросов.",
+      "command": "временный limit=10 + диагностика x-dbg-limiter/x-dbg-limit-result в заголовках (версия d1f29214) → бург 15 запросов → откат к limit=300 и чистой версии (03a42581).",
+      "result": "на всех запросах limiter=present, но limit_result=true на ВСЕХ 15 (при лимите 10) → 429 ни разу. Ранее: бург 320 с limit=300 → 0×429. Деплой принимает биндинг, рантайм не ограничивает.",
+      "verdict": "refuted",
+      "finding": "На текущем тарифе Rate Limiting API НЕ применяется (вероятно, требует Workers Paid). Биндинги оставлены — начнут enforce при апгрейде; код fail-open."
+    }
+  ],
+  "negativeResults": [
+    {
+      "attempt": "Передача сырой JSON Schema в registerTool (server v2)",
+      "whyFailed": "Фабрика createMcpHandler падает на каждом запросе → HTTP 500",
+      "date": "2026-08-14",
+      "ref": "exp-1"
+    },
+    {
+      "attempt": "CF Rate Limiting API binding ([[ratelimits]]) на бесплатном тарифе",
+      "whyFailed": "Деплой принимает биндинг, но limit() возвращает success: true всегда → enforcement отсутствует (limit=10, бург 15/30/320)",
+      "date": "2026-08-14",
+      "ref": "exp-7"
+    },
+    {
+      "attempt": "Запуск сервера как фоновый процесс в одной shell-сессии и обращение из другой",
+      "whyFailed": "Windows убивает фоновые процессы по завершении shell (exit 7 / 000)",
+      "date": "2026-08-14",
+      "ref": "integration tests"
+    }
+  ]
+}

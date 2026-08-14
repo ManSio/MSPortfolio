@@ -7,6 +7,7 @@ A portfolio that is simultaneously three things:
 1. **A live dashboard** — real GitHub metrics with freshness indicators and a static fallback, so numbers can never be fake.
 2. **An MCP server** — the CV as a machine-readable surface. Any AI agent (Claude Code, Cursor, Copilot) can connect and query `get_projects`, `analyze_stack`, `simulate_architecture` and more.
 3. **A proof-of-work engine** — a browser agent loop that *shows* the tool calls behind every answer, plus an interactive architecture simulator where visitors can "break" the systems.
+4. **A laboratory** (`#/lab`) — the diaries, experiments and tests behind every claim, rendered as charts from the same JSON files that feed the MCP server.
 
 ## Why this exists
 
@@ -75,9 +76,9 @@ Without any key the chat falls back to the deterministic rule-based engine.
 server/              MCP server entrypoint (+ README, tsconfig)
 scripts/             update-metrics.ts — CI refresh of the static snapshot
 src/
-  data/              projects.json · principles.json · timeline.json (single source of truth)
+  data/              projects.json · principles.json · timeline.json · lab/ (experiments · diary · known-issues · test-suites)
   lib/               mcp-tools.ts (shared tool logic) · intents.ts · api.ts · mcp-client.ts
-  components/        metrics/ · projects/ · playground/ · mcp/ · timeline/ · ui/
+  components/        metrics/ · projects/ · playground/ · mcp/ · timeline/ · lab/ · ui/
 .github/workflows/   deploy.yml — build → GitHub Pages + hourly metrics refresh
 Dockerfile           MCP server container for any Node host
 ```

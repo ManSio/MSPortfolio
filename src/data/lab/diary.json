@@ -1,0 +1,175 @@
+{
+  "entries": [
+    {
+      "date": "2026-08-14 09:30",
+      "title": "Создание MSPortfolio (MCP-Native Portfolio)",
+      "status": "fixed",
+      "rootCause": "— (новая инициатива, не инцидент)",
+      "fix": "Репозиторий ManSio/MSPortfolio: статический сайт (React 19/Vite 8/Tailwind v4, GH Pages) + MCP-сервер (@modelcontextprotocol/server@2 + Fastify, Streamable HTTP, 6 тулов) + браузерный агент-демо с trace + симулятор архитектуры + CI (deploy + hourly metrics refresh).",
+      "guard": "verified_from_clean_state: git clone → pnpm install → pnpm build; MCP smoke через curl.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 10:05",
+      "title": "ТЗ ошибочно предлагало Fastify-пакет @fastify/mcp",
+      "status": "fixed",
+      "rootCause": "Пакет не существует в npm; официальная поддержка Fastify — @modelcontextprotocol/fastify (middleware v2).",
+      "fix": "Использован @modelcontextprotocol/fastify@2 (createMcpFastifyApp + toNodeHandler + createMcpHandler) — проверено экспериментами №1-2.",
+      "guard": "Перед пином зависимости — проверка registry.",
+      "pattern": "P-002-вариант"
+    },
+    {
+      "date": "2026-08-14 10:20",
+      "title": "registerTool не принимает сырую JSON Schema → HTTP 500",
+      "status": "fixed",
+      "rootCause": "SDK v2 ожидает zod-схему; фабрика createMcpHandler падает на регистрации при каждом запросе.",
+      "fix": "z.fromJSONSchema(tool.inputSchema) при регистрации (проверено: parse OK / invalid caught).",
+      "guard": "Тест интеграции (tools/list, tools/call) перед коммитом.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 11:10",
+      "title": "Форк чужого проекта (infrawise) попал в портфолио как «свой»",
+      "status": "fixed",
+      "rootCause": "Данные о проектах взяты из users/ManSio/repos без проверки флага fork; infrawise — форк Sidd27/infrawise.",
+      "fix": "Удалён из projects/principles/timeline/архитектурных моделей; метрики фильтруют форки (live-fetch + update-metrics.ts + снапшот).",
+      "guard": "fork !== true в обоих путях метрик; проверка gh api repos/…/infrawise (fork/source) перед включением чужого кода.",
+      "pattern": "P-002-вариант"
+    },
+    {
+      "date": "2026-08-14 12:00",
+      "title": "Светлая тема нечитаема (белое на белом)",
+      "status": "fixed",
+      "rootCause": "Компоненты хардкодили тёмные цвета (text-paper = белый текст) и не реагировали на светлую тему; переключался только фон body.",
+      "fix": "Семантические токены через CSS-переменные (ink/paper/muted/faint/accent) + @custom-variant dark. Тёмная тема визуально не изменилась, светлая читаема.",
+      "guard": "Цвета только через семантические классы; никаких text-paper/\\d+-вариантов.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 12:30",
+      "title": "Cloudflare Workers entrypoint (workerd-native MCP)",
+      "status": "fixed",
+      "rootCause": "GH Pages — статика; MCP-серверу нужен процесс-хост → добавлен второй entrypoint для Workers.",
+      "fix": "worker/index.ts использует handler.fetch() (web-standard, без toNodeHandler); CORS/OPTIONS/health в обёртке. Проверено 7/7 тестов.",
+      "guard": "wrangler вынесен в npx (его build-скрипты workerd/esbuild ломают pnpm deps-check на Windows).",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 13:00",
+      "title": "mansio.github.io отдавал 404; pnpm approval в CI",
+      "status": "fixed",
+      "rootCause": "Репо ManSio.github.io не существовало — user-сайт не был настроен. pnpm 11 переименовал onlyBuiltDependencies → allowBuilds.",
+      "fix": "Создан ManSio.github.io (meta-refresh + JS redirect + canonical) на /MSPortfolio/. allowBuilds: esbuild: true в pnpm-workspace.yaml.",
+      "guard": "fresh frozen install + esbuild binary проверены.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 13:30",
+      "title": "Live deploy: MCP на Cloudflare Workers + user-сайт",
+      "status": "fixed",
+      "rootCause": "—",
+      "fix": "wrangler login → поддомен mansio-dev.workers.dev (зарегистрирован через REST API) → wrangler deploy → https://msp-portfolio.mansio-dev.workers.dev/mcp. Демо на сайте подключено к живому endpoint.",
+      "guard": "CI smoke на живой endpoint; wrangler deploy --dry-run + смоук собранного index.js.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 13:00",
+      "title": "SEO/mobile/CTA pass: OG-обложка, touch-targets, мобильная проверка",
+      "status": "fixed",
+      "rootCause": "— (запрос владельца: закрыть пункты SEO-аудита)",
+      "fix": "og:image (PIL, 1200×630) + twitter:card; CTA-секция «Let's talk»; Button получил min-h-11 (44px, Apple HIG); мобильная проверка автоматизирована scripts/check-mobile.mjs (headless Edge + CDP).",
+      "guard": "node scripts/check-mobile.mjs как регресс-проверка вёрстки.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 15:00",
+      "title": "Live-аудит MCP-эндпоинта: get_articles 403, rate limit отсутствует",
+      "status": "partial",
+      "rootCause": "get_articles — dev.to отклоняет запросы из Cloudflare-воркера (с обычного IP 200, с воркера 403). Rate limiting не реализован (эмпирически 20×200, 0×429).",
+      "fix": "НЕ фиксилось — найдено в исследовании (эксперименты против продакшена). План: get_articles → UA + cron-snapshot; rate limit → [[ratelimits]].",
+      "guard": "расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 20:30",
+      "title": "get_articles не показывал новую статью (Varnish-кэш dev.to)",
+      "status": "fixed",
+      "rootCause": "dev.to отдаёт /api/articles через многослойный Varnish; после публикации статьи устаревшая копия живёт в кэше и отдаётся части egress'ов. cache:no-store и cache-buster не помогали (Varnish нормализует неизвестные query-параметры).",
+      "fix": "реальный API-параметр state=published меняет ключ Varnish-кэша → свежие данные. Проверено live: воркер отдаёт 6 статей.",
+      "guard": "live-проверка get_articles; смоук tools/call get_articles уже в CI.",
+      "pattern": "P-002-вариант"
+    },
+    {
+      "date": "2026-08-14 20:00",
+      "title": "Analytics Engine включён и привязан; авто-деплой токеном закрыт",
+      "status": "fixed",
+      "rootCause": "— (owner actions закрыты)",
+      "fix": "CF API-токен через gh secret set → deploy-worker впервые ЗЕЛЁНЫЙ. Analytics Engine включён; биндинг ANALYTICS → датасет msp_portfolio. Live: 3 tools/call → счётчик today:16.",
+      "guard": "CI smoke; KNOWN_ISSUES KI-007.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 19:00",
+      "title": "Ideas 3/5/6: failure events в симуляторе, antipattern museum, terminal",
+      "status": "fixed",
+      "rootCause": "— (feature batch)",
+      "fix": "Симулятор эмитит failure-mode события (circuit_open, fallback_engaged, degraded_mode, cache_miss). Antipattern museum: 7 инцидентов + тул get_antipatterns. Terminal: команды поверх тулов.",
+      "guard": "тесты 36/36; live-валидация: tools/list 9, antipatterns count 7.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 18:30",
+      "title": "CI: refresh metrics до build; live-валидация новых фич",
+      "status": "fixed",
+      "rootCause": "«Refresh metrics snapshot» стоял после «Build» — каждый деплой нёс снапшот предыдущего рана.",
+      "fix": "шаг перенесён перед Build (deploy.yml). Live-валидация: get_commit_history → source:snapshot, count:15; /mcp/stats → today:6/total:6.",
+      "guard": "смоук tools/list (get_commit_history) + tools/call get_articles.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 18:00",
+      "title": "Features: get_commit_history, decision-log narrative, agent counter (/mcp/stats)",
+      "status": "fixed",
+      "rootCause": "— (feature batch)",
+      "fix": "Снапшот коммитов в update-metrics.ts; нарратив decision log в ProjectsGrid; KV-счётчик MCP_STATS + /mcp/stats. Инцидент: fire-and-forget void promise без ctx.waitUntil — workerd отменяет → фикс.",
+      "guard": "тесты воркера 34/34; live-валидация; §9 ловушка 10.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 17:00",
+      "title": "Rate Limiting API не применяется на тарифе аккаунта (эксперимент)",
+      "status": "partial",
+      "rootCause": "Биндинг [[ratelimits]] деплоится и виден, но limit() возвращает success: true на всех запросах даже при лимите 10 → рантайм не ограничивает. Вероятно, требует Workers Paid.",
+      "fix": "Эксперимент документирован; откат к limit=300. Биндинги остаются — начнут работать при апгрейде без изменения кода. Код fail-open.",
+      "guard": "EXPERIMENTS_LOG.md#7 (отрицательный результат); KI-007 обновлён.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 16:40",
+      "title": "Smoke get_articles упал: экранирование \\\"count\\\" в SSE + live без фикса",
+      "status": "fixed",
+      "rootCause": "Смоук искал \"count\", а в SSE-ответе tools/call поле лежит внутри JSON-строки text и экранировано (\\\"count\\\") — grep никогда не матчил.",
+      "fix": "Паттерн смоука → grep -q count (без кавычек); воркер с фиксами требует ручного деплоя.",
+      "guard": "смоук гоняется на каждый push; тесты воркера покрывают tools/call локально.",
+      "pattern": "P-002-вариант"
+    },
+    {
+      "date": "2026-08-14 16:00",
+      "title": "Хардненинг MCP-эндпоинта: rate limit, readOnlyHint, security-заголовки, KI-006/KI-008",
+      "status": "partial",
+      "rootCause": "KI-006 — dev.to 403 на запросы без UA из датацентрового egress; KI-007 — rate limit отсутствовал; KI-008 — llm_saturation no-op без честного объяснения.",
+      "fix": "UA + fallback снапшот; [[ratelimits]] 300/60 + CHAT 30/60; readOnlyHint/openWorldHint на все тулы; security-заголовки; честный finding «no LLM stage»; CI smoke tools/call; AE-телеметрия.",
+      "guard": "tests/worker.test.ts (12 интеграционных); tests/mcp-tools.test.ts; итог 29/29 тестов, typecheck, build.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14 15:30",
+      "title": "SDK v2 поддерживает annotations.readOnlyHint (проверено tsc)",
+      "status": "fixed",
+      "rootCause": "— (верификация возможности)",
+      "fix": "Временная правка registerTool → tsc OK → revert. Спецификация MCP 2026-07-28 вводит annotations; SDK v2 типизирует readOnlyHint.",
+      "guard": "EXPERIMENTS_LOG.md#4.",
+      "pattern": "NEW"
+    }
+  ]
+}

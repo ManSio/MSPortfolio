@@ -49,6 +49,15 @@
 **Сырой результат:** 29/29 passed; typecheck чистый; build OK (252.60 KB JS, gzip 79.19 KB).
 **Вердикт:** подтверждена — rate limit даёт 429, CORS fail-closed, adversarial отклоняются (400/-32602), конкуренция 8/8 без перекрёста, `readOnlyHint`/`openWorldHint` видны в tools/list.
 
+## [2026-08-14 21:00] — Гипотеза: страница Lab #/lab собирается из JSON-проекций без новых зависимостей
+**Ожидание:** 4 JSON-файла (experiments/diary/known-issues/test-suites) + dependency-free SVG-графики + хэш-роутинг не ломают сборку; тул-поверхность растёт 9→12 без потери readOnlyHint-аннотаций; тесты целостности ловят битые данные.
+**Команда:** `pnpm test` (4 файла) + `pnpm typecheck` + `pnpm build`.
+**Сырой результат:**
+- `45 passed (45)` — intents 7, lab 5, mcp-tools 17, worker 16.
+- typecheck: 0 ошибок (src + server + worker).
+- build: `dist/assets/index-C5e-Dl4g.js 308.12 kB │ gzip 95.62 kB` (рост +16.4 KB gzip против 79.19 KB — страница+данные; библиотек не добавлено).
+**Вердикт:** подтверждена. Данные/страница/тулы собираются, целостность охраняется тестами.
+
 ## [2026-08-14 17:00] — Гипотеза: CF Rate Limiting API binding применяется на аккаунте
 **Ожидание:** после деплоя `[[ratelimits]]` (limit=10/60) бург POST /mcp даст 429 после ~10 запросов.
 **Команда:** временный limit=10 + диагностика `x-dbg-limiter`/`x-dbg-limit-result` в заголовках (версия d1f29214) → бург 15 запросов → откат к limit=300 и чистой версии (03a42581).

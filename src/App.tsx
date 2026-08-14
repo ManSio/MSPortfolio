@@ -9,12 +9,14 @@ import { ExternalWidgets } from './components/metrics/ExternalWidgets';
 import { ProjectsGrid } from './components/projects/ProjectsGrid';
 import { PrinciplesGrid } from './components/projects/PrinciplesGrid';
 import { Timeline } from './components/timeline/Timeline';
+import { LabPage } from './components/lab/LabPage';
 import { Badge } from './components/ui/Badge';
 import { Button } from './components/ui/Button';
 import { Card } from './components/ui/Card';
 import { Section } from './components/ui/Section';
 import { useReveal } from './hooks/useReveal';
 import { useTheme } from './hooks/useTheme';
+import { useEffect, useState } from 'react';
 
 const NAV = [
   ['metrics', 'Metrics'],
@@ -24,8 +26,24 @@ const NAV = [
   ['simulator', 'Simulator'],
   ['agent', 'Agent'],
   ['timeline', 'Timeline'],
+  ['lab', 'Lab'],
   ['contact', 'Contact'],
 ] as const;
+
+/** Hash routing: `#/lab` renders the Lab page, everything else is the one-page portfolio. */
+function useHashRoute() {
+  const [hash, setHash] = useState(() => window.location.hash);
+  useEffect(() => {
+    const onHash = () => setHash(window.location.hash);
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+  return hash;
+}
+
+function navHref(id: string) {
+  return id === 'lab' ? '#/lab' : `#${id}`;
+}
 
 function ThemeToggle({ dark, toggle }: { dark: boolean; toggle: () => void }) {
   return (
@@ -42,6 +60,8 @@ function ThemeToggle({ dark, toggle }: { dark: boolean; toggle: () => void }) {
 export default function App() {
   const revealRef = useReveal<HTMLDivElement>();
   const { dark, toggle } = useTheme();
+  const hash = useHashRoute();
+  const isLab = hash === '#/lab';
 
   return (
     <div ref={revealRef} className="min-h-screen">
@@ -57,7 +77,7 @@ export default function App() {
           </a>
           <nav className="hidden items-center gap-5 text-sm text-muted md:flex">
             {NAV.map(([id, label]) => (
-              <a key={id} href={`#${id}`} className="transition-colors hover:text-accent">
+              <a key={id} href={navHref(id)} className="transition-colors hover:text-accent">
                 {label}
               </a>
             ))}
@@ -77,7 +97,11 @@ export default function App() {
       </header>
 
       <main id="top">
-        {/* ── Hero ───────────────────────────────────────────── */}
+        {isLab ? (
+          <LabPage />
+        ) : (
+          <>
+            {/* ── Hero ───────────────────────────────────────────── */}
         <section className="mx-auto max-w-5xl px-5 pt-16 pb-10 sm:pt-24">
           <div className="reveal">
             <div className="flex flex-wrap items-center gap-2">
@@ -205,6 +229,8 @@ export default function App() {
         <Section id="terminal" kicker="10 · the shell" title="Drop into a terminal">
           <Terminal />
         </Section>
+          </>
+        )}
       </main>
 
       <footer className="border-t border-line">

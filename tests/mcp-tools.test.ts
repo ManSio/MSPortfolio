@@ -20,6 +20,9 @@ describe('MCP tools', () => {
         'get_articles',
         'get_commit_history',
         'get_antipatterns',
+        'get_experiments',
+        'get_diary',
+        'get_known_issues',
         'analyze_stack',
         'simulate_architecture',
       ]),
@@ -124,6 +127,57 @@ describe('MCP tools', () => {
     for (const a of res.antipatterns) {
       expect(a.lesson.length).toBeGreaterThan(10);
       expect(a.tag.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('get_experiments returns experiments with verdicts and negative results (closed world)', async () => {
+    const res = (await call('get_experiments', {})) as {
+      experiments: Array<{ id: string; verdict: 'confirmed' | 'refuted' | 'partial'; finding: string }>;
+      negativeResults: Array<{ attempt: string; whyFailed: string }>;
+    };
+    expect(res.experiments.length).toBeGreaterThanOrEqual(7);
+    for (const e of res.experiments) {
+      expect(['confirmed', 'refuted', 'partial']).toContain(e.verdict);
+      expect(e.finding.length).toBeGreaterThan(10);
+    }
+    expect(res.negativeResults.length).toBeGreaterThanOrEqual(3);
+    for (const n of res.negativeResults) {
+      expect(n.attempt.length).toBeGreaterThan(5);
+      expect(n.whyFailed.length).toBeGreaterThan(5);
+    }
+  });
+
+  it('get_diary returns entries with root cause, fix and guard', async () => {
+    const res = (await call('get_diary', {})) as {
+      count: number;
+      entries: Array<{ date: string; title: string; status: 'fixed' | 'partial'; rootCause: string; fix: string; guard: string; pattern: string }>;
+    };
+    expect(res.count).toBeGreaterThanOrEqual(15);
+    for (const e of res.entries) {
+      expect(e.rootCause.length).toBeGreaterThan(0);
+      expect(e.fix.length).toBeGreaterThan(0);
+      expect(e.guard.length).toBeGreaterThan(0);
+      expect(['fixed', 'partial']).toContain(e.status);
+    }
+  });
+
+  it('get_known_issues returns the board with temperature (closed world)', async () => {
+    const res = (await call('get_known_issues', {})) as {
+      count: number;
+      issues: Array<{ id: string; status: string; temperature: 'stable' | 'watching' }>;
+    };
+    expect(res.count).toBeGreaterThanOrEqual(10);
+    for (const i of res.issues) {
+      expect(i.id).toMatch(/^KI-\d+$/);
+      expect(['stable', 'watching']).toContain(i.temperature);
+    }
+  });
+
+  it('lab tools are closed-world read-only', () => {
+    for (const name of ['get_experiments', 'get_diary', 'get_known_issues']) {
+      const tool = getTool(name);
+      expect(tool?.annotations?.readOnlyHint).toBe(true);
+      expect(tool?.annotations?.openWorldHint).toBe(false);
     }
   });
 

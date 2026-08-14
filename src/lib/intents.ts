@@ -89,6 +89,24 @@ export const INTENTS: Intent[] = [
     matches: ['антипаттерн', 'antipattern', 'музей', 'museum', 'mistake', 'урок', 'lesson', 'провал', 'факап', 'неудач'],
     tools: [{ name: 'get_antipatterns', args: {} }],
   },
+  {
+    id: 'experiments',
+    label: 'Experiments',
+    matches: ['эксперимент', 'experiment', 'гипотез', 'hypothes', 'замер', 'измер', 'measure', 'benchmark', 'лаборатор', 'lab', 'negative', 'отрицательн'],
+    tools: [{ name: 'get_experiments', args: {} }],
+  },
+  {
+    id: 'diary',
+    label: 'Diary',
+    matches: ['дневник', 'diary', 'инцидент', 'incident', 'сложн', 'hardest', 'отладк', 'debug', 'баг', 'bug', 'сломал', 'что сломалось', 'root cause'],
+    tools: [{ name: 'get_diary', args: {} }],
+  },
+  {
+    id: 'known_issues',
+    label: 'Known issues',
+    matches: ['known issue', 'известн', 'открыт', 'что сломано', 'что не работает', 'open', 'debt', 'долг', 'техдолг', 'бэклог', 'backlog'],
+    tools: [{ name: 'get_known_issues', args: {} }],
+  },
 ];
 
 export const QUICK_QUESTIONS = [
@@ -98,6 +116,7 @@ export const QUICK_QUESTIONS = [
   'Do you fit a Python/MCP role?',
   'What has he shipped recently?',
   'What did your mistakes teach you?',
+  'What experiments has he run?',
 ];
 
 export function matchIntent(text: string): Intent {
@@ -177,6 +196,26 @@ export function composeAnswer(intent: Intent, results: unknown[]): string {
       const d = data as { count?: number; antipatterns?: Array<{ title: string; lesson: string }> } | undefined;
       const list = (d?.antipatterns ?? []).map((a) => `• ${a.title} — ${a.lesson}`).join('\n');
       return `Antipattern museum (${d?.count ?? 0}):\n${list}`;
+    }
+    case 'experiments': {
+      const d = data as { experiments?: Array<{ id: string; title: string; verdict: string; finding: string }>; negativeResults?: Array<{ attempt: string }> } | undefined;
+      const list = (d?.experiments ?? []).map((e) => `• [${e.verdict}] ${e.title} — ${e.finding}`).join('\n');
+      const neg = (d?.negativeResults ?? []).map((n) => `• ${n.attempt}`).join('\n');
+      const tail = neg ? `\n\nDo not repeat:\n${neg}` : '';
+      return `Experiments (${d?.experiments?.length ?? 0}):\n${list}${tail}`;
+    }
+    case 'diary': {
+      const d = data as { entries?: Array<{ date: string; title: string; status: string; rootCause: string }> } | undefined;
+      const list = (d?.entries ?? [])
+        .slice(-5)
+        .map((e) => `• [${e.status}] ${e.date} — ${e.title} (root cause: ${e.rootCause.slice(0, 90)})`)
+        .join('\n');
+      return `Diary (${d?.entries?.length ?? 0} entries, recent first):\n${list}`;
+    }
+    case 'known_issues': {
+      const d = data as { issues?: Array<{ id: string; problem: string; status: string; temperature: string }> } | undefined;
+      const list = (d?.issues ?? []).map((i) => `• ${i.id} [${i.status}] (${i.temperature}) — ${i.problem.slice(0, 110)}`).join('\n');
+      return `Known issues (${d?.issues?.length ?? 0}):\n${list}`;
     }
     default:
       return JSON.stringify(results, null, 2);

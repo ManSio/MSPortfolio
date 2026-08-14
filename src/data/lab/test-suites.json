@@ -1,0 +1,27 @@
+{
+  "suites": [
+    {
+      "file": "tests/intents.test.ts",
+      "name": "Intent matching (RU/EN)",
+      "tests": 7,
+      "covers": "Маршрутизация намерений агента: проекты, стек-фильтры, принципы, статьи, таймлайн, fallback",
+      "updatedAt": "2026-08-14"
+    },
+    {
+      "file": "tests/mcp-tools.test.ts",
+      "name": "MCP tools + architecture models",
+      "tests": 13,
+      "covers": "Поверхность тулов, фильтры, честность analyze_stack, симуляция (5 точек, валидация, llm_saturation, events), снапшот коммитов, антипаттерны, аннотации, все архитектуры × все сценарии",
+      "updatedAt": "2026-08-14"
+    },
+    {
+      "file": "tests/worker.test.ts",
+      "name": "Worker /mcp integration",
+      "tests": 16,
+      "covers": "tools/list (9 тулов + аннотации), health без rate limit, /mcp/stats (KV), счётчик tools/call, 429 MCP/CHAT, security-заголовки, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), конкуренция 8× с проверкой корректности фильтра",
+      "updatedAt": "2026-08-14"
+    }
+  ],
+  "total": 36,
+  "updatedAt": "2026-08-14"
+}
