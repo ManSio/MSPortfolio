@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T17:54:52.378Z",
+  "fetchedAt": "2026-08-14T17:58:32.158Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T17:30:30Z",
+      "pushedAt": "2026-08-14T17:58:19Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T17:54:28Z",
+      "pushedAt": "2026-08-14T17:58:07Z",
       "language": "TypeScript"
     },
     {
@@ -163,6 +163,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "1acb7c3f4b",
+      "date": "2026-08-14T17:56:13Z",
+      "message": "fix(telemetry): метрики MCP больше не заражены общим tool_metrics.json + get_runtime_counters без «Blocked 100%»",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "bb06a9b696",
       "date": "2026-08-14T17:28:43Z",
       "message": "fix(install): вернуть документированную настройку MCP в settings.json (pythonw) + фикс _insert_before_final_brace",
@@ -176,11 +183,11 @@
       "author": "MSCodeBase Agent"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "7b2971b26a",
-      "date": "2026-08-14T16:44:13Z",
-      "message": "docs(diary): settings.json дубль-регистрация MCP удалена полностью (остался extension.toml)",
-      "author": "MSCodeBase Agent"
+      "repo": "MSPortfolio",
+      "sha": "a4a4e91da9",
+      "date": "2026-08-14T17:57:46Z",
+      "message": "docs(article): 9 tools -> 12 (lab tools) in dev.to draft; resolve KI-009",
+      "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
