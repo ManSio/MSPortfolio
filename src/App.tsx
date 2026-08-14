@@ -45,7 +45,7 @@ export default function App() {
           <a href="#top" className="font-mono text-sm font-bold tracking-tight">
             <span className="text-accent">~/</span>mikhail
           </a>
-          <nav className="hidden items-center gap-5 text-sm text-paper/70 md:flex">
+          <nav className="hidden items-center gap-5 text-sm text-muted md:flex">
             {NAV.map(([id, label]) => (
               <a key={id} href={`#${id}`} className="transition-colors hover:text-accent">
                 {label}
@@ -57,7 +57,7 @@ export default function App() {
               href="https://github.com/ManSio"
               target="_blank"
               rel="noreferrer"
-              className="text-sm text-paper/70 transition-colors hover:text-accent"
+              className="text-sm text-muted transition-colors hover:text-accent"
             >
               GitHub ↗
             </a>
@@ -81,7 +81,7 @@ export default function App() {
                 AI / Backend Engineer
               </span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-paper/70">
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
               I build <span className="text-paper">MCP-native tooling</span> and AI infrastructure. This portfolio is
               itself a system: a <span className="text-accent">live dashboard</span>, an{' '}
               <span className="text-accent">MCP server</span> any agent can query, and an interactive{' '}
@@ -98,7 +98,7 @@ export default function App() {
                 <Button variant="outline">GitHub ↗</Button>
               </a>
             </div>
-            <p className="mt-6 font-mono text-xs text-paper/40">
+            <p className="mt-6 font-mono text-xs text-faint">
               connect: <span className="text-accent">claude mcp add --transport http msp-portfolio https://…/mcp</span>
             </p>
           </div>
@@ -134,7 +134,7 @@ export default function App() {
             <div className="space-y-3">
               <Card>
                 <p className="font-mono text-xs text-accent">what you're seeing</p>
-                <p className="mt-2 text-sm leading-relaxed text-paper/70">
+                <p className="mt-2 text-sm leading-relaxed text-muted">
                   Every answer is produced by an <span className="text-paper">agent loop</span> that calls the same
                   MCP tools the deployed server exposes — you watch the{' '}
                   <span className="text-paper">tool calls and raw results</span>, not just the conclusion.
@@ -142,7 +142,7 @@ export default function App() {
               </Card>
               <Card>
                 <p className="font-mono text-xs text-accent">same tools, real MCP</p>
-                <p className="mt-2 text-sm leading-relaxed text-paper/70">
+                <p className="mt-2 text-sm leading-relaxed text-muted">
                   Point any MCP client at <span className="font-mono">/mcp</span> and you get{' '}
                   <span className="text-paper">get_projects, analyze_stack, simulate_architecture</span> and more.
                   Setup in <span className="text-accent">server/README.md</span>.
@@ -159,7 +159,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-paper/50">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-faint">
           <p>
             © {new Date().getFullYear()} Mikhail · built as a <span className="text-accent">living CV</span>
           </p>

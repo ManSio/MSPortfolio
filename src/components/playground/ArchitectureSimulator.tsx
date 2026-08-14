@@ -47,7 +47,7 @@ export function ArchitectureSimulator() {
               key={id}
               onClick={() => setProjectId(id)}
               className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
-                id === projectId ? 'border-accent/60 bg-accent/10 text-accent' : 'border-line text-paper/70 hover:border-accent/40'
+                id === projectId ? 'border-accent/60 bg-accent/10 text-accent' : 'border-line text-muted hover:border-accent/40'
               }`}
             >
               {projects.find((p) => p.id === id)?.name ?? id}
@@ -73,7 +73,7 @@ export function ArchitectureSimulator() {
               p95 (ms)
             </text>
           </svg>
-          <div className="mt-2 flex justify-between font-mono text-[11px] text-paper/45">
+          <div className="mt-2 flex justify-between font-mono text-[11px] text-faint">
             {sim.points.map((p) => (
               <span key={p.load}>×{p.load}</span>
             ))}
@@ -90,7 +90,7 @@ export function ArchitectureSimulator() {
               }`}
             >
               <p className="text-sm font-semibold text-paper">{s.label}</p>
-              <p className="mt-0.5 text-xs leading-snug text-paper/50">{s.description}</p>
+              <p className="mt-0.5 text-xs leading-snug text-faint">{s.description}</p>
             </button>
           ))}
         </div>
@@ -98,16 +98,16 @@ export function ArchitectureSimulator() {
 
       <div className="mt-5 rounded-lg border border-line bg-surface-2/50 p-4">
         <p className="font-mono text-xs text-accent">simulator output</p>
-        <ul className="mt-2 space-y-1 text-sm text-paper/75">
+        <ul className="mt-2 space-y-1 text-sm text-muted">
           {sim.findings.map((f, i) => (
             <li key={i}>• {f}</li>
           ))}
         </ul>
         <p className="mt-3 border-t border-line pt-2 text-sm">
-          <span className="font-semibold text-emerald-400">recommendation:</span>{' '}
-          <span className="text-paper/75">{sim.recommendation}</span>
+          <span className="font-semibold text-emerald-600 dark:text-emerald-400">recommendation:</span>{' '}
+          <span className="text-muted">{sim.recommendation}</span>
         </p>
-        <p className="mt-2 text-xs text-paper/40">
+        <p className="mt-2 text-xs text-faint">
           Model: {project?.name} — the same engine the <span className="font-mono">simulate_architecture</span> MCP tool exposes.
         </p>
       </div>

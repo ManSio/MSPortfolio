@@ -21,14 +21,14 @@ export function MetricCard({
 }) {
   return (
     <div className="reveal rounded-xl border border-line bg-surface/60 p-4">
-      <p className="text-xs font-medium text-paper/50 uppercase tracking-wide">{label}</p>
+      <p className="text-xs font-medium text-faint uppercase tracking-wide">{label}</p>
       <p className={cn('mt-1.5 font-mono text-2xl font-semibold tabular-nums', tone === 'accent' ? 'text-accent' : 'text-paper')}>
         {value}
-        {unit ? <span className="ml-0.5 text-sm text-paper/50">{unit}</span> : null}
+        {unit ? <span className="ml-0.5 text-sm text-faint">{unit}</span> : null}
       </p>
       {spark && spark.length > 0 ? <Sparkline data={spark} className="mt-2" /> : null}
       {hint ? (
-        <p className="mt-2 text-xs text-paper/45">
+        <p className="mt-2 text-xs text-faint">
           {hint}
         </p>
       ) : null}

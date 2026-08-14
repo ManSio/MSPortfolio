@@ -8,7 +8,7 @@ import type { ReactNode } from 'react';
 function renderMetricRow(label: ReactNode, value: ReactNode) {
   return (
     <div className="flex items-center justify-between gap-3 border-b border-line/50 py-1.5 text-sm last:border-0">
-      <span className="text-paper/55">{label}</span>
+      <span className="text-muted">{label}</span>
       <span className="font-mono tabular-nums">{value}</span>
     </div>
   );
@@ -70,7 +70,7 @@ export function GithubStats() {
                 <span className="flex items-center gap-2">
                   <Badge tone="accent">★ {r.stars}</Badge>
                   <Badge>⑂ {r.forks}</Badge>
-                  {r.language ? <span className="text-xs text-paper/45">{r.language}</span> : null}
+                  {r.language ? <span className="text-xs text-faint">{r.language}</span> : null}
                 </span>,
               )}
             </div>

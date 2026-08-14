@@ -103,7 +103,7 @@ export function AgentChat() {
           }
           if (f.kind === 'think') {
             return (
-              <div key={i} className="flex items-center gap-2 text-paper/50">
+              <div key={i} className="flex items-center gap-2 text-faint">
                 <span className="text-accent">▸</span> <span>{f.text}</span>
                 <span className="inline-block h-3.5 w-2 animate-blink bg-paper/40" />
               </div>
@@ -114,26 +114,26 @@ export function AgentChat() {
               <div key={i} className="rounded-lg border border-accent/30 bg-accent/5 px-3 py-2">
                 <span className="text-accent">$ tool</span>{' '}
                 <span className="font-semibold text-paper">{f.name}</span>{' '}
-                <span className="text-paper/50">{JSON.stringify(f.args)}</span>
+                <span className="text-faint">{JSON.stringify(f.args)}</span>
               </div>
             );
           }
           if (f.kind === 'result') {
             return (
-              <div key={i} className="max-h-56 overflow-auto rounded-lg border border-line bg-surface-2/60 px-3 py-2 text-paper/80 whitespace-pre">
-                <span className="text-emerald-400">result:</span> {f.text}
+              <div key={i} className="max-h-56 overflow-auto rounded-lg border border-line bg-surface-2/60 px-3 py-2 text-muted whitespace-pre">
+                <span className="text-emerald-600 dark:text-emerald-400">result:</span> {f.text}
               </div>
             );
           }
           return (
             <div key={i} className="rounded-lg border border-emerald-500/25 bg-emerald-500/5 px-3 py-2 whitespace-pre-wrap">
-              <span className="font-semibold text-emerald-400">answer</span>
+              <span className="font-semibold text-emerald-600 dark:text-emerald-400">answer</span>
               <p className="mt-1 text-paper">{f.text}</p>
             </div>
           );
         })}
         {busy ? (
-          <div className="flex items-center gap-2 text-paper/50">
+          <div className="flex items-center gap-2 text-faint">
             <span className="inline-block h-2 w-2 animate-pulse-dot rounded-full bg-accent" />
             <span className="inline-block h-2 w-2 animate-pulse-dot rounded-full bg-accent [animation-delay:200ms]" />
             <span className="inline-block h-2 w-2 animate-pulse-dot rounded-full bg-accent [animation-delay:400ms]" />
@@ -148,7 +148,7 @@ export function AgentChat() {
               key={q}
               disabled={busy}
               onClick={() => void run(q)}
-              className="rounded-full border border-line px-3 py-1 text-xs text-paper/70 transition-colors hover:border-accent/60 hover:text-accent disabled:opacity-40"
+              className="rounded-full border border-line px-3 py-1 text-xs text-muted transition-colors hover:border-accent/60 hover:text-accent disabled:opacity-40"
             >
               {q}
             </button>
@@ -166,7 +166,7 @@ export function AgentChat() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask in EN or RU… e.g. «Как устроен поиск в mscodebase?»"
             disabled={busy}
-            className="flex-1 rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm text-paper placeholder:text-paper/35 focus:border-accent/60 focus:outline-none disabled:opacity-40"
+            className="flex-1 rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm text-paper placeholder:text-faint focus:border-accent/60 focus:outline-none disabled:opacity-40"
           />
           <Button variant="accent" type="submit" disabled={busy}>
             Run

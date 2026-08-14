@@ -17,7 +17,7 @@ export function Timeline() {
               ev.title
             )}
           </h3>
-          <p className="mt-1 text-sm leading-relaxed text-paper/60">{ev.decision}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted">{ev.decision}</p>
         </li>
       ))}
     </ol>
