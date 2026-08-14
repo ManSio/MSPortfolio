@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T12:09:18.879Z",
+  "fetchedAt": "2026-08-14T12:25:54.713Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T11:56:55Z",
+      "pushedAt": "2026-08-14T12:25:30Z",
       "language": "TypeScript"
     },
     {
@@ -143,6 +143,13 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "9d18fdc3cd",
+      "date": "2026-08-14T12:25:28Z",
+      "message": "chore: enable Analytics Engine binding (dataset msprof)",
+      "author": "ManSio"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "eb59bf4b02",
