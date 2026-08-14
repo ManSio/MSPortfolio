@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T18:37:56.131Z",
+  "fetchedAt": "2026-08-14T18:44:03.366Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T18:37:34Z",
+      "pushedAt": "2026-08-14T18:43:43Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T17:58:19Z",
+      "pushedAt": "2026-08-14T18:38:54Z",
       "language": "Python"
     },
     {
@@ -163,17 +163,24 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "b675c8d3bd",
+      "date": "2026-08-14T18:43:40Z",
+      "message": "docs: live validation of /chat grounded answers (mscodebase ONNX, gemma memory) — closes 'test /chat' backlog item",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "fc2dd6af5b",
       "date": "2026-08-14T18:37:26Z",
       "message": "feat(lab): real per-project data for mscodebase-intelligence and gemma_agent",
       "author": "ManSio"
     },
     {
-      "repo": "MSPortfolio",
-      "sha": "32bea1b86c",
-      "date": "2026-08-14T18:27:29Z",
-      "message": "fix(lab): commit-log per project + honest empty states (no more '0' for mscodebase)",
-      "author": "ManSio"
+      "repo": "mscodebase-intelligence",
+      "sha": "23489d2305",
+      "date": "2026-08-14T18:36:59Z",
+      "message": "fix(win): мигающие консоли при простоях — resource_monitor powershell каждые ~30с без CREATE_NO_WINDOW",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
@@ -187,13 +194,6 @@
       "sha": "bb06a9b696",
       "date": "2026-08-14T17:28:43Z",
       "message": "fix(install): вернуть документированную настройку MCP в settings.json (pythonw) + фикс _insert_before_final_brace",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "fd2ca03a55",
-      "date": "2026-08-14T16:58:31Z",
-      "message": "fix(install): step_zedcfg больше не пишет легаси-запись в settings.json — чистит её (keep_to_query=True)",
       "author": "MSCodeBase Agent"
     },
     {
