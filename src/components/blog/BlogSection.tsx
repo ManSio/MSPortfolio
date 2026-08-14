@@ -18,18 +18,20 @@ export function BlogSection() {
               <Skeleton className="mt-1 h-4 w-2/3" />
             </div>
           ))
-        : articles.map((a) => <ArticleCard key={a.url} article={a} />)}
+        : articles.map((a, i) => <ArticleCard key={a.url} article={a} glassy={i % 3 === 2} />)}
     </div>
   );
 }
 
-function ArticleCard({ article: a }: { article: DevToArticle }) {
+function ArticleCard({ article: a, glassy }: { article: DevToArticle; glassy?: boolean }) {
   return (
     <a
       href={a.url}
       target="_blank"
       rel="noreferrer"
-      className="reveal group flex flex-col overflow-hidden rounded-xl border border-line bg-surface/60 transition-colors hover:border-accent/50"
+      className={`reveal group flex flex-col overflow-hidden rounded-xl border border-line bg-surface/60 transition-colors hover:border-accent/50 ${
+        glassy ? 'glass' : ''
+      }`}
     >
       {a.coverImage ? (
         <div className="relative h-40 overflow-hidden">

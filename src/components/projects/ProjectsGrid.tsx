@@ -8,16 +8,16 @@ const data = projectsData as ProjectsData;
 export function ProjectsGrid() {
   return (
     <div className="grid gap-5 md:grid-cols-2">
-      {data.projects.map((p) => (
-        <ProjectCard key={p.id} project={p} />
+      {data.projects.map((p, i) => (
+        <ProjectCard key={p.id} project={p} glassy={i % 3 === 2} />
       ))}
     </div>
   );
 }
 
-function ProjectCard({ project: p }: { project: Project }) {
+function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolean }) {
   return (
-    <Card className="reveal flex flex-col">
+    <Card className={`reveal flex flex-col ${glassy ? 'glass' : ''}`}>
       <CardHeader>
         <div>
           <a href={p.url} target="_blank" rel="noreferrer" className="text-lg font-bold hover:text-accent">

@@ -72,7 +72,14 @@ function corsHeaders(origins: string[], requestOrigin: string | null): Record<st
   return {};
 }
 
-const CHAT_MODEL_DEFAULT = 'google/gemma-4-31b-it:free';
+const CHAT_MODEL_CHAIN = [
+  'google/gemma-4-31b-it:free',
+  'nvidia/nemotron-3-ultra-550b-a55b:free',
+  'openai/gpt-oss-20b:free',
+  'poolside/laguna-s-2.1:free',
+];
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const CHAT_SYSTEM_PROMPT = `You are the interactive CV of Mikhail (ManSio), an AI/Backend engineer who builds MCP-native tooling.
 
@@ -116,7 +123,7 @@ interface ChatCompletionResponse {
   choices?: Array<{ message?: ChatMessage }>;
 }
 
-async function runAgentLoop(apiKey: string, model: string, history: ChatMessage[]): Promise<{ steps: ChatStep[]; answer: string }> {
+async function runAgentWithModel(apiKey: string, model: string, history: ChatMessage[]): Promise<{ steps: ChatStep[]; answer: string; model: string }> {
   const messages: ChatMessage[] = [{ role: 'system', content: CHAT_SYSTEM_PROMPT }, ...history];
   const steps: ChatStep[] = [];
   let response: ChatCompletionResponse | null = null;
@@ -167,7 +174,23 @@ async function runAgentLoop(apiKey: string, model: string, history: ChatMessage[
     }
   }
 
-  return { steps, answer: response?.choices?.[0]?.message?.content ?? '' };
+  return { steps, answer: response?.choices?.[0]?.message?.content ?? '', model };
+}
+
+/** Try each model in the chain; on rate-limit/5xx move to the next, fail fast on other errors. */
+async function runAgentLoop(apiKey: string, models: string[], history: ChatMessage[]): Promise<{ steps: ChatStep[]; answer: string; model: string }> {
+  let lastError: Error | null = null;
+  for (const model of models) {
+    try {
+      return await runAgentWithModel(apiKey, model, history);
+    } catch (e) {
+      const err = e instanceof Error ? e : new Error(String(e));
+      lastError = err;
+      if (!/429|5\d\d|408|timeout|temporarily|rate.limit/i.test(err.message)) throw err;
+      await sleep(1500);
+    }
+  }
+  throw lastError ?? new Error('all chat models failed');
 }
 
 async function handleChat(request: Request, env: Env): Promise<Response> {
@@ -185,9 +208,12 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     );
   }
 
-  const model = env.OPENROUTER_MODEL || CHAT_MODEL_DEFAULT;
-  const history: ChatMessage[] = body.messages.filter((m) => m && m.role === 'user' || m?.role === 'assistant');
-  const { steps, answer } = await runAgentLoop(apiKey, model, history);
+  const configured = env.OPENROUTER_MODEL;
+  const models = configured
+    ? [configured, ...CHAT_MODEL_CHAIN.filter((m) => m !== configured)]
+    : CHAT_MODEL_CHAIN;
+  const history: ChatMessage[] = body.messages.filter((m) => m && (m.role === 'user' || m.role === 'assistant'));
+  const { steps, answer, model } = await runAgentLoop(apiKey, models, history);
   return Response.json({ model, steps, answer });
 }
 
@@ -214,9 +240,14 @@ export default {
 
     if (url.pathname === '/chat') {
       if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
-      const res = await handleChat(request, env);
-      for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
-      return res;
+      try {
+        const res = await handleChat(request, env);
+        for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
+        return res;
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        return Response.json({ error: `chat failed: ${msg}` }, { status: 500 });
+      }
     }
 
     if (url.pathname !== '/mcp') {

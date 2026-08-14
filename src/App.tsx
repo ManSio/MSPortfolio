@@ -41,6 +41,10 @@ export default function App() {
 
   return (
     <div ref={revealRef} className="min-h-screen">
+      {/* Decorative gradient blobs — blurred by the .glass surfaces */}
+      <div className="ambient-blobs" aria-hidden="true">
+        <span />
+      </div>
       {/* ── Nav ─────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 border-b border-line bg-ink/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
@@ -89,7 +93,7 @@ export default function App() {
               <span className="text-accent">MCP server</span> any agent can query, and an interactive{' '}
               <span className="text-accent">proof-of-work engine</span> — no static claims, only process.
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="glass mt-7 flex flex-wrap gap-3 rounded-xl p-2">
               <a href="#agent">
                 <Button variant="accent">▶ Try the agent loop</Button>
               </a>
