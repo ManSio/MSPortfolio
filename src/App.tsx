@@ -1,5 +1,6 @@
 import { ArchitectureSimulator } from './components/playground/ArchitectureSimulator';
 import { AgentChat } from './components/mcp/AgentChat';
+import { BlogSection } from './components/blog/BlogSection';
 import { GithubStats } from './components/metrics/GithubStats';
 import { ExternalWidgets } from './components/metrics/ExternalWidgets';
 import { ProjectsGrid } from './components/projects/ProjectsGrid';
@@ -16,6 +17,7 @@ const NAV = [
   ['metrics', 'Metrics'],
   ['projects', 'Projects'],
   ['principles', 'Principles'],
+  ['blog', 'Blog'],
   ['simulator', 'Simulator'],
   ['agent', 'Agent'],
   ['timeline', 'Timeline'],
@@ -123,13 +125,18 @@ export default function App() {
           <PrinciplesGrid />
         </Section>
 
+        {/* ── Blog ───────────────────────────────────────────── */}
+        <Section id="blog" kicker="04 · writing" title="Field notes from building AI agents">
+          <BlogSection />
+        </Section>
+
         {/* ── Simulator ──────────────────────────────────────── */}
-        <Section id="simulator" kicker="04 · live system design" title="Break it. Watch it degrade.">
+        <Section id="simulator" kicker="05 · live system design" title="Break it. Watch it degrade.">
           <ArchitectureSimulator />
         </Section>
 
         {/* ── Agent ──────────────────────────────────────────── */}
-        <Section id="agent" kicker="05 · proof of work" title="Ask the portfolio — watch the process">
+        <Section id="agent" kicker="06 · proof of work" title="Ask the portfolio — watch the process">
           <div className="grid gap-5 lg:grid-cols-[1fr_300px]">
             <AgentChat />
             <div className="space-y-3">
@@ -154,7 +161,7 @@ export default function App() {
         </Section>
 
         {/* ── Timeline ───────────────────────────────────────── */}
-        <Section id="timeline" kicker="06 · the record" title="Engineering decision timeline">
+        <Section id="timeline" kicker="07 · the record" title="Engineering decision timeline">
           <Timeline />
         </Section>
       </main>

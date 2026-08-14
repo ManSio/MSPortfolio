@@ -29,7 +29,18 @@ const [user, repos] = await Promise.all([
 ]);
 
 // Dev.to articles (public API, no auth).
-let devto: { title: string; reading_time_minutes: number; url: string }[] = [];
+let devto: {
+  id?: number;
+  title: string;
+  description?: string;
+  reading_time_minutes?: number;
+  url: string;
+  tag_list?: string[];
+  public_reactions_count?: number;
+  comments_count?: number;
+  cover_image?: string | null;
+  readable_publish_date?: string;
+}[] = [];
 try {
   const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
   if (res.ok) devto = (await res.json()) as typeof devto;
@@ -58,9 +69,16 @@ const snapshot = {
     })),
   npm: [],
   devto: devto.map((a) => ({
+    id: a.id,
     title: a.title,
+    description: a.description ?? '',
     readingTimeMinutes: a.reading_time_minutes ?? 0,
     url: a.url,
+    tags: a.tag_list ?? [],
+    reactions: a.public_reactions_count ?? 0,
+    comments: a.comments_count ?? 0,
+    coverImage: a.cover_image ?? null,
+    readablePublishDate: a.readable_publish_date ?? '',
   })),
 };
 

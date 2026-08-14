@@ -50,13 +50,13 @@ export const INTENTS: Intent[] = [
   {
     id: 'principles',
     label: 'Principles',
-    matches: ['принцип', 'принципы', 'как мыслит', 'подход', 'философи', 'principle', 'approach', 'engineering'],
+    matches: ['принцип', 'принципы', 'как мыслит', 'мысл', 'подход', 'философи', 'principle', 'approach', 'engineering'],
     tools: [{ name: 'get_engineering_principles', args: {} }],
   },
   {
     id: 'stack',
     label: 'Stack fit',
-    matches: ['вакансия', 'требовани', 'job', 'skills', 'скилл', 'стек', 'подхожу', 'матчинг', 'requirements', 'coverage'],
+    matches: ['ваканс', 'требовани', 'job', 'skills', 'скилл', 'стек', 'stack', 'подхожу', 'матчинг', 'requirements', 'coverage'],
     tools: [{ name: 'analyze_stack', args: { required_skills: ['python', 'mcp', 'typescript', 'react', 'aws'] } }],
   },
   {

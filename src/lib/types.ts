@@ -62,6 +62,19 @@ export interface TimelineData {
 
 // ── Live metrics (from GitHub/npm/Dev.to APIs or static fallback) ──
 
+export interface DevToArticle {
+  id?: number;
+  title: string;
+  description?: string;
+  readingTimeMinutes?: number;
+  url: string;
+  tags?: string[];
+  reactions?: number;
+  comments?: number;
+  coverImage?: string | null;
+  readablePublishDate?: string;
+}
+
 export interface GithubRepoMetric {
   name: string;
   stars: number;
@@ -82,7 +95,7 @@ export interface MetricsSnapshot {
   } | null;
   repos: GithubRepoMetric[];
   npm: { package: string; downloads: number }[];
-  devto: { title: string; readingTimeMinutes: number; url: string }[];
+  devto: DevToArticle[];
 }
 
 // ── MCP tools ──

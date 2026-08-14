@@ -5,7 +5,7 @@
 // fallback keep the dashboard alive even when the API rate-limits the visitor.
 
 import { readCache, writeCache } from './cache';
-import type { GithubRepoMetric, MetricsSnapshot } from './types';
+import type { DevToArticle, GithubRepoMetric, MetricsSnapshot } from './types';
 
 const TTL = 60 * 60 * 1000; // 1 hour
 
@@ -76,16 +76,39 @@ export async function getNpmDownloads(pkg: string): Promise<number> {
   return data.downloads;
 }
 
-export async function getDevToArticles(username: string) {
+export async function getDevToArticles(username: string): Promise<DevToArticle[]> {
   const key = `devto:${username}`;
-  const cached = readCache(key, TTL);
-  if (cached) return cached.data as { title: string; reading_time_minutes: number; url: string }[];
+  const cached = readCache<DevToArticle[]>(key, TTL);
+  if (cached) return cached.data;
 
-  const data = await fetchJson<{ title: string; reading_time_minutes: number; url: string }[]>(
-    `https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=6`,
-  );
-  writeCache(key, data);
-  return data;
+  const data = await fetchJson<
+    Array<{
+      id?: number;
+      title: string;
+      description?: string;
+      reading_time_minutes?: number;
+      url: string;
+      tag_list?: string[];
+      public_reactions_count?: number;
+      comments_count?: number;
+      cover_image?: string | null;
+      readable_publish_date?: string;
+    }>
+  >(`https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=6`);
+  const mapped: DevToArticle[] = data.map((a) => ({
+    id: a.id,
+    title: a.title,
+    description: a.description ?? '',
+    readingTimeMinutes: a.reading_time_minutes ?? 0,
+    url: a.url,
+    tags: a.tag_list ?? [],
+    reactions: a.public_reactions_count ?? 0,
+    comments: a.comments_count ?? 0,
+    coverImage: a.cover_image ?? null,
+    readablePublishDate: a.readable_publish_date ?? '',
+  }));
+  writeCache(key, mapped);
+  return mapped;
 }
 
 // ── Static fallback snapshot ──

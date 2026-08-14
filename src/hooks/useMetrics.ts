@@ -20,10 +20,10 @@ export function useMetrics(): MetricsState {
 
     async function load() {
       try {
-        const [user, repos, devtoRaw] = await Promise.all([
+        const [user, repos, devto] = await Promise.all([
           getGithubUser(),
           getGithubRepos(),
-          getDevToArticles('mansio').catch(() => [] as { title: string; reading_time_minutes: number; url: string }[]),
+          getDevToArticles('mansio').catch(() => []),
         ]);
         if (cancelled) return;
         const live: MetricsSnapshot = {
@@ -37,11 +37,7 @@ export function useMetrics(): MetricsState {
           },
           repos: repos as GithubRepoMetric[],
           npm: [],
-          devto: devtoRaw.map((a) => ({
-            title: a.title,
-            readingTimeMinutes: Number(a.reading_time_minutes ?? 0),
-            url: a.url,
-          })),
+          devto,
         };
         setState({ status: 'live', snapshot: live });
       } catch {
