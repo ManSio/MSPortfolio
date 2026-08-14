@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T11:32:36.184Z",
+  "fetchedAt": "2026-08-14T11:46:11.198Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T11:32:12Z",
+      "pushedAt": "2026-08-14T11:32:41Z",
       "language": "TypeScript"
     },
     {
@@ -148,13 +148,6 @@
       "sha": "61daa5311d",
       "date": "2026-08-14T11:32:11Z",
       "message": "feat: failure events in simulator, antipattern museum, terminal mode",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "c79e6cab49",
-      "date": "2026-08-14T11:26:24Z",
-      "message": "docs: diary — CI snapshot ordering fix + live validation of new features",
       "author": "ManSio"
     },
     {
