@@ -19,6 +19,7 @@ describe('MCP tools', () => {
         'get_timeline',
         'get_articles',
         'get_commit_history',
+        'get_antipatterns',
         'analyze_stack',
         'simulate_architecture',
       ]),
@@ -117,6 +118,25 @@ describe('MCP tools', () => {
     }
   });
 
+  it('get_antipatterns returns the museum with lessons (closed world)', async () => {
+    const res = (await call('get_antipatterns', {})) as { count: number; antipatterns: Array<{ title: string; lesson: string; tag: string }> };
+    expect(res.count).toBeGreaterThanOrEqual(6);
+    for (const a of res.antipatterns) {
+      expect(a.lesson.length).toBeGreaterThan(10);
+      expect(a.tag.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('simulate_architecture emits failure-mode events per scenario', async () => {
+    const nodeLoss = (await call('simulate_architecture', { project_id: 'mscodebase-intelligence', scenario: 'node_loss' })) as SimulationResult;
+    expect(nodeLoss.events.some((e) => e.type === 'degraded_mode')).toBe(true);
+    expect(nodeLoss.events.some((e) => e.type === 'circuit_open')).toBe(true); // vector_search >100ms at 20x
+
+    const gemma = (await call('simulate_architecture', { project_id: 'gemma_agent', scenario: 'llm_saturation' })) as SimulationResult;
+    expect(gemma.events.some((e) => e.type === 'queue_backpressure')).toBe(true);
+    expect(gemma.events.some((e) => e.type === 'circuit_open')).toBe(true); // llm_generate >> 100ms
+  });
+
   it('every tool declares readOnlyHint annotations (read-only surface)', () => {
     for (const t of TOOLS) {
       expect(t.annotations?.readOnlyHint).toBe(true);
@@ -125,6 +145,8 @@ describe('MCP tools', () => {
     expect(articles?.annotations?.openWorldHint).toBe(true); // network fetch
     const commits = getTool('get_commit_history');
     expect(commits?.annotations?.openWorldHint).toBe(true); // fetches metrics snapshot
+    const antipatterns = getTool('get_antipatterns');
+    expect(antipatterns?.annotations?.openWorldHint).toBe(false); // closed world
     const local = getTool('get_projects');
     expect(local?.annotations?.openWorldHint).toBe(false); // closed world
   });

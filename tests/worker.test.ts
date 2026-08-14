@@ -37,8 +37,8 @@ describe('worker /mcp integration', () => {
     const res = await postMcp(makeEnv(), { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(res.status).toBe(200);
     const payload = ssePayload(await res.text());
-    const tools = payload.result.tools as Array<{ name: string; annotations?: { readOnlyHint?: boolean } }>;
-    expect(tools).toHaveLength(8);
+    const tools = payload.result.tools as Array<{ name: string; annotations?: { readOnlyHint?: boolean; openWorldHint?: boolean } }>;
+    expect(tools).toHaveLength(9);
     for (const t of tools) {
       expect(t.annotations?.readOnlyHint, `readOnlyHint missing on ${t.name}`).toBe(true);
     }
@@ -46,6 +46,8 @@ describe('worker /mcp integration', () => {
     expect(articles?.annotations?.openWorldHint).toBe(true);
     const commits = tools.find((t) => t.name === 'get_commit_history');
     expect(commits?.annotations?.openWorldHint).toBe(true);
+    const antipatterns = tools.find((t) => t.name === 'get_antipatterns');
+    expect(antipatterns?.annotations?.openWorldHint).toBe(false);
   });
 
   it('health is not rate limited and returns tool names', async () => {

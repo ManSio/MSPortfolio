@@ -80,6 +80,10 @@ jobs:
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'get_commit_history'
+          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'get_antipatterns'
           echo 'tools/list works ✔'
       - name: Check MCP tools/call (get_articles)
         # Regression guard for KI-006: get_articles returned 403 from dev.to.

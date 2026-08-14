@@ -8,7 +8,8 @@
 import projectsData from '../data/projects.json' with { type: 'json' };
 import principlesData from '../data/principles.json' with { type: 'json' };
 import timelineData from '../data/timeline.json' with { type: 'json' };
-import type { MCPTool, MetricsSnapshot, Principle, ProjectsData, SimulationResult, StackAnalysis } from './types.js';
+import antipatternsData from '../data/antipatterns.json' with { type: 'json' };
+import type { Antipattern, MCPTool, MetricsSnapshot, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis } from './types.js';
 
 const projects = (projectsData as ProjectsData).projects;
 const principles = (principlesData as { principles: Principle[] }).principles;
@@ -78,8 +79,9 @@ export const SCENARIOS: ScenarioDef[] = [
 
 const LOADS = [1, 2, 5, 10, 20];
 
-function runSimulation(model: ArchitectureModel, scenario: string): { points: SimulationResult['points']; findings: string[] } {
+function runSimulation(model: ArchitectureModel, scenario: string): { points: SimulationResult['points']; findings: string[]; events: SimEvent[] } {
   const findings: string[] = [];
+  const events: SimEvent[] = [];
   const points: SimulationResult['points'] = [];
 
   for (const load of LOADS) {
@@ -127,6 +129,18 @@ function runSimulation(model: ArchitectureModel, scenario: string): { points: Si
     const p50 = chainMs;
     const p95 = chainMs * 1.7;
     const bottleneck = [...stageLatencies].sort((a, b) => b.ms - a.ms)[0].name;
+    const worstStageMs = [...stageLatencies].sort((a, b) => b.ms - a.ms)[0].ms;
+
+    // Failure-mode events — derived from the same numbers the points use.
+    if (worstStageMs >= 100) events.push({ load, type: 'circuit_open', detail: `${bottleneck} exceeds 100ms — breaker trips` });
+    if (worstStageMs >= 200) events.push({ load, type: 'fallback_engaged', detail: `degraded path serves ${bottleneck}` });
+    if (chainMs >= 2000) events.push({ load, type: 'budget_exceeded', detail: 'p95 budget (2s) crossed' });
+    if (scenario === 'node_loss') events.push({ load, type: 'degraded_mode', detail: 'a replica is lost in every parallel group' });
+    if (scenario === 'cache_cold' && model.cache) events.push({ load, type: 'cache_miss', detail: 'hit ratio dropped to 0 — cache serves nothing' });
+    if (scenario === 'llm_saturation' && model.llmDominant) {
+      if (load >= 2) events.push({ load, type: 'queue_backpressure', detail: 'LLM tier queues requests' });
+      if (load >= 10) events.push({ load, type: 'llm_timeout_risk', detail: 'generation latency threatens client timeouts' });
+    }
 
     points.push({
       load,
@@ -159,7 +173,7 @@ function runSimulation(model: ArchitectureModel, scenario: string): { points: Si
   }
   if (findings.length === 0) findings.push('No stage crosses the latency budget under this scenario.');
 
-  return { points, findings };
+  return { points, findings, events };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -300,6 +314,16 @@ export const TOOLS: MCPTool[] = [
     },
   },
   {
+    name: 'get_antipatterns',
+    description: "Get the owner's antipattern museum — real engineering mistakes with why they were bad, how they were fixed, and the lesson. Read-only, closed world.",
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute() {
+      const list = (antipatternsData as { antipatterns: Antipattern[] }).antipatterns;
+      return { count: list.length, antipatterns: list };
+    },
+  },
+  {
     name: 'analyze_stack',
     description: 'Compare the owner\'s stack against a job\'s required skills. Returns per-skill match with evidence and coverage.',
     inputSchema: {
@@ -371,7 +395,7 @@ export const TOOLS: MCPTool[] = [
         throw new Error(`Unknown scenario: ${scenarioId}. Available: ${SCENARIOS.map((s) => s.id).join(', ')}`);
       }
 
-      const { points, findings } = runSimulation(model, scenarioId);
+      const { points, findings, events } = runSimulation(model, scenarioId);
       const scenarioDef = SCENARIOS.find((s) => s.id === scenarioId)!;
       const recommendation =
         scenarioId === 'llm_saturation'
@@ -388,6 +412,7 @@ export const TOOLS: MCPTool[] = [
         scenarioLabel: scenarioDef.label,
         points,
         findings,
+        events,
         recommendation,
       } satisfies SimulationResult;
     },

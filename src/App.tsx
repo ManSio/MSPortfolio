@@ -1,6 +1,8 @@
 import { ArchitectureSimulator } from './components/playground/ArchitectureSimulator';
+import { Terminal } from './components/playground/Terminal';
 import { AgentChat } from './components/mcp/AgentChat';
 import { McpStatsCard } from './components/mcp/McpStatsCard';
+import { AntipatternsGrid } from './components/antipatterns/AntipatternsGrid';
 import { BlogSection } from './components/blog/BlogSection';
 import { GithubStats } from './components/metrics/GithubStats';
 import { ExternalWidgets } from './components/metrics/ExternalWidgets';
@@ -192,6 +194,16 @@ export default function App() {
               <span className="text-accent">claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp</span>
             </p>
           </div>
+        </Section>
+
+        {/* ── Antipatterns ──────────────────────────────── */}
+        <Section id="antipatterns" kicker="09 · the museum" title="Antipattern museum — the mistakes that taught the most">
+          <AntipatternsGrid />
+        </Section>
+
+        {/* ── Terminal ───────────────────────────────────── */}
+        <Section id="terminal" kicker="10 · the shell" title="Drop into a terminal">
+          <Terminal />
         </Section>
       </main>
 

@@ -83,6 +83,12 @@ export const INTENTS: Intent[] = [
     matches: ['недавн', 'последн', 'свеж', 'что сейчас', 'над чем', 'нового', 'recent', 'lately', 'коммит', 'commit', 'shipped', 'баг', 'bug', 'сложн', 'hardest', 'ошиб'],
     tools: [{ name: 'get_commit_history', args: {} }],
   },
+  {
+    id: 'antipatterns',
+    label: 'Antipatterns',
+    matches: ['антипаттерн', 'antipattern', 'музей', 'museum', 'mistake', 'урок', 'lesson', 'провал', 'факап', 'неудач'],
+    tools: [{ name: 'get_antipatterns', args: {} }],
+  },
 ];
 
 export const QUICK_QUESTIONS = [
@@ -91,6 +97,7 @@ export const QUICK_QUESTIONS = [
   'What are your engineering principles?',
   'Do you fit a Python/MCP role?',
   'What has he shipped recently?',
+  'What did your mistakes teach you?',
 ];
 
 export function matchIntent(text: string): Intent {
@@ -165,6 +172,11 @@ export function composeAnswer(intent: Intent, results: unknown[]): string {
       const d = data as { count?: number; commits?: Array<{ repo: string; message: string; date: string }> } | undefined;
       const list = (d?.commits ?? []).slice(0, 5).map((c) => `• [${c.repo}] ${c.message} (${c.date.slice(0, 10)})`).join('\n');
       return `Recent commits (${d?.count ?? 0}):\n${list}`;
+    }
+    case 'antipatterns': {
+      const d = data as { count?: number; antipatterns?: Array<{ title: string; lesson: string }> } | undefined;
+      const list = (d?.antipatterns ?? []).map((a) => `• ${a.title} — ${a.lesson}`).join('\n');
+      return `Antipattern museum (${d?.count ?? 0}):\n${list}`;
     }
     default:
       return JSON.stringify(results, null, 2);

@@ -22,7 +22,7 @@ export function ArchitectureSimulator() {
 
   const sim = useMemo(() => {
     const model = ARCHITECTURES[projectId];
-    const { points, findings } = runSimulation(model, scenario);
+    const { points, findings, events } = runSimulation(model, scenario);
     const def = SCENARIOS.find((s) => s.id === scenario)!;
     const recommendation =
       scenario === 'llm_saturation'
@@ -32,7 +32,7 @@ export function ArchitectureSimulator() {
           : scenario === 'cache_cold'
             ? 'Pre-warm caches on deploy; serve from last-good snapshot while warming.'
             : `Autoscale the ${points[points.length - 1].bottleneck} stage before it saturates.`;
-    return { points, findings, def, recommendation };
+    return { points, findings, def, recommendation, events };
   }, [projectId, scenario]);
 
   const project = projects.find((p) => p.id === projectId);
@@ -103,6 +103,22 @@ export function ArchitectureSimulator() {
             <li key={i}>• {f}</li>
           ))}
         </ul>
+        {sim.events.length > 0 && (
+          <div className="mt-3">
+            <p className="font-mono text-[11px] text-amber-600/80 dark:text-amber-400/80">system events</p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {dedupeEvents(sim.events).map((e) => (
+                <span
+                  key={e.type}
+                  title={e.detail}
+                  className="rounded border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-[11px] text-amber-600/90 dark:text-amber-400/90"
+                >
+                  {e.type} @×{e.load}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
         <p className="mt-3 border-t border-line pt-2 text-sm">
           <span className="font-semibold text-emerald-600 dark:text-emerald-400">recommendation:</span>{' '}
           <span className="text-muted">{sim.recommendation}</span>
@@ -122,4 +138,12 @@ function chartX(load: number, points: Array<{ load: number }>, width: number) {
 function chartY(v: number, points: Array<{ p95: number }>, height: number) {
   const max = Math.max(...points.map((p) => p.p95)) * 1.15;
   return height - 16 - (v / max) * (height - 32);
+}
+function dedupeEvents(events: Array<{ type: string; load: number; detail: string }>) {
+  const seen = new Set<string>();
+  return events.filter((e) => {
+    if (seen.has(e.type)) return false;
+    seen.add(e.type);
+    return true;
+  });
 }

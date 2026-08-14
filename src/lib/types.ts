@@ -165,5 +165,23 @@ export interface SimulationResult {
   scenarioLabel: string;
   points: SimPoint[];
   findings: string[];
+  /** Failure-mode events per load (circuit open, fallback, retry storm...). */
+  events: SimEvent[];
   recommendation: string;
+}
+
+export interface SimEvent {
+  load: number;
+  type: string;
+  detail: string;
+}
+
+export interface Antipattern {
+  id: string;
+  title: string;
+  mistake: string;
+  whyBad: string;
+  fix: string;
+  lesson: string;
+  tag: string;
 }

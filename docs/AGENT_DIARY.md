@@ -73,6 +73,16 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 19:00] — Ideas 3/5/6: failure events в симуляторе, antipattern museum, terminal
+**Status:** ✅ Fixed (live)
+**Root Cause:** — (feature batch)
+**Fix:**
+1. Симулятор: runSimulation эмитит failure-mode события (circuit_open ≥100ms, fallback_engaged ≥200ms, degraded_mode при node_loss, cache_miss, queue_backpressure/llm_timeout_risk для LLM) — чипы в UI. Live: node_loss → degraded_mode + circuit_open@×10/×20.
+2. Antipattern museum: `src/data/antipatterns.json` (7 реальных инцидентов из AGENT_DIARY, обобщённо: fork-as-own, hardcoded-theme, raw-json-schema-500, silent-live-break, wire-format-assertion, cancelled-fire-and-forget, assumed-binding-works) + MCP-тул `get_antipatterns` (9-й) + секция AntipatternsGrid.
+3. Terminal: `src/components/playground/Terminal.tsx` — команды поверх тех же тулов (callLocalTool), секция «10 · the shell»; man/help/alias.
+**Guard:** тесты 36/36 (get_antipatterns, events по сценариям, аннотации openWorldHint false); live-валидация: tools/list 9, antipatterns count 7, events.
+**Pattern:** NEW
+
 ## [2026-08-14 18:30] — CI: refresh metrics до build; live-валидация новых фич
 **Status:** ✅ Fixed
 **Root Cause:** «Refresh metrics snapshot» стоял после «Build» — каждый деплой нёс снапшот предыдущего рана (get_commit_history показывал unavailable, пока CI не пересобрал).

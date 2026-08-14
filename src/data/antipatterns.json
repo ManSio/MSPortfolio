@@ -1,0 +1,67 @@
+{
+  "antipatterns": [
+    {
+      "id": "fork-as-own",
+      "title": "Claimed a fork as my own work",
+      "mistake": "A forked repository slipped into the portfolio as a personal project.",
+      "whyBad": "A portfolio's core promise is that every claim is the owner's own work. A fork is someone else's — and an AI agent or recruiter would trust a false claim as fact.",
+      "fix": "Filter the fork flag everywhere: live GitHub fetch, the hourly metrics snapshot, and the portfolio data itself.",
+      "lesson": "Verify ownership before claiming credit — never trust the shape of a data source over its content.",
+      "tag": "data"
+    },
+    {
+      "id": "hardcoded-theme",
+      "title": "Hardcoded dark-theme colors broke the light theme",
+      "mistake": "Components used literal dark-theme colors, so switching the theme produced white text on white background.",
+      "whyBad": "A theme is a cross-cutting concern — local color literals silently violate the global invariant, and only a full visual pass catches it.",
+      "fix": "Semantic tokens through CSS variables (ink/paper/muted/faint/accent) with a dark variant; no raw palette colors in components.",
+      "lesson": "Design tokens are invariants, not styling sugar. If the invariant is global, the enforcement must be too.",
+      "tag": "frontend"
+    },
+    {
+      "id": "raw-json-schema-500",
+      "title": "Passed raw JSON Schema to an SDK that wanted zod",
+      "mistake": "registerTool accepted the config but every request 500'd — the SDK v2 expects a zod schema, not a raw JSON Schema object.",
+      "whyBad": "A misleading API surface silently accepts input it can't use; the failure appeared only at request time, not at registration.",
+      "fix": "Convert with z.fromJSONSchema() and verify with an integration test (tools/list + tools/call) before shipping.",
+      "lesson": "Verify the SDK's expected input format with a real call — compile-time acceptance is not runtime acceptance.",
+      "tag": "sdk"
+    },
+    {
+      "id": "silent-live-break",
+      "title": "A live data source broke and nothing noticed",
+      "mistake": "get_articles started returning 403 from dev.to in production; the tool gracefully fell back to an error and stayed silent.",
+      "whyBad": "Graceful degradation without monitoring turns an outage into a quiet lie: the tool answered, but with no data.",
+      "fix": "Add a User-Agent header + committed-snapshot fallback, and a CI smoke step that calls the real tool, not just tools/list.",
+      "lesson": "A smoke test that lists tools proves discovery, not function. Exercise the real call path.",
+      "tag": "observability"
+    },
+    {
+      "id": "wire-format-assertion",
+      "title": "Asserted against the wrong wire format",
+      "mistake": "A CI grep looked for \"count\" in a response where the field is JSON-escaped inside an SSE text payload (\\\"count\\\") — the check never matched.",
+      "whyBad": "An assertion against an imagined format is worse than none: it passed when it should have failed loudly.",
+      "fix": "Match the bare token and document why; re-check the real byte-level output when writing assertions.",
+      "lesson": "Before asserting on output, look at the output. Tests encode assumptions — make the assumptions explicit.",
+      "tag": "testing"
+    },
+    {
+      "id": "cancelled-fire-and-forget",
+      "title": "Fire-and-forget work silently vanished in production",
+      "mistake": "An unawaited promise (void task) was expected to run after the response — the runtime cancelled it, and the KV counter never wrote.",
+      "whyBad": "Local tests in Node don't cancel pending promises, so the code was green while production silently lost the work.",
+      "fix": "Run background work inside ctx.waitUntil() in Workers; keep a void fallback only where the runtime doesn't cancel.",
+      "lesson": "Runtime lifecycles differ between dev and prod. If work outlives the request, it must be registered with the runtime.",
+      "tag": "concurrency"
+    },
+    {
+      "id": "assumed-binding-works",
+      "title": "Assumed a platform feature was enforced",
+      "mistake": "A Cloudflare rate-limit binding deployed cleanly, but limit() returned success on every call — enforcement simply wasn't active on the plan.",
+      "whyBad": "A binding that deploys is not a binding that enforces; without an empirical burst test the protection was imaginary.",
+      "fix": "Test the guard with a deliberately low limit before trusting it; document plan-dependent behavior explicitly.",
+      "lesson": "Verify platform behavior empirically — configuration acceptance and runtime enforcement are different contracts.",
+      "tag": "platform"
+    }
+  ]
+}
