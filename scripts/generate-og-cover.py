@@ -12,18 +12,20 @@ from pathlib import Path
 
 try:
     if sys.stdout.encoding != "utf-8":
-        sys.stdout.reconfigure(encoding="utf-8")
+        # pyright stub for TextIO lacks `reconfigure`; it exists at runtime.
+        sys.stdout.reconfigure(encoding="utf-8")  # type: ignore  # noqa
 
     from PIL import Image, ImageDraw, ImageFont
 
     W, H = 1200, 630
-    INK = (10, 10, 10, 255)        # --color-ink (dark)
-    PAPER = (250, 250, 250, 255)   # --color-paper
-    MUTED = (182, 191, 204, 255)   # --color-muted
-    FAINT = (122, 132, 148, 255)   # --color-faint
-    ACCENT = (0, 217, 255, 255)    # --color-accent (dark theme)
-    PRIMARY = (0, 102, 255, 255)   # --color-primary
-    LINE = (35, 42, 51, 255)       # --color-line (dark theme)
+    Color = tuple[int, int, int, int]
+    INK: Color = (10, 10, 10, 255)        # --color-ink (dark)
+    PAPER: Color = (250, 250, 250, 255)   # --color-paper
+    MUTED: Color = (182, 191, 204, 255)   # --color-muted
+    FAINT: Color = (122, 132, 148, 255)   # --color-faint
+    ACCENT: Color = (0, 217, 255, 255)    # --color-accent (dark theme)
+    PRIMARY: Color = (0, 102, 255, 255)   # --color-primary
+    LINE: Color = (35, 42, 51, 255)       # --color-line (dark theme)
 
     FONTS = Path("C:/Windows/Fonts")
     def font(name: str, size: int) -> ImageFont.FreeTypeFont:
@@ -38,8 +40,8 @@ try:
     img = Image.new("RGBA", (W, H), INK)
 
     # ── Ambient blobs (center-white radial gradient masked to a color) ──
-    def blob(size: int, color: tuple, peak: float, x: int, y: int) -> None:
-        grad = Image.radial_gradient("L").resize((size, size), Image.LANCZOS)
+    def blob(size: int, color: Color, peak: float, x: int, y: int) -> None:
+        grad = Image.radial_gradient("L").resize((size, size), Image.Resampling.LANCZOS)
         layer = Image.new("RGBA", (size, size), color)
         layer.putalpha(grad.point(lambda v: int(v * peak)))
         img.alpha_composite(layer, (x, y))

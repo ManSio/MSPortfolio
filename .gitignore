@@ -13,6 +13,9 @@ dist
 dist-ssr
 *.local
 
+# Local diagnostic artifacts (mobile-check screenshots, edge profile)
+.tmp
+
 # Agent working files (task state is ephemeral, see AGENTS.md §0.1)
 .agent_task_state.md
 

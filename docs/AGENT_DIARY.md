@@ -59,6 +59,13 @@
 **Guard:** CI smoke на живой endpoint; бандл проверяется `wrangler deploy --dry-run` + смоук собранного index.js.
 **Pattern:** NEW
 
+## [2026-08-14 13:00] — SEO/mobile/CTA pass: OG-обложка, touch-targets, мобильная проверка
+**Status:** ✅ Fixed
+**Root Cause:** — (запрос владельца: закрыть пункты SEO-аудита, присланного вместе с задачей)
+**Fix:** (1) Базовые мета уже были (title/description/og:title/og:description/og:url/canonical/JSON-LD Person) — добавлены `og:image` (сгенерирована `scripts/generate-og-cover.py` через PIL, 1200×630, фирменный стиль: ink/cyan/primary) + `og:image:width/height/alt` + `twitter:card=summary_large_image` + twitter:title/description/image. (2) CTA-секция 08 «Let's talk» (LinkedIn + fork-ссылка + MCP connect) после Timeline; mailto и Download CV не добавлены — email/CV у владельца не обнаружены (OPEN_QUESTION). (3) Мобильная проверка автоматизирована `scripts/check-mobile.mjs` (headless Edge + CDP, эмуляция 375×812): overflow=false, 8/8 секций рендерятся, но CTA-кнопки были 36–38px → Button получил `min-h-11` (44px, Apple HIG), инпут AgentChat выровнен. Timeline уже вертикальный — правок не потребовал.
+**Guard:** `node scripts/check-mobile.mjs` как регресс-проверка вёрстки; og-cover регенерируется скриптом; .tmp в .gitignore.
+**Pattern:** NEW
+
 ## [2026-08-14 14:30] — Blog (dev.to), vitest, CI auto-deploy worker, LLM-чат
 **Status:** ✅ Fixed
 **Root Cause:** —

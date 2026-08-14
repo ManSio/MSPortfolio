@@ -15,9 +15,14 @@ import { mkdirSync } from 'node:fs';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
-const BASE = 'http://127.0.0.1:4173/MSPortfolio/';
+const CANDIDATES = [
+  'http://localhost:4173/MSPortfolio/',
+  'http://127.0.0.1:4173/MSPortfolio/',
+  'http://[::1]:4173/MSPortfolio/',
+];
 const PREVIEW_PORT = 4173;
 
+let BASE = CANDIDATES[0];
 let preview = null;
 let edge = null;
 let ws = null;
@@ -55,16 +60,21 @@ async function main() {
   log('booting vite preview on :' + PREVIEW_PORT);
   preview = spawn('pnpm', ['preview', '--port', String(PREVIEW_PORT)], { shell: true, stdio: 'ignore' });
 
-  // wait for preview to accept requests
+  // wait for preview to accept requests (try all localhost spellings — vite
+  // may bind IPv4 or IPv6 depending on the platform)
   let ready = false;
   for (let i = 0; i < 40; i++) {
-    try {
-      const r = await fetch(BASE, { signal: AbortSignal.timeout(1000) });
-      if (r.ok) { ready = true; break; }
-    } catch { /* not yet */ }
+    for (const url of CANDIDATES) {
+      try {
+        const r = await fetch(url, { signal: AbortSignal.timeout(800) });
+        if (r.ok) { BASE = url; ready = true; break; }
+      } catch { /* not yet */ }
+    }
+    if (ready) break;
     await sleep(250);
   }
   if (!ready) throw new Error('vite preview did not come up');
+  log('preview reachable at', BASE);
 
   log('launching headless Edge');
   edge = spawn(EDGE, [

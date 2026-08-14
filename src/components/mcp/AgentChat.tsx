@@ -271,7 +271,7 @@ export function AgentChat() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask in EN or RU… e.g. «Как устроен поиск в mscodebase?»"
             disabled={busy}
-            className="flex-1 rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm text-paper placeholder:text-faint focus:border-accent/60 focus:outline-none disabled:opacity-40"
+            className="min-h-11 flex-1 rounded-lg border border-line bg-surface-2 px-3 py-2.5 text-sm text-paper placeholder:text-faint focus:border-accent/60 focus:outline-none disabled:opacity-40"
           />
           <Button variant="accent" type="submit" disabled={busy}>
             Run
