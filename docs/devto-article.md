@@ -1,7 +1,7 @@
 ---
 title: "I turned my portfolio into an MCP server"
 published: false
-description: "A GitHub Pages portfolio that is also a production MCP server on Cloudflare Workers — 9 tools, an interactive load simulator with failure events, an agent loop whose every tool call is visible, and a live query counter."
+description: "A GitHub Pages portfolio that is also a production MCP server on Cloudflare Workers — 12 tools, an interactive load simulator with failure events, an agent loop whose every tool call is visible, a live query counter, and a lab page of diaries/experiments/tests."
 tags: mcp, ai, cloudflare, portfolio
 cover_image: https://raw.githubusercontent.com/ManSio/MSPortfolio/main/docs/devto-cover1.png
 ---
@@ -107,7 +107,7 @@ export default {
 
 > 💡 **Pitfall:** `toNodeHandler()` breaks on Workers. The web-standard path is the whole point of the v2 SDK — use `handler.fetch()` directly.
 
-### 3.4 The nine tools
+### 3.4 The twelve tools
 
 | Tool | What it does |
 |---|---|
@@ -118,6 +118,9 @@ export default {
 | `get_articles` | Live fetch of recent Dev.to articles (tags, reading time) |
 | `get_commit_history` | Recent commits across the owner's repos — powers "what has he been building lately" |
 | `get_antipatterns` | The antipattern museum: real mistakes with why they were bad and the lesson |
+| `get_experiments` | Engineering experiments: hypothesis → command → verdict (confirmed/refuted/partial) + negative results |
+| `get_diary` | The engineering diary: incidents, root causes, fixes, guards — "what broke and how did you fix it" |
+| `get_known_issues` | The known-issues board (KI-*): open debt with status, temperature and deadlines |
 | `analyze_stack` | Compares the owner's stack against a job's required skills — per-skill evidence + coverage |
 | `simulate_architecture` | Simulates a project's architecture under load spike / node loss / cache cold / LLM saturation; returns p50 / p95 / throughput / bottleneck / failure events |
 
@@ -185,7 +188,8 @@ The smoke job is the important one: the endpoint is a product, not a demo, and C
 
 - `tools/list` responds in **~100ms** (health: ~97ms).
 - `simulate_architecture` at 20× load, search architecture: **p95 239ms** (load spike), **401ms** (node loss), **301ms** (cold cache). Under node loss the circuit breaker trips at ×10; the design absorbs the spike otherwise.
-- The endpoint now serves **9 tools**, all read-only-annotated, and a live counter tracks how many MCP queries it serves per day.
+- The endpoint now serves **12 tools**, all read-only-annotated, and a live counter tracks how many MCP queries it serves per day.
+- A lab page (`#/lab`) renders the diaries, experiments and test suites from the same JSON files the tools read — `get_experiments` (7 experiments, 5 confirmed / 1 partial / 1 refuted), `get_diary` (19 entries), `get_known_issues` (KI-001..010). The evidence behind every claim is a URL you can open, not a bullet point.
 - `get_articles` fetches live Dev.to data (`source: live`); the CI smoke exercises a real `tools/call`, not just `tools/list`.
 - An antipattern museum (`get_antipatterns`) turns the build's own mistakes — a forked repo claimed as mine, a JSON-Schema 500, a silently-broken live source, a cancelled fire-and-forget — into honest lessons.
 
