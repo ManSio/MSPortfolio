@@ -10,6 +10,7 @@ import testSuitesData from '../src/data/lab/test-suites.json' with { type: 'json
 interface Experiment {
   id: string;
   date: string;
+  project?: string;
   title: string;
   hypothesis: string;
   command: string;
@@ -25,6 +26,7 @@ interface NegativeResult {
 }
 interface DiaryEntry {
   date: string;
+  project?: string;
   title: string;
   status: 'fixed' | 'partial';
   rootCause: string;
@@ -34,6 +36,7 @@ interface DiaryEntry {
 }
 interface KnownIssue {
   id: string;
+  project?: string;
   problem: string;
   status: string;
   temperature: 'stable' | 'watching';
@@ -51,8 +54,9 @@ interface TestSuite {
 
 // Every assertion here guards the "lab" page + MCP tools: the data files are
 // the single machine-readable projection of docs/*.md — keep them in sync.
+// NOTE: lab data is English (site language); docs/*.md stay Russian (internal logs).
 describe('lab data integrity', () => {
-  it('experiments: every entry is complete and verdicts are valid', () => {
+  it('experiments: every entry is complete, verdicts valid, project tagged', () => {
     const exps = (experimentsData as { experiments: Experiment[] }).experiments;
     expect(exps.length).toBeGreaterThanOrEqual(7);
     for (const e of exps) {
@@ -63,6 +67,7 @@ describe('lab data integrity', () => {
       expect(e.result.length).toBeGreaterThan(20);
       expect(e.finding.length).toBeGreaterThan(10);
       expect(['confirmed', 'refuted', 'partial']).toContain(e.verdict);
+      expect(e.project).toBeTruthy(); // per-project attribution
     }
     const ids = new Set(exps.map((e) => e.id));
     expect(ids.size).toBe(exps.length); // unique ids
@@ -79,7 +84,7 @@ describe('lab data integrity', () => {
     }
   });
 
-  it('diary: entries are complete and statuses valid', () => {
+  it('diary: entries are complete, statuses valid, project tagged', () => {
     const entries = (diaryData as { entries: DiaryEntry[] }).entries;
     expect(entries.length).toBeGreaterThanOrEqual(15);
     for (const e of entries) {
@@ -90,10 +95,11 @@ describe('lab data integrity', () => {
       expect(e.guard.length).toBeGreaterThan(0);
       expect(e.pattern.length).toBeGreaterThan(0);
       expect(['fixed', 'partial']).toContain(e.status);
+      expect(e.project).toBeTruthy();
     }
   });
 
-  it('known issues: ids are KI-N and temperatures valid', () => {
+  it('known issues: ids are KI-N, temperatures valid, project tagged', () => {
     const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
     expect(issues.length).toBeGreaterThanOrEqual(10);
     const ids = new Set(issues.map((i) => i.id));
@@ -103,6 +109,7 @@ describe('lab data integrity', () => {
       expect(['stable', 'watching']).toContain(i.temperature);
       expect(i.problem.length).toBeGreaterThan(10);
       expect(i.owner.length).toBeGreaterThan(0);
+      expect(i.project).toBeTruthy();
     }
   });
 
@@ -120,27 +127,46 @@ describe('lab data integrity', () => {
     }
   });
 
-  it('LabPage renders server-side with all six sections', () => {
+  it('LabPage renders server-side with all seven sections + project filter', () => {
     const html = renderToStaticMarkup(createElement(LabPage));
-    // Hero + 6 numbered sections (experiments, negative results, diary, known issues, tests, dependencies)
+    // Hero + 7 numbered sections (decision logs, experiments, negative results, diary, known issues, tests, dependencies)
     for (const needle of [
       'The evidence trail',
-      '01 · experiments',
-      '02 · do not repeat',
-      '03 · the diary',
-      '04 · known issues',
-      '05 · tests',
-      '06 · dependencies',
+      '01 · decision logs',
+      '02 · experiments',
+      '03 · do not repeat',
+      '04 · the diary',
+      '05 · known issues',
+      '06 · tests',
+      '07 · dependencies',
+      'All projects',
       'get_experiments',
       'get_diary',
       'get_known_issues',
     ]) {
       expect(html).toContain(needle);
     }
-    // Every experiment and diary entry is present in the DOM
+    // Every experiment, diary entry and known issue is present in the DOM
+    // Every experiment and diary entry is present in the DOM (short slice avoids HTML-escaped apostrophes)
     const exps = (experimentsData as { experiments: Experiment[] }).experiments;
-    for (const e of exps) expect(html).toContain(e.title.slice(0, 30));
+    for (const e of exps) expect(html).toContain(e.title.slice(0, 20));
     const entries = (diaryData as { entries: DiaryEntry[] }).entries;
-    for (const d of entries) expect(html).toContain(d.title.slice(0, 30));
+    for (const d of entries) expect(html).toContain(d.title.slice(0, 20));
+    const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
+    for (const i of issues) expect(html).toContain(i.id);
+  });
+
+  it('lab data is English (site language); only docs/*.md stay Russian', () => {
+    const exps = (experimentsData as { experiments: Experiment[] }).experiments;
+    const entries = (diaryData as { entries: DiaryEntry[] }).entries;
+    const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
+    // Cyrillic is not allowed in lab projections (would leak Russian into the EN site)
+    const cyrillic = /[а-яА-ЯёЁ]/;
+    const texts = [
+      ...exps.map((e) => e.title + e.hypothesis + e.result + e.finding),
+      ...entries.map((d) => d.title + d.rootCause + d.fix + d.guard),
+      ...issues.map((i) => i.problem),
+    ];
+    for (const t of texts) expect(t.match(cyrillic)).toBeNull();
   });
 });

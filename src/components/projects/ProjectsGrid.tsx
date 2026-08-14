@@ -17,7 +17,7 @@ export function ProjectsGrid() {
 
 function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolean }) {
   return (
-    <Card className={`reveal flex flex-col ${glassy ? 'glass' : ''}`}>
+    <Card className={`reveal flex flex-col ${glassy ? 'glass-card hover-lift' : ''}`}>
       <CardHeader>
         <div>
           <a href={p.url} target="_blank" rel="noreferrer" className="text-lg font-bold hover:text-accent">

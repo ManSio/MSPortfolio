@@ -138,3 +138,84 @@ body {
   border: 1px solid color-mix(in oklab, var(--color-line) 65%, transparent);
   box-shadow: 0 8px 32px rgb(0 0 0 / 0.07);
 }
+
+/* ── Glassmorphism 2.0 — layered frosted card with gradient edge and sheen ──
+   Multi-layer blur + dynamic transparency + top highlight (2026 trend).
+   Used on Lab cards; hover lifts + glow handled in components. */
+.glass-card {
+  position: relative;
+  background:
+    linear-gradient(160deg, color-mix(in oklab, var(--color-surface) 62%, transparent) 0%, color-mix(in oklab, var(--color-surface-2) 38%, transparent) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid color-mix(in oklab, var(--color-line) 60%, transparent);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.06) inset,
+    0 10px 40px -14px rgb(0 0 0 / 0.18);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--color-accent) 35%, transparent), transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+.glass-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  pointer-events: none;
+}
+:root:not(.dark) .glass-card::before {
+  background: linear-gradient(135deg, color-mix(in oklab, var(--color-accent) 45%, transparent), transparent 40%);
+}
+
+/* Micro-animation: hover lift + accent glow for any interactive card */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-line));
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.06) inset,
+    0 18px 50px -18px rgb(0 0 0 / 0.35),
+    0 0 0 1px color-mix(in oklab, var(--color-accent) 12%, transparent);
+}
+
+/* Soft entrance for lab sections (chained to .reveal via .lab-reveal) */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.lab-enter {
+  animation: fadeSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-card,
+  .hover-lift {
+    transition: none;
+  }
+  .lab-enter {
+    animation: none;
+  }
+}

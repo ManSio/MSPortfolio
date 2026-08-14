@@ -193,6 +193,7 @@ export type ExperimentVerdict = 'confirmed' | 'refuted' | 'partial';
 export interface Experiment {
   id: string;
   date: string;
+  project?: string;
   title: string;
   hypothesis: string;
   command: string;
@@ -217,6 +218,7 @@ export type DiaryStatus = 'fixed' | 'partial';
 
 export interface DiaryEntry {
   date: string;
+  project?: string;
   title: string;
   status: DiaryStatus;
   rootCause: string;
@@ -233,6 +235,7 @@ export type IssueTemperature = 'stable' | 'watching';
 
 export interface KnownIssue {
   id: string;
+  project?: string;
   problem: string;
   status: string;
   temperature: IssueTemperature;

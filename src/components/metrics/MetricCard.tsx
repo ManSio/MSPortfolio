@@ -20,7 +20,7 @@ export function MetricCard({
   children?: ReactNode;
 }) {
   return (
-    <div className="reveal rounded-xl border border-line bg-surface/60 p-4">
+    <div className="glass-card reveal rounded-xl p-4">
       <p className="text-xs font-medium text-faint uppercase tracking-wide">{label}</p>
       <p className={cn('mt-1.5 font-mono text-2xl font-semibold tabular-nums', tone === 'accent' ? 'text-accent' : 'text-paper')}>
         {value}

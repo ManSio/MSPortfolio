@@ -86,9 +86,10 @@
 
 ## Lab (evidence trail)
 
-The `#/lab` page renders the diaries, experiments, known issues and test suites from the same JSON files that feed the MCP tools (`get_experiments`, `get_diary`, `get_known_issues`):
+The `#/lab` page renders the diaries, experiments, known issues and test suites from the same JSON files that feed the MCP tools (`get_experiments`, `get_diary`, `get_known_issues`), with a per-project filter and decision logs:
 
 - 7 experiments with hypothesis → command → verdict (5 confirmed, 1 partial, 1 refuted) + 3 negative results
 - 19 diary entries (incidents, root causes, fixes, guards)
-- 10 known issues (KI-001..KI-010) with status and temperature
-- 3 test suites / 36 tests
+- 10 known issues (KI-001..KI-011) with status and temperature
+- 4 test suites / 47 tests
+- Per-project decision logs (considered → chosen → why → cost) for every project

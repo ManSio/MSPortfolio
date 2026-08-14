@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { cn } from '../../lib/cn';
 
 /**
@@ -19,6 +20,7 @@ export function Donut({ segments, size = 180, thickness = 26, centerLabel }: { s
   const r = (size - thickness) / 2;
   const c = 2 * Math.PI * r;
   let acc = 0;
+  const [hovered, setHovered] = useState<string | null>(null);
 
   return (
     <div className="flex items-center gap-4">
@@ -29,6 +31,7 @@ export function Donut({ segments, size = 180, thickness = 26, centerLabel }: { s
             const dash = frac * c;
             const offset = -acc * c;
             acc += frac;
+            const active = hovered === seg.label;
             return (
               <circle
                 key={seg.label}
@@ -37,25 +40,32 @@ export function Donut({ segments, size = 180, thickness = 26, centerLabel }: { s
                 r={r}
                 fill="none"
                 stroke={seg.color}
-                strokeWidth={thickness}
+                strokeWidth={active ? thickness + 4 : thickness}
                 strokeDasharray={`${dash} ${c - dash}`}
                 strokeDashoffset={offset}
                 transform={`rotate(-90 ${size / 2} ${size / 2})`}
+                opacity={hovered === null || active ? 1 : 0.45}
+                style={{ transition: 'stroke-width 0.2s ease, opacity 0.2s ease', cursor: 'pointer' }}
+                onMouseEnter={() => setHovered(seg.label)}
+                onMouseLeave={() => setHovered(null)}
               />
             );
           })}
         <text x="50%" y="47%" textAnchor="middle" className="fill-paper" fontSize={size * 0.16} fontWeight={700} fontFamily="var(--font-mono)">
-          {total}
+          {hovered ? total : total}
         </text>
-        {centerLabel ? (
-          <text x="50%" y="60%" textAnchor="middle" className="fill-faint" fontSize={size * 0.07} fontFamily="var(--font-mono)">
-            {centerLabel}
-          </text>
-        ) : null}
+        <text x="50%" y="60%" textAnchor="middle" className="fill-faint" fontSize={size * 0.07} fontFamily="var(--font-mono)">
+          {centerLabel}
+        </text>
       </svg>
       <div className="space-y-1.5">
         {segments.map((seg) => (
-          <div key={seg.label} className="flex items-center gap-2 text-sm">
+          <div
+            key={seg.label}
+            onMouseEnter={() => setHovered(seg.label)}
+            onMouseLeave={() => setHovered(null)}
+            className={`flex cursor-pointer items-center gap-2 rounded px-1 py-0.5 text-sm transition-colors ${hovered === seg.label ? 'bg-surface-2' : ''}`}
+          >
             <span className="h-2.5 w-2.5 rounded-sm" style={{ background: seg.color }} />
             <span className="text-muted">{seg.label}</span>
             <span className="ml-auto font-mono tabular-nums text-paper">{seg.value}</span>

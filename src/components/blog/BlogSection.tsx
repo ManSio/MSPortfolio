@@ -34,7 +34,7 @@ function ArticleCard({ article: a, glassy }: { article: DevToArticle; glassy?: b
       target="_blank"
       rel="noreferrer"
       className={`reveal group flex flex-col overflow-hidden rounded-xl border border-line bg-surface/60 transition-colors hover:border-accent/50 ${
-        glassy ? 'glass' : ''
+        glassy ? 'glass-card hover-lift' : ''
       }`}
     >
       {img ? (

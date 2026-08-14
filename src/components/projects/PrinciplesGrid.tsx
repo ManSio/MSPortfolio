@@ -9,7 +9,7 @@ export function PrinciplesGrid() {
   return (
     <div className="grid gap-5 md:grid-cols-2">
       {data.principles.map((p, i) => (
-        <Card key={p.id} className={`reveal ${i % 3 === 2 ? 'glass' : ''}`}>
+        <Card key={p.id} className={`reveal ${i % 3 === 2 ? 'glass-card hover-lift' : ''}`}>
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-lg font-bold">{p.title}</h3>
             <Badge tone="accent">P-{String(i + 1).padStart(2, '0')}</Badge>

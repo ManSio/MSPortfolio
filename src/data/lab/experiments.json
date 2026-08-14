@@ -3,90 +3,97 @@
     {
       "id": "exp-1",
       "date": "2026-08-14",
-      "title": "MCP-сервер на @modelcontextprotocol/server@2 + Fastify поднимается без build-step",
-      "hypothesis": "Node 24 нативно запускает TS (type-stripping); официальный @modelcontextprotocol/fastify + toNodeHandler(createMcpHandler(factory)) отвечает на tools/list, tools/call, initialize по Streamable HTTP; JSON Schema в registerTool принимать НЕ будет — нужен z.fromJSONSchema.",
-      "command": "node server/index.ts → curl -X POST /mcp (tools/list / tools/call / initialize) → проба z.fromJSONSchema (.zod-probe.mjs).",
-      "result": "tools/list: 6 тулов; tools/call get_projects(filter=mcp): 2 проекта; initialize: protocolVersion 2025-11-25; raw JSON Schema → HTTP 500 на КАЖДОМ запросе; z.fromJSONSchema → PARSE_OK true INVALID_CAUGHT true → фикс.",
+      "project": "msp-portfolio",
+      "title": "MCP server on @modelcontextprotocol/server@2 + Fastify boots without a build step",
+      "hypothesis": "Node 24 runs TS natively (type-stripping); the official @modelcontextprotocol/fastify + toNodeHandler(createMcpHandler(factory)) answers tools/list, tools/call, initialize over Streamable HTTP; registerTool will NOT accept raw JSON Schema — z.fromJSONSchema is required.",
+      "command": "node server/index.ts → curl -X POST /mcp (tools/list / tools/call / initialize) → probe z.fromJSONSchema (.zod-probe.mjs).",
+      "result": "tools/list: 6 tools; tools/call get_projects(filter=mcp): 2 projects; initialize: protocolVersion 2025-11-25; raw JSON Schema → HTTP 500 on EVERY request; z.fromJSONSchema → PARSE_OK true INVALID_CAUGHT true → fix applied.",
       "verdict": "confirmed",
-      "finding": "registerTool не принимает сырую JSON Schema; конвертация z.fromJSONSchema обязательна."
+      "finding": "registerTool rejects raw JSON Schema; z.fromJSONSchema conversion is mandatory."
     },
     {
       "id": "exp-2",
       "date": "2026-08-14",
-      "title": "Сервер переживает adversarial-запросы и 8 параллельных вызовов без смешивания результатов",
-      "hypothesis": "Валидация JSON-RPC (400 на мусор), DNS-rebinding защита (403 на чужой Origin), параллельные вызовы возвращают СВОЙ результат по фильтру.",
-      "command": "7 атак (malformed JSON, unknown method, bad protocol version, unknown tool, missing args, CORS preflight, evil origin) + 8 параллельных tools/call с проверкой содержимого.",
-      "result": "400 / -32601 / 400 / -32602 / validation error / 403 / 403; concurrency PASS=8/8 (mscodebase для filter=mcp, infrawise для filter=aws, без перекрёста). Сервер жив после всех атак (health OK).",
+      "project": "msp-portfolio",
+      "title": "Server survives adversarial requests and 8 parallel calls without cross-wiring results",
+      "hypothesis": "JSON-RPC validation (400 on garbage), DNS-rebinding protection (403 on foreign Origin), parallel calls return THEIR OWN result per filter.",
+      "command": "7 attacks (malformed JSON, unknown method, bad protocol version, unknown tool, missing args, CORS preflight, evil origin) + 8 parallel tools/call with content verification.",
+      "result": "400 / -32601 / 400 / -32602 / validation error / 403 / 403; concurrency PASS=8/8 (mscodebase for filter=mcp, infrawise for filter=aws, no cross-wiring). Server alive after all attacks (health OK).",
       "verdict": "confirmed",
-      "finding": "CORS-preflight легитимного origin → 403 при пустом ALLOWED_ORIGINS — сознательный secure-default (fail-closed)."
+      "finding": "CORS preflight from a legit origin → 403 with empty ALLOWED_ORIGINS — a deliberate secure-default (fail-closed)."
     },
     {
       "id": "exp-3",
       "date": "2026-08-14 15:00",
-      "title": "Живой MCP-эндпоинт отвечает на tools/list/tools/call и отдаёт числа, совпадающие с симуляцией в коде",
-      "hypothesis": "health/tools/list = 200; simulate_architecture на живом эндпоинте = результат runSimulation в mcp-tools.ts; get_articles возвращает статьи dev.to.",
-      "command": "curl к https://msp-portfolio.mansio-dev.workers.dev (health, tools/list, tools/call × 4 сценария simulate_architecture, get_articles, analyze_stack) + python-бург 20× /mcp/health.",
-      "result": "health 97ms; simulate_architecture p95@20x: load_spike 238.5 / node_loss 400.9 / cache_cold 301.4 / llm_saturation 238.5 (=load_spike — no-op на не-LLM); get_articles 403 от dev.to (БАГ); analyze_stack coverage 0.75; бург curl-UA 200×20 (rate limit отсутствует); бург Python-urllib 403×20 (bot-protection).",
+      "project": "msp-portfolio",
+      "title": "Live MCP endpoint answers tools/list/tools/call and returns numbers matching the in-code simulation",
+      "hypothesis": "health/tools/list = 200; simulate_architecture on the live endpoint = runSimulation result in mcp-tools.ts; get_articles returns dev.to articles.",
+      "command": "curl to https://msp-portfolio.mansio-dev.workers.dev (health, tools/list, tools/call × 4 simulate_architecture scenarios, get_articles, analyze_stack) + python burst 20× /mcp/health.",
+      "result": "health 97ms; simulate_architecture p95@20x: load_spike 238.5 / node_loss 400.9 / cache_cold 301.4 / llm_saturation 238.5 (=load_spike — no-op on non-LLM); get_articles 403 from dev.to (BUG); analyze_stack coverage 0.75; curl-UA burst 200×20 (no rate limit); Python-urllib burst 403×20 (bot protection).",
       "verdict": "partial",
-      "finding": "Числа симулятора совпали с кодом; get_articles опровергнут (403). Дефекты: KI-006 (get_articles), KI-007 (rate limit), KI-008 (llm_saturation no-op)."
+      "finding": "Simulator numbers matched the code; get_articles refuted (403). Defects: KI-006 (get_articles), KI-007 (rate limit), KI-008 (llm_saturation no-op)."
     },
     {
       "id": "exp-4",
       "date": "2026-08-14 15:30",
-      "title": "SDK v2 registerTool принимает annotations.readOnlyHint",
-      "hypothesis": "tsc без ошибок при { annotations: { readOnlyHint: true } } в опциях registerTool.",
-      "command": "Временная правка worker/index.ts → npx tsc -p worker/tsconfig.json → revert.",
-      "result": "Command executed successfully (0 ошибок), правка откачена.",
+      "project": "msp-portfolio",
+      "title": "SDK v2 registerTool accepts annotations.readOnlyHint",
+      "hypothesis": "tsc passes with { annotations: { readOnlyHint: true } } in registerTool options.",
+      "command": "Temporary edit of worker/index.ts → npx tsc -p worker/tsconfig.json → revert.",
+      "result": "Command executed successfully (0 errors), edit reverted.",
       "verdict": "confirmed",
-      "finding": "Спецификация MCP 2026-07-28 (tools.md) вводит поле annotations; SDK v2 типизирует readOnlyHint — можно документировать read-only тулы нативно."
+      "finding": "MCP spec 2026-07-28 (tools.md) introduces the annotations field; SDK v2 types readOnlyHint — read-only tools are documented natively."
     },
     {
       "id": "exp-5",
       "date": "2026-08-14 16:00",
-      "title": "get_articles чинится UA-заголовком; возвращаются реальные статьи",
-      "hypothesis": "get_articles.execute() с headers User-Agent возвращает live-статьи (source: live), а не 403.",
-      "command": "node .tmp/probe_articles.ts (реальный fetch на dev.to с фиксом UA).",
-      "result": "source: live, count: 5 — реальные заголовки. public/metrics.json содержит 5 статей (CI-снапшот с UA-заголовком с GH Actions IP работает) → дифференциатор — UA, не IP-блок.",
+      "project": "msp-portfolio",
+      "title": "get_articles is fixed by a User-Agent header; real articles are returned",
+      "hypothesis": "get_articles.execute() with a User-Agent header returns live articles (source: live) instead of 403.",
+      "command": "node .tmp/probe_articles.ts (real fetch to dev.to with the UA fix).",
+      "result": "source: live, count: 5 — real headlines. public/metrics.json also holds 5 articles (CI snapshot with UA header from GH Actions IP works) → differentiator is UA, not IP block.",
       "verdict": "confirmed",
-      "finding": "KI-006 закрыт в коде; live-подтверждение с CF-egress после деплоя."
+      "finding": "KI-006 closed in code; live confirmation from CF egress after deploy."
     },
     {
       "id": "exp-6",
       "date": "2026-08-14 16:10",
-      "title": "Интеграционные тесты воркера покрывают rate limit, CORS, adversarial и конкуренцию",
-      "hypothesis": "tests/worker.test.ts (12 тестов): 429 на лимит (MCP и CHAT), health без лимита, security-заголовки, CORS allow/deny, malformed JSON → 400, unknown tool/method → error, 8 параллельных tools/call с проверкой корректности фильтра; SDK v2 сериализует annotations в tools/list.",
-      "command": "pnpm test (3 файла) + pnpm typecheck + pnpm build.",
-      "result": "29/29 passed; typecheck чистый; build OK (252.60 KB JS, gzip 79.19 KB).",
+      "project": "msp-portfolio",
+      "title": "Worker integration tests cover rate limit, CORS, adversarial and concurrency",
+      "hypothesis": "tests/worker.test.ts (12 tests): 429 on limit (MCP and CHAT), health without limit, security headers, CORS allow/deny, malformed JSON → 400, unknown tool/method → error, 8 parallel tools/call with filter correctness; SDK v2 serializes annotations into tools/list.",
+      "command": "pnpm test (3 files) + pnpm typecheck + pnpm build.",
+      "result": "29/29 passed; typecheck clean; build OK (252.60 KB JS, gzip 79.19 KB).",
       "verdict": "confirmed",
-      "finding": "Rate limit даёт 429, CORS fail-closed, adversarial отклоняются (400/-32602), конкуренция 8/8 без перекрёста, readOnlyHint/openWorldHint видны в tools/list."
+      "finding": "Rate limit returns 429, CORS fail-closed, adversarial rejected (400/-32602), concurrency 8/8 without cross-wiring, readOnlyHint/openWorldHint visible in tools/list."
     },
     {
       "id": "exp-7",
       "date": "2026-08-14 17:00",
-      "title": "CF Rate Limiting API binding применяется на аккаунте",
-      "hypothesis": "после деплоя [[ratelimits]] (limit=10/60) бург POST /mcp даст 429 после ~10 запросов.",
-      "command": "временный limit=10 + диагностика x-dbg-limiter/x-dbg-limit-result в заголовках (версия d1f29214) → бург 15 запросов → откат к limit=300 и чистой версии (03a42581).",
-      "result": "на всех запросах limiter=present, но limit_result=true на ВСЕХ 15 (при лимите 10) → 429 ни разу. Ранее: бург 320 с limit=300 → 0×429. Деплой принимает биндинг, рантайм не ограничивает.",
+      "project": "msp-portfolio",
+      "title": "CF Rate Limiting API binding is enforced on the account",
+      "hypothesis": "after deploy [[ratelimits]] (limit=10/60) a POST /mcp burst returns 429 after ~10 requests.",
+      "command": "temporary limit=10 + x-dbg-limiter/x-dbg-limit-result debug headers (version d1f29214) → 15-request burst → revert to limit=300 and clean version (03a42581).",
+      "result": "limiter=present on all requests, but limit_result=true on ALL 15 (with limit=10) → 429 never fired. Earlier: 320-burst with limit=300 → 0×429. Deploy accepts the binding, the runtime does not enforce.",
       "verdict": "refuted",
-      "finding": "На текущем тарифе Rate Limiting API НЕ применяется (вероятно, требует Workers Paid). Биндинги оставлены — начнут enforce при апгрейде; код fail-open."
+      "finding": "Rate Limiting API is NOT enforced on the current plan (likely requires Workers Paid). Bindings stay — they start enforcing on upgrade; code is fail-open."
     }
   ],
   "negativeResults": [
     {
-      "attempt": "Передача сырой JSON Schema в registerTool (server v2)",
-      "whyFailed": "Фабрика createMcpHandler падает на каждом запросе → HTTP 500",
+      "attempt": "Passing raw JSON Schema to registerTool (server v2)",
+      "whyFailed": "createMcpHandler factory crashes on every request → HTTP 500",
       "date": "2026-08-14",
       "ref": "exp-1"
     },
     {
-      "attempt": "CF Rate Limiting API binding ([[ratelimits]]) на бесплатном тарифе",
-      "whyFailed": "Деплой принимает биндинг, но limit() возвращает success: true всегда → enforcement отсутствует (limit=10, бург 15/30/320)",
+      "attempt": "CF Rate Limiting API binding ([[ratelimits]]) on the free plan",
+      "whyFailed": "Deploy accepts the binding, but limit() always returns success: true → no enforcement (limit=10, bursts 15/30/320)",
       "date": "2026-08-14",
       "ref": "exp-7"
     },
     {
-      "attempt": "Запуск сервера как фоновый процесс в одной shell-сессии и обращение из другой",
-      "whyFailed": "Windows убивает фоновые процессы по завершении shell (exit 7 / 000)",
+      "attempt": "Running the server as a background process in one shell session and calling it from another",
+      "whyFailed": "Windows kills background processes when the shell exits (exit 7 / 000)",
       "date": "2026-08-14",
       "ref": "integration tests"
     }

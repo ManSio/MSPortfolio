@@ -2,8 +2,9 @@
   "issues": [
     {
       "id": "KI-001",
-      "problem": "MCP-сервер нельзя хостить на GitHub Pages (статический хостинг) — требуется процесс-хост (Docker/Workers/локально).",
-      "status": "Открыто (by design)",
+      "project": "msp-portfolio",
+      "problem": "The MCP server cannot be hosted on GitHub Pages (static hosting) — a process host is required (Docker/Workers/local).",
+      "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
@@ -11,8 +12,9 @@
     },
     {
       "id": "KI-002",
-      "problem": "CORS: браузерное демо против удалённого /mcp требует явного ALLOWED_ORIGINS (secure-default: 403).",
-      "status": "Открыто (by design)",
+      "project": "msp-portfolio",
+      "problem": "CORS: the browser demo against the remote /mcp requires an explicit ALLOWED_ORIGINS (secure-default: 403).",
+      "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
@@ -20,8 +22,9 @@
     },
     {
       "id": "KI-003",
-      "problem": "Локально браузерное демо ходит на /mcp через vite-proxy; на проде (без запущенного сервера) автоматически переключается на local engine.",
-      "status": "Открыто (by design)",
+      "project": "msp-portfolio",
+      "problem": "Locally the browser demo calls /mcp through the vite proxy; in production (no running server) it automatically falls back to the local engine.",
+      "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
@@ -29,8 +32,9 @@
     },
     {
       "id": "KI-004",
-      "problem": "Vite-скрипт pnpm lint (oxlint) — 0 warnings; аннотация CI про Node 20 deprecation у actions/checkout@v4 — косметика.",
-      "status": "Открыто",
+      "project": "msp-portfolio",
+      "problem": "pnpm lint (oxlint) reports 0 warnings; the CI note about Node 20 deprecation in actions/checkout@v4 is cosmetic.",
+      "status": "Open",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
@@ -38,8 +42,9 @@
     },
     {
       "id": "KI-005",
-      "problem": "OG-превью кэшируется соцсетями (X/LinkedIn/Telegram): после деплоя первый share может показывать старое превью — сброс через validator'ы.",
-      "status": "Открыто (by design)",
+      "project": "msp-portfolio",
+      "problem": "OG preview is cached by social networks (X/LinkedIn/Telegram): after a deploy the first share may show the old preview — reset via validators.",
+      "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
@@ -47,26 +52,29 @@
     },
     {
       "id": "KI-006",
-      "problem": "get_articles падал: dev.to → 403 с воркера (с обычного IP 200). Фикс в коде: UA-заголовок + fallback на committed снапшот metrics.json. Проверено экспериментом (source: live, 5 статей). Live-подтверждение — после деплоя.",
-      "status": "Фикс в коде, ждёт деплоя",
+      "project": "msp-portfolio",
+      "problem": "get_articles failed: dev.to → 403 from the worker (200 from a normal IP). Fix in code: UA header + fallback to the committed metrics.json snapshot. Verified by experiment (source: live, 5 articles). Live confirmation — after deploy.",
+      "status": "Fix in code, awaiting deploy",
       "temperature": "watching",
-      "deadline": "после пуша",
+      "deadline": "after push",
       "owner": "owner",
       "link": "mcp-tools.ts"
     },
     {
       "id": "KI-007",
-      "problem": "Публичный /mcp без rate limiting. Реализовано в коде ([[ratelimits]] 300/60 + CHAT 30/60), но ЭМПИРИЧЕСКИ НЕ ПРИМЕНЯЕТСЯ на текущем тарифе: limit() возвращает success всегда. Вероятно, требует Workers Paid.",
-      "status": "Код готов, enforcement не активен",
+      "project": "msp-portfolio",
+      "problem": "Public /mcp without rate limiting. Implemented in code ([[ratelimits]] 300/60 + CHAT 30/60), but EMPIRICALLY NOT ENFORCED on the current plan: limit() always returns success. Likely requires Workers Paid.",
+      "status": "Code ready, enforcement inactive",
       "temperature": "watching",
-      "deadline": "решение владельца (апгрейд/принять риск)",
+      "deadline": "owner decision (upgrade/accept risk)",
       "owner": "owner",
       "link": "wrangler.toml"
     },
     {
       "id": "KI-008",
-      "problem": "simulate_architecture: llm_saturation не влиял на не-LLM модели, но выдавал «LLM generation dominates». Исправлено: честный finding «no LLM stage» + тест.",
-      "status": "Исправлено + тест",
+      "project": "msp-portfolio",
+      "problem": "simulate_architecture: llm_saturation did not affect non-LLM models but claimed 'LLM generation dominates'. Fixed: honest 'no LLM stage' finding + test.",
+      "status": "Fixed + test",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
@@ -74,21 +82,33 @@
     },
     {
       "id": "KI-009",
-      "problem": "Драфт статьи: пример «I know Kubernetes» противоречит живому analyze_stack (matched:false, evidence в стеке проектов нет).",
-      "status": "Открыто (решение владельца)",
-      "temperature": "watching",
-      "deadline": "до публикации статьи",
+      "project": "msp-portfolio",
+      "problem": "Article draft: the 'I know Kubernetes' example contradicted the live analyze_stack (matched:false, no evidence in the project stack). Resolved: the article uses Kubernetes only as an honest counterexample — consistent with matched:false.",
+      "status": "Resolved (article is honest)",
+      "temperature": "stable",
+      "deadline": null,
       "owner": "owner",
-      "link": "драфт статьи (§1)"
+      "link": "article draft (§1, §3.4)"
     },
     {
       "id": "KI-010",
-      "problem": "Agent counter (KV calls:*) — eventually consistent и приблизительный (get+put не атомарен). Приемлемо для демо-метрики «запросов сегодня».",
-      "status": "Открыто (by design)",
+      "project": "msp-portfolio",
+      "problem": "Agent counter (KV calls:*) — eventually consistent and approximate (get+put is not atomic). Acceptable for the 'queries today' demo metric.",
+      "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
       "link": "worker/index.ts (/mcp/stats)"
+    },
+    {
+      "id": "KI-011",
+      "project": "msp-portfolio",
+      "problem": "Lab page #/lab: JSON projections (src/data/lab/*.json) mirror the markdown logs (EXPERIMENTS_LOG.md, AGENT_DIARY.md, KNOWN_ISSUES.md). Drift is risky: the page and MCP tools read the JSON. Guard: tests/lab.test.ts validates structure/integrity; log edits must sync the JSON in the same commit.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/data/lab/"
     }
   ]
 }

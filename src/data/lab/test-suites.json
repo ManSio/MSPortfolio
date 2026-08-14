@@ -4,24 +4,31 @@
       "file": "tests/intents.test.ts",
       "name": "Intent matching (RU/EN)",
       "tests": 7,
-      "covers": "Маршрутизация намерений агента: проекты, стек-фильтры, принципы, статьи, таймлайн, fallback",
+      "covers": "Agent intent routing: projects, stack filters, principles, articles, timeline, fallback",
       "updatedAt": "2026-08-14"
     },
     {
       "file": "tests/mcp-tools.test.ts",
       "name": "MCP tools + architecture models",
-      "tests": 13,
-      "covers": "Поверхность тулов, фильтры, честность analyze_stack, симуляция (5 точек, валидация, llm_saturation, events), снапшот коммитов, антипаттерны, аннотации, все архитектуры × все сценарии",
+      "tests": 17,
+      "covers": "Tool surface, filters, analyze_stack honesty, simulation (5 points, validation, llm_saturation, events), commit snapshot, antipatterns, lab tools, annotations, all architectures × all scenarios",
       "updatedAt": "2026-08-14"
     },
     {
       "file": "tests/worker.test.ts",
       "name": "Worker /mcp integration",
       "tests": 16,
-      "covers": "tools/list (9 тулов + аннотации), health без rate limit, /mcp/stats (KV), счётчик tools/call, 429 MCP/CHAT, security-заголовки, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), конкуренция 8× с проверкой корректности фильтра",
+      "covers": "tools/list (12 tools + annotations), health without rate limit, /mcp/stats (KV), tools/call counter, 429 MCP/CHAT, security headers, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), 8-way concurrency with filter correctness",
+      "updatedAt": "2026-08-14"
+    },
+    {
+      "file": "tests/lab.test.ts",
+      "name": "Lab data integrity + SSR render",
+      "tests": 6,
+      "covers": "Experiment completeness/verdicts, negative results refs, diary completeness/statuses, KI ids/temperatures, test-suite sum = total, LabPage server-side render with all six sections",
       "updatedAt": "2026-08-14"
     }
   ],
-  "total": 36,
+  "total": 46,
   "updatedAt": "2026-08-14"
 }

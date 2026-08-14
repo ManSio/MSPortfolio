@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-14 22:00] — Lab #/lab v2: EN-данные, per-project (decision logs + фильтр), стекло 2.0 + микро-анимации
+**Status:** ✅ Fixed
+**Root Cause:** — (запрос владельца: «агент берёт только из MSPortfolio? не вижу данных по каждому проекту, инцидентов, графиков решений; не хватает стекла/анимаций/интерактива; lab на русском»)
+**Fix:** (1) **EN**: все JSON-проекции lab переведены (experiments/diary/known-issues/test-suites) — сайт полностью английский, русский остаётся только во внутренних docs/*.md (guard-тест: кириллица в lab-данных запрещена). (2) **Per-project**: добавлен тег `project` в эксперименты/дневник/KI + фильтр-вкладки «All projects / <проект>» + секция «01 · decision logs» (considered→chosen→why→cost из projects.json — single source of truth get_projects). (3) **Дизайн (тренды 2026)**: `.glass-card` — стекло 2.0 (слоистый blur+saturate, градиентная кромка через mask, верхний блик), `.hover-lift` на базовом Card, hover на Donut (active-сегмент + legend), hover-строки матрицы, hover-точки. prefers-reduced-motion поддержан. (4) Тесты 47/47 (lab +7: EN-проверка, project-теги, 7 секций SSR), typecheck, build 94.54 KB gzip.
+**Guard:** tests/lab.test.ts (EN + структура); KI-011 обновлён; инструменты MCP отдают EN автоматически (читают те же JSON).
+**Pattern:** NEW
+
 ## [2026-08-14 21:30] — Опубликованная dev.to-статья синхронизирована с 12 тулами; KI-009 закрыт
 **Status:** ✅ Fixed
 **Root Cause:** — (владелец опубликовал сокращённую версию статьи; в ней раздел «The nine tools» — 9 тулов, тогда как живой /mcp отдаёт 12; наш драфт docs/devto-article.md в публикацию НЕ попал — это разные тексты)

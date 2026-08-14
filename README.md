@@ -7,7 +7,7 @@ A portfolio that is simultaneously three things:
 1. **A live dashboard** — real GitHub metrics with freshness indicators and a static fallback, so numbers can never be fake.
 2. **An MCP server** — the CV as a machine-readable surface. Any AI agent (Claude Code, Cursor, Copilot) can connect and query `get_projects`, `analyze_stack`, `simulate_architecture` and more.
 3. **A proof-of-work engine** — a browser agent loop that *shows* the tool calls behind every answer, plus an interactive architecture simulator where visitors can "break" the systems.
-4. **A laboratory** (`#/lab`) — the diaries, experiments and tests behind every claim, rendered as charts from the same JSON files that feed the MCP server.
+4. **A laboratory** (`#/lab`) — the diaries, experiments, decision logs and tests behind every claim, rendered as glassmorphism charts from the same JSON files that feed the MCP server. Per-project filter included.
 
 ## Why this exists
 
