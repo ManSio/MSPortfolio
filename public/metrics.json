@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-08-14T07:40:42.174Z",
+  "fetchedAt": "2026-08-14T07:47:40.668Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 5,
+    "publicRepos": 6,
     "followers": 53,
     "following": 65
   },
@@ -13,8 +13,16 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T07:40:21Z",
+      "pushedAt": "2026-08-14T07:47:18Z",
       "language": "TypeScript"
+    },
+    {
+      "name": "ManSio.github.io",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T07:43:46Z",
+      "language": "HTML"
     },
     {
       "name": "mscodebase-intelligence",
