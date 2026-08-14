@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T11:19:06.848Z",
+  "fetchedAt": "2026-08-14T11:22:47.783Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T11:22:28Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-14T11:18:41Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T11:18:40Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio",
@@ -144,6 +144,20 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "d27cc55166",
+      "date": "2026-08-14T11:22:18Z",
+      "message": "ci: refresh metrics snapshot before build so deployments ship fresh data",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "27ead580ed",
+      "date": "2026-08-14T11:18:38Z",
+      "message": "feat: get_commit_history tool, decision-log narrative, live agent counter",
+      "author": "ManSio"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "eb59bf4b02",
       "date": "2026-08-14T11:08:56Z",
@@ -163,13 +177,6 @@
       "date": "2026-08-14T06:02:25Z",
       "message": "fix(health): orphan detection — exclude venv/.git from disk scan (273 false orphans from rglob cap)",
       "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "27ead580ed",
-      "date": "2026-08-14T11:18:38Z",
-      "message": "feat: get_commit_history tool, decision-log narrative, live agent counter",
-      "author": "ManSio"
     },
     {
       "repo": "ManSio",
