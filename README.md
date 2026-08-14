@@ -45,8 +45,8 @@ zero-ops hosting, free tier (100k req/day):
 
 ```sh
 pnpm cf:deploy   # first run: logs in to your Cloudflare account
-# -> https://msp-portfolio.<your-subdomain>.workers.dev/mcp
-claude mcp add --transport http msp-portfolio https://msp-portfolio.<your-subdomain>.workers.dev/mcp
+# -> https://msp-portfolio.mansio-dev.workers.dev/mcp  (live)
+claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp
 ```
 
 ## Repository layout

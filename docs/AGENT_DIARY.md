@@ -50,6 +50,11 @@
 **Fix 1:** Создан `ManSio.github.io` с index.html (meta-refresh + JS redirect + canonical) на `/MSPortfolio/`; Pages включён через API (main, root). Проверено: 200 + заголовок.
 **Root Cause 2:** pnpm 11 переименовал `onlyBuiltDependencies` → `allowBuilds` (map `pkg: true`), поле `pnpm` в package.json больше не читается → fresh `--frozen-lockfile` в CI падал ERR_PNPM_IGNORED_BUILDS.
 **Fix 2:** `allowBuilds: esbuild: true` в pnpm-workspace.yaml (настройки pnpm 11 живут только там). Проверено fresh frozen install + esbuild binary.
-**Workers:** `wrangler deploy --dry-run` — бандл 692 KiB/gz 136 KiB, env-биндинг ок; смоук собранного бандла (health/tools/list/simulate) — 200 OK. Реальный деплой требует `wrangler login` (авторизация пользователя, невозможна за него).
-**Guard:** Верификация бандла перед деплоем: `npx wrangler deploy --dry-run` + смоук собранного index.js.
+**Pattern:** NEW
+
+## [2026-08-14 13:30] — Live deploy: MCP на Cloudflare Workers + user-сайт
+**Status:** ✅ Fixed
+**Root Cause:** —
+**Fix:** `wrangler login` (пользователь, браузер) → поддомен `mansio-dev.workers.dev` (CLI `subdomain` в v4 нет, зарегистрирован через REST API: PUT /accounts/{id}/workers/subdomain) → `wrangler deploy` → **https://msp-portfolio.mansio-dev.workers.dev/mcp**. Демо на сайте подключено к живому endpoint (`src/lib/config.ts` MCP_ENDPOINT), CORS разрешает GH Pages + localhost, CI-джоба `smoke` проверяет публичный endpoint с чистого раннера (health + tools/list) — success. Локальная песочница не может достучаться до workers.dev (TLS SEC_E_ILLEGAL_MESSAGE) — это ограничение окружения, публичная доступность подтверждена раннером.
+**Guard:** CI smoke на живой endpoint; бандл проверяется `wrangler deploy --dry-run` + смоук собранного index.js.
 **Pattern:** NEW

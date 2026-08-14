@@ -99,7 +99,8 @@ export default function App() {
               </a>
             </div>
             <p className="mt-6 font-mono text-xs text-faint">
-              connect: <span className="text-accent">claude mcp add --transport http msp-portfolio https://…/mcp</span>
+              connect:{' '}
+              <span className="text-accent">claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp</span>
             </p>
           </div>
         </section>
