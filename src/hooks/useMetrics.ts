@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getDevToArticles, getGithubRepos, getGithubUser, loadFallbackSnapshot } from '../lib/api';
+import { FALLBACK_ARTICLES } from '../data/articles';
 import type { GithubRepoMetric, MetricsSnapshot } from '../lib/types';
 
 export interface MetricsState {
@@ -28,8 +29,9 @@ export function useMetrics(): MetricsState {
           getDevToArticles('mansio').catch(() => []),
         ]);
         if (cancelled) return;
-        // If Dev.to is rate-limited/blocked in this browser, keep the snapshot's articles
-        const articles = devto.length > 0 ? devto : (fallback?.devto ?? []);
+        // Layered fallback: live Dev.to -> snapshot -> bundled copy (never empty)
+        const articles =
+          devto.length > 0 ? devto : fallback?.devto?.length ? fallback.devto : FALLBACK_ARTICLES;
         const live: MetricsSnapshot = {
           fetchedAt: new Date().toISOString(),
           source: 'live',
