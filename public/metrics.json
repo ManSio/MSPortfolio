@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T14:16:44.827Z",
+  "fetchedAt": "2026-08-14T14:30:06.599Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T14:16:23Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "ManSio.github.io",
       "stars": 0,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T13:53:33Z",
+      "pushedAt": "2026-08-14T14:20:00Z",
       "language": "HTML"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T14:29:48Z",
+      "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
@@ -162,17 +162,10 @@
   ],
   "commits": [
     {
-      "repo": "MSPortfolio",
-      "sha": "67cac1ed86",
-      "date": "2026-08-14T14:16:22Z",
-      "message": "fix(sitemap): remove fragment URLs Google rejects, lowercase host",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "72f58ad72e",
-      "date": "2026-08-14T13:55:44Z",
-      "message": "chore: add Google Search Console verification meta tag to portfolio",
+      "repo": "ManSio.github.io",
+      "sha": "45fb383621",
+      "date": "2026-08-14T14:19:59Z",
+      "message": "feat: root sitemap (redirect page + portfolio)",
       "author": "ManSio"
     },
     {
@@ -190,10 +183,17 @@
       "author": "ManSio"
     },
     {
-      "repo": "ManSio.github.io",
-      "sha": "2309c5a131",
-      "date": "2026-08-14T07:43:41Z",
-      "message": "init: redirect to /MSPortfolio/",
+      "repo": "MSPortfolio",
+      "sha": "723226384e",
+      "date": "2026-08-14T14:29:46Z",
+      "message": "fix(site): browser dev.to fetch uses state=published (bypass stale Varnish)",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "67cac1ed86",
+      "date": "2026-08-14T14:16:22Z",
+      "message": "fix(sitemap): remove fragment URLs Google rejects, lowercase host",
       "author": "ManSio"
     },
     {
