@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T18:44:03.366Z",
+  "fetchedAt": "2026-08-14T18:47:33.312Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T18:43:43Z",
+      "pushedAt": "2026-08-14T18:47:09Z",
       "language": "TypeScript"
     },
     {
@@ -163,16 +163,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "b675c8d3bd",
-      "date": "2026-08-14T18:43:40Z",
-      "message": "docs: live validation of /chat grounded answers (mscodebase ONNX, gemma memory) — closes 'test /chat' backlog item",
+      "sha": "bed3276ff2",
+      "date": "2026-08-14T18:47:06Z",
+      "message": "feat(lab): load curves section — degradation charts from the simulate_architecture engine",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "fc2dd6af5b",
-      "date": "2026-08-14T18:37:26Z",
-      "message": "feat(lab): real per-project data for mscodebase-intelligence and gemma_agent",
+      "sha": "b675c8d3bd",
+      "date": "2026-08-14T18:43:40Z",
+      "message": "docs: live validation of /chat grounded answers (mscodebase ONNX, gemma memory) — closes 'test /chat' backlog item",
       "author": "ManSio"
     },
     {
