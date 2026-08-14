@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T21:39:47.585Z",
+  "fetchedAt": "2026-08-14T22:40:04.606Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T21:39:53Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-14T21:34:25Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T20:45:21Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -73,7 +73,7 @@
       "id": 4371984,
       "title": "The Mechanical vs. The Semantic: What Happens When AI Memory is Wrong?",
       "description": "An empirical look at memory contamination in AI agents. I ran an experiment to see how agents handle false facts, tested a retraction mechanism, and closed the final gap with verify-on-read.",
-      "readingTimeMinutes": 6,
+      "readingTimeMinutes": 7,
       "url": "https://dev.to/mansio/the-mechanical-vs-the-semantic-what-happens-when-ai-memory-is-wrong-38ko",
       "tags": [
         "ai",
