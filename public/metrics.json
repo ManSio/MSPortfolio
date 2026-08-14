@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T17:11:15.082Z",
+  "fetchedAt": "2026-08-14T17:54:52.378Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T17:00:15Z",
+      "pushedAt": "2026-08-14T17:30:30Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T16:06:02Z",
+      "pushedAt": "2026-08-14T17:54:28Z",
       "language": "TypeScript"
     },
     {
@@ -163,6 +163,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "bb06a9b696",
+      "date": "2026-08-14T17:28:43Z",
+      "message": "fix(install): вернуть документированную настройку MCP в settings.json (pythonw) + фикс _insert_before_final_brace",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "fd2ca03a55",
       "date": "2026-08-14T16:58:31Z",
       "message": "fix(install): step_zedcfg больше не пишет легаси-запись в settings.json — чистит её (keep_to_query=True)",
@@ -176,11 +183,11 @@
       "author": "MSCodeBase Agent"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "3c81f7807c",
-      "date": "2026-08-14T16:32:28Z",
-      "message": "fix(win): CMD-окна при работе MCP — pythonw-лаунчер + CREATE_NO_WINDOW везде + watchdog на Zed",
-      "author": "MSCodeBase Agent"
+      "repo": "MSPortfolio",
+      "sha": "0efd2bcb4a",
+      "date": "2026-08-14T17:52:55Z",
+      "message": "feat(lab): #/lab laboratory page (diaries, experiments, tests) + 3 MCP tools",
+      "author": "ManSio"
     },
     {
       "repo": "ManSio.github.io",
