@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T18:47:33.312Z",
+  "fetchedAt": "2026-08-14T19:13:17.941Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T18:47:09Z",
+      "pushedAt": "2026-08-14T18:47:40Z",
       "language": "TypeScript"
     },
     {
@@ -166,13 +166,6 @@
       "sha": "bed3276ff2",
       "date": "2026-08-14T18:47:06Z",
       "message": "feat(lab): load curves section — degradation charts from the simulate_architecture engine",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "b675c8d3bd",
-      "date": "2026-08-14T18:43:40Z",
-      "message": "docs: live validation of /chat grounded answers (mscodebase ONNX, gemma memory) — closes 'test /chat' backlog item",
       "author": "ManSio"
     },
     {
