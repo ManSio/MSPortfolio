@@ -145,8 +145,8 @@ export function composeAnswer(intent: Intent, results: unknown[]): string {
         .join('\n');
     }
     case 'timeline': {
-      const d = data as Array<{ date: string; title: string }> | undefined;
-      const recent = (d ?? []).slice(-3).map((e) => `• ${e.date} — ${e.title}`).join('\n');
+      const arr = Array.isArray(data) ? (data as Array<{ date: string; title: string }>) : [];
+      const recent = arr.slice(-3).map((e) => `• ${e.date} — ${e.title}`).join('\n');
       return `Recent decisions:\n${recent}\n\nFull timeline is in the trace.`;
     }
     case 'articles': {

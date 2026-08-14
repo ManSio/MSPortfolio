@@ -39,6 +39,20 @@ export class ErrorBoundary extends Component<Props, State> {
             <p style={{ opacity: 0.7, fontFamily: 'var(--font-mono)', fontSize: '0.8rem', wordBreak: 'break-all' }}>
               {this.state.error.message}
             </p>
+            <pre
+              style={{
+                marginTop: '1rem',
+                textAlign: 'left',
+                maxHeight: '40vh',
+                overflow: 'auto',
+                fontSize: '0.7rem',
+                opacity: 0.6,
+                fontFamily: 'var(--font-mono)',
+                whiteSpace: 'pre-wrap',
+              }}
+            >
+              {this.state.error.stack}
+            </pre>
             <p style={{ marginTop: '1rem', fontSize: '0.85rem', opacity: 0.6 }}>
               Please hard-refresh (Ctrl+F5). If it persists, open the console and report the error above.
             </p>

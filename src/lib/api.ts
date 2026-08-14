@@ -101,7 +101,7 @@ export async function getDevToArticles(username: string): Promise<DevToArticle[]
     description: a.description ?? '',
     readingTimeMinutes: a.reading_time_minutes ?? 0,
     url: a.url,
-    tags: a.tag_list ?? [],
+    tags: Array.isArray(a.tag_list) ? a.tag_list : [],
     reactions: a.public_reactions_count ?? 0,
     comments: a.comments_count ?? 0,
     coverImage: a.cover_image ?? null,

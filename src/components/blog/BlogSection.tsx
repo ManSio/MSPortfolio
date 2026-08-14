@@ -24,6 +24,8 @@ export function BlogSection() {
 }
 
 function ArticleCard({ article: a, glassy }: { article: DevToArticle; glassy?: boolean }) {
+  // tags may arrive as a comma-string from some mirrors — never trust the shape
+  const tags = Array.isArray(a.tags) ? a.tags : [];
   return (
     <a
       href={a.url}
@@ -51,7 +53,7 @@ function ArticleCard({ article: a, glassy }: { article: DevToArticle; glassy?: b
 
       <div className="flex flex-1 flex-col p-5">
         <div className="flex flex-wrap gap-1.5">
-          {(a.tags ?? []).slice(0, 4).map((t) => (
+          {(tags.slice(0, 4)).map((t) => (
             <Badge key={t} tone="accent">
               #{t}
             </Badge>
