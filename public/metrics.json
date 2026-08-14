@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-08-14T10:16:06.307Z",
+  "fetchedAt": "2026-08-14T10:43:26.415Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 6,
-    "followers": 53,
+    "followers": 54,
     "following": 65
   },
   "repos": [
@@ -13,8 +13,16 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T10:15:15Z",
+      "pushedAt": "2026-08-14T10:42:56Z",
       "language": "TypeScript"
+    },
+    {
+      "name": "ManSio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T10:16:54Z",
+      "language": null
     },
     {
       "name": "ManSio.github.io",
@@ -31,14 +39,6 @@
       "openIssues": 0,
       "pushedAt": "2026-08-14T06:18:28Z",
       "language": "Python"
-    },
-    {
-      "name": "ManSio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-08T12:53:38Z",
-      "language": null
     },
     {
       "name": "gemma_agent",
