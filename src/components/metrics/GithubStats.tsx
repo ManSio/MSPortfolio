@@ -2,7 +2,17 @@ import { useMetrics } from '../../hooks/useMetrics';
 import { Card, CardHeader } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Skeleton } from '../ui/Skeleton';
-import { FreshnessBadge, LiveDot, MetricCard, renderMetricRow } from './MetricCard';
+import { FreshnessBadge, LiveDot, MetricCard } from './MetricCard';
+import type { ReactNode } from 'react';
+
+function renderMetricRow(label: ReactNode, value: ReactNode) {
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-line/50 py-1.5 text-sm last:border-0">
+      <span className="text-paper/55">{label}</span>
+      <span className="font-mono tabular-nums">{value}</span>
+    </div>
+  );
+}
 
 const STAR_SPARK = [1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4, 5, 6];
 
