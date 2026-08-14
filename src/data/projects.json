@@ -4,7 +4,7 @@
     "name": "Mikhail",
     "role": "AI / Backend Engineer",
     "location": "Remote-friendly",
-    "summary": "Builds MCP-native tooling and AI infrastructure. Two production MCP servers: codebase intelligence for Zed and AWS infrastructure analysis."
+    "summary": "Builds MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence (LanceDB/BM25 hybrid search) in Zed."
   },
   "projects": [
     {
@@ -42,32 +42,6 @@
           "alternatives": ["Embeddings only", "BM25 only"],
           "reason": "Exact identifier matches beat fuzzy vector recall for code; fusion gives both.",
           "tradeoff": "Two indexes to keep consistent — resolved by a single write path."
-        }
-      ],
-      "metrics": { "type": "github" }
-    },
-    {
-      "id": "infrawise",
-      "name": "InfraWise",
-      "repo": "ManSio/infrawise",
-      "url": "https://github.com/ManSio/infrawise",
-      "language": "TypeScript",
-      "stack": ["MCP", "AWS", "DynamoDB", "Lambda", "SQS", "SNS", "S3", "API Gateway", "PostgreSQL", "MySQL", "MongoDB", "Kafka", "IaC"],
-      "stars": 1,
-      "forks": 0,
-      "tagline": "MCP server for AWS infrastructure analysis",
-      "description": "Analyzes AWS infrastructure — DynamoDB, Lambda, SQS, SNS, S3, API Gateway, PostgreSQL, MySQL, MongoDB, Kafka & IaC drift. Works with Claude Code, Cursor, and GitHub Copilot.",
-      "highlights": [
-        "Multi-service AWS topology introspection via MCP",
-        "IaC drift detection",
-        "Agent-agnostic: works in Claude Code, Cursor, Copilot"
-      ],
-      "decisionLog": [
-        {
-          "decision": "Agent-agnostic MCP surface (not tied to one IDE)",
-          "alternatives": ["IDE plugin", "CLI-only"],
-          "reason": "One MCP server is consumable by every major coding agent; zero install per IDE.",
-          "tradeoff": "MCP protocol versioning churn must be tracked."
         }
       ],
       "metrics": { "type": "github" }

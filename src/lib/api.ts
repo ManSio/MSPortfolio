@@ -49,14 +49,17 @@ export async function getGithubRepos(): Promise<GithubRepoMetric[]> {
   const raw = await fetchJson<Array<Record<string, unknown>>>(
     `https://api.github.com/users/${GH_OWNER}/repos?per_page=100&sort=updated`,
   );
-  const repos: GithubRepoMetric[] = raw.map((r) => ({
-    name: String(r.name),
-    stars: Number(r.stargazers_count ?? 0),
-    forks: Number(r.forks_count ?? 0),
-    openIssues: Number(r.open_issues_count ?? 0),
-    pushedAt: String(r.pushed_at ?? ''),
-    language: (r.language as string | null) ?? null,
-  }));
+  // Forks are someone else's work — never display them as the owner's projects.
+  const repos: GithubRepoMetric[] = raw
+    .filter((r) => r.fork !== true)
+    .map((r) => ({
+      name: String(r.name),
+      stars: Number(r.stargazers_count ?? 0),
+      forks: Number(r.forks_count ?? 0),
+      openIssues: Number(r.open_issues_count ?? 0),
+      pushedAt: String(r.pushed_at ?? ''),
+      language: (r.language as string | null) ?? null,
+    }));
   writeCache(key, repos);
   return repos;
 }

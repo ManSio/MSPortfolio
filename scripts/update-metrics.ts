@@ -37,14 +37,16 @@ const snapshot = {
     followers: user.followers,
     following: user.following,
   },
-  repos: repos.map((r) => ({
-    name: r.name,
-    stars: r.stargazers_count ?? 0,
-    forks: r.forks_count ?? 0,
-    openIssues: r.open_issues_count ?? 0,
-    pushedAt: r.pushed_at ?? '',
-    language: r.language ?? null,
-  })),
+  repos: repos
+    .filter((r) => r.fork !== true)
+    .map((r) => ({
+      name: r.name,
+      stars: r.stargazers_count ?? 0,
+      forks: r.forks_count ?? 0,
+      openIssues: r.open_issues_count ?? 0,
+      pushedAt: r.pushed_at ?? '',
+      language: r.language ?? null,
+    })),
   npm: [],
   devto: [],
 };

@@ -44,14 +44,6 @@ const ARCHITECTURES: Record<string, ArchitectureModel> = {
     ],
     cache: { hitRatio: 0.7, saveMs: 10 },
   },
-  infrawise: {
-    stages: [
-      { name: 'aws_auth', baseMs: 30, contention: 0.15 },
-      { name: 'topology_discovery', baseMs: 80, contention: 0.4, group: 'discovery', replicas: 3 },
-      { name: 'drift_compare', baseMs: 15, contention: 0.25 },
-      { name: 'report_render', baseMs: 5, contention: 0.1 },
-    ],
-  },
   gemma_agent: {
     stages: [
       { name: 'intent_routing', baseMs: 5, contention: 0.15 },

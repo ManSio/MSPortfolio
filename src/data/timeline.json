@@ -8,12 +8,6 @@
     },
     {
       "date": "2026",
-      "title": "InfraWise: AWS analysis as MCP",
-      "decision": "Exposed AWS infrastructure introspection (DynamoDB, Lambda, SQS, SNS, S3, API Gateway, databases, Kafka, IaC drift) through a single agent-agnostic MCP server.",
-      "link": "https://github.com/ManSio/infrawise"
-    },
-    {
-      "date": "2026",
       "title": "MSCodeBase Intelligence: hybrid search for code",
       "decision": "Chose LanceDB + BM25 hybrid search over SQLite FTS5/Elasticsearch for an embedded, zero-ops, memory-safe code search MCP server for Zed.",
       "link": "https://github.com/ManSio/mscodebase-intelligence"

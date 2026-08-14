@@ -44,9 +44,9 @@
       "id": "agent-agnostic",
       "title": "Agent-agnostic surfaces",
       "statement": "Tooling speaks protocols (MCP), not personalities. One server, consumed by Claude Code, Cursor, Copilot or any future agent.",
-      "example": "InfraWise ships a single MCP server that works across every major coding agent.",
+      "example": "This portfolio's own MCP server speaks standard Streamable HTTP — the same endpoint works from Claude Code, Cursor and Copilot with zero per-IDE setup.",
       "abTest": "IDE-specific plugins would multiply maintenance by N and make the tool useless the day a new IDE appears.",
-      "evidence": "infrawise: MCP server for Claude Code, Cursor and Copilot"
+      "evidence": "msp-portfolio: MCP server on @modelcontextprotocol/server@2 (Streamable HTTP)"
     }
   ]
 }
