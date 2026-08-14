@@ -53,3 +53,21 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           force_orphan: true
+
+  smoke:
+    runs-on: ubuntu-latest
+    # The MCP Worker is deployed manually (needs a Cloudflare account); this
+    # job verifies the public endpoint answers. Fails loudly when it doesn't.
+    needs: deploy
+    steps:
+      - name: Check MCP endpoint health
+        run: |
+          curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"ok":true'
+          echo 'MCP endpoint is healthy ✔'
+      - name: Check MCP tools/list
+        run: |
+          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'simulate_architecture'
+          echo 'tools/list works ✔'

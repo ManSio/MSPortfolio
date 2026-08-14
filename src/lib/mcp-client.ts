@@ -4,6 +4,7 @@
 // (e.g. pure static GitHub Pages without the server running).
 
 import { TOOLS, getTool } from './mcp-tools';
+import { MCP_ENDPOINT } from './config';
 
 export type McpMode = 'live' | 'local';
 
@@ -23,7 +24,7 @@ function parseSse(raw: string): string {
 }
 
 async function rpcCall(method: string, params: unknown, id: number): Promise<JsonRpcResponse> {
-  const res = await fetch('/mcp', {
+  const res = await fetch(MCP_ENDPOINT, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
