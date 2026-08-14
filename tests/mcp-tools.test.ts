@@ -63,7 +63,7 @@ describe('MCP tools', () => {
     expect(res.points[0].load).toBe(1);
     expect(res.points[4].load).toBe(20);
     expect(res.points[4].p95).toBeGreaterThan(res.points[0].p95);
-    expect(res.bottleneck.length).toBeGreaterThan(0);
+    expect(res.points[4].bottleneck.length).toBeGreaterThan(0);
     expect(res.findings.length).toBeGreaterThan(0);
   });
 
