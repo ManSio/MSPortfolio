@@ -73,6 +73,13 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 17:00] — Rate Limiting API не применяется на тарифе аккаунта (эксперимент)
+**Status:** 🟡 Partial (код готов; enforcement зависит от плана)
+**Root Cause:** Биндинг `[[ratelimits]]` деплоится и виден (env.MCP_RATE_LIMITER present), но `limit()` возвращает `success: true` на всех запросах даже при лимите 10 → рантайм не ограничивает. Вероятно, Rate Limiting API требует Workers Paid; точная причина не установлена (нет billing-доступа).
+**Fix:** Эксперимент (limit=10 + debug-заголовки x-dbg-limiter/x-dbg-limit-result → 15/15 success) документирован; откат к limit=300 и чистой версии (03a42581 live). Биндинги остаются в wrangler.toml — начнут работать при апгрейде плана без изменения кода. Код fail-open, тесты зелёные.
+**Guard:** EXPERIMENTS_LOG.md#7 (отрицательный результат); KI-007 обновлён. Смягчение на границе: CF bot-protection + read-only тулы.
+**Pattern:** NEW
+
 ## [2026-08-14 16:40] — Smoke get_articles упал: экранирование `\"count\"` в SSE + live без фикса
 **Status:** ✅ Fixed
 **Root Cause:** (1) Новый смоук-шаг искал `"count"`, а в SSE-ответе tools/call поле лежит внутри JSON-строки text и экранировано (`\"count\"`) — grep никогда не матчил. (2) Дополнительно смоук честно показал, что live-воркер ещё на старом коде: `deploy-worker` скипается — секрет CLOUDFLARE_API_TOKEN в GitHub не задан (деплой вручную через wrangler login).
