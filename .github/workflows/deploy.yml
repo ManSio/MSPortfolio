@@ -94,8 +94,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Deploy MCP worker
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        # secrets context is not allowed in `if` — proxy through env instead
+        if: ${{ env.CF_TOKEN != '' }}
         run: npx --yes wrangler@4 deploy
         env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
