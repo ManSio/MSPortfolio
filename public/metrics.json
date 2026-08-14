@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T13:56:17.466Z",
+  "fetchedAt": "2026-08-14T14:16:44.827Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T14:16:23Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "ManSio.github.io",
       "stars": 0,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-14T13:53:33Z",
       "language": "HTML"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T13:55:56Z",
-      "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
@@ -162,6 +162,20 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "67cac1ed86",
+      "date": "2026-08-14T14:16:22Z",
+      "message": "fix(sitemap): remove fragment URLs Google rejects, lowercase host",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "72f58ad72e",
+      "date": "2026-08-14T13:55:44Z",
+      "message": "chore: add Google Search Console verification meta tag to portfolio",
+      "author": "ManSio"
+    },
+    {
       "repo": "ManSio.github.io",
       "sha": "1607725bc2",
       "date": "2026-08-14T13:53:32Z",
@@ -180,20 +194,6 @@
       "sha": "2309c5a131",
       "date": "2026-08-14T07:43:41Z",
       "message": "init: redirect to /MSPortfolio/",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "72f58ad72e",
-      "date": "2026-08-14T13:55:44Z",
-      "message": "chore: add Google Search Console verification meta tag to portfolio",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "34397f99c2",
-      "date": "2026-08-14T13:45:16Z",
-      "message": "fix(get_articles): add state=published to bypass dev.to Varnish stale cache",
       "author": "ManSio"
     },
     {
