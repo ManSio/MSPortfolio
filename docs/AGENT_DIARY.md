@@ -73,6 +73,13 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 18:30] — CI: refresh metrics до build; live-валидация новых фич
+**Status:** ✅ Fixed
+**Root Cause:** «Refresh metrics snapshot» стоял после «Build» — каждый деплой нёс снапшот предыдущего рана (get_commit_history показывал unavailable, пока CI не пересобрал).
+**Fix:** шаг перенесён перед Build (deploy.yml). Live-валидация: get_commit_history → source:snapshot, count:15 (реальные коммиты); /mcp/stats → today:6/total:6 (считает tools/call); tools/list — 8 тулов; smoke зелёный.
+**Guard:** смоук tools/list (get_commit_history) + tools/call get_articles.
+**Pattern:** NEW
+
 ## [2026-08-14 18:00] — Features: get_commit_history, decision-log narrative, agent counter (/mcp/stats)
 **Status:** ✅ Fixed (live)
 **Root Cause:** — (feature batch)
