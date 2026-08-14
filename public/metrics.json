@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T18:05:50.974Z",
+  "fetchedAt": "2026-08-14T18:13:57.466Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T18:03:34Z",
+      "pushedAt": "2026-08-14T18:13:36Z",
       "language": "TypeScript"
     },
     {
@@ -163,9 +163,9 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "f51c1aa0e8",
-      "date": "2026-08-14T18:02:55Z",
-      "message": "docs(article): mirror published dev.to version synced to 12 tools",
+      "sha": "e88a8cfad5",
+      "date": "2026-08-14T18:13:27Z",
+      "message": "feat(lab): v2 — EN data, per-project filter + decision logs, glassmorphism 2.0",
       "author": "ManSio"
     },
     {
