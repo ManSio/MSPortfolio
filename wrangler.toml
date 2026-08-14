@@ -28,16 +28,11 @@ namespace_id = "3002"
   limit = 30
   period = 60
 
-# Telemetry: one event per /mcp request (RPC method + tool name). The dataset
-# auto-creates on the first write; visible in the Cloudflare dashboard.
-# NOTE: DISABLED 2026-08-14 — Analytics Engine is not enabled on this account
-# (deploy fails with code 10089). The worker code is already guarded and works
-# without the binding. To re-enable: activate AE at
-# https://dash.cloudflare.com/<account>/workers/analytics-engine then uncomment:
-#
-# [[analytics_engine_datasets]]
-# binding = "ANALYTICS"
-# dataset = "mcp_calls"
+# Telemetry: one event per /mcp request (RPC method + tool name). Enabled in
+# the dashboard 2026-08-14; the dataset auto-creates on the first write.
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "msprof"
 
 # Agent counter (see worker /mcp/stats): daily + total tool invocations.
 # Created 2026-08-14 via `wrangler kv namespace create MCP_STATS`.
