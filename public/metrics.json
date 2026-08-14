@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T18:13:57.466Z",
+  "fetchedAt": "2026-08-14T18:27:57.292Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T18:13:36Z",
+      "pushedAt": "2026-08-14T18:27:37Z",
       "language": "TypeScript"
     },
     {
@@ -161,6 +161,13 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "32bea1b86c",
+      "date": "2026-08-14T18:27:29Z",
+      "message": "fix(lab): commit-log per project + honest empty states (no more '0' for mscodebase)",
+      "author": "ManSio"
+    },
     {
       "repo": "MSPortfolio",
       "sha": "e88a8cfad5",
