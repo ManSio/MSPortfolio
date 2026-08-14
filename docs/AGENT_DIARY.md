@@ -73,6 +73,16 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 20:00] — Analytics Engine включён и привязан; авто-деплой токеном закрыт
+**Status:** ✅ Fixed (live)
+**Root Cause:** — (owner actions закрыты)
+**Fix:**
+1. CF API-токен (шаблон «Edit Cloudflare Workers») установлен через `gh secret set` (интерактивно) → `deploy-worker` впервые ЗЕЛЁНЫЙ (ранее 9109 — в секрете был битый токен; флаг `--body-file` в старой версии gh отсутствует → `--body`). Теперь каждый пуш авто-деплоит воркер.
+2. Analytics Engine включён в дашборде; биндинг `ANALYTICS` → датасет `msp_portfolio` в wrangler.toml (согласовано с биндингом, добавленным в дашборде). Код writeDataPoint был готов (ctx.waitUntil, метод+тул) — другой агент не видел исходник и предлагал добавить его в минифицированный бандл (не понадобилось).
+3. Live: 3 tools/call → счётчик today:16; AE-записи fire-and-forget. Проверка датасета — в дашборде (wrangler OAuth не имеет analytics-read, SQL API → 401).
+**Guard:** CI smoke; KNOWN_ISSUES KI-007 (rate limit — не enforced на тарифе).
+**Pattern:** NEW
+
 ## [2026-08-14 19:00] — Ideas 3/5/6: failure events в симуляторе, antipattern museum, terminal
 **Status:** ✅ Fixed (live)
 **Root Cause:** — (feature batch)
