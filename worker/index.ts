@@ -73,6 +73,9 @@ function corsHeaders(origins: string[], requestOrigin: string | null): Record<st
 }
 
 const CHAT_MODEL_CHAIN = [
+  // The free router picks a random free model — great for distributing load;
+  // the specific models below are fallbacks when the pick is rate-limited.
+  'openrouter/free',
   'google/gemma-4-31b-it:free',
   'nvidia/nemotron-3-ultra-550b-a55b:free',
   'openai/gpt-oss-20b:free',
@@ -177,7 +180,8 @@ async function runAgentWithModel(apiKey: string, model: string, history: ChatMes
   return { steps, answer: response?.choices?.[0]?.message?.content ?? '', model };
 }
 
-/** Try each model in the chain; on rate-limit/5xx move to the next, fail fast on other errors. */
+/** Try each model in the chain; retry on rate-limit/5xx and free-router 4xx,
+ * fail fast only on auth errors (401/403 = bad key). */
 async function runAgentLoop(apiKey: string, models: string[], history: ChatMessage[]): Promise<{ steps: ChatStep[]; answer: string; model: string }> {
   let lastError: Error | null = null;
   for (const model of models) {
@@ -186,8 +190,8 @@ async function runAgentLoop(apiKey: string, models: string[], history: ChatMessa
     } catch (e) {
       const err = e instanceof Error ? e : new Error(String(e));
       lastError = err;
-      if (!/429|5\d\d|408|timeout|temporarily|rate.limit/i.test(err.message)) throw err;
-      await sleep(1500);
+      if (/401|403/.test(err.message)) throw err; // bad key — no point trying other models
+      await sleep(1200);
     }
   }
   throw lastError ?? new Error('all chat models failed');
@@ -229,13 +233,15 @@ export default {
     const cors = corsHeaders(origins, origin);
 
     if (url.pathname === '/mcp/health') {
-      return Response.json({
+      const res = Response.json({
         ok: true,
         name: NAME,
         version: VERSION,
         tools: TOOLS.map((t) => t.name),
         chatConfigured: Boolean(env.OPENROUTER_API_KEY),
       });
+      for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
+      return res;
     }
 
     if (url.pathname === '/chat') {

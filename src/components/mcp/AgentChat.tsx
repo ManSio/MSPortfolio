@@ -25,6 +25,23 @@ type ChatMode = 'llm' | 'rules';
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const KEY_STORAGE = 'msp:openrouter-key';
 
+// localStorage can throw in private mode / when storage is blocked — never crash on it.
+function safeGet(key: string): string {
+  try {
+    return localStorage.getItem(key) ?? '';
+  } catch {
+    return '';
+  }
+}
+function safeSet(key: string, value: string) {
+  try {
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
+  } catch {
+    // storage unavailable — the chat works in BYOK-session mode for this load only
+  }
+}
+
 function buildFrames(question: string, intent: Intent): Frame[] {
   const frames: Frame[] = [{ kind: 'user', text: question }];
   frames.push({ kind: 'think', text: `Intent matched: "${intent.label}"` });
@@ -40,7 +57,7 @@ export function AgentChat() {
   const [mode, setMode] = useState<McpMode | 'probing'>('probing');
   const [chatMode, setChatMode] = useState<ChatMode>('rules');
   const [chatConfigured, setChatConfigured] = useState(false);
-  const [userKey, setUserKey] = useState<string>(() => localStorage.getItem(KEY_STORAGE) ?? '');
+  const [userKey, setUserKey] = useState<string>(() => safeGet(KEY_STORAGE));
   const [frames, setFrames] = useState<Frame[]>([
     {
       kind: 'think',
@@ -145,13 +162,8 @@ export function AgentChat() {
 
   function setAndStoreKey(v: string) {
     setUserKey(v);
-    if (v.trim()) {
-      localStorage.setItem(KEY_STORAGE, v.trim());
-      setChatMode('llm');
-    } else {
-      localStorage.removeItem(KEY_STORAGE);
-      setChatMode(chatConfigured ? 'llm' : 'rules');
-    }
+    safeSet(KEY_STORAGE, v.trim());
+    setChatMode(v.trim() ? 'llm' : chatConfigured ? 'llm' : 'rules');
   }
 
   return (

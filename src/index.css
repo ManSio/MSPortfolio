@@ -83,7 +83,9 @@ body {
   background: transparent;
 }
 
-/* ── Ambient gradient blobs (what the glass blurs) ── */
+/* ── Ambient gradient blobs (what the glass blurs) ──
+   Radial gradients, not filter:blur — giant blurs on fixed elements can
+   trigger black-screen GPU compositing bugs on some Windows drivers. */
 .ambient-blobs {
   position: fixed;
   inset: 0;
@@ -97,36 +99,35 @@ body {
   content: "";
   position: absolute;
   border-radius: 9999px;
-  filter: blur(90px);
 }
 .ambient-blobs::before {
   width: 42vw;
   height: 42vw;
   top: -12vw;
   left: -12vw;
-  background: color-mix(in oklab, var(--color-accent) 22%, transparent);
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-accent) 24%, transparent) 0%, transparent 70%);
 }
 .ambient-blobs::after {
   width: 36vw;
   height: 36vw;
   bottom: -10vw;
   right: -8vw;
-  background: color-mix(in oklab, var(--color-primary) 18%, transparent);
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-primary) 20%, transparent) 0%, transparent 70%);
 }
 .ambient-blobs span {
   width: 28vw;
   height: 28vw;
   top: 45%;
   left: 55%;
-  background: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-accent) 14%, transparent) 0%, transparent 70%);
 }
 
 /* ── Frosted glass surface — apply selectively (≈1/3 of cards) ──
    Unlayered rule, so it wins over Tailwind's layered utilities. */
 .glass {
   background: color-mix(in oklab, var(--color-surface) 55%, transparent);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid color-mix(in oklab, var(--color-line) 65%, transparent);
   box-shadow: 0 8px 32px rgb(0 0 0 / 0.07);
 }
