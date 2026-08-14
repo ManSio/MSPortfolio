@@ -22,3 +22,10 @@
 **Fix:** `z.fromJSONSchema(tool.inputSchema)` при регистрации (проверено: parse OK / invalid caught). Детали — EXPERIMENTS_LOG.md#1.
 **Guard:** Тест интеграции (tools/list, tools/call) перед коммитом.
 **Pattern:** NEW
+
+## [2026-08-14 11:10] — Форк чужого проекта (infrawise) попал в портфолио как «свой»
+**Status:** ✅ Fixed
+**Root Cause:** Данные о проектах взяты из `users/ManSio/repos` без проверки флага `fork`; `infrawise` — форк `Sidd27/infrawise`.
+**Fix:** Удалён из projects/principles/timeline/архитектурных моделей; метрики фильтруют форки (live-fetch + update-metrics.ts + снапшот).
+**Guard:** `fork !== true` в обоих путях метрик; проверка `gh api repos/…/infrawise` (fork/source) перед включением чужого кода.
+**Pattern:** P-002-вариант (предположение вместо проверки)
