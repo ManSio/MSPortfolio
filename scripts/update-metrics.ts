@@ -28,6 +28,15 @@ const [user, repos] = await Promise.all([
   gh(`/users/${OWNER}/repos?per_page=100&sort=updated`),
 ]);
 
+// Dev.to articles (public API, no auth).
+let devto: { title: string; reading_time_minutes: number; url: string }[] = [];
+try {
+  const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
+  if (res.ok) devto = (await res.json()) as typeof devto;
+} catch {
+  devto = [];
+}
+
 const snapshot = {
   fetchedAt: new Date().toISOString(),
   source: 'fallback' as const,
@@ -48,7 +57,11 @@ const snapshot = {
       language: r.language ?? null,
     })),
   npm: [],
-  devto: [],
+  devto: devto.map((a) => ({
+    title: a.title,
+    readingTimeMinutes: a.reading_time_minutes ?? 0,
+    url: a.url,
+  })),
 };
 
 writeFileSync(TARGET, JSON.stringify(snapshot, null, 2) + '\n');

@@ -63,6 +63,7 @@ jobs:
       - name: Check MCP endpoint health
         run: |
           curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"ok":true'
+          curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"chatConfigured"'
           echo 'MCP endpoint is healthy ✔'
       - name: Check MCP tools/list
         run: |

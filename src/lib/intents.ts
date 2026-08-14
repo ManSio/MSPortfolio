@@ -71,6 +71,12 @@ export const INTENTS: Intent[] = [
     matches: ['история', 'таймлайн', 'timeline', 'решения', 'decisions', 'хронологи'],
     tools: [{ name: 'get_timeline', args: {} }],
   },
+  {
+    id: 'articles',
+    label: 'Articles',
+    matches: ['стать', 'article', 'articles', 'blog', 'блог', 'writing', 'публикац', 'dev.to', 'писа'],
+    tools: [{ name: 'get_articles', args: {} }],
+  },
 ];
 
 export const QUICK_QUESTIONS = [
@@ -142,6 +148,11 @@ export function composeAnswer(intent: Intent, results: unknown[]): string {
       const d = data as Array<{ date: string; title: string }> | undefined;
       const recent = (d ?? []).slice(-3).map((e) => `• ${e.date} — ${e.title}`).join('\n');
       return `Recent decisions:\n${recent}\n\nFull timeline is in the trace.`;
+    }
+    case 'articles': {
+      const d = data as { count?: number; articles?: Array<{ title: string; readingTimeMinutes: number; url: string }> } | undefined;
+      const list = (d?.articles ?? []).map((a) => `• ${a.title} (~${a.readingTimeMinutes} min) — ${a.url}`).join('\n');
+      return `${d?.count ?? 0} articles on Dev.to:\n${list}`;
     }
     default:
       return JSON.stringify(results, null, 2);

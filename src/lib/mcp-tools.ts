@@ -220,6 +220,39 @@ export const TOOLS: MCPTool[] = [
     },
   },
   {
+    name: 'get_articles',
+    description: 'Get recent Dev.to articles with reading time, tags and links.',
+    inputSchema: { type: 'object', properties: {} },
+    async execute() {
+      try {
+        const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6', {
+          signal: AbortSignal.timeout(8000),
+        });
+        if (!res.ok) throw new Error(`dev.to responded ${res.status}`);
+        const articles = (await res.json()) as Array<{
+          title: string;
+          description?: string;
+          reading_time_minutes?: number;
+          url: string;
+          tag_list?: string[];
+        }>;
+        return {
+          count: articles.length,
+          articles: articles.map((a) => ({
+            title: a.title,
+            description: a.description ?? '',
+            readingTimeMinutes: a.reading_time_minutes ?? 0,
+            url: a.url,
+            tags: a.tag_list ?? [],
+          })),
+        };
+      } catch (e) {
+        // Fall back to a graceful empty result instead of a hard error.
+        return { count: 0, articles: [], error: e instanceof Error ? e.message : String(e) };
+      }
+    },
+  },
+  {
     name: 'analyze_stack',
     description: 'Compare the owner\'s stack against a job\'s required skills. Returns per-skill match with evidence and coverage.',
     inputSchema: {

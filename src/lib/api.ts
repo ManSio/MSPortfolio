@@ -82,7 +82,7 @@ export async function getDevToArticles(username: string) {
   if (cached) return cached.data as { title: string; reading_time_minutes: number; url: string }[];
 
   const data = await fetchJson<{ title: string; reading_time_minutes: number; url: string }[]>(
-    `https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=3`,
+    `https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=6`,
   );
   writeCache(key, data);
   return data;

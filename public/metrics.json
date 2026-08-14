@@ -1,54 +1,39 @@
 {
-  "fetchedAt": "2026-08-14T08:11:22.198Z",
+  "fetchedAt": "2026-08-14T06:36:42.000Z",
   "source": "fallback",
-  "user": {
-    "login": "ManSio",
-    "publicRepos": 6,
-    "followers": 53,
-    "following": 65
-  },
+  "user": { "login": "ManSio", "publicRepos": 5, "followers": 53, "following": 64 },
   "repos": [
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T08:10:59Z",
-      "language": "TypeScript"
-    },
-    {
-      "name": "ManSio.github.io",
-      "stars": 0,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T07:43:46Z",
-      "language": "HTML"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T06:18:28Z",
-      "language": "Python"
-    },
-    {
-      "name": "ManSio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-08T12:53:38Z",
-      "language": null
-    },
-    {
-      "name": "gemma_agent",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 11,
-      "pushedAt": "2026-08-05T08:34:20Z",
-      "language": "Python"
-    }
+    { "name": "MSPortfolio", "stars": 0, "forks": 0, "openIssues": 0, "pushedAt": "2026-08-14T06:36:42Z", "language": null },
+    { "name": "mscodebase-intelligence", "stars": 2, "forks": 0, "openIssues": 0, "pushedAt": "2026-08-14T06:18:28Z", "language": "Python" },
+    { "name": "ManSio", "stars": 1, "forks": 0, "openIssues": 0, "pushedAt": "2026-08-08T12:53:38Z", "language": null },
+    { "name": "gemma_agent", "stars": 2, "forks": 0, "openIssues": 11, "pushedAt": "2026-08-05T08:34:20Z", "language": "Python" }
   ],
   "npm": [],
-  "devto": []
+  "devto": [
+    {
+      "title": "The Mechanical vs. The Semantic: What Happens When AI Memory is Wrong?",
+      "readingTimeMinutes": 6,
+      "url": "https://dev.to/mansio/the-mechanical-vs-the-semantic-what-happens-when-ai-memory-is-wrong-38ko"
+    },
+    {
+      "title": "What I learned building a long-lived AI agent (the boring version)",
+      "readingTimeMinutes": 5,
+      "url": "https://dev.to/mansio/what-i-learned-building-a-long-lived-ai-agent-the-boring-version-32p8"
+    },
+    {
+      "title": "I Asked One AI to Fact-Check Another AI's Audit of My Own Code",
+      "readingTimeMinutes": 5,
+      "url": "https://dev.to/mansio/i-asked-one-ai-to-fact-check-another-ais-audit-of-my-own-code-1ac3"
+    },
+    {
+      "title": "PageRank vs RAG on a Real Codebase: Corrected Numbers, and What I Almost Got Wrong Twice",
+      "readingTimeMinutes": 7,
+      "url": "https://dev.to/mansio/i-measured-pagerank-token-savings-on-a-real-codebase-the-result-will-surprise-you-5bnj"
+    },
+    {
+      "title": "The Silent Vector Contamination Bug: Why Your Concurrent Embeddings Might Be Lying to You",
+      "readingTimeMinutes": 4,
+      "url": "https://dev.to/mansio/the-silent-vector-contamination-bug-why-your-concurrent-embeddings-might-be-lying-to-you-5fg7"
+    }
+  ]
 }

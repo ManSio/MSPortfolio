@@ -49,6 +49,24 @@ pnpm cf:deploy   # first run: logs in to your Cloudflare account
 claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp
 ```
 
+## AI chat on the site (OpenRouter, free models)
+
+The Agent demo can run as a **grounded LLM agent**: the model picks MCP tools,
+the worker executes them, and the answer is composed from real tool results
+(no hallucinated facts). The same worker exposes `POST /chat`.
+
+Enable it with a free OpenRouter key (models with function calling, e.g.
+`google/gemma-4-31b-it:free`):
+
+```sh
+# Option A — server key (visitors need no key)
+npx wrangler secret put OPENROUTER_API_KEY
+# Option B — bring-your-own-key: visitors paste their key in the chat UI (stored in localStorage)
+```
+
+Model is configurable via the `OPENROUTER_MODEL` variable in `wrangler.toml`.
+Without any key the chat falls back to the deterministic rule-based engine.
+
 ## Repository layout
 
 ```

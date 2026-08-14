@@ -18,7 +18,7 @@
  */
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
-import { TOOLS } from '../src/lib/mcp-tools.ts';
+import { getTool, TOOLS } from '../src/lib/mcp-tools.ts';
 
 const NAME = 'msp-portfolio';
 const VERSION = '1.0.0';
@@ -48,6 +48,10 @@ const handler = createMcpHandler(() => {
 interface Env {
   /** Comma-separated browser origins allowed to call /mcp (e.g. https://mansio.github.io) */
   ALLOWED_ORIGINS?: string;
+  /** Optional server-side OpenRouter key for the /chat agent demo. */
+  OPENROUTER_API_KEY?: string;
+  /** OpenRouter model id (default: a free model with function calling). */
+  OPENROUTER_MODEL?: string;
 }
 
 const CORS_ALLOW_HEADERS =
@@ -68,16 +72,128 @@ function corsHeaders(origins: string[], requestOrigin: string | null): Record<st
   return {};
 }
 
+const CHAT_MODEL_DEFAULT = 'google/gemma-4-31b-it:free';
+
+const CHAT_SYSTEM_PROMPT = `You are the interactive CV of Mikhail (ManSio), an AI/Backend engineer who builds MCP-native tooling.
+
+Rules:
+- Answer questions about his experience using ONLY the provided tools (get_projects, get_engineering_principles, analyze_stack, simulate_architecture, get_timeline, get_articles, get_profile).
+- NEVER invent projects, metrics, links or facts that the tools did not return.
+- If the tools return nothing relevant, say that honestly instead of guessing.
+- Be concise (3-6 sentences). Answer in the language the user wrote in (RU or EN).
+- You may call several tools in sequence to compose a full answer.`;
+
+interface ChatMessage {
+  role: 'system' | 'user' | 'assistant' | 'tool';
+  content?: string;
+  tool_calls?: Array<{ id: string; type: string; function: { name: string; arguments: string } }>;
+  tool_call_id?: string;
+}
+
+interface ChatStep {
+  type: 'tool_call' | 'tool_result';
+  name: string;
+  args?: unknown;
+  result?: unknown;
+}
+
+function openAiTools() {
+  return TOOLS.map((t) => ({
+    type: 'function',
+    function: { name: t.name, description: t.description, parameters: t.inputSchema },
+  }));
+}
+
+function parseArgs(raw: string | undefined): unknown {
+  try {
+    return JSON.parse(raw ?? '{}');
+  } catch {
+    return {};
+  }
+}
+
+interface ChatCompletionResponse {
+  choices?: Array<{ message?: ChatMessage }>;
+}
+
+async function runAgentLoop(apiKey: string, model: string, history: ChatMessage[]): Promise<{ steps: ChatStep[]; answer: string }> {
+  const messages: ChatMessage[] = [{ role: 'system', content: CHAT_SYSTEM_PROMPT }, ...history];
+  const steps: ChatStep[] = [];
+  let response: ChatCompletionResponse | null = null;
+
+  for (let round = 0; round < 5; round++) {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://mansio.github.io/MSPortfolio/',
+        'X-Title': 'MSPortfolio agent demo',
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        tools: openAiTools(),
+        tool_choice: 'auto',
+        temperature: 0.3,
+      }),
+      signal: AbortSignal.timeout(90000),
+    });
+    if (!res.ok) {
+      const text = (await res.text()).slice(0, 300);
+      throw new Error(`OpenRouter ${res.status}: ${text}`);
+    }
+    response = (await res.json()) as ChatCompletionResponse;
+    const msg = response?.choices?.[0]?.message;
+    const toolCalls = msg?.tool_calls;
+    if (!toolCalls || toolCalls.length === 0) break;
+
+    messages.push({ role: 'assistant', content: msg?.content ?? '', tool_calls: toolCalls });
+    for (const call of toolCalls) {
+      const name = call.function?.name ?? '?';
+      const args = parseArgs(call.function?.arguments);
+      const tool = getTool(name);
+      let result: unknown = { error: `Unknown tool: ${name}` };
+      if (tool) {
+        try {
+          result = await tool.execute((args ?? {}) as Record<string, unknown>);
+        } catch (e) {
+          result = { error: e instanceof Error ? e.message : String(e) };
+        }
+      }
+      steps.push({ type: 'tool_call', name, args });
+      steps.push({ type: 'tool_result', name, result });
+      messages.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) });
+    }
+  }
+
+  return { steps, answer: response?.choices?.[0]?.message?.content ?? '' };
+}
+
+async function handleChat(request: Request, env: Env): Promise<Response> {
+  if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+  const body = (await request.json().catch(() => null)) as { messages?: ChatMessage[]; apiKey?: string } | null;
+  if (!body || !Array.isArray(body.messages) || body.messages.length === 0) {
+    return Response.json({ error: 'messages[] is required' }, { status: 400 });
+  }
+
+  const apiKey = typeof body.apiKey === 'string' && body.apiKey.trim() ? body.apiKey.trim() : (env.OPENROUTER_API_KEY ?? '');
+  if (!apiKey) {
+    return Response.json(
+      { error: 'No API key: set OPENROUTER_API_KEY on the worker or send one from the browser.' },
+      { status: 400 },
+    );
+  }
+
+  const model = env.OPENROUTER_MODEL || CHAT_MODEL_DEFAULT;
+  const history: ChatMessage[] = body.messages.filter((m) => m && m.role === 'user' || m?.role === 'assistant');
+  const { steps, answer } = await runAgentLoop(apiKey, model, history);
+  return Response.json({ model, steps, answer });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-
-    if (url.pathname === '/mcp/health') {
-      return Response.json({ ok: true, name: NAME, version: VERSION, tools: TOOLS.map((t) => t.name) });
-    }
-    if (url.pathname !== '/mcp') {
-      return new Response('Not found', { status: 404 });
-    }
 
     const origins = (env.ALLOWED_ORIGINS ?? '')
       .split(',')
@@ -85,6 +201,27 @@ export default {
       .filter(Boolean);
     const origin = request.headers.get('Origin');
     const cors = corsHeaders(origins, origin);
+
+    if (url.pathname === '/mcp/health') {
+      return Response.json({
+        ok: true,
+        name: NAME,
+        version: VERSION,
+        tools: TOOLS.map((t) => t.name),
+        chatConfigured: Boolean(env.OPENROUTER_API_KEY),
+      });
+    }
+
+    if (url.pathname === '/chat') {
+      if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+      const res = await handleChat(request, env);
+      for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
+      return res;
+    }
+
+    if (url.pathname !== '/mcp') {
+      return new Response('Not found', { status: 404 });
+    }
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: cors });

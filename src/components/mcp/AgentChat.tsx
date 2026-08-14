@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { composeAnswer, matchIntent, QUICK_QUESTIONS, type Intent } from '../../lib/intents';
-import { callLocalTool, callMcpTool, probeMcpEndpoint, type McpMode } from '../../lib/mcp-client';
+import {
+  callChat,
+  callLocalTool,
+  callMcpTool,
+  probeChat,
+  probeMcpEndpoint,
+  type McpMode,
+} from '../../lib/mcp-client';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { LiveDot } from '../metrics/MetricCard';
@@ -10,9 +17,13 @@ type Frame =
   | { kind: 'think'; text: string }
   | { kind: 'tool'; name: string; args: Record<string, unknown> }
   | { kind: 'result'; text: string }
-  | { kind: 'answer'; text: string };
+  | { kind: 'answer'; text: string }
+  | { kind: 'error'; text: string };
+
+type ChatMode = 'llm' | 'rules';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const KEY_STORAGE = 'msp:openrouter-key';
 
 function buildFrames(question: string, intent: Intent): Frame[] {
   const frames: Frame[] = [{ kind: 'user', text: question }];
@@ -27,6 +38,9 @@ function buildFrames(question: string, intent: Intent): Frame[] {
 
 export function AgentChat() {
   const [mode, setMode] = useState<McpMode | 'probing'>('probing');
+  const [chatMode, setChatMode] = useState<ChatMode>('rules');
+  const [chatConfigured, setChatConfigured] = useState(false);
+  const [userKey, setUserKey] = useState<string>(() => localStorage.getItem(KEY_STORAGE) ?? '');
   const [frames, setFrames] = useState<Frame[]>([
     {
       kind: 'think',
@@ -36,32 +50,32 @@ export function AgentChat() {
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const historyRef = useRef<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
 
   useEffect(() => {
-    probeMcpEndpoint().then((m) => setMode(m));
+    Promise.all([probeMcpEndpoint(), probeChat()]).then(([mcpMode, chat]) => {
+      setMode(mcpMode);
+      setChatConfigured(chat.configured);
+      setChatMode(chat.configured || userKey ? 'llm' : 'rules');
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [frames]);
 
-  async function run(question: string) {
-    if (busy) return;
-    setBusy(true);
-    setInput('');
+  async function runRules(question: string) {
     const intent = matchIntent(question);
     const draft = buildFrames(question, intent);
     const visible = draft.filter((f) => f.kind !== 'answer');
     setFrames((prev) => [...prev, ...visible]);
 
-    const toolCalls = intent.tools;
     const results: unknown[] = [];
-
-    for (const call of toolCalls) {
+    for (const call of intent.tools) {
       await sleep(450);
       setFrames((prev) => [...prev, { kind: 'think', text: `Executing ${call.name}…` }]);
       await sleep(550);
-
       let result: unknown;
       try {
         result = mode === 'live' ? await callMcpTool(call.name, call.args, results.length + 2) : await callLocalTool(call.name, call.args);
@@ -75,7 +89,69 @@ export function AgentChat() {
 
     const answer = composeAnswer(intent, results);
     setFrames((prev) => [...prev, { kind: 'answer', text: answer }]);
-    setBusy(false);
+    return answer;
+  }
+
+  async function runLlm(question: string) {
+    historyRef.current.push({ role: 'user', content: question });
+    setFrames((prev) => [...prev, { kind: 'user', text: question }]);
+
+    const apiKey = userKey || ''; // empty → server key is used by the worker
+    const res = await callChat(historyRef.current, apiKey);
+
+    for (const step of res.steps) {
+      await sleep(300);
+      if (step.type === 'tool_call') {
+        setFrames((prev) => [
+          ...prev,
+          { kind: 'think', text: `LLM decided to call ${step.name}(${JSON.stringify(step.args ?? {})})` },
+          { kind: 'tool', name: step.name, args: (step.args ?? {}) as Record<string, unknown> },
+        ]);
+      } else {
+        await sleep(500);
+        setFrames((prev) => [...prev, { kind: 'result', text: JSON.stringify(step.result, null, 2).slice(0, 2000) }]);
+      }
+    }
+    await sleep(300);
+    setFrames((prev) => [...prev, { kind: 'answer', text: res.answer }]);
+    historyRef.current.push({ role: 'assistant', content: res.answer });
+    return res.answer;
+  }
+
+  async function run(question: string) {
+    if (busy) return;
+    setBusy(true);
+    setInput('');
+    try {
+      if (chatMode === 'llm') {
+        try {
+          await runLlm(question);
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e);
+          setFrames((prev) => [
+            ...prev,
+            { kind: 'error', text: `LLM call failed (${msg}). Falling back to the rule-based engine…` },
+          ]);
+          await sleep(400);
+          await runRules(question);
+        }
+      } else {
+        await runRules(question);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function setAndStoreKey(v: string) {
+    setUserKey(v);
+    if (v.trim()) {
+      localStorage.setItem(KEY_STORAGE, v.trim());
+      setChatMode('llm');
+    } else {
+      localStorage.removeItem(KEY_STORAGE);
+      setChatMode(chatConfigured ? 'llm' : 'rules');
+    }
   }
 
   return (
@@ -85,9 +161,9 @@ export function AgentChat() {
           <LiveDot />
           <span className="font-mono text-sm font-semibold">agent-loop</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {mode === 'probing' ? <Badge>probing…</Badge> : mode === 'live' ? <Badge tone="success">LIVE MCP endpoint</Badge> : <Badge tone="warn">local engine (no server)</Badge>}
-          <Badge tone="accent">Streamable HTTP</Badge>
+          {chatMode === 'llm' ? <Badge tone="accent">LLM · grounded</Badge> : <Badge>rule-based</Badge>}
         </div>
       </div>
 
@@ -124,6 +200,13 @@ export function AgentChat() {
               </div>
             );
           }
+          if (f.kind === 'error') {
+            return (
+              <div key={i} className="rounded-lg border border-red-500/30 bg-red-500/5 px-3 py-2 text-red-600 dark:text-red-400 whitespace-pre-wrap">
+                {f.text}
+              </div>
+            );
+          }
           return (
             <div key={i} className="rounded-lg border border-emerald-500/25 bg-emerald-500/5 px-3 py-2 whitespace-pre-wrap">
               <span className="font-semibold text-emerald-600 dark:text-emerald-400">answer</span>
@@ -141,6 +224,17 @@ export function AgentChat() {
       </div>
 
       <div className="shrink-0 border-t border-line p-3">
+        {chatMode === 'llm' && !chatConfigured && (
+          <div className="mb-2 flex items-center gap-2">
+            <input
+              value={userKey}
+              onChange={(e) => setAndStoreKey(e.target.value)}
+              type="password"
+              placeholder="OpenRouter key (free models) — stored in your browser only"
+              className="flex-1 rounded-lg border border-line bg-surface-2 px-2.5 py-1.5 font-mono text-xs text-paper placeholder:text-faint focus:border-accent/60 focus:outline-none"
+            />
+          </div>
+        )}
         <div className="mb-3 flex flex-wrap gap-2">
           {QUICK_QUESTIONS.map((q) => (
             <button

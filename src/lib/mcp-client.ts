@@ -69,4 +69,53 @@ export function callLocalTool(name: string, args: Record<string, unknown>): Prom
   return tool.execute(args);
 }
 
+// ── LLM chat (OpenRouter via the worker's /chat endpoint) ──
+
+export interface ChatStep {
+  type: 'tool_call' | 'tool_result';
+  name: string;
+  args?: unknown;
+  result?: unknown;
+}
+
+export interface ChatResponse {
+  model: string;
+  steps: ChatStep[];
+  answer: string;
+}
+
+export interface ChatHealth {
+  ok?: boolean;
+  chatConfigured?: boolean;
+}
+
+/** Returns whether the worker exposes a server-configured chat endpoint. */
+export async function probeChat(): Promise<{ configured: boolean; reachable: boolean }> {
+  try {
+    const res = await fetch(`${MCP_ENDPOINT}/health`, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return { configured: false, reachable: false };
+    const h = (await res.json()) as ChatHealth;
+    return { configured: Boolean(h.chatConfigured), reachable: true };
+  } catch {
+    return { configured: false, reachable: false };
+  }
+}
+
+export async function callChat(
+  messages: Array<{ role: 'user' | 'assistant'; content: string }>,
+  apiKey: string,
+): Promise<ChatResponse> {
+  const res = await fetch(`${MCP_ENDPOINT}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, apiKey }),
+    signal: AbortSignal.timeout(120000),
+  });
+  if (!res.ok) {
+    const err = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(err?.error ?? `chat endpoint responded ${res.status}`);
+  }
+  return (await res.json()) as ChatResponse;
+}
+
 export { TOOLS };
