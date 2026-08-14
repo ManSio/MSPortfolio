@@ -14,6 +14,8 @@ export const FALLBACK_ARTICLES: DevToArticle[] = [
     reactions: 19,
     comments: 39,
     coverImage: null,
+    socialImage:
+      'https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh5tdgd82gnvqwwvx9m7s.png',
     readablePublishDate: 'Aug 11',
   },
   {
@@ -28,6 +30,8 @@ export const FALLBACK_ARTICLES: DevToArticle[] = [
     comments: 28,
     coverImage:
       'https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png',
+    socialImage:
+      'https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png',
     readablePublishDate: 'Aug 9',
   },
   {
@@ -42,6 +46,8 @@ export const FALLBACK_ARTICLES: DevToArticle[] = [
     comments: 4,
     coverImage:
       'https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png',
+    socialImage:
+      'https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png',
     readablePublishDate: 'Aug 8',
   },
   {
@@ -55,6 +61,8 @@ export const FALLBACK_ARTICLES: DevToArticle[] = [
     reactions: 2,
     comments: 2,
     coverImage: null,
+    socialImage:
+      'https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F7zqwuyw5onysh9hvpy7p.png',
     readablePublishDate: 'Jul 22',
   },
   {
@@ -68,6 +76,8 @@ export const FALLBACK_ARTICLES: DevToArticle[] = [
     reactions: 1,
     comments: 0,
     coverImage: null,
+    socialImage:
+      'https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh0yqnvxw2c8wsznehyc9.png',
     readablePublishDate: 'Jul 21',
   },
 ];

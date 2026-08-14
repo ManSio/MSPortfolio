@@ -92,6 +92,7 @@ export async function getDevToArticles(username: string): Promise<DevToArticle[]
       public_reactions_count?: number;
       comments_count?: number;
       cover_image?: string | null;
+      social_image?: string | null;
       readable_publish_date?: string;
     }>
   >(`https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=6`);
@@ -105,6 +106,7 @@ export async function getDevToArticles(username: string): Promise<DevToArticle[]
     reactions: a.public_reactions_count ?? 0,
     comments: a.comments_count ?? 0,
     coverImage: a.cover_image ?? null,
+    socialImage: a.social_image ?? null,
     readablePublishDate: a.readable_publish_date ?? '',
   }));
   writeCache(key, mapped);

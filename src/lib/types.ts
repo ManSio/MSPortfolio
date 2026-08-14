@@ -72,6 +72,7 @@ export interface DevToArticle {
   reactions?: number;
   comments?: number;
   coverImage?: string | null;
+  socialImage?: string | null;
   readablePublishDate?: string;
 }
 
