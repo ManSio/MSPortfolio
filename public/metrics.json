@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T17:58:32.158Z",
+  "fetchedAt": "2026-08-14T18:03:26.454Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T18:03:08Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-14T17:58:19Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T17:58:07Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -162,6 +162,20 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "f51c1aa0e8",
+      "date": "2026-08-14T18:02:55Z",
+      "message": "docs(article): mirror published dev.to version synced to 12 tools",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "a4a4e91da9",
+      "date": "2026-08-14T17:57:46Z",
+      "message": "docs(article): 9 tools -> 12 (lab tools) in dev.to draft; resolve KI-009",
+      "author": "ManSio"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "1acb7c3f4b",
       "date": "2026-08-14T17:56:13Z",
@@ -181,20 +195,6 @@
       "date": "2026-08-14T16:58:31Z",
       "message": "fix(install): step_zedcfg больше не пишет легаси-запись в settings.json — чистит её (keep_to_query=True)",
       "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "a4a4e91da9",
-      "date": "2026-08-14T17:57:46Z",
-      "message": "docs(article): 9 tools -> 12 (lab tools) in dev.to draft; resolve KI-009",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "0efd2bcb4a",
-      "date": "2026-08-14T17:52:55Z",
-      "message": "feat(lab): #/lab laboratory page (diaries, experiments, tests) + 3 MCP tools",
-      "author": "ManSio"
     },
     {
       "repo": "ManSio.github.io",
