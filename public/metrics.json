@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T09:44:17.996Z",
+  "fetchedAt": "2026-08-14T09:51:33.997Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T09:43:54Z",
+      "pushedAt": "2026-08-14T09:51:13Z",
       "language": "TypeScript"
     },
     {
@@ -66,8 +66,8 @@
       "reactions": 19,
       "comments": 39,
       "coverImage": null,
-      "readablePublishDate": "Aug 11",
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh5tdgd82gnvqwwvx9m7s.png"
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh5tdgd82gnvqwwvx9m7s.png",
+      "readablePublishDate": "Aug 11"
     },
     {
       "id": 4353746,
@@ -84,8 +84,8 @@
       "reactions": 14,
       "comments": 28,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png",
-      "readablePublishDate": "Aug 9",
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png"
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png",
+      "readablePublishDate": "Aug 9"
     },
     {
       "id": 4347706,
@@ -102,8 +102,8 @@
       "reactions": 6,
       "comments": 4,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png",
-      "readablePublishDate": "Aug 8",
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png"
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png",
+      "readablePublishDate": "Aug 8"
     },
     {
       "id": 4200469,
@@ -120,8 +120,8 @@
       "reactions": 2,
       "comments": 2,
       "coverImage": null,
-      "readablePublishDate": "Jul 22",
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F7zqwuyw5onysh9hvpy7p.png"
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F7zqwuyw5onysh9hvpy7p.png",
+      "readablePublishDate": "Jul 22"
     },
     {
       "id": 4200301,
@@ -138,8 +138,8 @@
       "reactions": 1,
       "comments": 0,
       "coverImage": null,
-      "readablePublishDate": "Jul 21",
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh0yqnvxw2c8wsznehyc9.png"
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh0yqnvxw2c8wsznehyc9.png",
+      "readablePublishDate": "Jul 21"
     }
   ]
 }
