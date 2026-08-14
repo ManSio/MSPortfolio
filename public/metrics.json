@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T16:05:56.405Z",
+  "fetchedAt": "2026-08-14T17:11:15.082Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T15:09:50Z",
+      "pushedAt": "2026-08-14T17:00:15Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T15:07:09Z",
+      "pushedAt": "2026-08-14T16:06:02Z",
       "language": "TypeScript"
     },
     {
@@ -100,7 +100,7 @@
         "llm"
       ],
       "reactions": 14,
-      "comments": 28,
+      "comments": 30,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png",
       "readablePublishDate": "Aug 9"
@@ -163,31 +163,24 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "34b32129c3",
-      "date": "2026-08-14T15:08:00Z",
-      "message": "fix(reranker): grader mutation hardening — NaN/Inf rejection, index contract, duplicate decline (evalmut transfer)",
+      "sha": "fd2ca03a55",
+      "date": "2026-08-14T16:58:31Z",
+      "message": "fix(install): step_zedcfg больше не пишет легаси-запись в settings.json — чистит её (keep_to_query=True)",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "286f902bae",
-      "date": "2026-08-14T13:35:20Z",
-      "message": "feat(1L): live-arm Day 1 — 100 verdicts via opencode deepseek-v4-flash-free, dedup merge fix, EXPERIMENTS_LOG entry (live vs proxy: unknown 0→80%, false_accept 0→10%)",
+      "sha": "7b2971b26a",
+      "date": "2026-08-14T16:44:13Z",
+      "message": "docs(diary): settings.json дубль-регистрация MCP удалена полностью (остался extension.toml)",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "2de6f49772",
-      "date": "2026-08-14T13:00:32Z",
-      "message": "docs(1L): free-tier limit measured (~3 calls/window) — feasibility constraint + options",
+      "sha": "3c81f7807c",
+      "date": "2026-08-14T16:32:28Z",
+      "message": "fix(win): CMD-окна при работе MCP — pythonw-лаунчер + CREATE_NO_WINDOW везде + watchdog на Zed",
       "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "723226384e",
-      "date": "2026-08-14T14:29:46Z",
-      "message": "fix(site): browser dev.to fetch uses state=published (bypass stale Varnish)",
-      "author": "ManSio"
     },
     {
       "repo": "ManSio.github.io",
