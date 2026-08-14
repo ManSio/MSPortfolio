@@ -1,5 +1,7 @@
 # MSPortfolio — MCP-Native Engineering Portfolio
 
+[![Deploy status](https://github.com/ManSio/MSPortfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/ManSio/MSPortfolio/actions/workflows/deploy.yml)
+
 A portfolio that is simultaneously three things:
 
 1. **A live dashboard** — real GitHub metrics with freshness indicators and a static fallback, so numbers can never be fake.

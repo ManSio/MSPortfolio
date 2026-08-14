@@ -220,6 +220,12 @@ export default function App() {
             <a href="https://github.com/ManSio" target="_blank" rel="noreferrer" className="hover:text-accent">
               github
             </a>
+            <span className="mx-2">·</span>
+            <img
+              src="https://github.com/ManSio/MSPortfolio/actions/workflows/deploy.yml/badge.svg"
+              alt="CI status"
+              className="inline h-4 align-middle opacity-70 hover:opacity-100"
+            />
           </p>
         </div>
       </footer>

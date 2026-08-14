@@ -1,0 +1,34 @@
+# Mikhail (ManSio) — MCP-Native Engineering Portfolio
+
+> AI/Backend engineer building MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence. This portfolio is a living CV: the same MCP tools that power this page are exposed as a production MCP server any agent can query.
+
+## Key facts
+
+- Role: AI / Backend Engineer
+- Location: Remote-friendly
+- Core stack: Python, TypeScript, React, MCP, LanceDB, BM25, RAG, Zed
+
+## For AI agents — query the live MCP server
+
+- Endpoint (Streamable HTTP): https://msp-portfolio.mansio-dev.workers.dev/mcp
+- Health: https://msp-portfolio.mansio-dev.workers.dev/mcp/health
+- Add to Claude Code: `claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp`
+
+## MCP tools (9)
+
+- get_profile — owner's professional summary
+- get_projects — projects with stack, highlights, decision logs (filter by stack tag)
+- get_engineering_principles — principles with real examples and A/B counterfactuals
+- get_timeline — engineering decision timeline
+- get_articles — recent Dev.to articles
+- get_commit_history — recent commits across the owner's repos
+- get_antipatterns — antipattern museum: real mistakes with lessons
+- analyze_stack — job-fit comparison with per-skill evidence and coverage
+- simulate_architecture — failure simulation: load spike / node loss / cache cold / LLM saturation
+
+## Links
+
+- [Portfolio](https://mansio.github.io/MSPortfolio/)
+- [Source code](https://github.com/ManSio/MSPortfolio)
+- [Dev.to articles](https://dev.to/mansio)
+- [Full content](https://mansio.github.io/MSPortfolio/llms-full.txt)
