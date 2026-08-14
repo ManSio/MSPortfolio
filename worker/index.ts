@@ -53,6 +53,15 @@ interface AnalyticsEngine {
   writeDataPoint(data: { blobs?: string[]; doubles?: number[]; indexes?: string[] }): void;
 }
 
+interface KVNamespaceLike {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string): Promise<void>;
+}
+
+interface ExecutionContextLike {
+  waitUntil(promise: Promise<unknown>): void;
+}
+
 interface Env {
   /** Comma-separated browser origins allowed to call /mcp (e.g. https://mansio.github.io) */
   ALLOWED_ORIGINS?: string;
@@ -66,6 +75,8 @@ interface Env {
   CHAT_RATE_LIMITER?: RateLimiter;
   /** CF Analytics Engine binding for /mcp telemetry (dataset auto-creates on first write). */
   ANALYTICS?: AnalyticsEngine;
+  /** CF KV namespace for the agent counter (wrangler.toml [[kv_namespaces]]). */
+  MCP_STATS?: KVNamespaceLike;
 }
 
 const CORS_ALLOW_HEADERS =
@@ -110,6 +121,21 @@ async function enforceRateLimit(env: Env, pathname: string, request: Request): P
   return null;
 }
 
+/** Best-effort, non-atomic daily/total counter (KV is eventually consistent). */
+async function bumpAgentCounter(stats: KVNamespaceLike): Promise<void> {
+  try {
+    const date = new Date().toISOString().slice(0, 10);
+    const todayKey = `calls:${date}`;
+    const [todayRaw, totalRaw] = await Promise.all([stats.get(todayKey), stats.get('calls:total')]);
+    await Promise.all([
+      stats.put(todayKey, String((Number(todayRaw) || 0) + 1)),
+      stats.put('calls:total', String((Number(totalRaw) || 0) + 1)),
+    ]);
+  } catch {
+    // best-effort — a failed counter write must never fail the request
+  }
+}
+
 const CHAT_MODEL_CHAIN = [
   // The free router picks a random free model — great for distributing load;
   // the specific models below are fallbacks when the pick is rate-limited.
@@ -125,7 +151,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const CHAT_SYSTEM_PROMPT = `You are the interactive CV of Mikhail (ManSio), an AI/Backend engineer who builds MCP-native tooling.
 
 Rules:
-- Answer questions about his experience using ONLY the provided tools (get_projects, get_engineering_principles, analyze_stack, simulate_architecture, get_timeline, get_articles, get_profile).
+- Answer questions about his experience using ONLY the provided tools (get_projects, get_engineering_principles, analyze_stack, simulate_architecture, get_timeline, get_articles, get_commit_history, get_profile).
 - NEVER invent projects, metrics, links or facts that the tools did not return.
 - If the tools return nothing relevant, say that honestly instead of guessing.
 - Be concise (3-6 sentences). Answer in the language the user wrote in (RU or EN).
@@ -260,7 +286,7 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx?: ExecutionContextLike): Promise<Response> {
     const url = new URL(request.url);
 
     const origins = (env.ALLOWED_ORIGINS ?? '')
@@ -281,6 +307,23 @@ export default {
         }),
         cors,
       );
+    }
+
+    if (url.pathname === '/mcp/stats') {
+      const stats = env.MCP_STATS;
+      let today = 0;
+      let total = 0;
+      if (stats) {
+        try {
+          const date = new Date().toISOString().slice(0, 10);
+          const [t, tot] = await Promise.all([stats.get(`calls:${date}`), stats.get('calls:total')]);
+          today = Number(t) || 0;
+          total = Number(tot) || 0;
+        } catch {
+          // counters unavailable — report zeros
+        }
+      }
+      return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total }), cors);
     }
 
     if (url.pathname === '/chat') {
@@ -304,12 +347,15 @@ export default {
       return finalize(new Response(null, { status: 204 }), cors);
     }
 
-    // Fire-and-forget telemetry: one Analytics Engine event per /mcp request
-    // (RPC method + tool name). Never blocks or fails the request.
+    // Fire-and-forget telemetry + agent counter. Never blocks or fails the request.
+    // NOTE: must run inside ctx.waitUntil — pending work that is not awaited is
+    // cancelled by the workerd runtime once the response returns (KV was empty
+    // on deploy 8cc4c86f until this was fixed).
     if (request.method === 'POST') {
       const analytics = env.ANALYTICS;
-      if (analytics) {
-        void request
+      const stats = env.MCP_STATS;
+      if (analytics || stats) {
+        const task = request
           .clone()
           .text()
           .then((bodyText) => {
@@ -322,9 +368,13 @@ export default {
             } catch {
               // non-JSON body — keep 'unknown'
             }
-            analytics.writeDataPoint({ blobs: tool ? [method, tool] : [method], indexes: ['/mcp'] });
+            if (analytics) analytics.writeDataPoint({ blobs: tool ? [method, tool] : [method], indexes: ['/mcp'] });
+            // Count real tool invocations (not discovery) for the agent counter.
+            if (stats && method === 'tools/call') return bumpAgentCounter(stats);
           })
           .catch(() => {});
+        if (ctx?.waitUntil) ctx.waitUntil(task);
+        else void task; // tests (no ctx) rely on Node not cancelling pending work
       }
     }
 

@@ -38,12 +38,14 @@ describe('worker /mcp integration', () => {
     expect(res.status).toBe(200);
     const payload = ssePayload(await res.text());
     const tools = payload.result.tools as Array<{ name: string; annotations?: { readOnlyHint?: boolean } }>;
-    expect(tools).toHaveLength(7);
+    expect(tools).toHaveLength(8);
     for (const t of tools) {
       expect(t.annotations?.readOnlyHint, `readOnlyHint missing on ${t.name}`).toBe(true);
     }
     const articles = tools.find((t) => t.name === 'get_articles');
     expect(articles?.annotations?.openWorldHint).toBe(true);
+    const commits = tools.find((t) => t.name === 'get_commit_history');
+    expect(commits?.annotations?.openWorldHint).toBe(true);
   });
 
   it('health is not rate limited and returns tool names', async () => {
@@ -59,6 +61,61 @@ describe('worker /mcp integration', () => {
     const body = (await res.json()) as { ok: boolean; tools: string[] };
     expect(body.ok).toBe(true);
     expect(body.tools).toContain('simulate_architecture');
+  });
+
+  it('/mcp/stats returns daily and total counters from KV', async () => {
+    const date = new Date().toISOString().slice(0, 10);
+    const kv = new Map<string, string>([
+      [`calls:${date}`, '7'],
+      ['calls:total', '42'],
+    ]);
+    const env = makeEnv({ MCP_STATS: { get: async (k) => kv.get(k) ?? null, put: async () => {} } });
+    const res = await worker.fetch(new Request(`${BASE}/mcp/stats`), env as never);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { enabled: boolean; today: number; total: number };
+    expect(body.enabled).toBe(true);
+    expect(body.today).toBe(7);
+    expect(body.total).toBe(42);
+  });
+
+  it('/mcp/stats reports disabled without the KV binding', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/mcp/stats`), makeEnv() as never);
+    const body = (await res.json()) as { enabled: boolean; today: number; total: number };
+    expect(body.enabled).toBe(false);
+    expect(body.today).toBe(0);
+  });
+
+  it('increments the agent counter on tools/call (best-effort, fire-and-forget)', async () => {
+    const kv = new Map<string, string>();
+    const env = makeEnv({
+      MCP_STATS: {
+        get: async (k) => kv.get(k) ?? null,
+        put: async (k, v) => {
+          kv.set(k, v);
+        },
+      },
+    });
+    const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'get_profile', arguments: {} } });
+    expect(res.status).toBe(200);
+    await new Promise((r) => setTimeout(r, 50)); // counter bump is async fire-and-forget
+    const date = new Date().toISOString().slice(0, 10);
+    expect(kv.get(`calls:${date}`)).toBe('1');
+    expect(kv.get('calls:total')).toBe('1');
+  });
+
+  it('does not count tools/list against the agent counter', async () => {
+    const kv = new Map<string, string>();
+    const env = makeEnv({
+      MCP_STATS: {
+        get: async (k) => kv.get(k) ?? null,
+        put: async (k, v) => {
+          kv.set(k, v);
+        },
+      },
+    });
+    await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
+    await new Promise((r) => setTimeout(r, 50));
+    expect(kv.size).toBe(0);
   });
 
   it('returns 429 when the rate limit is exceeded', async () => {

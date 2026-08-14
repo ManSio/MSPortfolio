@@ -39,6 +39,12 @@ namespace_id = "3002"
 # binding = "ANALYTICS"
 # dataset = "mcp_calls"
 
+# Agent counter (see worker /mcp/stats): daily + total tool invocations.
+# Created 2026-08-14 via `wrangler kv namespace create MCP_STATS`.
+[[kv_namespaces]]
+binding = "MCP_STATS"
+id = "4a57c087950841e88c27239d2c7d8c21"
+
 # Respective Cloudflare account/zone info goes here for production routes.
 # With `workers_dev = true` (default) the worker gets a public URL like
 # https://msp-portfolio.<subdomain>.workers.dev automatically.

@@ -5,6 +5,7 @@
 // fallback keep the dashboard alive even when the API rate-limits the visitor.
 
 import { readCache, writeCache } from './cache';
+import { STATS_ENDPOINT } from './config';
 import type { DevToArticle, GithubRepoMetric, MetricsSnapshot } from './types';
 
 const TTL = 60 * 60 * 1000; // 1 hour
@@ -122,6 +123,27 @@ export async function loadFallbackSnapshot(): Promise<MetricsSnapshot | null> {
     });
     if (!res.ok) return null;
     return (await res.json()) as MetricsSnapshot;
+  } catch {
+    return null;
+  }
+}
+
+// ── Live MCP agent counter (worker /mcp/stats) ──
+
+export interface McpStats {
+  ok?: boolean;
+  enabled?: boolean;
+  today?: number;
+  total?: number;
+}
+
+export async function getMcpStats(): Promise<McpStats | null> {
+  try {
+    const res = await fetch(STATS_ENDPOINT, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as McpStats;
   } catch {
     return null;
   }

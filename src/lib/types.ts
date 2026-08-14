@@ -85,6 +85,14 @@ export interface GithubRepoMetric {
   language: string | null;
 }
 
+export interface CommitEntry {
+  repo: string;
+  sha: string;
+  date: string;
+  message: string;
+  author: string;
+}
+
 export interface MetricsSnapshot {
   fetchedAt: string;
   source: 'live' | 'fallback';
@@ -97,6 +105,8 @@ export interface MetricsSnapshot {
   repos: GithubRepoMetric[];
   npm: { package: string; downloads: number }[];
   devto: DevToArticle[];
+  /** Recent commit history per repo (powers get_commit_history). */
+  commits: CommitEntry[];
 }
 
 // ── MCP tools ──

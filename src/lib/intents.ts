@@ -77,6 +77,12 @@ export const INTENTS: Intent[] = [
     matches: ['стать', 'article', 'articles', 'blog', 'блог', 'writing', 'публикац', 'dev.to', 'писа'],
     tools: [{ name: 'get_articles', args: {} }],
   },
+  {
+    id: 'recent_work',
+    label: 'Recent work',
+    matches: ['недавн', 'последн', 'свеж', 'что сейчас', 'над чем', 'нового', 'recent', 'lately', 'коммит', 'commit', 'shipped', 'баг', 'bug', 'сложн', 'hardest', 'ошиб'],
+    tools: [{ name: 'get_commit_history', args: {} }],
+  },
 ];
 
 export const QUICK_QUESTIONS = [
@@ -84,6 +90,7 @@ export const QUICK_QUESTIONS = [
   'How does your MCP server work under load?',
   'What are your engineering principles?',
   'Do you fit a Python/MCP role?',
+  'What has he shipped recently?',
 ];
 
 export function matchIntent(text: string): Intent {
@@ -153,6 +160,11 @@ export function composeAnswer(intent: Intent, results: unknown[]): string {
       const d = data as { count?: number; articles?: Array<{ title: string; readingTimeMinutes: number; url: string }> } | undefined;
       const list = (d?.articles ?? []).map((a) => `• ${a.title} (~${a.readingTimeMinutes} min) — ${a.url}`).join('\n');
       return `${d?.count ?? 0} articles on Dev.to:\n${list}`;
+    }
+    case 'recent_work': {
+      const d = data as { count?: number; commits?: Array<{ repo: string; message: string; date: string }> } | undefined;
+      const list = (d?.commits ?? []).slice(0, 5).map((c) => `• [${c.repo}] ${c.message} (${c.date.slice(0, 10)})`).join('\n');
+      return `Recent commits (${d?.count ?? 0}):\n${list}`;
     }
     default:
       return JSON.stringify(results, null, 2);

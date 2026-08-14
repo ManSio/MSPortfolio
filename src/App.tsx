@@ -1,5 +1,6 @@
 import { ArchitectureSimulator } from './components/playground/ArchitectureSimulator';
 import { AgentChat } from './components/mcp/AgentChat';
+import { McpStatsCard } from './components/mcp/McpStatsCard';
 import { BlogSection } from './components/blog/BlogSection';
 import { GithubStats } from './components/metrics/GithubStats';
 import { ExternalWidgets } from './components/metrics/ExternalWidgets';
@@ -161,6 +162,7 @@ export default function App() {
                   Setup in <span className="text-accent">server/README.md</span>.
                 </p>
               </Card>
+              <McpStatsCard />
             </div>
           </div>
         </Section>

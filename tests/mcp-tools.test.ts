@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ARCHITECTURES, getTool, runSimulation, TOOLS } from '../src/lib/mcp-tools';
 import type { StackAnalysis, SimulationResult } from '../src/lib/types';
 
@@ -18,6 +18,7 @@ describe('MCP tools', () => {
         'get_engineering_principles',
         'get_timeline',
         'get_articles',
+        'get_commit_history',
         'analyze_stack',
         'simulate_architecture',
       ]),
@@ -87,12 +88,43 @@ describe('MCP tools', () => {
     expect(sat.findings.some((f) => f.includes('LLM generation dominates'))).toBe(false);
   });
 
+  it('get_commit_history maps the committed snapshot (mock fetch)', async () => {
+    const fakeFetch = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          fetchedAt: '2026-08-14T00:00:00Z',
+          source: 'fallback',
+          user: null,
+          repos: [],
+          npm: [],
+          devto: [],
+          commits: [
+            { repo: 'msp-portfolio', sha: 'abc123', date: '2026-08-14T10:00:00Z', message: 'fix: hardening', author: 'ManSio' },
+          ],
+        }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      ),
+    );
+    vi.stubGlobal('fetch', fakeFetch);
+    try {
+      const res = (await call('get_commit_history', {})) as { count: number; commits: Array<{ repo: string; message: string }>; source: string };
+      expect(res.count).toBe(1);
+      expect(res.commits[0].repo).toBe('msp-portfolio');
+      expect(res.commits[0].message).toBe('fix: hardening');
+      expect(res.source).toBe('snapshot');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it('every tool declares readOnlyHint annotations (read-only surface)', () => {
     for (const t of TOOLS) {
       expect(t.annotations?.readOnlyHint).toBe(true);
     }
     const articles = getTool('get_articles');
     expect(articles?.annotations?.openWorldHint).toBe(true); // network fetch
+    const commits = getTool('get_commit_history');
+    expect(commits?.annotations?.openWorldHint).toBe(true); // fetches metrics snapshot
     const local = getTool('get_projects');
     expect(local?.annotations?.openWorldHint).toBe(false); // closed world
   });

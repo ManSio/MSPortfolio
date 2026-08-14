@@ -55,9 +55,31 @@ function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolea
           {p.decisionLog.map((d, i) => (
             <div key={i} className="rounded-lg border border-line bg-surface-2/40 p-3">
               <p className="text-sm font-semibold">{d.decision}</p>
-              <p className="mt-1 text-xs text-faint">Alternatives: {d.alternatives.join(', ')}</p>
-              <p className="mt-1.5 text-sm text-muted">{d.reason}</p>
-              <p className="mt-1.5 text-xs text-amber-600/80 dark:text-amber-400/80">Trade-off: {d.tradeoff}</p>
+              {d.alternatives.length > 0 && (
+                <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
+                  <span className="text-faint">considered</span>
+                  {d.alternatives.map((alt, j) => (
+                    <span
+                      key={j}
+                      className="rounded border border-line px-1.5 py-0.5 text-faint line-through decoration-muted/50"
+                    >
+                      {alt}
+                    </span>
+                  ))}
+                  <span className="text-faint">→</span>
+                  <span className="rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-accent">
+                    this one
+                  </span>
+                </div>
+              )}
+              <p className="mt-2 text-sm text-muted">
+                <span className="text-faint">Why: </span>
+                {d.reason}
+              </p>
+              <p className="mt-1.5 text-xs text-amber-600/80 dark:text-amber-400/80">
+                <span className="text-faint">What it cost: </span>
+                {d.tradeoff}
+              </p>
             </div>
           ))}
         </div>

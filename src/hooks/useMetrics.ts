@@ -44,6 +44,7 @@ export function useMetrics(): MetricsState {
           repos: repos as GithubRepoMetric[],
           npm: [],
           devto: articles,
+          commits: [], // frontend doesn't consume commits — the MCP tool reads the committed snapshot
         };
         setState({ status: 'live', snapshot: live });
       } catch {

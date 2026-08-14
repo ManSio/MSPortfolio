@@ -13,6 +13,9 @@ dist
 dist-ssr
 *.local
 
+# Cloudflare Wrangler local state (auth/session cache)
+.wrangler
+
 # Local diagnostic artifacts (mobile-check screenshots, edge profile)
 .tmp
 

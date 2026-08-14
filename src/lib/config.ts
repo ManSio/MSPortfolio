@@ -7,3 +7,6 @@ export const MCP_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/mcp';
 
 // The worker's chat endpoint lives at the worker root (NOT under /mcp).
 export const CHAT_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/chat';
+
+// Live agent-traffic counter (daily + total tool invocations).
+export const STATS_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/mcp/stats';

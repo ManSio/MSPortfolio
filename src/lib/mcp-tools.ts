@@ -8,7 +8,7 @@
 import projectsData from '../data/projects.json' with { type: 'json' };
 import principlesData from '../data/principles.json' with { type: 'json' };
 import timelineData from '../data/timeline.json' with { type: 'json' };
-import type { DevToArticle, MCPTool, Principle, ProjectsData, SimulationResult, StackAnalysis } from './types.js';
+import type { MCPTool, MetricsSnapshot, Principle, ProjectsData, SimulationResult, StackAnalysis } from './types.js';
 
 const projects = (projectsData as ProjectsData).projects;
 const principles = (principlesData as { principles: Principle[] }).principles;
@@ -263,26 +263,19 @@ export const TOOLS: MCPTool[] = [
         // dev.to may still block Cloudflare egress. Fall back to the committed
         // metrics snapshot (refreshed hourly in CI) so agents get real data
         // instead of an empty error.
-        try {
-          const snap = await fetch('https://mansio.github.io/MSPortfolio/metrics.json', { signal: AbortSignal.timeout(8000) });
-          if (snap.ok) {
-            const data = (await snap.json()) as { devto?: DevToArticle[] };
-            if (data.devto && data.devto.length > 0) {
-              return {
-                count: data.devto.length,
-                articles: data.devto.map((a) => ({
-                  title: a.title,
-                  description: a.description ?? '',
-                  readingTimeMinutes: a.readingTimeMinutes ?? 0,
-                  url: a.url,
-                  tags: a.tags ?? [],
-                })),
-                source: 'snapshot',
-              };
-            }
-          }
-        } catch {
-          // snapshot unavailable — fall through to the graceful empty result
+        const snap = await fetchCommittedMetrics();
+        if (snap?.devto && snap.devto.length > 0) {
+          return {
+            count: snap.devto.length,
+            articles: snap.devto.map((a) => ({
+              title: a.title,
+              description: a.description ?? '',
+              readingTimeMinutes: a.readingTimeMinutes ?? 0,
+              url: a.url,
+              tags: a.tags ?? [],
+            })),
+            source: 'snapshot',
+          };
         }
         return {
           count: 0,
@@ -291,6 +284,19 @@ export const TOOLS: MCPTool[] = [
           error: e instanceof Error ? e.message : String(e),
         };
       }
+    },
+  },
+  {
+    name: 'get_commit_history',
+    description: "Get recent commit history across the owner's public repos (hourly snapshot). Use it to answer 'what has he been building lately' or 'show the hardest bugs he has fixed'.",
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    async execute() {
+      const snap = await fetchCommittedMetrics();
+      if (!snap?.commits || snap.commits.length === 0) {
+        return { count: 0, commits: [], source: 'unavailable', error: 'Commit snapshot unavailable.' };
+      }
+      return { count: snap.commits.length, commits: snap.commits, source: 'snapshot' };
     },
   },
   {
@@ -393,3 +399,20 @@ export function getTool(name: string): MCPTool | undefined {
 }
 
 export { runSimulation, ARCHITECTURES };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Committed metrics snapshot (hourly-refreshed in CI → public/metrics.json)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const METRICS_SNAPSHOT_URL = 'https://mansio.github.io/MSPortfolio/metrics.json';
+
+/** Fetches the committed metrics snapshot. Returns null on any failure. */
+async function fetchCommittedMetrics(): Promise<MetricsSnapshot | null> {
+  try {
+    const res = await fetch(METRICS_SNAPSHOT_URL, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return null;
+    return (await res.json()) as MetricsSnapshot;
+  } catch {
+    return null;
+  }
+}

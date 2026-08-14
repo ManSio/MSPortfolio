@@ -73,6 +73,17 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 18:00] — Features: get_commit_history, decision-log narrative, agent counter (/mcp/stats)
+**Status:** ✅ Fixed (live)
+**Root Cause:** — (feature batch)
+**Fix:**
+1. get_commit_history: снапшот коммитов в update-metrics.ts (топ-3/репо, фильтр cron-шума `[skip ci]`), тул читает metrics.json (fetch + fallback), /chat prompt + rule-based intent 'recent_work' + QUICK_QUESTION.
+2. Decision log: нарратив «considered → this one → why → what it cost» в ProjectsGrid.tsx.
+3. Agent counter: KV namespace MCP_STATS (4a57c087…), /mcp/stats (today/total), инкремент на tools/call (не на tools/list).
+**Инцидент:** fire-and-forget `void promise` без `ctx.waitUntil` — workerd отменяет незавершённую работу после возврата response → KV пуст (wrangler kv key list = []), stats = 0 даже после tools/call. Фикс: `ctx.waitUntil(task)` + fallback `void task` для тестов. Подтверждено live: после фикса tools/call → stats today:1/total:1.
+**Guard:** тесты воркера 34/34 (включая счётчик и /mcp/stats); live-валидация; §9 ловушка 10.
+**Pattern:** NEW
+
 ## [2026-08-14 17:00] — Rate Limiting API не применяется на тарифе аккаунта (эксперимент)
 **Status:** 🟡 Partial (код готов; enforcement зависит от плана)
 **Root Cause:** Биндинг `[[ratelimits]]` деплоится и виден (env.MCP_RATE_LIMITER present), но `limit()` возвращает `success: true` на всех запросах даже при лимите 10 → рантайм не ограничивает. Вероятно, Rate Limiting API требует Workers Paid; точная причина не установлена (нет billing-доступа).

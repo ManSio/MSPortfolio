@@ -49,6 +49,31 @@ try {
   devto = [];
 }
 
+// Commit history (top 3 per repo) — powers the get_commit_history MCP tool.
+// Drops the cron snapshot noise so agents see real work, not bot commits.
+const COMMIT_FILTER = /^chore: refresh metrics snapshot|\[skip ci\]/;
+const commitLists = await Promise.all(
+  repos.map(async (r) => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${r.name}/commits?per_page=3`, { headers });
+      if (!res.ok) return [];
+      const data = (await res.json()) as Array<{ sha: string; commit: { message: string; author?: { name?: string; date?: string } } }>;
+      return data
+        .filter((c) => !COMMIT_FILTER.test(c.commit.message))
+        .map((c) => ({
+          repo: r.name,
+          sha: c.sha.slice(0, 10),
+          date: c.commit.author?.date ?? '',
+          message: c.commit.message.split('\n')[0],
+          author: c.commit.author?.name ?? '',
+        }));
+    } catch {
+      return [];
+    }
+  }),
+);
+const commits = commitLists.flat().slice(0, 30);
+
 const snapshot = {
   fetchedAt: new Date().toISOString(),
   source: 'fallback' as const,
@@ -82,6 +107,7 @@ const snapshot = {
     socialImage: a.social_image ?? null,
     readablePublishDate: a.readable_publish_date ?? '',
   })),
+  commits,
 };
 
 writeFileSync(TARGET, JSON.stringify(snapshot, null, 2) + '\n');
