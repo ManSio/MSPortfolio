@@ -2,6 +2,16 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-14 23:30] — Live-валидация /chat: агент отвечает фактами по всем проектам (mscodebase/gemma)
+**Status:** ✅ Fixed (live)
+**Root Cause:** — (закрыт открытый вопрос бэклога «/chat тестировать? (расход квоты)» — владелец дал команду)
+**Fix:** 2 вопроса через живой endpoint (модель openrouter/free, серверный ключ):
+1. «ONNX migration in mscodebase?» → агент вызвал get_diary, ответил точно (хардкод lm_studio → порт-проверка, ONNX Runtime v2.7.0, 50 тулов) — совпадает с exp-8/diary.
+2. «Weak memory in gemma_agent?» → агент вызвал get_known_issues, нашёл KI-014 (substring stub, 4/10, Mem0) — точный ответ.
+Вывод: цикл «вопрос → MCP-тул (lab-данные по ВСЕМ проектам) → grounded-ответ» работает на проде; выдумок нет.
+**Guard:** чат заземлён на тулы (system prompt запрещает выдумывать); CI smoke проверяет chatConfigured.
+**Pattern:** NEW
+
 ## [2026-08-14 23:00] — Lab #/lab v4: реальные данные по всем проектам (mscodebase/gemma из их репозиториев)
 **Status:** ✅ Fixed
 **Root Cause:** — (запрос владельца: «да» на добавление реальных записей по mscodebase/gemma; раньше lab-секции были только про MSPortfolio)
