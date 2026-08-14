@@ -73,6 +73,13 @@
 **Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
 **Pattern:** NEW
 
+## [2026-08-14 16:40] — Smoke get_articles упал: экранирование `\"count\"` в SSE + live без фикса
+**Status:** ✅ Fixed
+**Root Cause:** (1) Новый смоук-шаг искал `"count"`, а в SSE-ответе tools/call поле лежит внутри JSON-строки text и экранировано (`\"count\"`) — grep никогда не матчил. (2) Дополнительно смоук честно показал, что live-воркер ещё на старом коде: `deploy-worker` скипается — секрет CLOUDFLARE_API_TOKEN в GitHub не задан (деплой вручную через wrangler login).
+**Fix:** Паттерн смоука → `grep -q count` (без кавычек — матчится и старый, и новый формат); задокументировано в deploy.yml. Воркер с фиксами требует ручного деплоя владельцем (`pnpm cf:deploy`) или установки секрета CLOUDFLARE_API_TOKEN.
+**Guard:** смоук гоняется на каждый push; тесты воркера (worker.test.ts) покрывают tools/call локально без SSE-нюансов.
+**Pattern:** P-002-вариант (не сверил реальный wire-формат перед ассертом)
+
 ## [2026-08-14 16:00] — Хардненинг MCP-эндпоинта: rate limit, readOnlyHint, security-заголовки, KI-006/KI-008
 **Status:** 🟡 Partial (код + тесты готовы; live-подтверждение после деплоя через CI deploy-worker)
 **Root Cause:** KI-006 — dev.to 403 на запросы без UA из датацентрового egress; KI-007 — rate limit отсутствовал (подтверждено экспериментом 20×200); KI-008 — llm_saturation no-op без честного объяснения.

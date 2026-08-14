@@ -77,11 +77,13 @@ jobs:
           echo 'tools/list works ✔'
       - name: Check MCP tools/call (get_articles)
         # Regression guard for KI-006: get_articles returned 403 from dev.to.
+        # Note: the tool payload nests JSON inside the SSE `text` field, so the
+        # field name is escaped (\"count\") — match the bare token instead.
         run: |
           curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
-            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' | grep -q '"count"'
+            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' | grep -q count
           echo 'get_articles works ✔'
 
   deploy-worker:
