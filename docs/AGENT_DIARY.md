@@ -29,3 +29,17 @@
 **Fix:** Удалён из projects/principles/timeline/архитектурных моделей; метрики фильтруют форки (live-fetch + update-metrics.ts + снапшот).
 **Guard:** `fork !== true` в обоих путях метрик; проверка `gh api repos/…/infrawise` (fork/source) перед включением чужого кода.
 **Pattern:** P-002-вариант (предположение вместо проверки)
+
+## [2026-08-14 12:00] — Светлая тема нечитаема (белое на белом)
+**Status:** ✅ Fixed
+**Root Cause:** Компоненты хардкодили тёмные цвета (`text-paper` = белый текст) и не реагировали на светлую тему; переключался только фон body.
+**Fix:** Семантические токены через CSS-переменные (ink=фон страницы, paper=основной текст, muted/faint=вторичный/третичный, accent темнеет на светлом) + `@custom-variant dark` для `dark:`-утилит. Тёмная тема визуально не изменилась, светлая читаема.
+**Guard:** Цвета только через семантические классы; никаких `text-paper/\d+`-вариантов.
+**Pattern:** NEW
+
+## [2026-08-14 12:30] — Cloudflare Workers entrypoint (workerd-native MCP)
+**Status:** ✅ Fixed
+**Root Cause:** GH Pages — статика; MCP-серверу нужен процесс-хост → добавлен второй entrypoint для Workers.
+**Fix:** `worker/index.ts` использует `handler.fetch()` (web-standard, без toNodeHandler — в Node-сборке это метод объекта, не функция); CORS/OPTIONS/health в обёртке. Проверено 7/7 тестов (health, 404, tools/list, tools/call, preflight allowed/denied, browser-origin call).
+**Guard:** wrangler вынесен в npx (его build-скрипты workerd/esbuild ломают pnpm deps-check на Windows — §9).
+**Pattern:** NEW

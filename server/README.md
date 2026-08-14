@@ -78,9 +78,22 @@ GitHub Pages cannot run processes, so the MCP server is a separate entrypoint:
   docker run -p 3000:3000 msp-portfolio-mcp
   ```
 
-- **Option B — Cloudflare Workers**: the site SDK ships a workerd entry
-  (`@modelcontextprotocol/server` has workerd shims and upstream tests for
-  Workers). Follow-up: `wrangler deploy` with the same `src/lib/mcp-tools.ts`.
+- **Option B — Cloudflare Workers**: the SDK ships workerd-native shims and the
+  handler used here (`createMcpHandler` → `.fetch()`) runs on Workers as-is.
+  The repo already contains [`worker/index.ts`](../worker/index.ts) +
+  [`wrangler.toml`](../wrangler.toml) (CORS for the GitHub Pages site baked in):
+
+  ```sh
+  pnpm cf:deploy
+  # -> https://msp-portfolio.<your-subdomain>.workers.dev/mcp
+  claude mcp add --transport http msp-portfolio https://msp-portfolio.<your-subdomain>.workers.dev/mcp
+  ```
+
+  Local check without an account (web-standard handler simulated in Node):
+
+  ```sh
+  node -e "import('./worker/index.ts').then(m=>m.default.fetch(new Request('http://x/mcp/health')).then(r=>r.text().then(console.log)))"
+  ```
 
 - **Option C — local only**: run `pnpm server` and connect tools that support
   localhost MCP endpoints.

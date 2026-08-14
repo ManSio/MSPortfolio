@@ -9,8 +9,10 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "server": "node server/index.ts",
-    "typecheck": "tsc -b && tsc -p server/tsconfig.json",
-    "metrics": "node scripts/update-metrics.ts"
+    "typecheck": "tsc -b && tsc -p server/tsconfig.json && tsc -p worker/tsconfig.json",
+    "metrics": "node scripts/update-metrics.ts",
+    "cf:dev": "npx --yes wrangler@4 dev",
+    "cf:deploy": "npx --yes wrangler@4 deploy"
   },
   "dependencies": {
     "@modelcontextprotocol/fastify": "^2.0.0",

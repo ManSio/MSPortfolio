@@ -24,7 +24,7 @@ the same data files that feed the MCP server (single source of truth).
 pnpm install
 pnpm dev            # site at http://localhost:5173, /mcp proxied to :3000
 pnpm server         # MCP server at http://127.0.0.1:3000/mcp
-pnpm typecheck
+pnpm typecheck      # app + server + worker
 pnpm build
 ```
 
@@ -36,6 +36,18 @@ claude mcp add --transport http msp-portfolio http://127.0.0.1:3000/mcp
 ```
 
 Full docs (tools, env, deploy options): [`server/README.md`](server/README.md).
+
+## MCP server at a public URL (Cloudflare Workers)
+
+GitHub Pages cannot run processes, so the MCP endpoint ships a second,
+workerd-native entrypoint in [`worker/`](worker/index.ts) — the same tools,
+zero-ops hosting, free tier (100k req/day):
+
+```sh
+pnpm cf:deploy   # first run: logs in to your Cloudflare account
+# -> https://msp-portfolio.<your-subdomain>.workers.dev/mcp
+claude mcp add --transport http msp-portfolio https://msp-portfolio.<your-subdomain>.workers.dev/mcp
+```
 
 ## Repository layout
 
