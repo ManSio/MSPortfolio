@@ -20,6 +20,35 @@
 
 > Поправка 2026-08-14: infrawise оказался форком чужого проекта (Sidd27/infrawise) и удалён из портфолио; вывод о корректности параллелизма (правильный вход → правильный выход) не зависит от конкретного набора проектов и остаётся в силе.
 
+## [2026-08-14 15:00] — Гипотеза: живой MCP-эндпоинт отвечает на tools/list/tools/call и отдаёт числа, совпадающие с симуляцией в коде
+**Ожидание:** health/tools/list = 200; `simulate_architecture` на живом эндпоинте = результат `runSimulation` в mcp-tools.ts; `get_articles` возвращает статьи dev.to.
+**Команда:** curl к https://msp-portfolio.mansio-dev.workers.dev (health, tools/list, tools/call × 4 сценария simulate_architecture, get_articles, analyze_stack) + python-бург 20× /mcp/health (curl-UA и Python-urllib UA).
+**Сырой результат:**
+- health: `{"ok":true,...,"chatConfigured":true}` — 97ms; tools/list — 105ms.
+- simulate_architecture p95@20x: load_spike 238.5ms / node_loss 400.9ms / cache_cold 301.4ms / llm_saturation 238.5ms (= load_spike — сценарий не действует на не-LLM модель).
+- get_articles: **403 от dev.to** (`count:0, error:"dev.to responded 403"`) — БАГ; с обычного IP dev.to = 200 → блокировка исходящих запросов воркера.
+- analyze_stack([kubernetes,typescript,mcp,python]): coverage 0.75, kubernetes matched:false (нет evidence в стеке проектов).
+- Бург 20× curl-UA: 200×20, 0×429 — **rate limit отсутствует**. Бург 20× Python-urllib UA: 403×20 — Cloudflare bot-protection на границе.
+**Вердикт:** частично подтверждена. Числа симулятора совпали с кодом; get_articles опровергнут (403). Дефекты: KI-006 (get_articles), KI-007 (rate limit), KI-008 (llm_saturation no-op).
+
+## [2026-08-14 15:30] — Гипотеза: SDK v2 `registerTool` принимает `annotations.readOnlyHint`
+**Ожидание:** tsc без ошибок при `{ annotations: { readOnlyHint: true } }` в опциях registerTool.
+**Команда:** временная правка worker/index.ts → `npx tsc -p worker/tsconfig.json` → revert.
+**Сырой результат:** `Command executed successfully` (0 ошибок), правка откачена.
+**Вердикт:** подтверждена — спецификация MCP 2026-07-28 (tools.md) вводит поле `annotations`; SDK v2 типизирует `readOnlyHint`. Это позволяет документировать read-only тулы нативно, без текста в description.
+
+## [2026-08-14 16:00] — Гипотеза: get_articles чинится UA-заголовком; возвращаются реальные статьи
+**Ожидание:** `get_articles.execute()` с headers `User-Agent` возвращает live-статьи (source: live), а не 403.
+**Команда:** `node .tmp/probe_articles.ts` (реальный fetch на dev.to с фиксом UA).
+**Сырой результат:** `source: live, count: 5` — реальные заголовки («The Mechanical vs. The Semantic…» и др.). Дополнительно: `public/metrics.json` содержит 5 статей (CI-снапшот с UA-заголовком с GH Actions IP работает) → дифференциатор — UA, не IP-блок.
+**Вердикт:** подтверждена. KI-006 закрыт в коде; live-подтверждение с CF-egress после деплоя.
+
+## [2026-08-14 16:10] — Гипотеза: интеграционные тесты воркера покрывают rate limit, CORS, adversarial и конкуренцию
+**Ожидание:** tests/worker.test.ts (12 тестов): 429 на лимит (MCP и CHAT), health без лимита, security-заголовки, CORS allow/deny, malformed JSON → 400, unknown tool/method → error, 8 параллельных tools/call с проверкой корректности фильтра; SDK v2 сериализует annotations в tools/list.
+**Команда:** `pnpm test` (3 файла) + `pnpm typecheck` + `pnpm build`.
+**Сырой результат:** 29/29 passed; typecheck чистый; build OK (252.60 KB JS, gzip 79.19 KB).
+**Вердикт:** подтверждена — rate limit даёт 429, CORS fail-closed, adversarial отклоняются (400/-32602), конкуренция 8/8 без перекрёста, `readOnlyHint`/`openWorldHint` видны в tools/list.
+
 ---
 
 ## 🚫 Отрицательные результаты (не повторять)

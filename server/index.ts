@@ -48,7 +48,7 @@ const handler = createMcpHandler(() => {
   for (const tool of TOOLS) {
     server.registerTool(
       tool.name,
-      { description: tool.description, inputSchema: z.fromJSONSchema(tool.inputSchema) },
+      { description: tool.description, inputSchema: z.fromJSONSchema(tool.inputSchema), annotations: tool.annotations },
       async (args) => {
         try {
           const result = await tool.execute(args as Record<string, unknown>);

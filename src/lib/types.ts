@@ -101,11 +101,24 @@ export interface MetricsSnapshot {
 
 // ── MCP tools ──
 
+export interface ToolAnnotations {
+  /** Tool does not modify state — safe to expose to agents without confirmation. */
+  readOnlyHint?: boolean;
+  /** Tool may have destructive side effects. */
+  destructiveHint?: boolean;
+  /** Tool is safe to retry — repeated calls produce the same result. */
+  idempotentHint?: boolean;
+  /** Tool may interact with the outside world (network, external systems). */
+  openWorldHint?: boolean;
+}
+
 export interface MCPTool {
   name: string;
   description: string;
   /** JSON Schema (draft 2020-12) describing tool input. */
   inputSchema: Record<string, unknown>;
+  /** Machine-readable behavior hints (MCP spec 2026-07-28: `annotations`). */
+  annotations?: ToolAnnotations;
   execute(args: Record<string, unknown>): Promise<unknown>;
 }
 

@@ -75,6 +75,14 @@ jobs:
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'simulate_architecture'
           echo 'tools/list works ✔'
+      - name: Check MCP tools/call (get_articles)
+        # Regression guard for KI-006: get_articles returned 403 from dev.to.
+        run: |
+          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' | grep -q '"count"'
+          echo 'get_articles works ✔'
 
   deploy-worker:
     # Auto-deploys the MCP worker on every push once the Cloudflare API token

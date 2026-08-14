@@ -78,6 +78,24 @@ describe('MCP tools', () => {
     expect(ratio).toBeGreaterThan(3); // LLM dominates and saturates hard
     expect(res.findings.some((f) => f.includes('LLM'))).toBe(true);
   });
+
+  it('llm_saturation is a no-op on non-LLM architectures and says so (KI-008)', async () => {
+    const spike = (await call('simulate_architecture', { project_id: 'mscodebase-intelligence', scenario: 'load_spike' })) as SimulationResult;
+    const sat = (await call('simulate_architecture', { project_id: 'mscodebase-intelligence', scenario: 'llm_saturation' })) as SimulationResult;
+    expect(sat.points).toEqual(spike.points);
+    expect(sat.findings.some((f) => f.toLowerCase().includes('no llm stage'))).toBe(true);
+    expect(sat.findings.some((f) => f.includes('LLM generation dominates'))).toBe(false);
+  });
+
+  it('every tool declares readOnlyHint annotations (read-only surface)', () => {
+    for (const t of TOOLS) {
+      expect(t.annotations?.readOnlyHint).toBe(true);
+    }
+    const articles = getTool('get_articles');
+    expect(articles?.annotations?.openWorldHint).toBe(true); // network fetch
+    const local = getTool('get_projects');
+    expect(local?.annotations?.openWorldHint).toBe(false); // closed world
+  });
 });
 
 describe('architecture models', () => {

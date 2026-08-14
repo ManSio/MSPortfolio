@@ -8,7 +8,7 @@
 import projectsData from '../data/projects.json' with { type: 'json' };
 import principlesData from '../data/principles.json' with { type: 'json' };
 import timelineData from '../data/timeline.json' with { type: 'json' };
-import type { MCPTool, Principle, ProjectsData, SimulationResult, StackAnalysis } from './types.js';
+import type { DevToArticle, MCPTool, Principle, ProjectsData, SimulationResult, StackAnalysis } from './types.js';
 
 const projects = (projectsData as ProjectsData).projects;
 const principles = (principlesData as { principles: Principle[] }).principles;
@@ -151,7 +151,11 @@ function runSimulation(model: ArchitectureModel, scenario: string): { points: Si
     findings.push(`Cold cache costs ~${Math.round((model.cache.saveMs * 3) * 10) / 10}ms per request on top of baseline.`);
   }
   if (scenario === 'llm_saturation') {
-    findings.push('LLM generation dominates — horizontal scaling of the model tier matters more than any micro-optimization.');
+    if (model.llmDominant) {
+      findings.push('LLM generation dominates — horizontal scaling of the model tier matters more than any micro-optimization.');
+    } else {
+      findings.push('This architecture has no LLM stage — llm_saturation degrades it no more than load_spike.');
+    }
   }
   if (findings.length === 0) findings.push('No stage crosses the latency budget under this scenario.');
 
@@ -167,6 +171,7 @@ export const TOOLS: MCPTool[] = [
     name: 'get_profile',
     description: "Get the owner's professional profile summary.",
     inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
     async execute() {
       return projectsData.profile;
     },
@@ -184,6 +189,7 @@ export const TOOLS: MCPTool[] = [
         },
       },
     },
+    annotations: { readOnlyHint: true, openWorldHint: false },
     async execute({ filter }) {
       const tag = filter === undefined || filter === 'all' ? null : String(filter);
       const list = tag ? projects.filter((p) => p.stack.some((s) => s.toLowerCase() === tag)) : projects;
@@ -207,6 +213,7 @@ export const TOOLS: MCPTool[] = [
     name: 'get_engineering_principles',
     description: 'Get engineering principles with real examples and A/B-style counterfactuals.',
     inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
     async execute() {
       return { count: principles.length, principles };
     },
@@ -215,6 +222,7 @@ export const TOOLS: MCPTool[] = [
     name: 'get_timeline',
     description: 'Get the engineering decision timeline.',
     inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: false },
     async execute() {
       return timelineData.events;
     },
@@ -223,9 +231,13 @@ export const TOOLS: MCPTool[] = [
     name: 'get_articles',
     description: 'Get recent Dev.to articles with reading time, tags and links.',
     inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true, openWorldHint: true },
     async execute() {
       try {
         const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6', {
+          // dev.to rejects headerless fetches from datacenter egress (403); the
+          // CI snapshot script already proves a UA header makes it through.
+          headers: { 'User-Agent': 'msp-portfolio-server' },
           signal: AbortSignal.timeout(8000),
         });
         if (!res.ok) throw new Error(`dev.to responded ${res.status}`);
@@ -245,10 +257,39 @@ export const TOOLS: MCPTool[] = [
             url: a.url,
             tags: a.tag_list ?? [],
           })),
+          source: 'live',
         };
       } catch (e) {
-        // Fall back to a graceful empty result instead of a hard error.
-        return { count: 0, articles: [], error: e instanceof Error ? e.message : String(e) };
+        // dev.to may still block Cloudflare egress. Fall back to the committed
+        // metrics snapshot (refreshed hourly in CI) so agents get real data
+        // instead of an empty error.
+        try {
+          const snap = await fetch('https://mansio.github.io/MSPortfolio/metrics.json', { signal: AbortSignal.timeout(8000) });
+          if (snap.ok) {
+            const data = (await snap.json()) as { devto?: DevToArticle[] };
+            if (data.devto && data.devto.length > 0) {
+              return {
+                count: data.devto.length,
+                articles: data.devto.map((a) => ({
+                  title: a.title,
+                  description: a.description ?? '',
+                  readingTimeMinutes: a.readingTimeMinutes ?? 0,
+                  url: a.url,
+                  tags: a.tags ?? [],
+                })),
+                source: 'snapshot',
+              };
+            }
+          }
+        } catch {
+          // snapshot unavailable — fall through to the graceful empty result
+        }
+        return {
+          count: 0,
+          articles: [],
+          source: 'unavailable',
+          error: e instanceof Error ? e.message : String(e),
+        };
       }
     },
   },
@@ -262,6 +303,7 @@ export const TOOLS: MCPTool[] = [
       },
       required: ['required_skills'],
     },
+    annotations: { readOnlyHint: true, openWorldHint: false },
     async execute({ required_skills }) {
       const skills = Array.isArray(required_skills) ? required_skills.map(String) : [];
       const allStack = new Set<string>();
@@ -313,6 +355,7 @@ export const TOOLS: MCPTool[] = [
       },
       required: ['project_id', 'scenario'],
     },
+    annotations: { readOnlyHint: true, openWorldHint: false },
     async execute({ project_id, scenario }) {
       const projectId = String(project_id);
       const scenarioId = String(scenario);

@@ -28,7 +28,7 @@ const handler = createMcpHandler(() => {
   for (const tool of TOOLS) {
     server.registerTool(
       tool.name,
-      { description: tool.description, inputSchema: z.fromJSONSchema(tool.inputSchema) },
+      { description: tool.description, inputSchema: z.fromJSONSchema(tool.inputSchema), annotations: tool.annotations },
       async (args) => {
         try {
           const result = await tool.execute(args as Record<string, unknown>);
@@ -45,6 +45,14 @@ const handler = createMcpHandler(() => {
   return server;
 });
 
+interface RateLimiter {
+  limit(args: { key: string }): Promise<{ success: boolean }>;
+}
+
+interface AnalyticsEngine {
+  writeDataPoint(data: { blobs?: string[]; doubles?: number[]; indexes?: string[] }): void;
+}
+
 interface Env {
   /** Comma-separated browser origins allowed to call /mcp (e.g. https://mansio.github.io) */
   ALLOWED_ORIGINS?: string;
@@ -52,6 +60,12 @@ interface Env {
   OPENROUTER_API_KEY?: string;
   /** OpenRouter model id (default: a free model with function calling). */
   OPENROUTER_MODEL?: string;
+  /** CF Rate Limiting API binding for /mcp (wrangler.toml [[ratelimits]]). Absent in local tests. */
+  MCP_RATE_LIMITER?: RateLimiter;
+  /** CF Rate Limiting API binding for /chat. Absent in local tests. */
+  CHAT_RATE_LIMITER?: RateLimiter;
+  /** CF Analytics Engine binding for /mcp telemetry (dataset auto-creates on first write). */
+  ANALYTICS?: AnalyticsEngine;
 }
 
 const CORS_ALLOW_HEADERS =
@@ -70,6 +84,30 @@ function corsHeaders(origins: string[], requestOrigin: string | null): Record<st
     };
   }
   return {};
+}
+
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+};
+
+/** Applies security + CORS headers to a response (preserves existing headers). */
+function finalize(res: Response, cors: Record<string, string>): Response {
+  const headers = new Headers(res.headers);
+  for (const [k, v] of Object.entries(SECURITY_HEADERS)) headers.set(k, v);
+  for (const [k, v] of Object.entries(cors)) headers.set(k, v);
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+}
+
+/** Returns a 429 Response when the per-IP+path limit is exceeded, else null. */
+async function enforceRateLimit(env: Env, pathname: string, request: Request): Promise<Response | null> {
+  const limiter = pathname === '/chat' ? env.CHAT_RATE_LIMITER : env.MCP_RATE_LIMITER;
+  if (!limiter) return null; // binding absent (local tests / misconfig) — fail open
+  const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
+  const { success } = await limiter.limit({ key: `${pathname}|${ip}` });
+  if (!success) return new Response(`Rate limit exceeded for ${pathname}`, { status: 429 });
+  return null;
 }
 
 const CHAT_MODEL_CHAIN = [
@@ -233,39 +271,67 @@ export default {
     const cors = corsHeaders(origins, origin);
 
     if (url.pathname === '/mcp/health') {
-      const res = Response.json({
-        ok: true,
-        name: NAME,
-        version: VERSION,
-        tools: TOOLS.map((t) => t.name),
-        chatConfigured: Boolean(env.OPENROUTER_API_KEY),
-      });
-      for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
-      return res;
+      return finalize(
+        Response.json({
+          ok: true,
+          name: NAME,
+          version: VERSION,
+          tools: TOOLS.map((t) => t.name),
+          chatConfigured: Boolean(env.OPENROUTER_API_KEY),
+        }),
+        cors,
+      );
     }
 
     if (url.pathname === '/chat') {
-      if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+      if (request.method === 'OPTIONS') return finalize(new Response(null, { status: 204 }), cors);
+      const limited = await enforceRateLimit(env, '/chat', request);
+      if (limited) return finalize(limited, cors);
       try {
         const res = await handleChat(request, env);
-        for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
-        return res;
+        return finalize(res, cors);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        return Response.json({ error: `chat failed: ${msg}` }, { status: 500 });
+        return finalize(Response.json({ error: `chat failed: ${msg}` }, { status: 500 }), cors);
       }
     }
 
     if (url.pathname !== '/mcp') {
-      return new Response('Not found', { status: 404 });
+      return finalize(new Response('Not found', { status: 404 }), cors);
     }
 
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: cors });
+      return finalize(new Response(null, { status: 204 }), cors);
     }
 
+    // Fire-and-forget telemetry: one Analytics Engine event per /mcp request
+    // (RPC method + tool name). Never blocks or fails the request.
+    if (request.method === 'POST') {
+      const analytics = env.ANALYTICS;
+      if (analytics) {
+        void request
+          .clone()
+          .text()
+          .then((bodyText) => {
+            let method = 'unknown';
+            let tool: string | undefined;
+            try {
+              const parsed = JSON.parse(bodyText) as { method?: string; params?: { name?: string } };
+              if (parsed.method) method = parsed.method;
+              tool = parsed.params?.name;
+            } catch {
+              // non-JSON body — keep 'unknown'
+            }
+            analytics.writeDataPoint({ blobs: tool ? [method, tool] : [method], indexes: ['/mcp'] });
+          })
+          .catch(() => {});
+      }
+    }
+
+    const limited = await enforceRateLimit(env, '/mcp', request);
+    if (limited) return finalize(limited, cors);
+
     const res = await handler.fetch(request);
-    for (const [key, value] of Object.entries(cors)) res.headers.set(key, value);
-    return res;
+    return finalize(res, cors);
   },
 };

@@ -66,7 +66,26 @@
 **Guard:** `node scripts/check-mobile.mjs` как регресс-проверка вёрстки; og-cover регенерируется скриптом; .tmp в .gitignore.
 **Pattern:** NEW
 
-## [2026-08-14 14:30] — Blog (dev.to), vitest, CI auto-deploy worker, LLM-чат
+## [2026-08-14 15:00] — Live-аудит MCP-эндпоинта: get_articles 403, rate limit отсутствует
+**Status:** 🟡 Partial (P1 открыт — KI-006)
+**Root Cause:** (1) `get_articles` — dev.to отклоняет запросы из Cloudflare-воркера (с обычного IP 200, с воркера 403; вероятно IP-диапазон или отсутствующий User-Agent). (2) rate limiting не реализован ни в коде, ни в wrangler.toml (эмпирически 20×200, 0×429; смягчено только CF bot-protection для бот-UA).
+**Fix:** НЕ фиксилось — найдено в исследовании (эксперименты против продакшена). План: get_articles → cron-snapshot (паттерн metrics, GITHUB_TOKEN/прямой fetch в CI) или User-Agent; rate limit → CF Rate Limiting API binding `[[ratelimits]]` (wrangler 4.36+, без латентности, per-location).
+**Guard:** расширить CI smoke: tools/call get_articles (не только tools/list); эксперименты — EXPERIMENTS_LOG.md#3-4.
+**Pattern:** NEW
+
+## [2026-08-14 16:00] — Хардненинг MCP-эндпоинта: rate limit, readOnlyHint, security-заголовки, KI-006/KI-008
+**Status:** 🟡 Partial (код + тесты готовы; live-подтверждение после деплоя через CI deploy-worker)
+**Root Cause:** KI-006 — dev.to 403 на запросы без UA из датацентрового egress; KI-007 — rate limit отсутствовал (подтверждено экспериментом 20×200); KI-008 — llm_saturation no-op без честного объяснения.
+**Fix:** (1) `get_articles`: UA-заголовок + fallback на committed снапшот metrics.json (проверено: source live, 5 статей); (2) `wrangler.toml`: `[[ratelimits]]` MCP 300/60 + CHAT 30/60 (per IP+path), воркер возвращает 429, fail-open при отсутствии биндинга; (3) аннотации `readOnlyHint`/`openWorldHint` на все 7 тулов — SDK v2 сериализует их в tools/list (проверено тестом); (4) security-заголовки `nosniff`/`X-Frame-Options: DENY`/`Referrer-Policy` через finalize(); (5) KI-008: честный finding «no LLM stage» для не-LLM моделей; (6) CI smoke: добавлен tools/call get_articles (ловил бы KI-006); (7) Analytics Engine телеметрия /mcp (метод+тул, fire-and-forget).
+**Guard:** tests/worker.test.ts (12 интеграционных: 429, CORS, adversarial, конкуренция 8×); tests/mcp-tools.test.ts (KI-008, аннотации); CI smoke get_articles. Итог: 29/29 тестов, typecheck, build.
+**Pattern:** NEW
+
+## [2026-08-14 15:30] — SDK v2 поддерживает annotations.readOnlyHint (проверено tsc)
+**Status:** ✅ Fixed (знание)
+**Root Cause:** — (верификация возможности)
+**Fix:** Временная правка registerTool → tsc OK → revert. Спецификация MCP 2026-07-28 вводит `annotations`; SDK v2 типизирует readOnlyHint. Готово к использованию для документирования read-only тулов.
+**Guard:** EXPERIMENTS_LOG.md#4.
+**Pattern:** NEW
 **Status:** ✅ Fixed
 **Root Cause:** —
 **Fix:**
