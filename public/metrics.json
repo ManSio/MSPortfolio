@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T19:56:31.215Z",
+  "fetchedAt": "2026-08-14T20:45:14.401Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T19:13:24Z",
+      "pushedAt": "2026-08-14T19:56:37Z",
       "language": "TypeScript"
     },
     {
@@ -161,13 +161,6 @@
     }
   ],
   "commits": [
-    {
-      "repo": "MSPortfolio",
-      "sha": "bed3276ff2",
-      "date": "2026-08-14T18:47:06Z",
-      "message": "feat(lab): load curves section — degradation charts from the simulate_architecture engine",
-      "author": "ManSio"
-    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "23489d2305",
