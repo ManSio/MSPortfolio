@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T20:45:14.401Z",
+  "fetchedAt": "2026-08-14T21:39:47.585Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T19:56:37Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T18:38:54Z",
+      "pushedAt": "2026-08-14T21:34:25Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T20:45:21Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -163,23 +163,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "23489d2305",
-      "date": "2026-08-14T18:36:59Z",
-      "message": "fix(win): мигающие консоли при простоях — resource_monitor powershell каждые ~30с без CREATE_NO_WINDOW",
+      "sha": "4c1af8f9de",
+      "date": "2026-08-14T21:32:34Z",
+      "message": "fix(install): убрать устаревшие EMBEDDING_PROVIDER/EMBEDDING_DIMENSION из extension.toml env (авто-детект провайдера)",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "1acb7c3f4b",
-      "date": "2026-08-14T17:56:13Z",
-      "message": "fix(telemetry): метрики MCP больше не заражены общим tool_metrics.json + get_runtime_counters без «Blocked 100%»",
+      "sha": "a2ce8556bb",
+      "date": "2026-08-14T21:30:51Z",
+      "message": "fix(diary): маркеры verified_from_clean_state (✅ да) + реальные имена тестов для verify_diary",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "bb06a9b696",
-      "date": "2026-08-14T17:28:43Z",
-      "message": "fix(install): вернуть документированную настройку MCP в settings.json (pythonw) + фикс _insert_before_final_brace",
+      "sha": "ad79432a41",
+      "date": "2026-08-14T21:20:47Z",
+      "message": "experiment(1L): live-arm свип 14 моделей OpenRouter + Red Team верификация — отчёт, harness, тесты",
       "author": "MSCodeBase Agent"
     },
     {
