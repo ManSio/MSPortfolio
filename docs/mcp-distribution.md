@@ -29,7 +29,10 @@ curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.Man
 ```
 
 Примечания:
-- Namespace `io.github.Mansio/...` привязан к GitHub-аккаунту (проверено: login = ManSio).
+- Name: `io.github.ManSio/msp-portfolio` (регистр = ТОЧНЫЙ кейс GitHub-логина `ManSio`).
+  Проверка прав регистро-чувствительна: OIDC даёт `io.github.ManSio/*`, имя с другим
+  регистром (напр. `Mansio`) → 403 "You do not have permission". Поймано на v1.0.1-v1.0.3,
+  исправлено в v1.0.4.
 - Схема: https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json
 - Версия в `server.json` перезаписывается из тега workflow'ом (шаг Set version).
 - **`description` — максимум 100 символов** (официальный registry, 422-ошибка валидации;
