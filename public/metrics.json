@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T10:12:31.649Z",
+  "fetchedAt": "2026-08-15T10:13:52.035Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:12:14Z",
+      "pushedAt": "2026-08-15T10:13:35Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "21680d89f6",
-      "date": "2026-08-15T10:12:10Z",
-      "message": "ci(registry): raw curl publish with full server response in annotation",
+      "sha": "e2721efd51",
+      "date": "2026-08-15T10:13:31Z",
+      "message": "fix(registry): server name must match GitHub login case-sensitively — io.github.ManSio (403 root cause)",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "fd9db53513",
-      "date": "2026-08-15T10:10:14Z",
-      "message": "ci(registry): diagnostic — capture publish output into check-run annotation",
+      "sha": "21680d89f6",
+      "date": "2026-08-15T10:12:10Z",
+      "message": "ci(registry): raw curl publish with full server response in annotation",
       "author": "ManSio"
     },
     {
