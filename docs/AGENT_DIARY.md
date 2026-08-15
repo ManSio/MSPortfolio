@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 17:30] — Evidence-реестр расширен до 29 claims (22 supported / 7 refused), тесты 65/65
+**Status:** ✅ Fixed (локально; GH Pages обновится по push)
+**Root Cause:** — (владелец: «да» на расширение реестра до ~20-30 утверждений по всем типам данных)
+**Fix:** `src/data/lab/evidence.json` — 29 claims, **каждый вердикт измерен** через живой verify_claim (не выдуман): 22 supported по профилю/проектам/принципам (fail-closed, measure-not-assume, single-write-path, self-healing, agent-agnostic)/таймлайну (2014 ManSio, LanceDB+BM25 vs FTS5)/антипаттернам (fork-as-own, hardcoded-theme)/экспериментам (mutmut reranker, FTS5-only beats pipeline, live-LLM false-acceptance)/дневнику (0 errors ≠ correct data, PID-reuse)/KI (OpenRouter multi-upstream, duplicate Zed windows, late enrichment) + 7 честных отказов (Google/Meta/iOS/Netflix/Linux/Turing/CTO). Guard: evidence-eval.test.ts сверяет каждый claim с verify_claim, lab.test.ts — целостность и суммы.
+**Guard:** при добавлении claims — тот же процесс: сформулировать по фактам из data → измерить вердикт → записать; тест не даст реестру разойтись с корпусом.
+**Pattern:** NEW
+
 ## [2026-08-15 17:00] — P2: D4 (KV-квота анонима) + D5 (/openapi.json) + PR в awesome-mcp (#12210)
 **Status:** ✅ Fixed (прод: воркер задеплоен a6ef377a, тесты 63/63)
 **Root Cause:** — (владелец: «да» на закрытие хвостов: PR в awesome-mcp + P2 D4/D5)

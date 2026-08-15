@@ -27,34 +27,129 @@
     },
     {
       "id": "ev-06",
+      "claim": "must refuse rather than guess when it cannot verify",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-07",
+      "claim": "performance claims come from benchmarks with a command line",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-08",
+      "claim": "derived state written through a single write path",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-09",
+      "claim": "watchdogs and reindex triggers recover deterministically",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-10",
+      "claim": "one server consumed by Claude Code and Cursor",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-11",
+      "claim": "chose LanceDB and BM25 over SQLite FTS5",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-12",
+      "claim": "joined GitHub as ManSio",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-13",
+      "claim": "claimed a fork as my own work",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-14",
+      "claim": "hardcoded dark theme colors broke the light theme",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-15",
+      "claim": "mutation testing for the reranker grader",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-16",
+      "claim": "FTS5 only beats the full pipeline by recall",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-17",
+      "claim": "live LLM false-acceptance across 14 models",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-18",
+      "claim": "zero errors did not mean correct data",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-19",
+      "claim": "reranker was offline due to PID reuse",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-20",
+      "claim": "OpenRouter routes one prompt across multiple upstreams",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-21",
+      "claim": "two Zed windows can start duplicate servers",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-22",
+      "claim": "late enrichment found no imports on search chunks",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-23",
       "claim": "worked at Google",
       "expected": "refused"
     },
     {
-      "id": "ev-07",
+      "id": "ev-24",
       "claim": "led a team of engineers at Meta",
       "expected": "refused"
     },
     {
-      "id": "ev-08",
+      "id": "ev-25",
       "claim": "built a mobile app for iOS",
       "expected": "refused"
     },
     {
-      "id": "ev-09",
+      "id": "ev-26",
       "claim": "ten years at Netflix as staff engineer",
       "expected": "refused"
     },
     {
-      "id": "ev-10",
+      "id": "ev-27",
       "claim": "contributed to the Linux kernel",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-28",
+      "claim": "won a Turing Award",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-29",
+      "claim": "CTO of a Series B startup",
       "expected": "refused"
     }
   ],
   "summary": {
-    "supported": 5,
-    "refused": 5,
-    "total": 10
+    "supported": 22,
+    "refused": 7,
+    "total": 29
   },
   "updatedAt": "2026-08-15"
 }
