@@ -64,10 +64,12 @@ describe('verify_claim — Evidence Score v1 (deterministic arm)', () => {
     const short = await verify('portfolio');
     expect(short.supported).toBe(false);
     expect(short.note).toContain('too short');
+    // The note explains WHY: shows the found significant word.
+    expect(short.note).toContain('portfolio');
 
     const empty = await verify('');
     expect(empty.supported).toBe(false);
-    expect(empty.note).toBeTruthy();
+    expect(empty.note).toContain('no significant words');
   });
 });
 

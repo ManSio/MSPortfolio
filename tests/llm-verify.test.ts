@@ -95,7 +95,7 @@ describe('verifyClaimLlmArm — decision logic (mocked model)', () => {
     vi.stubGlobal('fetch', fetchMock);
     const res = await verifyClaimLlmArm('the and for when', CONFIG);
     expect(res.verdict).toBe('refused');
-    expect(res.reason).toContain('too short');
+    expect(res.reason).toContain('no significant words');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

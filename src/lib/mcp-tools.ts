@@ -646,6 +646,10 @@ export const TOOLS: MCPTool[] = [
       const claimText = String(claim ?? '').trim();
       const tokens = claimTokens(claimText);
       if (tokens.length < 2) {
+        const note =
+          tokens.length === 0
+            ? 'Claim too short — no significant words found. Need at least 2 words of 4+ letters.'
+            : `Claim too short — only ${tokens.length} significant word${tokens.length === 1 ? '' : 's'}: ${tokens.join(', ')}. Need at least 2 (words under 4 letters and generic ones like built/used/made are ignored).`;
         return {
           claim: claimText,
           tokens,
@@ -653,7 +657,7 @@ export const TOOLS: MCPTool[] = [
           evidenceCount: 0,
           evidence: [],
           arm: 'deterministic',
-          note: 'Claim too short — provide at least two significant words (length >= 4).',
+          note,
         } satisfies VerifyClaimResult;
       }
       const evidence = EVIDENCE_CORPUS

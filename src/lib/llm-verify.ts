@@ -103,7 +103,12 @@ export async function verifyClaimLlmArm(claim: string, config: LlmArmConfig): Pr
 
   // Mirror v1's "too short to verify" rule: refuse without a network call.
   if (claimTokens(claim).length < 2) {
-    return { claim, verdict: 'refused', arm: 'llm', reason: 'Claim too short — provide at least two significant words.', latencyMs: latencyMs() };
+    const tokens = claimTokens(claim);
+    const reason =
+      tokens.length === 0
+        ? 'Claim too short — no significant words found. Need at least 2 words of 4+ letters.'
+        : `Claim too short — only ${tokens.length} significant word${tokens.length === 1 ? '' : 's'}: ${tokens.join(', ')}. Need at least 2 (words under 4 letters and generic ones like built/used/made are ignored).`;
+    return { claim, verdict: 'refused', arm: 'llm', reason, latencyMs: latencyMs() };
   }
 
   // Token-overlap candidates padded with core identity records (profile + projects + principles),
