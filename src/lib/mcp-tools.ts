@@ -256,7 +256,9 @@ export const TOOLS: MCPTool[] = [
         // real API param, so it changes the Varnish cache key — unlike ad-hoc
         // params, which Varnish normalizes away. cache:no-store + UA header
         // cover the CF-side cache and the 403-on-headerless-fetch case.
-        const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6&state=published', {
+        // per_page=8 (was 6): a real param, so bumping it busts a stale
+        // Varnish entry (2026-08-15) and leaves headroom above the 7 posts.
+        const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=8&state=published', {
           cache: 'no-store',
           // dev.to rejects headerless fetches from datacenter egress (403); the
           // CI snapshot script already proves a UA header makes it through.

@@ -96,7 +96,7 @@ export async function getDevToArticles(username: string): Promise<DevToArticle[]
       social_image?: string | null;
       readable_publish_date?: string;
     }>
-  >(`https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=6&state=published`);
+  >(`https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=8&state=published`);
   const mapped: DevToArticle[] = data.map((a) => ({
     id: a.id,
     title: a.title,

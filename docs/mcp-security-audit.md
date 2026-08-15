@@ -92,7 +92,7 @@ CVE, включая уязвимость в mcp-remote с CVSS 9.6, дающую
   статичных JSON (`projects.json`, `principles.json`, `timeline.json`) + вычисления.
   Никаких записей, exec, файловых операций, сетевых вызовов к нефиксированным хостам.
 - ✅ **SSRF-поверхность отсутствует.** Единственный исходящий fetch — захардкоженный
-  URL dev.to (`mcp-tools.ts:228`: `https://dev.to/api/articles?username=mansio&per_page=6`).
+  URL dev.to (`mcp-tools.ts:228`: `https://dev.to/api/articles?username=mansio&per_page=8`).
   Ни один инструмент не принимает URL от вызывающего.
 - ✅ **Единственная точка пользовательского ввода — `/chat`** (`worker/index.ts:200-222`),
   и она уходит в LLM (OpenRouter), а не в вывод MCP-инструментов. System prompt явно

@@ -4,6 +4,22 @@ import type { DevToArticle } from '../lib/types';
 
 export const FALLBACK_ARTICLES: DevToArticle[] = [
   {
+    id: 4399317,
+    title: 'Your memory layer is lying to you (and your LLM agrees)',
+    description:
+      '14 models, 4 arms, ~3400 API calls. No model balanced false-accept and recall with pattern strings. With real file snippets: recall 0.08->0.88 at FA=0.02. The problem was the evidence, not the model.',
+    readingTimeMinutes: 10,
+    url: 'https://dev.to/mansio/your-memory-layer-is-lying-to-you-and-your-llm-agrees-1oia',
+    tags: ['llm', 'memorylayer', 'agents', 'benchmark'],
+    reactions: 2,
+    comments: 0,
+    coverImage:
+      'https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png',
+    socialImage:
+      'https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png',
+    readablePublishDate: 'Aug 14',
+  },
+  {
     id: 4371984,
     title: 'The Mechanical vs. The Semantic: What Happens When AI Memory is Wrong?',
     description:

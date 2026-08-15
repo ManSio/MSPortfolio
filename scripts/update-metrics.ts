@@ -45,7 +45,8 @@ let devto: {
   readable_publish_date?: string;
 }[] = [];
 try {
-  const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=6&state=published', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
+  // per_page=8 (was 6): real param, busts stale dev.to Varnish entries and leaves headroom (2026-08-15)
+  const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=8&state=published', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
   if (res.ok) devto = (await res.json()) as typeof devto;
 } catch {
   devto = [];
