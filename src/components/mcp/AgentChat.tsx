@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { composeAnswer, matchIntent, QUICK_QUESTIONS, type Intent } from '../../lib/intents';
+import { computeChatEvidence, evidenceLabel } from '../../lib/evidence';
 import {
   callChat,
   callLocalTool,
@@ -17,6 +18,7 @@ type Frame =
   | { kind: 'think'; text: string }
   | { kind: 'tool'; name: string; args: Record<string, unknown> }
   | { kind: 'result'; text: string }
+  | { kind: 'evidence'; text: string }
   | { kind: 'answer'; text: string }
   | { kind: 'error'; text: string };
 
@@ -106,6 +108,11 @@ export function AgentChat() {
 
     const answer = composeAnswer(intent, results);
     setFrames((prev) => [...prev, { kind: 'answer', text: answer }]);
+    const grounded = results.filter((r) => !(r && typeof r === 'object' && 'error' in (r as Record<string, unknown>))).length;
+    setFrames((prev) => [
+      ...prev,
+      { kind: 'evidence', text: evidenceLabel({ toolCalls: results.length, grounded, failed: results.length - grounded, ungrounded: results.length === 0 }) },
+    ]);
     return answer;
   }
 
@@ -131,6 +138,7 @@ export function AgentChat() {
     }
     await sleep(300);
     setFrames((prev) => [...prev, { kind: 'answer', text: res.answer }]);
+    setFrames((prev) => [...prev, { kind: 'evidence', text: evidenceLabel(res.evidence ?? computeChatEvidence(res.steps)) }]);
     historyRef.current.push({ role: 'assistant', content: res.answer });
     return res.answer;
   }
@@ -215,6 +223,13 @@ export function AgentChat() {
           if (f.kind === 'error') {
             return (
               <div key={i} className="rounded-lg border border-red-500/30 bg-red-500/5 px-3 py-2 text-red-600 dark:text-red-400 whitespace-pre-wrap">
+                {f.text}
+              </div>
+            );
+          }
+          if (f.kind === 'evidence') {
+            return (
+              <div key={i} className="rounded-lg border border-sky-500/25 bg-sky-500/5 px-3 py-1.5 text-xs text-sky-600 dark:text-sky-400">
                 {f.text}
               </div>
             );

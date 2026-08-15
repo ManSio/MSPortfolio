@@ -1,6 +1,7 @@
 import { ArchitectureSimulator } from './components/playground/ArchitectureSimulator';
 import { Terminal } from './components/playground/Terminal';
 import { AgentChat } from './components/mcp/AgentChat';
+import { ClaimVerifier } from './components/mcp/ClaimVerifier';
 import { McpStatsCard } from './components/mcp/McpStatsCard';
 import { AntipatternsGrid } from './components/antipatterns/AntipatternsGrid';
 import { BlogSection } from './components/blog/BlogSection';
@@ -189,6 +190,7 @@ export default function App() {
                 </p>
               </Card>
               <McpStatsCard />
+              <ClaimVerifier />
             </div>
           </div>
         </Section>

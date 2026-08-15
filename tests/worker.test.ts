@@ -33,12 +33,12 @@ function postMcp(env: Env, body: unknown, headers: Record<string, string> = {}) 
 }
 
 describe('worker /mcp integration', () => {
-  it('tools/list exposes 12 tools with readOnlyHint annotations', async () => {
+  it('tools/list exposes 13 tools with readOnlyHint annotations', async () => {
     const res = await postMcp(makeEnv(), { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(res.status).toBe(200);
     const payload = ssePayload(await res.text());
     const tools = payload.result.tools as Array<{ name: string; annotations?: { readOnlyHint?: boolean; openWorldHint?: boolean } }>;
-    expect(tools).toHaveLength(12);
+    expect(tools).toHaveLength(13);
     for (const t of tools) {
       expect(t.annotations?.readOnlyHint, `readOnlyHint missing on ${t.name}`).toBe(true);
     }
@@ -185,6 +185,36 @@ describe('worker /mcp integration', () => {
   it('unknown path returns 404', async () => {
     const res = await worker.fetch(new Request(`${BASE}/nope`), makeEnv() as never);
     expect(res.status).toBe(404);
+  });
+
+  it('/resume.txt renders a plain-text CV from the same tools (D2)', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/resume.txt`), makeEnv() as never);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('text/plain');
+    const text = await res.text();
+    expect(text).toContain('Mikhail');
+    expect(text).toContain('AI / Backend Engineer');
+    expect(text).toContain('## Projects');
+    expect(text).toContain('MSCodeBase Intelligence');
+    expect(text).toContain('/mcp');
+  });
+
+  it('/llms.txt describes the server and its tools (D2/D5)', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/llms.txt`), makeEnv() as never);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('text/plain');
+    const text = await res.text();
+    expect(text).toContain('/mcp');
+    expect(text).toContain('simulate_architecture');
+    expect(text).toContain('get_profile');
+    expect(text).toContain('resume.txt');
+  });
+
+  it('/resume.txt and /llms.txt reject non-GET methods', async () => {
+    const post = await worker.fetch(new Request(`${BASE}/resume.txt`, { method: 'POST' }), makeEnv() as never);
+    expect(post.status).toBe(405);
+    const put = await worker.fetch(new Request(`${BASE}/llms.txt`, { method: 'PUT' }), makeEnv() as never);
+    expect(put.status).toBe(405);
   });
 
   it('adversarial: malformed JSON body is rejected', async () => {

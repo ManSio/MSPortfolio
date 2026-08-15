@@ -12,8 +12,16 @@ A portfolio that is simultaneously three things:
 ## Why this exists
 
 Most portfolios show **results**. This one shows **process** — the decision logs,
-the tool calls, the degradation curves. Everything on the page is generated from
-the same data files that feed the MCP server (single source of truth).
+the tool calls, the degradation curves — and the **evidence** behind every claim:
+any statement an agent makes about the owner can be traced to a data record
+(`verify_claim`, the evidence score), and every chat answer shows which tool calls
+grounded it. Everything on the page is generated from the same data files that
+feed the MCP server (single source of truth).
+
+> This is how I build.
+> Here is a system that lets you verify how I build.
+> And here is a system you can actually use.
+> And here is how I know when it is wrong.
 
 ## Stack
 
@@ -69,6 +77,12 @@ npx wrangler secret put OPENROUTER_API_KEY
 
 Model is configurable via the `OPENROUTER_MODEL` variable in `wrangler.toml`.
 Without any key the chat falls back to the deterministic rule-based engine.
+
+On the **Agent** section, a **Verify a claim** widget runs the same `verify_claim`
+tool the MCP server exposes: paste any claim about the owner and see the source
+records behind it — or an honest refusal when the data does not support it.
+Every chat answer ends with an `evidence:` line (tool calls · grounded · failed)
+so a visitor can see what the answer was based on.
 
 ## Repository layout
 

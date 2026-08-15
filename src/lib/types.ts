@@ -297,3 +297,21 @@ export interface TestSuitesData {
   total: number;
   updatedAt: string;
 }
+
+// ── Evidence verification (verify_claim — Evidence Score v1) ──
+
+export interface EvidenceRecord {
+  kind: string;
+  source: string;
+  title: string;
+  matchedTokens: string[];
+}
+
+export interface VerifyClaimResult {
+  claim: string;
+  tokens: string[];
+  supported: boolean;
+  evidenceCount: number;
+  evidence: EvidenceRecord[];
+  note?: string;
+}

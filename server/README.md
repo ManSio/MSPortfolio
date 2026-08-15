@@ -97,3 +97,17 @@ GitHub Pages cannot run processes, so the MCP server is a separate entrypoint:
 
 - **Option C — local only**: run `pnpm server` and connect tools that support
   localhost MCP endpoints.
+
+## MCP directories & distribution
+
+The server is published for discovery in MCP server directories (decision D1,
+research 2026-08-15):
+
+| Directory | Status | Where |
+|-----------|--------|-------|
+| Official MCP Registry | ready — publish on `v*` tag | `server.json` + `.github/workflows/publish-mcp.yml` |
+| Smithery | ready — auto-crawled | `smithery.yaml` (repo root) |
+| Glama / awesome-mcp-servers | manual PR (entry snippet) | [`docs/mcp-distribution.md`](../docs/mcp-distribution.md) |
+| mcp.so / PulseMCP / MCPMarket | web forms (optional) | [`docs/mcp-distribution.md`](../docs/mcp-distribution.md) |
+
+Full step-by-step checklist: [`docs/mcp-distribution.md`](../docs/mcp-distribution.md).

@@ -17,18 +17,25 @@
     {
       "file": "tests/worker.test.ts",
       "name": "Worker /mcp integration",
-      "tests": 16,
-      "covers": "tools/list (12 tools + annotations), health without rate limit, /mcp/stats (KV), tools/call counter, 429 MCP/CHAT, security headers, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), 8-way concurrency with filter correctness",
-      "updatedAt": "2026-08-14"
+      "tests": 19,
+      "covers": "tools/list (13 tools + annotations), health without rate limit, /mcp/stats (KV), tools/call counter, 429 MCP/CHAT, security headers, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), 8-way concurrency with filter correctness, /resume.txt + /llms.txt + 405",
+      "updatedAt": "2026-08-15"
     },
     {
       "file": "tests/lab.test.ts",
       "name": "Lab data integrity + SSR render",
-      "tests": 7,
+      "tests": 8,
       "covers": "Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, test-suite sum = total, LabPage SSR (7 sections + filter), EN-only projections",
-      "updatedAt": "2026-08-14"
+      "updatedAt": "2026-08-15"
+    },
+    {
+      "file": "tests/evidence-eval.test.ts",
+      "name": "Evidence Score v1 (D3 deterministic arm)",
+      "tests": 9,
+      "covers": "verify_claim: 13th tool registration + required claim input, supported true-claim (profile evidence), project-traced claim, negative controls (Google/Meta refused), too-short/empty claim notes; computeEvidence: toolCalls/grounded/failed counts, ungrounded flag, null result = failed",
+      "updatedAt": "2026-08-15"
     }
   ],
-  "total": 47,
-  "updatedAt": "2026-08-14"
+  "total": 60,
+  "updatedAt": "2026-08-15"
 }

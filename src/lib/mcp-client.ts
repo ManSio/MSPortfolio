@@ -71,6 +71,8 @@ export function callLocalTool(name: string, args: Record<string, unknown>): Prom
 
 // ── LLM chat (OpenRouter via the worker's /chat endpoint) ──
 
+import type { ChatEvidence } from './evidence';
+
 export interface ChatStep {
   type: 'tool_call' | 'tool_result';
   name: string;
@@ -82,6 +84,8 @@ export interface ChatResponse {
   model: string;
   steps: ChatStep[];
   answer: string;
+  /** Grounding summary computed by the worker (Evidence Score v1). */
+  evidence?: ChatEvidence;
 }
 
 export interface ChatHealth {

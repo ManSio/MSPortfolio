@@ -12,7 +12,7 @@ import antipatternsData from '../data/antipatterns.json' with { type: 'json' };
 import experimentsData from '../data/lab/experiments.json' with { type: 'json' };
 import diaryData from '../data/lab/diary.json' with { type: 'json' };
 import knownIssuesData from '../data/lab/known-issues.json' with { type: 'json' };
-import type { Antipattern, DiaryEntry, ExperimentsData, KnownIssue, MCPTool, MetricsSnapshot, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis } from './types.js';
+import type { Antipattern, DiaryEntry, ExperimentsData, KnownIssue, MCPTool, MetricsSnapshot, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis, VerifyClaimResult } from './types.js';
 
 const projects = (projectsData as ProjectsData).projects;
 const principles = (principlesData as { principles: Principle[] }).principles;
@@ -182,6 +182,115 @@ function runSimulation(model: ArchitectureModel, scenario: string): { points: Si
 // ─────────────────────────────────────────────────────────────────────────────
 // Tool implementations
 // ─────────────────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// verify_claim — Evidence Score v1 (deterministic corpus grounding)
+//
+// Maps a claim about the owner to the data records that support it. Built from
+// the SAME files the other tools read — grounding is mechanical, not LLM-based:
+// a claim is `supported` when >=2 distinct significant words appear in one record.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const CLAIM_STOPWORDS = new Set([
+  'about', 'been', 'could', 'from', 'have', 'into', 'that', 'their', 'them',
+  'there', 'these', 'they', 'this', 'those', 'using', 'what', 'when', 'where',
+  'which', 'will', 'with', 'would', 'your', 'worked', 'built', 'used', 'made',
+]);
+
+interface EvidenceCorpusRecord {
+  kind: string;
+  source: string;
+  title: string;
+  text: string;
+}
+
+/** Flatten one typed record into searchable text (explicit fields, not raw JSON — no metadata noise). */
+function recordText(...parts: Array<string | undefined>): string {
+  return parts.filter(Boolean).join(' ').toLowerCase();
+}
+
+function buildEvidenceCorpus(): EvidenceCorpusRecord[] {
+  const records: EvidenceCorpusRecord[] = [];
+  const profile = projectsData.profile as { name?: string; role?: string; location?: string; summary?: string };
+  records.push({
+    kind: 'profile',
+    source: 'projects.json#profile',
+    title: 'Profile',
+    text: recordText(profile?.name, profile?.role, profile?.location, profile?.summary),
+  });
+  for (const p of projects) {
+    records.push({
+      kind: 'project',
+      source: `projects.json#${p.id}`,
+      title: p.name,
+      text: recordText(
+        p.name,
+        p.tagline,
+        p.description,
+        p.language,
+        ...p.stack,
+        ...p.highlights,
+        ...p.decisionLog.flatMap((d) => [d.decision, d.reason, d.tradeoff]),
+      ),
+    });
+  }
+  for (const pr of principles) {
+    records.push({
+      kind: 'principle',
+      source: `principles.json#${pr.id}`,
+      title: pr.title,
+      text: recordText(pr.title, pr.statement, pr.example, pr.abTest, pr.evidence),
+    });
+  }
+  for (const ev of timelineData.events) {
+    records.push({
+      kind: 'timeline',
+      source: `timeline.json#${ev.date}`,
+      title: ev.title,
+      text: recordText(ev.title, ev.decision),
+    });
+  }
+  for (const ap of (antipatternsData as { antipatterns: Antipattern[] }).antipatterns) {
+    records.push({
+      kind: 'antipattern',
+      source: `antipatterns.json#${ap.id}`,
+      title: ap.title,
+      text: recordText(ap.title, ap.mistake, ap.whyBad, ap.fix, ap.lesson),
+    });
+  }
+  for (const ex of (experimentsData as ExperimentsData).experiments) {
+    records.push({
+      kind: 'experiment',
+      source: `lab/experiments.json#${ex.id}`,
+      title: ex.title,
+      text: recordText(ex.title, ex.hypothesis, ex.result, ex.finding, ex.conclusion),
+    });
+  }
+  for (const d of (diaryData as { entries: DiaryEntry[] }).entries) {
+    records.push({
+      kind: 'diary',
+      source: `lab/diary.json#${d.date}`,
+      title: d.title,
+      text: recordText(d.title, d.rootCause, d.fix, d.guard, d.pattern),
+    });
+  }
+  for (const ki of (knownIssuesData as { issues: KnownIssue[] }).issues) {
+    records.push({
+      kind: 'known-issue',
+      source: `lab/known-issues.json#${ki.id}`,
+      title: ki.problem,
+      text: recordText(ki.problem, ki.status, ki.link),
+    });
+  }
+  return records;
+}
+
+function claimTokens(claim: string): string[] {
+  const words = claim.toLowerCase().match(/[a-zа-я0-9]+/g) ?? [];
+  return words.filter((w) => w.length >= 4 && !CLAIM_STOPWORDS.has(w));
+}
+
+const EVIDENCE_CORPUS = buildEvidenceCorpus();
 
 export const TOOLS: MCPTool[] = [
   {
@@ -455,6 +564,48 @@ export const TOOLS: MCPTool[] = [
     async execute() {
       const list = (knownIssuesData as { issues: KnownIssue[] }).issues;
       return { count: list.length, issues: list };
+    },
+  },
+  {
+    name: 'verify_claim',
+    description: "Ground a claim about the owner against the portfolio's data (profile, projects, principles, timeline, antipatterns, experiments, diary, known issues). Deterministic: returns the evidence records that support the claim (with source paths) and a supported verdict. Use it before asserting a fact about the owner, or to check what an answer was based on.",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        claim: { type: 'string', description: 'The claim to verify, e.g. "built an MCP server with LanceDB hybrid search".' },
+      },
+      required: ['claim'],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute({ claim }) {
+      const claimText = String(claim ?? '').trim();
+      const tokens = claimTokens(claimText);
+      if (tokens.length < 2) {
+        return {
+          claim: claimText,
+          tokens,
+          supported: false,
+          evidenceCount: 0,
+          evidence: [],
+          note: 'Claim too short — provide at least two significant words (length >= 4).',
+        } satisfies VerifyClaimResult;
+      }
+      const evidence = EVIDENCE_CORPUS
+        .map((r) => {
+          const matchedTokens = tokens.filter((t) => r.text.includes(t));
+          return { ...r, matchedTokens };
+        })
+        .filter((r) => r.matchedTokens.length >= 2) // precision guard: >=2 distinct words in the SAME record
+        .sort((a, b) => b.matchedTokens.length - a.matchedTokens.length)
+        .slice(0, 5)
+        .map((r) => ({ kind: r.kind, source: r.source, title: r.title, matchedTokens: r.matchedTokens }));
+      return {
+        claim: claimText,
+        tokens,
+        supported: evidence.length > 0,
+        evidenceCount: evidence.length,
+        evidence,
+      } satisfies VerifyClaimResult;
     },
   },
 ];

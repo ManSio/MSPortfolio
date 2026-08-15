@@ -12,9 +12,12 @@
 
 - Endpoint (Streamable HTTP): https://msp-portfolio.mansio-dev.workers.dev/mcp
 - Health: https://msp-portfolio.mansio-dev.workers.dev/mcp/health
+- Plain-text CV (curl): https://msp-portfolio.mansio-dev.workers.dev/resume.txt
+- Server self-description: https://msp-portfolio.mansio-dev.workers.dev/llms.txt
+- Agent skill: https://github.com/ManSio/MSPortfolio/blob/main/public/msp-portfolio.skill.md
 - Add to Claude Code: `claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp`
 
-## MCP tools (12)
+## MCP tools (13)
 
 - get_profile — owner's professional summary
 - get_projects — projects with stack, highlights, decision logs (filter by stack tag)
@@ -28,10 +31,12 @@
 - get_known_issues — known-issues board with status and temperature
 - analyze_stack — job-fit comparison with per-skill evidence and coverage
 - simulate_architecture — failure simulation: load spike / node loss / cache cold / LLM saturation
+- verify_claim — evidence score: ground a claim about the owner against the portfolio data
 
 ## Links
 
 - [Portfolio](https://mansio.github.io/MSPortfolio/)
 - [Source code](https://github.com/ManSio/MSPortfolio)
 - [Dev.to articles](https://dev.to/mansio)
+- [Agent skill](https://github.com/ManSio/MSPortfolio/blob/main/public/msp-portfolio.skill.md)
 - [Full content](https://mansio.github.io/MSPortfolio/llms-full.txt)

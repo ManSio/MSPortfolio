@@ -1,0 +1,57 @@
+# Smithery registry config — https://smithery.ai/docs/build/project-config/smithery-yaml
+# HTTP-transport MCP server; Smithery hosts the listing and proxies clients to our
+# Cloudflare Workers endpoint. Auto-crawled from this repo.
+
+name: msp-portfolio
+displayName: MSPortfolio — MCP-Native Engineering Portfolio
+description: |
+  Live MCP server for Mikhail (ManSio)'s engineering portfolio: projects with decision
+  logs, engineering principles with A/B counterfactuals, timeline, articles, commit
+  history, antipattern museum, stack-fit analysis, architecture failure simulation,
+  and the full lab (experiments, diary, known issues) — one source of truth.
+homepage: https://mansio.github.io/MSPortfolio/
+repository: https://github.com/ManSio/MSPortfolio
+version: "1.0.0"
+
+runtime: container
+
+startCommand:
+  type: http
+  url: https://msp-portfolio.mansio-dev.workers.dev/mcp
+  configSchema:
+    type: object
+    properties: {}
+    required: []
+  commandFunction: |-
+    () => ({ type: "http", url: "https://msp-portfolio.mansio-dev.workers.dev/mcp" })
+
+remote:
+  type: http
+  url: https://msp-portfolio.mansio-dev.workers.dev/mcp
+
+categories:
+  - developer-tools
+  - data
+tags:
+  - portfolio
+  - cv
+  - resume
+  - mcp
+  - engineering
+  - lab
+  - cloudflare-workers
+
+tools:
+  - name: get_profile
+  - name: get_projects
+  - name: get_engineering_principles
+  - name: get_timeline
+  - name: get_articles
+  - name: get_commit_history
+  - name: get_antipatterns
+  - name: get_experiments
+  - name: get_diary
+  - name: get_known_issues
+  - name: analyze_stack
+  - name: simulate_architecture
+  - name: verify_claim
