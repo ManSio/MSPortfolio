@@ -295,6 +295,25 @@ function claimTokens(claim: string): string[] {
 
 const EVIDENCE_CORPUS = buildEvidenceCorpus();
 
+/**
+ * Top-K candidate records for a claim, ranked by the same token-overlap scoring
+ * v1 uses (precision-first: ≥1 token overlap to be a candidate). Exposes the
+ * full record text so the v2 LLM arm can verify a paraphrase against real
+ * content — candidates and tool share one corpus (SSOT).
+ */
+export function evidenceCandidates(claim: string, limit = 5): Array<EvidenceCorpusRecord & { matchedTokens: string[] }> {
+  const tokens = claimTokens(claim);
+  return EVIDENCE_CORPUS.map((r) => ({
+    ...r,
+    matchedTokens: tokens.filter((t) => r.text.includes(t)),
+  }))
+    .filter((r) => r.matchedTokens.length > 0)
+    .sort((a, b) => b.matchedTokens.length - a.matchedTokens.length)
+    .slice(0, limit);
+}
+
+export type EvidenceCandidate = EvidenceCorpusRecord & { matchedTokens: string[] };
+
 export const TOOLS: MCPTool[] = [
   {
     name: 'get_profile',

@@ -1,6 +1,13 @@
 # v2 — LLM-рука для `verify_claim` (recall-проверка перефразировок)
 
-**Статус:** ⏳ план (код НЕ написан) · **Связь:** KI-017, research-mcp-portfolio-benchmarks §7 (консенсус), tests/evidence-eval.test.ts
+**Статус:** 🟡 этап 0 и этап 1 (машинерия) реализованы; живые числа ждут ключа OpenRouter · **Связь:** KI-017, research-mcp-portfolio-benchmarks §7 (консенсус), tests/evidence-eval.test.ts
+
+> **Прогресс 2026-08-15:** этап 0 (парафраз-набор, baseline 0/8) — ✅ в `tests/evidence-eval.test.ts`
+> и `src/data/paraphrase-eval.ts` (общий с eval-скриптом). Этап 1 — ✅ код `verifyClaimLlmArm()`
+> в `src/lib/llm-verify.ts` + `scripts/eval-llm-arm.ts` + 8 fail-closed тестов с мок-моделью
+> (`tests/llm-verify.test.ts`). Осталось: прогнать eval с реальным ключом
+> (`OPENROUTER_API_KEY=<key> node scripts/eval-llm-arm.ts`) и, если recall ≥80% и
+> false-acceptance ≤1% — перейти к этапу 2 (интеграция в тул с флагом `arm`).
 
 ---
 

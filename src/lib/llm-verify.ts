@@ -1,0 +1,143 @@
+// v2 — LLM arm for verify_claim (KI-017 recall gap). Plan: docs/verify-claim-v2-llm-arm.md.
+//
+// Design (per plan §4-5):
+//   - Called ONLY on a deterministic v1 miss; never downgrades a v1 `supported`.
+//   - LLM receives the claim + top-K candidate records (same corpus as v1) and
+//     must cite a record to say `supported`; anything else is fail-closed `refused`.
+//   - Stateless: one fetch per call, no shared mutable state.
+// Этап 1: this module powers the offline eval (scripts/eval-llm-arm.ts) and is
+// NOT yet wired into the MCP tool — integration (этап 2) waits for eval numbers.
+
+import { evidenceCandidates } from './mcp-tools.ts';
+
+export interface LlmArmConfig {
+  apiKey: string;
+  model?: string;
+  endpoint?: string;
+  timeoutMs?: number;
+  maxCandidates?: number;
+}
+
+export interface LlmArmResult {
+  claim: string;
+  verdict: 'supported' | 'refused';
+  arm: 'llm';
+  /** Record the LLM cited as the source (only for supported). */
+  source?: string;
+  /** Short human-readable justification from the LLM (transparency). */
+  reason?: string;
+  /** Set when the arm could not run — verdict is then fail-closed refused. */
+  error?: string;
+  latencyMs: number;
+}
+
+const DEFAULT_MODEL = 'openrouter/free';
+const DEFAULT_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+const DEFAULT_TIMEOUT_MS = 8000;
+const DEFAULT_MAX_CANDIDATES = 5;
+
+const SYSTEM_PROMPT = `You verify a factual claim about a person against EXACTLY the provided data records.
+
+Rules:
+- Reply with ONLY a JSON object: {"verdict":"supported"|"refused","source":"<record source> or null","reason":"<one short sentence>"}
+- "supported" ONLY if the claim is fully entailed by a SINGLE record (the fact can be read directly in that record's text).
+- Partial overlap, inference, or anything not explicitly in the record text → "refused".
+- Never assume, extrapolate, or use outside knowledge. When in doubt → "refused".
+- For "supported" you MUST set "source" to exactly one of the provided record sources; otherwise the answer is rejected.`;
+
+function buildUserPrompt(claim: string, candidates: Array<{ source: string; kind: string; text: string }>): string {
+  const records = candidates.map((c, i) => `${i + 1}. [${c.source}] (${c.kind}) ${c.text}`).join('\n');
+  return `Claim: "${claim}"\n\nRecords:\n${records}\n\nIs the claim supported by exactly one of these records?`;
+}
+
+/** Extract the first {...} JSON object from the model's content (tolerates code fences / prose). */
+function parseVerdict(
+  content: string,
+): { verdict: 'supported' | 'refused'; source: string | null; reason: string } | null {
+  const start = content.indexOf('{');
+  const end = content.lastIndexOf('}');
+  if (start < 0 || end <= start) return null;
+  try {
+    const parsed = JSON.parse(content.slice(start, end + 1)) as Record<string, unknown>;
+    if (parsed.verdict !== 'supported' && parsed.verdict !== 'refused') return null;
+    return {
+      verdict: parsed.verdict,
+      source: typeof parsed.source === 'string' && parsed.source ? parsed.source : null,
+      reason: typeof parsed.reason === 'string' ? parsed.reason : '',
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function verifyClaimLlmArm(claim: string, config: LlmArmConfig): Promise<LlmArmResult> {
+  const started = Date.now();
+  const latencyMs = () => Date.now() - started;
+
+  const candidates = evidenceCandidates(claim, config.maxCandidates ?? DEFAULT_MAX_CANDIDATES);
+  if (candidates.length === 0) {
+    // Nothing for the LLM to check against — fail-closed, no network call.
+    return { claim, verdict: 'refused', arm: 'llm', reason: 'No candidate records overlap the claim.', latencyMs: latencyMs() };
+  }
+
+  const endpoint = config.endpoint ?? DEFAULT_ENDPOINT;
+  const timeoutMs = config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    let res: Response;
+    try {
+      res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${config.apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://mansio.github.io/MSPortfolio/',
+          'X-Title': 'MSPortfolio verify_claim LLM arm',
+        },
+        body: JSON.stringify({
+          model: config.model ?? DEFAULT_MODEL,
+          temperature: 0,
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: buildUserPrompt(claim, candidates) },
+          ],
+        }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+
+    if (!res.ok) {
+      const text = (await res.text()).slice(0, 300);
+      throw new Error(`OpenRouter ${res.status}: ${text}`);
+    }
+
+    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    const content = data.choices?.[0]?.message?.content ?? '';
+    const parsed = parseVerdict(content);
+    if (!parsed) throw new Error('Unparseable LLM response');
+
+    if (parsed.verdict === 'supported') {
+      const sourceValid = candidates.some((c) => c.source === parsed.source);
+      if (!sourceValid) {
+        // Precision guard (§5): `supported` without a valid cited record is refused.
+        return {
+          claim,
+          verdict: 'refused',
+          arm: 'llm',
+          reason: 'LLM claimed support without a valid cited record — fail-closed.',
+          latencyMs: latencyMs(),
+        };
+      }
+      return { claim, verdict: 'supported', source: parsed.source ?? undefined, reason: parsed.reason, arm: 'llm', latencyMs: latencyMs() };
+    }
+
+    return { claim, verdict: 'refused', arm: 'llm', reason: parsed.reason || undefined, latencyMs: latencyMs() };
+  } catch (err) {
+    const message = err instanceof Error && err.name === 'AbortError' ? `Timeout after ${timeoutMs}ms` : err instanceof Error ? err.message : String(err);
+    return { claim, verdict: 'refused', arm: 'llm', reason: 'LLM arm unavailable — fail-closed.', error: message, latencyMs: latencyMs() };
+  }
+}

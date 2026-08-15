@@ -35,7 +35,14 @@
      "covers": "verify_claim: 13th tool registration + required claim input, supported true-claim (profile evidence), project-traced claim, negative controls (Google/Meta refused), too-short/empty claim notes; computeEvidence: toolCalls/grounded/failed counts, ungrounded flag, null result = failed; evidence ledger: every canonical claim verdict matches verify_claim; v2 stage 0: 8 true paraphrases refused by v1 (recall-gap baseline, KI-017), 3 paraphrased negative controls stay refused, documented substring false-acceptance (search+engine)",
      "updatedAt": "2026-08-15"
     }
+    {
+     "file": "tests/llm-verify.test.ts",
+     "name": "v2 LLM arm decision logic (mocked provider)",
+     "tests": 8,
+     "covers": "verifyClaimLlmArm fail-closed guards (v2 plan §5): supported with valid cited record, refused passthrough, garbage response, supported without source, supported with source outside candidates, HTTP error, abort/timeout, no candidates without network call",
+     "updatedAt": "2026-08-15"
+    }
    ],
-   "total": 69,
+   "total": 77,
   "updatedAt": "2026-08-15"
 }

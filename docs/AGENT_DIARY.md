@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 19:10] — v2 этап 1: LLM-рука verifyClaimLlmArm + eval-скрипт + 8 fail-closed тестов (живые числа — за ключом)
+**Status:** ✅ Fixed (код + тесты 77/77, typecheck, lint; этап 2 — интеграция в тул — отложен до чисел)
+**Root Cause:** — (владелец: «продолжи, объясни не программисту» → этап 1 плана v2)
+**Fix:** (1) `src/data/paraphrase-eval.ts` — парафраз-набор вынесен в общий модуль (SSOT: тест + eval-скрипт). (2) `src/lib/mcp-tools.ts` — экспорт `evidenceCandidates()` (та же токенная оценка v1, полный текст записей — корпус один, SSOT). (3) `src/lib/llm-verify.ts` — `verifyClaimLlmArm()`: промпт с t=0 и жёсткими правилами, строгий JSON-парсинг, precision-guards §5 (supported требует валидный source из кандидатов; мусор/429/таймаут/0 кандидатов → fail-closed refused). (4) `scripts/eval-llm-arm.ts` — офлайн-оценка: v1 vs llm vs combined recall на 8 true-парафразах + false-acceptance на 3 негативных + p50/p95, DoD-чек (≥80% / ≤1% / p95<3s). (5) `tests/llm-verify.test.ts` — 8 тестов решения с мок-моделью. **Ключа OpenRouter в окружении нет — живые числа не измерены; скрипт готов к запуску владельцем.**
+**Guard:** fail-closed гарантирован тестами (мок); этап 2 (интеграция) не начнётся, пока eval не покажет recall ≥80% и false-acceptance ≤1% (DoD плана v2).
+**Pattern:** NEW
+
 ## [2026-08-15 18:50] — v2 этап 0: парафраз-набор (baseline recall) + синхронизация llms-full.txt / test-suites.json
 **Status:** ✅ Fixed (тесты 69/69, typecheck, lint; прод не деплоен)
 **Root Cause:** — (владелец: «да» на следующий шаг — синхронизировать устаревшие статы и начать v2 по плану)
