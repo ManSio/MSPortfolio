@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T07:43:47.866Z",
+  "fetchedAt": "2026-08-15T08:01:27.807Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T06:57:34Z",
+      "pushedAt": "2026-08-15T08:01:01Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-14T21:34:25Z",
+      "pushedAt": "2026-08-15T07:47:50Z",
       "language": "Python"
     },
     {
@@ -162,24 +162,31 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "128df093bc",
+      "date": "2026-08-15T08:00:39Z",
+      "message": "feat(lab): full MScodebase experiment set — per-experiment charts, conclusions, related links",
+      "author": "ManSio"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "29e1365ec5",
+      "date": "2026-08-15T07:27:05Z",
+      "message": "refactor(experiments): per-experiment folders with READMEs + index",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "26241b3663",
+      "date": "2026-08-15T07:25:03Z",
+      "message": "feat(exp-1L): per-category metrics + CoT vs zero-shot + server-side audit (V3/Part 5)",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "4c1af8f9de",
       "date": "2026-08-14T21:32:34Z",
       "message": "fix(install): убрать устаревшие EMBEDDING_PROVIDER/EMBEDDING_DIMENSION из extension.toml env (авто-детект провайдера)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "a2ce8556bb",
-      "date": "2026-08-14T21:30:51Z",
-      "message": "fix(diary): маркеры verified_from_clean_state (✅ да) + реальные имена тестов для verify_diary",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "ad79432a41",
-      "date": "2026-08-14T21:20:47Z",
-      "message": "experiment(1L): live-arm свип 14 моделей OpenRouter + Red Team верификация — отчёт, harness, тесты",
       "author": "MSCodeBase Agent"
     },
     {
