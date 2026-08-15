@@ -17,6 +17,16 @@ interface Experiment {
   result: string;
   verdict: 'confirmed' | 'refuted' | 'partial';
   finding: string;
+  chart?: LabChart | LabChart[];
+  conclusion?: string;
+  links?: string[];
+}
+interface LabChart {
+  type: string;
+  title: string;
+  data: unknown[];
+  xLabel?: string;
+  yLabel?: string;
 }
 interface NegativeResult {
   attempt: string;
@@ -81,6 +91,25 @@ describe('lab data integrity', () => {
       expect(n.attempt.length).toBeGreaterThan(5);
       expect(n.whyFailed.length).toBeGreaterThan(5);
       if (n.ref.startsWith('exp-')) expect(expIds.has(n.ref)).toBe(true);
+    }
+  });
+
+  it('experiments: per-experiment charts are well-formed and links point to real experiments', () => {
+    const exps = (experimentsData as { experiments: Experiment[] }).experiments;
+    const ids = new Set(exps.map((e) => e.id));
+    const chartTypes = ['bar', 'donut', 'line', 'stacked'];
+    for (const e of exps) {
+      const charts = e.chart ? (Array.isArray(e.chart) ? e.chart : [e.chart]) : [];
+      for (const c of charts) {
+        expect(chartTypes).toContain(c.type);
+        expect(c.title.length).toBeGreaterThan(3);
+        expect(c.data.length).toBeGreaterThan(0);
+        for (const d of c.data as { label?: unknown; value?: unknown }[]) {
+          expect(typeof d.label).toBe('string');
+          expect(typeof d.value).toBe('number');
+        }
+      }
+      for (const link of e.links ?? []) expect(ids.has(link)).toBe(true);
     }
   });
 
@@ -156,6 +185,9 @@ describe('lab data integrity', () => {
     for (const d of entries) expect(html).toContain(d.title.slice(0, 20));
     const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
     for (const i of issues) expect(html).toContain(i.id);
+    // Per-experiment charts and conclusions are rendered too
+    expect(html).toContain('False-accept rate, code_first arm');
+    expect(html).toContain('conclusion: ');
   });
 
   it('lab data is English (site language); only docs/*.md stay Russian', () => {

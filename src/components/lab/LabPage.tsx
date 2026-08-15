@@ -6,11 +6,11 @@ import testSuitesData from '../../data/lab/test-suites.json';
 import projectsData from '../../data/projects.json';
 import { loadFallbackSnapshot } from '../../lib/api';
 import { ARCHITECTURES, runSimulation, SCENARIOS } from '../../lib/mcp-tools';
-import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project, CommitEntry } from '../../lib/types';
+import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project, CommitEntry, LabChart, LabBarDatum, LabDonutSegment, LabLineSeries } from '../../lib/types';
 import { Badge } from '../ui/Badge';
 import { Card, CardHeader } from '../ui/Card';
 import { MetricCard } from '../metrics/MetricCard';
-import { BarList, Donut, LineChart, StackedBar, type DonutSegment, type LineSeries } from './charts';
+import { BarList, Donut, LineChart, StackedBar, type BarDatum, type DonutSegment, type LineSeries } from './charts';
 
 const experiments = (experimentsData as { experiments: Experiment[]; negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] }).experiments;
 const negativeResults = (experimentsData as { negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] }).negativeResults;
@@ -68,6 +68,35 @@ function diaryStatus(list: DiaryEntry[]): DonutSegment[] {
     { label: 'Fixed', value: fixed, color: '#10b981' },
     { label: 'Partial', value: partial, color: '#f59e0b' },
   ].filter((s) => s.value > 0);
+}
+
+/** Per-experiment chart renderer: the JSON drives the same SVG primitives as the rest of the page. */
+function renderLabChart(c: LabChart) {
+  switch (c.type) {
+    case 'bar':
+      return <BarList data={c.data as LabBarDatum[]} />;
+    case 'donut':
+      return <Donut segments={c.data as LabDonutSegment[]} centerLabel={c.title} />;
+    case 'line':
+      return <LineChart series={c.data as LabLineSeries[]} xLabel={c.xLabel} yLabel={c.yLabel} />;
+    case 'stacked':
+      return <StackedBar parts={c.data as BarDatum[]} />;
+  }
+}
+
+function ExperimentChart({ chart }: { chart?: LabChart | LabChart[] }) {
+  if (!chart) return null;
+  const charts = Array.isArray(chart) ? chart : [chart];
+  return (
+    <div className="mt-4 grid gap-4 border-t border-line pt-3 lg:grid-cols-2">
+      {charts.map((c, i) => (
+        <div key={i} className="rounded-lg border border-line bg-surface-2/40 p-3">
+          <p className="mb-2 font-mono text-[11px] leading-snug text-faint">{c.title}</p>
+          {renderLabChart(c)}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function patternCounts(list: DiaryEntry[]) {
@@ -323,6 +352,27 @@ export function LabPage() {
                       </div>
                     </div>
                   </details>
+                  {e.chart ? <ExperimentChart chart={e.chart} /> : null}
+                  {e.conclusion ? (
+                    <p className="mt-3 rounded-lg border border-accent/25 bg-accent/5 px-3 py-2 text-sm leading-relaxed text-muted">
+                      <span className="font-mono text-[11px] text-accent">conclusion: </span>
+                      {e.conclusion}
+                    </p>
+                  ) : null}
+                  {e.links && e.links.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                      <span className="font-mono text-[11px] text-faint">related:</span>
+                      {e.links.map((id) => {
+                        const target = experiments.find((x) => x.id === id);
+                        if (!target) return null;
+                        return (
+                          <span key={id} className="rounded-full border border-line bg-surface-2/60 px-2 py-0.5 font-mono text-[10px] text-muted">
+                            {target.id} · {target.title.slice(0, 44)}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  ) : null}
                 </Card>
               ))}
             </div>

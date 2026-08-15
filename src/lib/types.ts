@@ -190,6 +190,36 @@ export interface Antipattern {
 
 export type ExperimentVerdict = 'confirmed' | 'refuted' | 'partial';
 
+export type LabChartType = 'bar' | 'donut' | 'line' | 'stacked';
+
+export interface LabBarDatum {
+  label: string;
+  value: number;
+  sub?: string;
+  color?: string;
+}
+
+export interface LabDonutSegment {
+  label: string;
+  value: number;
+  color: string;
+}
+
+export interface LabLineSeries {
+  label: string;
+  color: string;
+  points: { x: number; y: number }[];
+}
+
+/** Per-experiment chart data (rendered by the Lab page from the same JSON). */
+export interface LabChart {
+  type: LabChartType;
+  title: string;
+  xLabel?: string;
+  yLabel?: string;
+  data: LabBarDatum[] | LabDonutSegment[] | LabLineSeries[];
+}
+
 export interface Experiment {
   id: string;
   date: string;
@@ -200,6 +230,12 @@ export interface Experiment {
   result: string;
   verdict: ExperimentVerdict;
   finding: string;
+  /** One or more charts summarizing the measured numbers. */
+  chart?: LabChart | LabChart[];
+  /** One-line takeaway, used by the lab page and agents. */
+  conclusion?: string;
+  /** Ids of experiments this one is related to (shared dataset / control / follow-up). */
+  links?: string[];
 }
 
 export interface NegativeResult {

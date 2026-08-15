@@ -3,132 +3,374 @@
     {
       "id": "exp-1",
       "date": "2026-08-14",
-      "project": "msp-portfolio",
-      "title": "MCP server on @modelcontextprotocol/server@2 + Fastify boots without a build step",
-      "hypothesis": "Node 24 runs TS natively (type-stripping); the official @modelcontextprotocol/fastify + toNodeHandler(createMcpHandler(factory)) answers tools/list, tools/call, initialize over Streamable HTTP; registerTool will NOT accept raw JSON Schema — z.fromJSONSchema is required.",
-      "command": "node server/index.ts → curl -X POST /mcp (tools/list / tools/call / initialize) → probe z.fromJSONSchema (.zod-probe.mjs).",
-      "result": "tools/list: 6 tools; tools/call get_projects(filter=mcp): 2 projects; initialize: protocolVersion 2025-11-25; raw JSON Schema → HTTP 500 on EVERY request; z.fromJSONSchema → PARSE_OK true INVALID_CAUGHT true → fix applied.",
+      "project": "mscodebase-intelligence",
+      "title": "Memory Contamination Live-Arm: live LLM false-acceptance across 14 models",
+      "hypothesis": "Real LLM verdicts on the same 50 memory facts (25 true / 25 false, v4_rep dataset) differ from the deterministic proxy agent (exp-2); false-acceptance spans ~0 to ~0.3 across models and arms (memory_first vs code_first).",
+      "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm both --models qwen3.7-flash,qwen3.6-flash,qwen3.5-flash,deepseek-v4-flash,glm-4.7-flash,nemotron-3.5-lightning,nemotron-3-nano-30b,claude-sonnet-5,glm-5.2,deepseek-v4-pro --prompt-version v2 --no-reasoning --tag v2_en",
+      "result": "~3300 calls, ~$0.14. FA code_first: qwen3.6/3.7 0.00 (confirmed over 4 runs, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max incompatible with the 100-token budget (mandatory reasoning). Server-side audit: 4087 calls across >=8 upstreams (Alibaba/DeepInfra/DigitalOcean/...).",
       "verdict": "confirmed",
-      "finding": "registerTool rejects raw JSON Schema; z.fromJSONSchema conversion is mandatory."
+      "finding": "FA=0.00 for qwen3.6/3.7 is fail-closed, not filtering: code_first recall(real)=0.08-0.20 (2-5/25 true accepted, 7-9/25 actively rejected). CoT does not pay off for cheap VOR (x30-65 cost, glm loses 16-26% to EMPTY_CONTENT); qwen3.8-max (CoT) is the middle option (recall 0.36, FA 0.04).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False-accept rate, code_first arm (V2-EN, %)",
+          "data": [
+            { "label": "qwen3.7-flash", "value": 0, "color": "#10b981" },
+            { "label": "qwen3.6-flash", "value": 0, "color": "#10b981" },
+            { "label": "claude-sonnet-5", "value": 0, "color": "#10b981" },
+            { "label": "deepseek-v4-pro", "value": 0, "color": "#10b981" },
+            { "label": "deepseek-v4-flash", "value": 0, "color": "#10b981" },
+            { "label": "qwen3.5-flash", "value": 0, "color": "#10b981" },
+            { "label": "glm-5.2", "value": 2, "color": "#f59e0b" },
+            { "label": "nemotron-3.5-lightning", "value": 4, "color": "#f59e0b" },
+            { "label": "glm-4.7-flash", "value": 24, "color": "#ef4444" },
+            { "label": "nemotron-3-nano-30b", "value": 38, "color": "#ef4444" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "code_first recall on TRUE facts (25) - the fail-closed cost, %",
+          "data": [
+            { "label": "deepseek-v4-flash", "value": 4, "sub": "FA 0.00", "color": "#f59e0b" },
+            { "label": "qwen3.6-flash", "value": 8, "sub": "FA 0.00", "color": "#f59e0b" },
+            { "label": "qwen3.7-flash", "value": 20, "sub": "FA 0.00", "color": "#f59e0b" },
+            { "label": "qwen3.8-max (CoT)", "value": 36, "sub": "FA 0.04", "color": "#10b981" },
+            { "label": "claude-sonnet-5", "value": 44, "sub": "FA 0.00", "color": "#10b981" },
+            { "label": "nemotron-3.5-lightning", "value": 52, "sub": "FA 0.04", "color": "#10b981" },
+            { "label": "nemotron-3-nano-30b", "value": 80, "sub": "FA 0.38", "color": "#ef4444" },
+            { "label": "glm-4.7-flash", "value": 88, "sub": "FA 0.24", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "For cheap fail-closed VOR pick qwen3.6/3.7 (FA 0.00, ~$0.003 per 100 calls) but expect almost all live memory to be rejected; pick qwen3.8-max (CoT) when preserving true memory matters more than price.",
+      "links": ["exp-2", "exp-3"]
     },
     {
       "id": "exp-2",
-      "date": "2026-08-14",
-      "project": "msp-portfolio",
-      "title": "Server survives adversarial requests and 8 parallel calls without cross-wiring results",
-      "hypothesis": "JSON-RPC validation (400 on garbage), DNS-rebinding protection (403 on foreign Origin), parallel calls return THEIR OWN result per filter.",
-      "command": "7 attacks (malformed JSON, unknown method, bad protocol version, unknown tool, missing args, CORS preflight, evil origin) + 8 parallel tools/call with content verification.",
-      "result": "400 / -32601 / 400 / -32602 / validation error / 403 / 403; concurrency PASS=8/8 (mscodebase for filter=mcp, infrawise for filter=aws, no cross-wiring). Server alive after all attacks (health OK).",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Memory Contamination proxy-control: retraction -88%, verify-on-read adoption to 0.0",
+      "hypothesis": "A deterministic proxy agent ('check the claim against patterns in the code') measures memory contamination without LLM noise; retraction (ADR-0002) and lazy validation (ADR-0003) reduce adoption of false memory.",
+      "command": "python experiments/1V_memory_contamination/memory_contamination_verify.py experiments/1V_memory_contamination/memory_contamination_facts_v4_rep.json",
+      "result": "1-V (N=24): code_contradictability 0.714, correction_capability 1.0; 1-R: persistent contamination -88%, memory_first adoption 1.0->0.12; verify-on-read: code_first adoption ->0.0 (was 0.12), steady-state 0.6ms; 1-V-REP (N=50, v4_rep): adoption 0.0 reproduced, 0 false REFUTED of TRUE facts with typed anchors.",
       "verdict": "confirmed",
-      "finding": "CORS preflight from a legit origin → 403 with empty ALLOWED_ORIGINS — a deliberate secure-default (fail-closed)."
+      "finding": "The proxy always decides (unknown=0) and false_accept=0 by construction - the headline numbers are a property of the heuristic, not of LLM behavior; the live arm (exp-1) measures the real gap.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Adoption of false memory by policy (proxy agent)",
+          "data": [
+            { "label": "memory_first (pre)", "value": 1.0, "sub": "no code shown", "color": "#ef4444" },
+            { "label": "after retraction (1-R)", "value": 0.12, "sub": "ADR-0002", "color": "#f59e0b" },
+            { "label": "code_first verify-on-read", "value": 0, "sub": "ADR-0003, 0.6ms steady-state", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Verify-on-read plus retraction eliminate false adoption in the proxy, but present-trap blindness (claim about an existing file with the wrong subject) is structural and survives.",
+      "links": ["exp-1", "exp-3"]
     },
     {
       "id": "exp-3",
-      "date": "2026-08-14 15:00",
-      "project": "msp-portfolio",
-      "title": "Live MCP endpoint answers tools/list/tools/call and returns numbers matching the in-code simulation",
-      "hypothesis": "health/tools/list = 200; simulate_architecture on the live endpoint = runSimulation result in mcp-tools.ts; get_articles returns dev.to articles.",
-      "command": "curl to https://msp-portfolio.mansio-dev.workers.dev (health, tools/list, tools/call × 4 simulate_architecture scenarios, get_articles, analyze_stack) + python burst 20× /mcp/health.",
-      "result": "health 97ms; simulate_architecture p95@20x: load_spike 238.5 / node_loss 400.9 / cache_cold 301.4 / llm_saturation 238.5 (=load_spike — no-op on non-LLM); get_articles 403 from dev.to (BUG); analyze_stack coverage 0.75; curl-UA burst 200×20 (no rate limit); Python-urllib burst 403×20 (bot protection).",
-      "verdict": "partial",
-      "finding": "Simulator numbers matched the code; get_articles refuted (403). Defects: KI-006 (get_articles), KI-007 (rate limit), KI-008 (llm_saturation no-op)."
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "Manifest anchoring (pkg: anchors, ADR-0005): closed-world manifest kills 7 false REFUTED",
+      "hypothesis": "A manifest (pyproject.toml + requirements) as a closed world - absence there is proof - catches SILENT-trap prose that file/import/env anchors miss; fastmcp dist-name != import-path caused 7 false REFUTED.",
+      "command": "python experiments/1M_manifest_anchoring/exp_1M_manifest_anchoring.md && pytest tests/test_verify_on_read.py -q",
+      "result": "4th anchor type pkg: added to verify_on_read.py; the 7 false REFUTED [G07,G25,G11,G24,G23,G18,G21] drop to 0 on the v4_rep dataset; +7 tests.",
+      "verdict": "confirmed",
+      "finding": "A closed-world manifest is a stronger evidence source than bare tokens; the fix was verified by 1-V-REP (0 false REFUTED of TRUE facts).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False REFUTED of TRUE facts on v4_rep (N=50)",
+          "data": [
+            { "label": "file/import/env anchors", "value": 7, "sub": "fastmcp dist name vs import path", "color": "#ef4444" },
+            { "label": "with pkg: anchors (ADR-0005)", "value": 0, "sub": "closed-world manifest", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Evidence must come from a closed world: the manifest decides, tokens only hint.",
+      "links": ["exp-2"]
     },
     {
       "id": "exp-4",
-      "date": "2026-08-14 15:30",
-      "project": "msp-portfolio",
-      "title": "SDK v2 registerTool accepts annotations.readOnlyHint",
-      "hypothesis": "tsc passes with { annotations: { readOnlyHint: true } } in registerTool options.",
-      "command": "Temporary edit of worker/index.ts → npx tsc -p worker/tsconfig.json → revert.",
-      "result": "Command executed successfully (0 errors), edit reverted.",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Context aggregator vs multi-tool: 1 call instead of 4-5, -78% calls at recall parity",
+      "hypothesis": "One get_edit_context-style aggregator beats 4-5 separate MCP calls for agent context gathering.",
+      "command": "python experiments/context_engine/bench_v2.py",
+      "result": "D v3 (N=30): recall B vs C2 indistinguishable (delta +0.025, CI +/-0.054, ties 27/30) - the v2 gap was noise; tokens B lower by ~980; B-scheme (intent filter): recall 0.900 >= A 0.875 at 1 RT and 275 tokens. D v1 (N=4): -78% tool_calls, -89% latency, -19% tokens at success parity.",
       "verdict": "confirmed",
-      "finding": "MCP spec 2026-07-28 (tools.md) introduces the annotations field; SDK v2 types readOnlyHint — read-only tools are documented natively."
+      "finding": "The B-scheme (intent filter) is the optimum: same recall as multi-tool at 1 request and 275 tokens; the earlier recall gap was noise, not signal.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Context gathering cost, aggregator vs multi-tool (reduction %)",
+          "data": [
+            { "label": "tool calls", "value": 78, "sub": "4-5 calls -> 1", "color": "#10b981" },
+            { "label": "latency", "value": 89, "sub": "-89%", "color": "#10b981" },
+            { "label": "tokens", "value": 19, "sub": "-19%", "color": "#10b981" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Recall by scheme (D v3, N=30)",
+          "data": [
+            { "label": "A multi-tool", "value": 0.875, "color": "#6366f1" },
+            { "label": "B aggregator (intent filter)", "value": 0.9, "sub": "1 RT, 275 tokens", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "One aggregator with an intent filter is the optimum: same recall, 1 request, 275 tokens - the multi-tool path is 4-5x the cost for the same answer.",
+      "links": ["exp-5"]
     },
     {
       "id": "exp-5",
-      "date": "2026-08-14 16:00",
-      "project": "msp-portfolio",
-      "title": "get_articles is fixed by a User-Agent header; real articles are returned",
-      "hypothesis": "get_articles.execute() with a User-Agent header returns live articles (source: live) instead of 403.",
-      "command": "node .tmp/probe_articles.ts (real fetch to dev.to with the UA fix).",
-      "result": "source: live, count: 5 — real headlines. public/metrics.json also holds 5 articles (CI snapshot with UA header from GH Actions IP works) → differentiator is UA, not IP block.",
-      "verdict": "confirmed",
-      "finding": "KI-006 closed in code; live confirmation from CF egress after deploy."
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Multi-RAG ablation: FTS5-only beats the full pipeline by recall; H1 refuted",
+      "hypothesis": "H1: multi-RAG (vector+BM25+FTS5+graph) beats any single component by recall. H2: incremental component contributions are positive. H3: graph helps relationship tasks. H5: BM25 and FTS5 are redundant.",
+      "command": "python experiments/context_engine/multi_rag_ablation.py",
+      "result": "H1 refuted: fts5_only 0.825 >= full 0.775; multi-RAG wins precision (quality 0.719 vs fts5 0.523); increments: BM25 over vector +0.430, FTS5 over V+BM25 +0.178, vector over BM25 -0.098 (hurts), graph 0.000; H3 confirmed: graph_only recall max on find_caller_callee 0.625 / find_impact 0.583, min git_history 0.000 at 12ms/121 tokens; H5 refuted: FTS5 +0.178 recall over V+BM25, opposite profiles.",
+      "verdict": "refuted",
+      "finding": "Recall comes from keyword tiers (FTS5/BM25), precision is bought by the reranker, and the vector tier is the weakest on symbol tasks. Production bug found: hybrid_search_async cache-hit silently skips the dense tier - cache isolation per arm is mandatory in ablations (first run fully distorted).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall by pipeline (30 tasks) - H1 refuted",
+          "data": [
+            { "label": "fts5_only", "value": 0.825, "sub": "single component", "color": "#10b981" },
+            { "label": "full (no rerank)", "value": 0.775, "color": "#f59e0b" },
+            { "label": "full + quality", "value": 0.756, "sub": "precision 0.719", "color": "#6366f1" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Incremental recall delta over the previous tier",
+          "data": [
+            { "label": "BM25 over vector", "value": 0.43, "sub": "+0.430 significant", "color": "#10b981" },
+            { "label": "FTS5 over V+BM25", "value": 0.178, "sub": "+0.178 significant", "color": "#10b981" },
+            { "label": "graph enrichment", "value": 0, "sub": "metadata, not text", "color": "#f59e0b" },
+            { "label": "vector over BM25", "value": 0.098, "sub": "-0.098 (hurts)", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "More tiers is not better by recall: FTS5-only is the recall max, the reranker buys precision, and graph value lives in metadata that text-based evidence metrics cannot see.",
+      "links": ["exp-4"]
     },
     {
       "id": "exp-6",
-      "date": "2026-08-14 16:10",
-      "project": "msp-portfolio",
-      "title": "Worker integration tests cover rate limit, CORS, adversarial and concurrency",
-      "hypothesis": "tests/worker.test.ts (12 tests): 429 on limit (MCP and CHAT), health without limit, security headers, CORS allow/deny, malformed JSON → 400, unknown tool/method → error, 8 parallel tools/call with filter correctness; SDK v2 serializes annotations into tools/list.",
-      "command": "pnpm test (3 files) + pnpm typecheck + pnpm build.",
-      "result": "29/29 passed; typecheck clean; build OK (252.60 KB JS, gzip 79.19 KB).",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Shadow-canary fail-open: 5/5 attacks passed before the fix, 0 after",
+      "hypothesis": "Collapse-to-constant vectors, an empty canary and a failed baseline are treated as trust by the shadow embedder canary (fail-open).",
+      "command": "python experiments/canary_shadow/exp_canary_attack.py",
+      "result": "EXP-1: 5/5 attacks passed pre-fix. Fix (2026-08-12, P2): fail-closed on empty canary and baseline failure, absolute anchor _ABS_MIN_QUALITY 0.5, collapse detector (variance < 1e-3), eligible_seen in the log; tests/test_shadow_canary.py 13/13 with realistic per-pair vectors.",
       "verdict": "confirmed",
-      "finding": "Rate limit returns 429, CORS fail-closed, adversarial rejected (400/-32602), concurrency 8/8 without cross-wiring, readOnlyHint/openWorldHint visible in tools/list."
+      "finding": "Relative metrics are attackable: absence of signal (empty canary) must fail closed, and a quality floor must be absolute, not relative.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Canary attacks that passed (EXP-1, 2026-08-11)",
+          "data": [
+            { "label": "before fix", "value": 5, "sub": "5/5 passed", "color": "#ef4444" },
+            { "label": "after fail-closed fix", "value": 0, "sub": "13/13 regression tests", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Fail-closed on absence of signal, an absolute quality anchor (0.5) and a collapse detector are the guard; relative comparisons alone are attackable.",
+      "links": []
     },
     {
       "id": "exp-7",
-      "date": "2026-08-14 17:00",
-      "project": "msp-portfolio",
-      "title": "CF Rate Limiting API binding is enforced on the account",
-      "hypothesis": "after deploy [[ratelimits]] (limit=10/60) a POST /mcp burst returns 429 after ~10 requests.",
-      "command": "temporary limit=10 + x-dbg-limiter/x-dbg-limit-result debug headers (version d1f29214) → 15-request burst → revert to limit=300 and clean version (03a42581).",
-      "result": "limiter=present on all requests, but limit_result=true on ALL 15 (with limit=10) → 429 never fired. Earlier: 320-burst with limit=300 → 0×429. Deploy accepts the binding, the runtime does not enforce.",
-      "verdict": "refuted",
-      "finding": "Rate Limiting API is NOT enforced on the current plan (likely requires Workers Paid). Bindings stay — they start enforcing on upgrade; code is fail-open."
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Concurrency vs semantic correctness: '0 errors' != correct data under race",
+      "hypothesis": "Replacing a thread-safety primitive (lock -> pool -> queue) creates a new race surface; the absence of exceptions does not prove result correctness.",
+      "command": "python experiments/concurrency/experiment_concurrency_vs_semantic.py && python experiments/concurrency/experiment_concurrency_vs_semantic_attacks.py",
+      "result": "EXP-6: VC/Merkle accepted 2 hallucinated lies, VOR 0 (illustration, not proof - falsifiability critique). EXP-7 adversarial probe: A1b hybrid (equal input rights) FP=0; A2 VOR lie about a real import FP=1; A3 no anchor UNCHECKABLE; A4a VC cosmetic change FN=1; A4b VC write conflict REJECTED (unique coverage); A5 poisoned truth list FP=1; A6 scenario mutation flips the verdict.",
+      "verdict": "confirmed",
+      "finding": "VC and VOR are complementary layers: consistency (VC) catches lost writes, semantics (VOR) catches lies. A verdict that flips when one scenario variable changes (A6) is an illustration, not a law.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Hallucinated lies accepted by validator arm",
+          "data": [
+            { "label": "VC/Merkle (no semantic inputs)", "value": 2, "color": "#ef4444" },
+            { "label": "Verify-On-Read (anchor)", "value": 0, "color": "#10b981" },
+            { "label": "hybrid, equal rights", "value": 0, "sub": "A1b", "color": "#10b981" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Blind spots found by the adversarial probe (FP / FN)",
+          "data": [
+            { "label": "A1a VC baseline", "value": 2, "sub": "FP - no semantics", "color": "#ef4444" },
+            { "label": "A2 VOR real-import lie", "value": 1, "sub": "FP", "color": "#ef4444" },
+            { "label": "A4a VC cosmetic change", "value": 1, "sub": "FN - page hash too coarse", "color": "#f59e0b" },
+            { "label": "A5 VOR poisoned truth list", "value": 1, "sub": "FP", "color": "#ef4444" },
+            { "label": "A6 scenario mutation", "value": 1, "sub": "FN - verdict flips", "color": "#f59e0b" },
+            { "label": "A4b VC lost write", "value": 1, "sub": "caught - unique coverage", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "What matters is an external grounding layer plus a consistency layer plus anchor-extraction quality - not choosing 'VC or VOR'; and every concurrency test must verify that the returned result belongs to the right input.",
+      "links": ["exp-2", "exp-1"]
     },
     {
       "id": "exp-8",
-      "date": "2026-07-08",
+      "date": "2026-08-14",
       "project": "mscodebase-intelligence",
-      "title": "ONNX migration: replace the external LM Studio process with a local ONNX Runtime",
-      "hypothesis": "A local ONNX Runtime can replace LM Studio (external process) for embeddings and reranking — full autonomy, no manual setup, no HTTP dependency on port 1234.",
-      "command": "intel_get_runtime_status while port 1234 closed → observed provider: lm_studio (hardcoded); replaced the hardcoded provider string in intelligence_layer.py with a real port probe; migrated embedding + reranker calls to ONNX Runtime.",
-      "result": "7 critical bugs fixed during the migration; all 50 tools run in ONNX mode (v2.7.0). The status API had a HARDCODED 'lm_studio' provider — after the port probe it reports the truth.",
+      "title": "Mutation testing for the reranker grader: mutation score 8% -> 100%",
+      "hypothesis": "validate_scores has holes that plain testing misses: NaN/Infinity pass isinstance, then clamp, then earn the maximum score.",
+      "command": "python experiments/evalmut/probe_evalmut_transfer.py",
+      "result": "12 mutations from the evalmut catalog adapted to validate_scores; mutation score 8% -> 100% (11/11 polarity holes) after the fix (P-006: type validation without value validation). Fix: math.isfinite, decline on duplicates, regex path through validate_scores; +13 tests in tests/test_reranker.py.",
       "verdict": "confirmed",
-      "finding": "A hardcoded provider status lies about the real runtime. The fix (port probe) was the root cause of the false 'lm_studio' state — see docs/en/investigations/ONNX_SESSION_REPORT.md."
+      "finding": "Validate values, not just types - NaN/Infinity otherwise silently earn the maximum score.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Mutation score on validate_scores (12 mutations)",
+          "data": [
+            { "label": "before fix", "value": 8, "sub": "8%", "color": "#ef4444" },
+            { "label": "after P-006 fix", "value": 100, "sub": "11/11 polarity holes closed", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Mutation testing is the guard for graders: ordinary tests prove the happy path, mutations prove the holes.",
+      "links": []
     },
     {
       "id": "exp-9",
-      "date": "2026-07-05",
+      "date": "2026-07-22",
       "project": "mscodebase-intelligence",
-      "title": "LSP investigation: a custom Python LSP cannot register in Zed 1.9.0 (Windows)",
-      "hypothesis": "A pygls-based custom LSP can be registered in Zed and provide inlay hints / autocomplete / code actions in the editor.",
-      "command": "python lsp_main.py standalone (starts fine, accepts stdio) → register 'mscodebase-lsp' in settings.json → observe the MCP log while opening .py files.",
-      "result": "Zed never started the custom LSP. settings.json can only override parameters of ALREADY KNOWN LSPs — it cannot register new language server names. Re-verified on Zed 1.14.2 (2026-08-06): only a Rust/WASM zed_extension_api wrapper can register a language server. LSP→MCP bridge deprecated; the writer (lsp_main.py) was removed 2026-07-20.",
-      "verdict": "refuted",
-      "finding": "Editor LSP registration requires a Rust+WASM extension, not a Python/pygls server. Replacement: LspClient spawning basedpyright as a subprocess → 3 MCP tools (lsp_find_references / lsp_find_definition / lsp_document_symbols). See docs/en/investigations/LSP_WONTFIX.md."
+      "title": "Root-cause prediction audit: top-1 accuracy 0.13 on 31 incidents",
+      "hypothesis": "The root-cause engine's predictions on the incident dataset can be evaluated against a gold standard; the audit quantifies current quality as a baseline to beat.",
+      "command": "python experiments/root_cause_eval/evaluate_root_cause.py",
+      "result": "31 incidents; top1_accuracy 0.129, avg_similarity 0.175, avg_term_overlap 0.158; gold standard + gold validation dataset built; research status (yellow).",
+      "verdict": "partial",
+      "finding": "Root-cause prediction is far from solved: the audit dataset and gold standard are the baseline, and the engine's current top-1 accuracy is 13%.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Root-cause engine quality on the audit dataset (31 incidents), %",
+          "data": [
+            { "label": "top-1 accuracy", "value": 13, "sub": "%", "color": "#ef4444" },
+            { "label": "avg similarity", "value": 17, "sub": "%", "color": "#f59e0b" },
+            { "label": "avg term overlap", "value": 16, "sub": "%", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "conclusion": "The incident dataset plus the gold standard is the asset; the 13% top-1 accuracy is the honest starting point for improvement.",
+      "links": []
     },
     {
       "id": "exp-10",
-      "date": "2026-06-05",
-      "project": "gemma_agent",
-      "title": "Production evidence: measured metrics for a Telegram + OpenRouter bot (3-8 users)",
-      "hypothesis": "Real production data (tokens, latency, cost) can be measured and published honestly — method: pain → metric → fix → new snapshot — so reviewers do not have to trust README badges alone.",
-      "command": "jsonl telemetry (turns.jsonl, llm_usage.jsonl) + weekly aggregation scripts; public repo export on 2026-06-06; period 2026-05-02 → 2026-06-05.",
-      "result": "2779+ pytest cases, CI on every PR; report documents measured tokens/latency/cost with explicit caveats (PRODUCTION_EVIDENCE_REPORT.md). Public GitHub export date (2026-06-06) ≠ production start (2026-05-02).",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "PID-lock self-healing: orphan lock wait 30s -> 120ms",
+      "hypothesis": "Classifying the DB PID-lock holder (DEAD/HEALTHY/ORPHAN/AMBIGUOUS) instead of failing closed on a stale lock eliminates the zombie boot loop.",
+      "command": "python experiments/lock_zombie/benchmark_selfhealing.py",
+      "result": "orphan 30s -> 120ms, healthy 30s -> 1.5s soft, free/stale unchanged; fix in src/core/database_lock.py (holder classification, TOCTOU guard, retry-unlink); +17 tests in tests/test_database_lock_selfhealing.py; 1022 passed, ruff clean.",
       "verdict": "confirmed",
-      "finding": "Public GitHub date ≠ project age. Reviewers must not equate 'repo created on GitHub' with 'project born yesterday' — production ran for a month before the export."
+      "finding": "Never block boot on a lock whose holder may be a zombie: classify the holder and self-heal instead of failing closed for 30 seconds.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Boot wait on the DB PID-lock (seconds)",
+          "data": [
+            { "label": "orphan lock (before)", "value": 30, "sub": "boot timeout -> zombie loop", "color": "#ef4444" },
+            { "label": "orphan lock (after)", "value": 0.12, "sub": "self-healing", "color": "#10b981" },
+            { "label": "healthy holder (after)", "value": 1.5, "sub": "soft wait", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Holder classification plus TOCTOU guards turns a 30-second zombie deadlock into a 120ms self-heal.",
+      "links": []
+    },
+    {
+      "id": "exp-11",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Late enrichment: imports metadata covers 0.0% of search chunks",
+      "hypothesis": "Enriching search results with metadata (imports, calls) at query time (late) instead of at index time improves relevance.",
+      "command": "python experiments/late_enrichment/bench.py",
+      "result": "Measurement on real project chunks (~186 tokens/chunk): imports=0.0 on search chunks - the finding behind KNOWN_ISSUES; late enrichment stays behind the MSCODEBASE_LATE_ENRICHMENT flag.",
+      "verdict": "partial",
+      "finding": "Index-time enrichment produced nothing for search chunks: imports coverage is 0.0, so the late path is kept behind a flag until the hypothesis is re-probed.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Imports coverage on search chunks",
+          "data": [
+            { "label": "imports coverage", "value": 0, "sub": "~186 tokens/chunk", "color": "#f59e0b" },
+            { "label": "chunks with any metadata", "value": 0, "sub": "finding -> KNOWN_ISSUES", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "The enrichment hypothesis is open: metadata extraction produced 0.0 on search chunks, so the flag stays off until a better probe.",
+      "links": ["exp-4"]
+    },
+    {
+      "id": "exp-12",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Benchmark 2.0 scaffold: 12 repository-reasoning tasks at levels L3-L5",
+      "hypothesis": "RepoReason (integration width, not file count) and Active-SWE motivate measuring reasoning quality (L3 explain, L4 impact, L5 hidden bug) instead of query -> 5 results -> latency.",
+      "command": "python experiments/benchmark2/runner.py && python experiments/benchmark2/runner.py --keywords",
+      "result": "tasks.jsonl: 12 tasks (architecture / impact / history / hidden bugs / consistency) with evidence, probes and check criteria; keywords.jsonl: 8 short keyword queries - CoREB: short queries crush nDCG@10 for all models; scaffold v1 status (yellow).",
+      "verdict": "partial",
+      "finding": "A reasoning-quality benchmark needs L3-L5 tasks with evidence and checks; short keyword queries are a separate failure mode (CoREB) that must be measured independently.",
+      "chart": [
+        {
+          "type": "donut",
+          "title": "Benchmark 2.0 catalog",
+          "data": [
+            { "label": "reasoning tasks (L3-L5)", "value": 12, "color": "#6366f1" },
+            { "label": "keyword probes", "value": 8, "color": "#06b6d4" }
+          ]
+        }
+      ],
+      "conclusion": "The scaffold is the deliverable: 12 evidence-backed reasoning tasks plus 8 keyword probes give the next harness a differentiated yardstick.",
+      "links": ["exp-4"]
     }
   ],
   "negativeResults": [
     {
-      "attempt": "Passing raw JSON Schema to registerTool (server v2)",
-      "whyFailed": "createMcpHandler factory crashes on every request → HTTP 500",
-      "date": "2026-08-14",
+      "attempt": "scip-python as a pip dependency (SCIP backend for Python)",
+      "whyFailed": "The package does not exist on PyPI (404) - only Sourcegraph CLI repositories with node/native builds.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "cypher-sqlite as a ready-made Cypher library",
+      "whyFailed": "The package does not exist on PyPI (404); a custom CypherExecutor was already implemented.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "371-language symbol extraction via tree-sitter-language-pack",
+      "whyFailed": "The manifest lists 371 grammars but only 71 (19%) ship tags.scm - the rest parse AST without symbols.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "pylint-django as a code duplication detector",
+      "whyFailed": "It is a Django-framework plugin (ForeignKey/Model types), not a dup-detector - per the official PyPI description.",
+      "date": "2026-08-08",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "CoT prompting for cheap verify-on-read",
+      "whyFailed": "x30-65 cost and x20-70 tokens for a marginal recall gain (qwen3.6 code_first 0.08 -> 0.20); glm-4.7 loses 16-26% of responses to upstream EMPTY_CONTENT.",
+      "date": "2026-08-15",
       "ref": "exp-1"
     },
     {
-      "attempt": "CF Rate Limiting API binding ([[ratelimits]]) on the free plan",
-      "whyFailed": "Deploy accepts the binding, but limit() always returns success: true → no enforcement (limit=10, bursts 15/30/320)",
-      "date": "2026-08-14",
-      "ref": "exp-7"
-    },
-    {
-      "attempt": "Running the server as a background process in one shell session and calling it from another",
-      "whyFailed": "Windows kills background processes when the shell exits (exit 7 / 000)",
-      "date": "2026-08-14",
-      "ref": "integration tests"
+      "attempt": "First multi-RAG ablation run without per-arm cache isolation",
+      "whyFailed": "The hybrid_search_async embedding cache-hit skips the dense tier - the vector tier silently disappears on repeated queries and the first run was fully distorted (vector_bm25 == bm25_only 30/30).",
+      "date": "2026-08-11",
+      "ref": "exp-5"
     }
   ]
 }

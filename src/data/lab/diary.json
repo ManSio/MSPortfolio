@@ -1,234 +1,194 @@
 {
   "entries": [
     {
-      "date": "2026-08-14 09:30",
-      "project": "msp-portfolio",
-      "title": "Created MSPortfolio (MCP-Native Portfolio)",
+      "date": "2026-07-05",
+      "project": "mscodebase-intelligence",
+      "title": "Custom Python LSP cannot register in Zed (WONTFIX)",
       "status": "fixed",
-      "rootCause": "— (new initiative, not an incident)",
-      "fix": "Repo ManSio/MSPortfolio: static site (React 19/Vite 8/Tailwind v4, GH Pages) + MCP server (@modelcontextprotocol/server@2 + Fastify, Streamable HTTP, 6 tools) + browser agent demo with trace + architecture simulator + CI (deploy + hourly metrics refresh).",
-      "guard": "verified_from_clean_state: git clone → pnpm install → pnpm build; MCP smoke via curl.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 10:05",
-      "project": "msp-portfolio",
-      "title": "Spec wrongly proposed the Fastify package @fastify/mcp",
-      "status": "fixed",
-      "rootCause": "The package does not exist on npm; official Fastify support is @modelcontextprotocol/fastify (middleware v2).",
-      "fix": "Used @modelcontextprotocol/fastify@2 (createMcpFastifyApp + toNodeHandler + createMcpHandler) — verified by experiments #1-2.",
-      "guard": "Check the registry before pinning any dependency.",
+      "rootCause": "Zed settings.json can only override KNOWN LSPs; a pygls-based server is never started (verified on Zed 1.9.0 and 1.14.2).",
+      "fix": "Deprecated the LSP->MCP bridge (writer removed 2026-07-20); replaced with LspClient spawning basedpyright as a subprocess -> 3 MCP tools (lsp_find_references / lsp_find_definition / lsp_document_symbols).",
+      "guard": "docs/en/investigations/LSP_WONTFIX.md documents the dead end.",
       "pattern": "P-002-variant"
-    },
-    {
-      "date": "2026-08-14 10:20",
-      "project": "msp-portfolio",
-      "title": "registerTool rejects raw JSON Schema → HTTP 500",
-      "status": "fixed",
-      "rootCause": "SDK v2 expects a zod schema; the createMcpHandler factory crashes on registration on every request.",
-      "fix": "z.fromJSONSchema(tool.inputSchema) at registration (verified: parse OK / invalid caught).",
-      "guard": "Integration test (tools/list, tools/call) before commit.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 11:10",
-      "project": "msp-portfolio",
-      "title": "A fork of someone else's project (infrawise) slipped into the portfolio as 'mine'",
-      "status": "fixed",
-      "rootCause": "Project data was taken from users/ManSio/repos without checking the fork flag; infrawise is a fork of Sidd27/infrawise.",
-      "fix": "Removed from projects/principles/timeline/architecture models; metrics filter forks (live-fetch + update-metrics.ts + snapshot).",
-      "guard": "fork !== true in both metric paths; verify gh api repos/…/infrawise (fork/source) before including someone else's code.",
-      "pattern": "P-002-variant"
-    },
-    {
-      "date": "2026-08-14 12:00",
-      "project": "msp-portfolio",
-      "title": "Light theme unreadable (white on white)",
-      "status": "fixed",
-      "rootCause": "Components hardcoded dark colors (text-paper = white text) and ignored the light theme; only the body background switched.",
-      "fix": "Semantic tokens via CSS variables (ink/paper/muted/faint/accent) + @custom-variant dark. Dark theme visually unchanged, light theme readable.",
-      "guard": "Colors only through semantic classes; no text-paper/\\d+ variants.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 12:30",
-      "project": "msp-portfolio",
-      "title": "Cloudflare Workers entrypoint (workerd-native MCP)",
-      "status": "fixed",
-      "rootCause": "GH Pages is static; the MCP server needs a process host → added a second entrypoint for Workers.",
-      "fix": "worker/index.ts uses handler.fetch() (web-standard, no toNodeHandler); CORS/OPTIONS/health in the wrapper. Verified 7/7 tests.",
-      "guard": "wrangler hoisted into npx (its workerd/esbuild build scripts break pnpm deps-check on Windows).",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 13:00",
-      "project": "msp-portfolio",
-      "title": "mansio.github.io returned 404; pnpm approval in CI",
-      "status": "fixed",
-      "rootCause": "The ManSio.github.io repo did not exist — the user site was not set up. pnpm 11 renamed onlyBuiltDependencies → allowBuilds.",
-      "fix": "Created ManSio.github.io (meta-refresh + JS redirect + canonical) to /MSPortfolio/. allowBuilds: esbuild: true in pnpm-workspace.yaml.",
-      "guard": "Fresh frozen install + esbuild binary verified.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 13:30",
-      "project": "msp-portfolio",
-      "title": "Live deploy: MCP on Cloudflare Workers + user site",
-      "status": "fixed",
-      "rootCause": "—",
-      "fix": "wrangler login → mansio-dev.workers.dev subdomain (registered via REST API) → wrangler deploy → https://msp-portfolio.mansio-dev.workers.dev/mcp. Site demo wired to the live endpoint.",
-      "guard": "CI smoke against the live endpoint; wrangler deploy --dry-run + smoke of the built index.js.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 13:00",
-      "project": "msp-portfolio",
-      "title": "SEO/mobile/CTA pass: OG cover, touch targets, mobile check",
-      "status": "fixed",
-      "rootCause": "— (owner request: close the SEO-audit items)",
-      "fix": "og:image (PIL, 1200×630) + twitter:card; 'Let's talk' CTA section; Button got min-h-11 (44px, Apple HIG); mobile check automated via scripts/check-mobile.mjs (headless Edge + CDP).",
-      "guard": "node scripts/check-mobile.mjs as a layout regression check.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 15:00",
-      "project": "msp-portfolio",
-      "title": "Live audit of the MCP endpoint: get_articles 403, no rate limit",
-      "status": "partial",
-      "rootCause": "get_articles — dev.to rejects requests from the Cloudflare worker (200 from a normal IP, 403 from the worker). Rate limiting not implemented (empirically 20×200, 0×429).",
-      "fix": "NOT fixed yet — found during research (experiments against production). Plan: get_articles → UA + cron-snapshot; rate limit → [[ratelimits]].",
-      "guard": "extend CI smoke: tools/call get_articles (not just tools/list); experiments — EXPERIMENTS_LOG.md#3-4.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 20:30",
-      "project": "msp-portfolio",
-      "title": "get_articles did not show a new article (dev.to Varnish cache)",
-      "status": "fixed",
-      "rootCause": "dev.to serves /api/articles through layered Varnish; after publication a stale copy lives in the cache and is served to some egresses. cache:no-store and cache-busters did not help (Varnish normalizes unknown query params).",
-      "fix": "the real API param state=published changes the Varnish cache key → fresh data. Verified live: worker returns 6 articles.",
-      "guard": "live check of get_articles; tools/call get_articles smoke already in CI.",
-      "pattern": "P-002-variant"
-    },
-    {
-      "date": "2026-08-14 20:00",
-      "project": "msp-portfolio",
-      "title": "Analytics Engine enabled and bound; auto-deploy closed with a token",
-      "status": "fixed",
-      "rootCause": "— (owner actions closed)",
-      "fix": "CF API token via gh secret set → deploy-worker GREEN for the first time. Analytics Engine enabled; ANALYTICS binding → msp_portfolio dataset. Live: 3 tools/call → counter today:16.",
-      "guard": "CI smoke; KNOWN_ISSUES KI-007.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 19:00",
-      "project": "msp-portfolio",
-      "title": "Ideas 3/5/6: failure events in the simulator, antipattern museum, terminal",
-      "status": "fixed",
-      "rootCause": "— (feature batch)",
-      "fix": "Simulator emits failure-mode events (circuit_open, fallback_engaged, degraded_mode, cache_miss). Antipattern museum: 7 incidents + get_antipatterns tool. Terminal: commands over the tools.",
-      "guard": "tests 36/36; live validation: tools/list 9, antipatterns count 7.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 18:30",
-      "project": "msp-portfolio",
-      "title": "CI: refresh metrics before build; live validation of new features",
-      "status": "fixed",
-      "rootCause": "'Refresh metrics snapshot' ran after 'Build' — every deploy shipped the previous run's snapshot.",
-      "fix": "moved the step before Build (deploy.yml). Live validation: get_commit_history → source:snapshot, count:15; /mcp/stats → today:6/total:6.",
-      "guard": "tools/list smoke (get_commit_history) + tools/call get_articles.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 18:00",
-      "project": "msp-portfolio",
-      "title": "Features: get_commit_history, decision-log narrative, agent counter (/mcp/stats)",
-      "status": "fixed",
-      "rootCause": "— (feature batch)",
-      "fix": "Commit snapshot in update-metrics.ts; decision-log narrative in ProjectsGrid; KV counter MCP_STATS + /mcp/stats. Incident: fire-and-forget void promise without ctx.waitUntil — workerd cancels → fixed.",
-      "guard": "worker tests 34/34; live validation; §9 trap 10.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 17:00",
-      "project": "msp-portfolio",
-      "title": "Rate Limiting API is not enforced on the account's plan (experiment)",
-      "status": "partial",
-      "rootCause": "The [[ratelimits]] binding deploys and is visible, but limit() returns success: true on all requests even with limit=10 → the runtime does not enforce. Likely requires Workers Paid.",
-      "fix": "Experiment documented; reverted to limit=300. Bindings stay — they start working on upgrade without code changes. Code is fail-open.",
-      "guard": "EXPERIMENTS_LOG.md#7 (negative result); KI-007 updated.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-08-14 16:40",
-      "project": "msp-portfolio",
-      "title": "get_articles smoke failed: \\\"count\\\" escaping in SSE + live without the fix",
-      "status": "fixed",
-      "rootCause": "The smoke searched for \"count\", but in the SSE tools/call response the field lives inside a JSON text string and is escaped (\\\"count\\\") — the grep never matched.",
-      "fix": "Smoke pattern → grep -q count (without quotes); the worker with fixes needs a manual deploy.",
-      "guard": "smoke runs on every push; worker tests cover tools/call locally.",
-      "pattern": "P-002-variant"
-    },
-    {
-      "date": "2026-08-14 16:00",
-      "project": "msp-portfolio",
-      "title": "MCP endpoint hardening: rate limit, readOnlyHint, security headers, KI-006/KI-008",
-      "status": "partial",
-      "rootCause": "KI-006 — dev.to 403 on headerless fetches from datacenter egress; KI-007 — no rate limit existed; KI-008 — llm_saturation no-op without an honest explanation.",
-      "fix": "UA + snapshot fallback; [[ratelimits]] 300/60 + CHAT 30/60; readOnlyHint/openWorldHint on all tools; security headers; honest 'no LLM stage' finding; CI smoke tools/call; AE telemetry.",
-      "guard": "tests/worker.test.ts (12 integration); tests/mcp-tools.test.ts; result 29/29 tests, typecheck, build.",
-      "pattern": "NEW"
     },
     {
       "date": "2026-07-08",
       "project": "mscodebase-intelligence",
       "title": "ONNX migration: 7 critical bugs fixed while moving off LM Studio",
       "status": "fixed",
-      "rootCause": "LM Studio is an external process requiring manual startup/setup; the status API hardcoded 'lm_studio' as the provider, so it lied when port 1234 was closed.",
-      "fix": "Replaced the hardcoded provider string with a real port probe; migrated embeddings + reranking to a local ONNX Runtime. All 50 tools work in ONNX mode (v2.7.0).",
+      "rootCause": "LM Studio is an external process needing manual startup; the status API hardcoded 'lm_studio' as the provider, so it lied when port 1234 was closed.",
+      "fix": "Replaced the hardcoded provider string with a real port probe; migrated embeddings + reranking to a local ONNX Runtime; all 50 tools work in ONNX mode (v2.7.0).",
       "guard": "intel_get_runtime_status now reflects the real runtime; docs/en/investigations/ONNX_SESSION_REPORT.md.",
       "pattern": "NEW"
     },
     {
-      "date": "2026-07-05",
+      "date": "2026-08-08",
       "project": "mscodebase-intelligence",
-      "title": "LSP investigation: custom Python LSP cannot register in Zed (WONTFIX)",
+      "title": "Lock-zombie: MCP boot blocked up to 30s by a stale DB PID-lock",
       "status": "fixed",
-      "rootCause": "Zed settings.json can only override KNOWN LSPs — it cannot register a new language server name; a pygls-based server is never started (verified on Zed 1.9.0 and 1.14.2).",
-      "fix": "WONTFIX the editor LSP. Deprecated the LSP→MCP bridge (writer lsp_main.py removed 2026-07-20); replaced with LspClient spawning basedpyright as a subprocess → 3 MCP tools (lsp_find_references / lsp_find_definition / lsp_document_symbols).",
-      "guard": "docs/en/investigations/LSP_WONTFIX.md; re-verified on Zed 1.14.2 (2026-08-06).",
+      "rootCause": "Boot failed closed on the DB PID-lock for up to 30s, exceeding the Zed timeout; the server was killed, the zombie stayed, and _is_pid_alive could not tell a healthy MCP from an orphan.",
+      "fix": "Holder classification (DEAD/HEALTHY/ORPHAN/AMBIGUOUS) with a TOCTOU guard and retry-unlink in src/core/database_lock.py; orphan self-heals in 120ms.",
+      "guard": "tests/test_database_lock_selfhealing.py (+17); benchmark_selfhealing.py.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Probe script shadowed the production symbol build_call_graph",
+      "status": "fixed",
+      "rootCause": "run_experiment_pagerank.py defined the same name as the production build_call_graph; the probe silently shadowed it in the graph module.",
+      "fix": "Renamed and gated the probe; one-off experiment scripts now live in their folder or _archive (experiments/README rule).",
+      "guard": "grep for name collisions before adding probes.",
       "pattern": "P-002-variant"
     },
     {
-      "date": "2026-06-06",
-      "project": "gemma_agent",
-      "title": "Public GitHub export date ≠ production start date",
-      "status": "fixed",
-      "rootCause": "The repo was exported publicly on 2026-06-06, but production ran since 2026-05-02 — an external reviewer could mistake the export date for the project's age.",
-      "fix": "docs/HONEST_POSITIONING.md documents the timeline explicitly: public export ≠ project born yesterday; production metrics cover 2026-05-02 → 2026-06-05.",
-      "guard": "PRODUCTION_EVIDENCE_REPORT.md ties measured numbers to git-verifiable artifacts.",
-      "pattern": "NEW"
-    },
-    {
-      "date": "2026-06-05",
-      "project": "gemma_agent",
-      "title": "Memory retrieval is a substring stub (self-assessed 4/10)",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Context aggregator D1-D3 defects found by the harness",
       "status": "partial",
-      "rootCause": "Default memory retrieval is substring-based — simple but weak for semantic recall; the maintainer self-assessed it 4/10 and recommends Mem0 for production-grade retrieval.",
-      "fix": "Documented honestly in HONEST_POSITIONING.md (self-assessed scores table); option to plug a Mem0 server for real retrieval.",
-      "guard": "Honest positioning doc keeps the gap visible for humans and tools.",
+      "rootCause": "Intent filters git_history/verify_change silently returned empty in the B-scheme; harness gaps (D1-D3) hid the failures.",
+      "fix": "Documented in KNOWN_ISSUES (yellow); re-run after the fix is planned.",
+      "guard": "intent coverage asserted per task in bench_v2.",
       "pattern": "NEW"
     },
     {
-      "date": "2026-08-14 15:30",
-      "project": "msp-portfolio",
-      "title": "SDK v2 supports annotations.readOnlyHint (verified via tsc)",
-      "status": "fixed",
-      "rootCause": "— (capability verification)",
-      "fix": "Temporary registerTool edit → tsc OK → revert. MCP spec 2026-07-28 introduces annotations; SDK v2 types readOnlyHint.",
-      "guard": "EXPERIMENTS_LOG.md#4.",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Late enrichment: imports metadata = 0.0 on search chunks",
+      "status": "partial",
+      "rootCause": "Chunks from the search pipeline (~186 tokens) carry no import metadata; enrichment at query time had nothing to add.",
+      "fix": "Kept behind the MSCODEBASE_LATE_ENRICHMENT flag; the finding is recorded in KNOWN_ISSUES.",
+      "guard": "flag stays off; the hypothesis is re-probed before enabling.",
       "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Memory contamination: the memory layer accepts false claims",
+      "status": "fixed",
+      "rootCause": "Project memory was add-only with no retraction and no validation against the code; false claims propagated into context.",
+      "fix": "ADR-0002 (retraction + statuses) and ADR-0003 (lazy verify-on-read); measured adoption drop 1.0 -> 0.12 -> 0.0 in experiments 1-R / 1-V.",
+      "guard": "tests/test_memory_retraction.py + tests/test_verify_on_read.py.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Shadow canary fail-open: 5/5 attacks passed",
+      "status": "fixed",
+      "rootCause": "The canary trusted empty responses and a failed baseline (fail-open); the quality metric was relative, so a collapse-to-constant passed.",
+      "fix": "Fail-closed on empty canary and baseline failure, absolute anchor _ABS_MIN_QUALITY 0.5, collapse detector (variance < 1e-3).",
+      "guard": "tests/test_shadow_canary.py 13/13 (realistic per-pair vectors).",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "hybrid_search_async cache-hit skips the dense tier",
+      "status": "partial",
+      "rootCause": "An embedding cache hit returned early, silently skipping the vector search tier; repeat queries lost vector recall (the first multi-RAG run was fully distorted).",
+      "fix": "Cache isolation per arm in ablations; the production fix is tracked in KNOWN_ISSUES (hybrid-cache).",
+      "guard": "ablation harness must isolate the cache per arm.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Concurrency: 0 errors did not mean correct data",
+      "status": "fixed",
+      "rootCause": "Replacing a thread-safety primitive created a new race surface (shared results dict, shared correlation id, result swap between inputs) that exception-free runs do not expose.",
+      "fix": "Rule §2.3: results are collected per call; stress tests must verify the right input -> right output (adversarial probe EXP-7).",
+      "guard": "tests on result correctness under N=2 and N=8 concurrency.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-12",
+      "project": "mscodebase-intelligence",
+      "title": "Memory v2: SUPERSEDED filter + false-retraction metric not committed",
+      "status": "partial",
+      "rootCause": "ADR-0004 cascade behavior (REFUTED propagation) was designed and validated but left uncommitted at session end.",
+      "fix": "Recorded as tech debt; commit planned with the next memory batch.",
+      "guard": "session-end checklist: commit or park experiments.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Server unreachable during/after indexing",
+      "status": "fixed",
+      "rootCause": "A sync update_all in the main loop blocked the server while indexing.",
+      "fix": "Moved update_all off the hot path; indexing no longer blocks tool calls.",
+      "guard": "get_health_report smoke after a full reindex.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "extract_anchors produced garbage anchors -> false VOR retractions",
+      "status": "fixed",
+      "rootCause": "Anchor extraction over-matched identifiers, so verify-on-read retracted valid memory.",
+      "fix": "Tightened anchor extraction; verified against the memory dataset.",
+      "guard": "tests/test_verify_on_read.py (anchor quality cases).",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Reranker offline all day: PID-reuse in _is_pid_alive",
+      "status": "fixed",
+      "rootCause": "A completed process object was classified as alive via PID reuse, so the reranker process was treated as running when it was dead.",
+      "fix": "Process-object state check before PID liveness; the reranker restarts on demand.",
+      "guard": "runtime status probe shows the real process state.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Duplicate servers with two Zed windows",
+      "status": "fixed",
+      "rootCause": "The lock was taken before Popen, not before port readiness; the second window started a duplicate server.",
+      "fix": "Lock acquisition moved after the port-readiness check; multi-window PID-lock documented.",
+      "guard": "KNOWN_ISSUES multi-window PID-lock entry.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "validate_scores grader: 11 holes (NaN/Infinity pass)",
+      "status": "fixed",
+      "rootCause": "Type validation without value validation: NaN/Infinity passed isinstance, clamped, and earned the maximum score.",
+      "fix": "P-006: math.isfinite, decline on duplicates, regex path through validate_scores; mutation score 8% -> 100%.",
+      "guard": "tests/test_reranker.py (+13); evalmut probe in CI.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "stale_detector MCP tool: 11 false drifts",
+      "status": "fixed",
+      "rootCause": "The stale detector reported drifts that were actually renames/reorders; severity_overrides has a Windows quirk.",
+      "fix": "Fixed the 11 false drifts; the Windows quirk stays open in KNOWN_ISSUES.",
+      "guard": "negative-controls runner (protocol of Tom).",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "fastmcp dist-name vs import-path: 7 false REFUTED",
+      "status": "fixed",
+      "rootCause": "VOR anchors (file/import/env) could not tell a dist name from an import path; the fastmcp class was retracted as absent.",
+      "fix": "ADR-0005: pkg: anchors from the manifest (pyproject.toml + requirements) as a closed world; 7 false REFUTED -> 0.",
+      "guard": "tests/test_verify_on_read.py (+7).",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "CoT arm: glm-4.7 upstream EMPTY_CONTENT",
+      "status": "partial",
+      "rootCause": "In reasoning mode the upstream returns finish=stop with an empty body (reasoning_tokens ~6) for 16-26% of responses; the share is unstable between runs.",
+      "fix": "Documented as an upstream defect; glm CoT numbers are qualitative only; the harness retries and counts errors honestly.",
+      "guard": "run report flags n(err) per model.",
+      "pattern": "P-002-variant"
     }
   ]
 }

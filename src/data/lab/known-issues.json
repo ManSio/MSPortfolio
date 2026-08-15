@@ -1,154 +1,124 @@
 {
   "issues": [
     {
-      "id": "KI-001",
-      "project": "msp-portfolio",
-      "problem": "The MCP server cannot be hosted on GitHub Pages (static hosting) — a process host is required (Docker/Workers/local).",
+      "id": "KI-101",
+      "project": "mscodebase-intelligence",
+      "problem": "hybrid_search_async: an embedding cache-hit silently skips the dense tier - repeat queries lose vector recall (found by the multi-RAG ablation; the first run was fully distorted).",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": "after re-run",
+      "owner": "owner",
+      "link": "src/core/search/engine.py"
+    },
+    {
+      "id": "KI-102",
+      "project": "mscodebase-intelligence",
+      "problem": "Present-trap blindness is structural: claims about an existing file/import with the wrong subject or value are not caught by anchor verification (memory_first adoption 0.24 in the proxy control).",
+      "status": "Open (by design)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/intelligence/verify_on_read.py"
+    },
+    {
+      "id": "KI-103",
+      "project": "mscodebase-intelligence",
+      "problem": "VOR is fail-closed: live-LLM verification (qwen3.6/3.7) accepts 2-5/25 true claims and actively rejects 7-9/25 (recall 0.08-0.20) - executing such verdicts would retract almost all live memory.",
+      "status": "Open (policy choice)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/1L_live_arm/report.md"
+    },
+    {
+      "id": "KI-104",
+      "project": "mscodebase-intelligence",
+      "problem": "glm-4.7-flash in reasoning mode returns 16-26% EMPTY_CONTENT (finish=stop, empty body) - an upstream defect; its CoT numbers are qualitative only.",
+      "status": "Open (upstream)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "upstream",
+      "link": "experiments/1L_live_arm/report.md"
+    },
+    {
+      "id": "KI-105",
+      "project": "mscodebase-intelligence",
+      "problem": "OpenRouter routes one prompt across >=8 upstreams (Alibaba/DeepInfra/DigitalOcean/Cloudflare/Novita/Baidu/StreamLake/Bedrock): per-run verdict variance (FA +/-0.05-0.10) is expected; determinism under temp=0 is an illusion.",
       "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
-      "link": "server/README.md"
+      "link": "experiments/1L_live_arm/openrouter_activity_2026-08-15.csv"
     },
     {
-      "id": "KI-002",
-      "project": "msp-portfolio",
-      "problem": "CORS: the browser demo against the remote /mcp requires an explicit ALLOWED_ORIGINS (secure-default: 403).",
+      "id": "KI-106",
+      "project": "mscodebase-intelligence",
+      "problem": "Late enrichment: imports=0.0 on search chunks (~186 tokens/chunk); the MSCODEBASE_LATE_ENRICHMENT flag stays off until the hypothesis is re-probed.",
+      "status": "Open (research)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/late_enrichment/README.md"
+    },
+    {
+      "id": "KI-107",
+      "project": "mscodebase-intelligence",
+      "problem": "The vector tier (multilingual-e5-small) is the weakest on symbol tasks (recall 0.083-0.167); recall is carried by keyword tiers, precision by the reranker.",
       "status": "Open (by design)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
-      "link": "server/README.md"
+      "link": "experiments/context_engine/README.md"
     },
     {
-      "id": "KI-003",
-      "project": "msp-portfolio",
-      "problem": "Locally the browser demo calls /mcp through the vite proxy; in production (no running server) it automatically falls back to the local engine.",
-      "status": "Open (by design)",
-      "temperature": "stable",
+      "id": "KI-108",
+      "project": "mscodebase-intelligence",
+      "problem": "Graph enrichment adds metadata (callers/callees), not text: evidence metrics by text patterns do not see it; a separate graph-contribution protocol is needed.",
+      "status": "Open (research)",
+      "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "src/lib/mcp-client.ts"
+      "link": "experiments/context_engine/README.md"
     },
     {
-      "id": "KI-004",
-      "project": "msp-portfolio",
-      "problem": "pnpm lint (oxlint) reports 0 warnings; the CI note about Node 20 deprecation in actions/checkout@v4 is cosmetic.",
+      "id": "KI-109",
+      "project": "mscodebase-intelligence",
+      "problem": "P1: propagation_engine.py is invisible to code search and the symbol graph - the root cause is not yet established.",
+      "status": "Open (P1)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/intelligence/propagation_engine.py"
+    },
+    {
+      "id": "KI-110",
+      "project": "mscodebase-intelligence",
+      "problem": "Path storage is scattered and there is no GC: 2481 junk folders accumulated; a cleanup task is open.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-111",
+      "project": "mscodebase-intelligence",
+      "problem": "severity_overrides has a Windows quirk (stale_detector) - behavior differs between platforms.",
       "status": "Open",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
-      "link": ".github/workflows/deploy.yml"
+      "link": "scripts/stale_detector"
     },
     {
-      "id": "KI-005",
-      "project": "msp-portfolio",
-      "problem": "OG preview is cached by social networks (X/LinkedIn/Telegram): after a deploy the first share may show the old preview — reset via validators.",
-      "status": "Open (by design)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "index.html (og:image)"
-    },
-    {
-      "id": "KI-006",
-      "project": "msp-portfolio",
-      "problem": "get_articles failed: dev.to → 403 from the worker (200 from a normal IP). Fix in code: UA header + fallback to the committed metrics.json snapshot. Verified by experiment (source: live, 5 articles). Live confirmation — after deploy.",
-      "status": "Fix in code, awaiting deploy",
-      "temperature": "watching",
-      "deadline": "after push",
-      "owner": "owner",
-      "link": "mcp-tools.ts"
-    },
-    {
-      "id": "KI-007",
-      "project": "msp-portfolio",
-      "problem": "Public /mcp without rate limiting. Implemented in code ([[ratelimits]] 300/60 + CHAT 30/60), but EMPIRICALLY NOT ENFORCED on the current plan: limit() always returns success. Likely requires Workers Paid.",
-      "status": "Code ready, enforcement inactive",
-      "temperature": "watching",
-      "deadline": "owner decision (upgrade/accept risk)",
-      "owner": "owner",
-      "link": "wrangler.toml"
-    },
-    {
-      "id": "KI-008",
-      "project": "msp-portfolio",
-      "problem": "simulate_architecture: llm_saturation did not affect non-LLM models but claimed 'LLM generation dominates'. Fixed: honest 'no LLM stage' finding + test.",
-      "status": "Fixed + test",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "mcp-tools.ts"
-    },
-    {
-      "id": "KI-009",
-      "project": "msp-portfolio",
-      "problem": "Article draft: the 'I know Kubernetes' example contradicted the live analyze_stack (matched:false, no evidence in the project stack). Resolved: the article uses Kubernetes only as an honest counterexample — consistent with matched:false.",
-      "status": "Resolved (article is honest)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "article draft (§1, §3.4)"
-    },
-    {
-      "id": "KI-010",
-      "project": "msp-portfolio",
-      "problem": "Agent counter (KV calls:*) — eventually consistent and approximate (get+put is not atomic). Acceptable for the 'queries today' demo metric.",
-      "status": "Open (by design)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "worker/index.ts (/mcp/stats)"
-    },
-    {
-      "id": "KI-011",
-      "project": "msp-portfolio",
-      "problem": "Lab page #/lab: JSON projections (src/data/lab/*.json) mirror the markdown logs (EXPERIMENTS_LOG.md, AGENT_DIARY.md, KNOWN_ISSUES.md). Drift is risky: the page and MCP tools read the JSON. Guard: tests/lab.test.ts validates structure/integrity; log edits must sync the JSON in the same commit.",
-      "status": "Open (by design)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "src/data/lab/"
-    },
-    {
-      "id": "KI-012",
+      "id": "KI-112",
       "project": "mscodebase-intelligence",
-      "problem": "Custom Python LSP cannot register in Zed (settings.json only overrides KNOWN LSPs). WONTFIX on Zed — full editor LSP support requires a Rust+WASM zed_extension_api wrapper. Mitigation: LspClient (basedpyright subprocess) → 3 MCP tools.",
-      "status": "Open (by design)",
+      "problem": "Two Zed windows can start duplicate servers: the lock is taken before Popen, not before port readiness (mitigated 2026-08-13).",
+      "status": "Open (mitigated)",
       "temperature": "stable",
       "deadline": null,
       "owner": "owner",
-      "link": "docs/en/investigations/LSP_WONTFIX.md"
-    },
-    {
-      "id": "KI-013",
-      "project": "mscodebase-intelligence",
-      "problem": "LanceDB API surface changes between minor versions — the pin must be verified against the exact installed version before every bump.",
-      "status": "Open (by design)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "decision log (LanceDB over SQLite FTS)"
-    },
-    {
-      "id": "KI-014",
-      "project": "gemma_agent",
-      "problem": "Default memory retrieval is a substring stub (self-assessed 4/10) — weak for semantic recall; Mem0 server recommended for production-grade retrieval.",
-      "status": "Open (by design)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "docs/HONEST_POSITIONING.md"
-    },
-    {
-      "id": "KI-015",
-      "project": "gemma_agent",
-      "problem": "Repository name 'gemma_agent' is historical — refers to the project, not Google DeepMind Gemma. Must be explained to avoid confusion.",
-      "status": "Open (by design)",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "docs/HONEST_POSITIONING.md"
+      "link": "src/core/database_lock.py"
     }
   ]
 }
