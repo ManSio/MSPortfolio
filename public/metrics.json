@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T17:34:35.287Z",
+  "fetchedAt": "2026-08-15T18:47:00.117Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T16:40:54Z",
+      "pushedAt": "2026-08-15T17:34:41Z",
       "language": "TypeScript"
     },
     {
@@ -53,7 +53,7 @@
   "devto": [
     {
       "id": 4399317,
-      "title": "Your memory layer is lying to you (and your LLM agrees)",
+      "title": "Bare tokens vs real code: an 11x recall jump in LLM memory verification (3400 calls, 14 models",
       "description": "14 models, 4 arms, ~3400 API calls. No model balanced false-accept and recall with pattern strings. With real file snippets: recall 0.08→0.88 at FA=0.02. The problem was the evidence, not the model.",
       "readingTimeMinutes": 10,
       "url": "https://dev.to/mansio/your-memory-layer-is-lying-to-you-and-your-llm-agrees-1oia",
@@ -63,7 +63,7 @@
         "agents",
         "benchmark"
       ],
-      "reactions": 2,
+      "reactions": 7,
       "comments": 0,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
@@ -81,7 +81,7 @@
         "cloudflare",
         "portfolio"
       ],
-      "reactions": 9,
+      "reactions": 10,
       "comments": 0,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
