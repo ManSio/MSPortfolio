@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T08:01:27.807Z",
+  "fetchedAt": "2026-08-15T08:29:05.176Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T08:01:01Z",
+      "pushedAt": "2026-08-15T08:28:42Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T07:47:50Z",
+      "pushedAt": "2026-08-15T08:19:50Z",
       "language": "Python"
     },
     {
@@ -52,6 +52,24 @@
   "npm": [],
   "devto": [
     {
+      "id": 4399317,
+      "title": "Your memory layer is lying to you (and your LLM agrees)",
+      "description": "14 models, 4 arms, ~3400 API calls. No model balanced false-accept and recall with pattern strings. With real file snippets: recall 0.08→0.88 at FA=0.02. The problem was the evidence, not the model.",
+      "readingTimeMinutes": 10,
+      "url": "https://dev.to/mansio/your-memory-layer-is-lying-to-you-and-your-llm-agrees-1oia",
+      "tags": [
+        "llm",
+        "memorylayer",
+        "agents",
+        "benchmark"
+      ],
+      "reactions": 2,
+      "comments": 0,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
+      "readablePublishDate": "Aug 14"
+    },
+    {
       "id": 4397130,
       "title": "I turned my portfolio into an MCP server (and I'm not a programmer)",
       "description": "A civil engineer who directs AI agents built a portfolio that answers questions from other AI agents. Here's what broke, what worked, and why.",
@@ -63,7 +81,7 @@
         "cloudflare",
         "portfolio"
       ],
-      "reactions": 7,
+      "reactions": 9,
       "comments": 0,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
@@ -163,10 +181,24 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "317f1b6e7f",
+      "date": "2026-08-15T08:28:28Z",
+      "message": "fix(articles): bust stale dev.to Varnish entry — per_page 6->8 + fallback for the new post",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "128df093bc",
       "date": "2026-08-15T08:00:39Z",
       "message": "feat(lab): full MScodebase experiment set — per-experiment charts, conclusions, related links",
       "author": "ManSio"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "ff104ed26c",
+      "date": "2026-08-15T08:14:53Z",
+      "message": "feat(exp-1L): V4 arm file_content_first — real file fragment closes 'anchor bias' bite #2",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
@@ -180,13 +212,6 @@
       "sha": "26241b3663",
       "date": "2026-08-15T07:25:03Z",
       "message": "feat(exp-1L): per-category metrics + CoT vs zero-shot + server-side audit (V3/Part 5)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "4c1af8f9de",
-      "date": "2026-08-14T21:32:34Z",
-      "message": "fix(install): убрать устаревшие EMBEDDING_PROVIDER/EMBEDDING_DIMENSION из extension.toml env (авто-детект провайдера)",
       "author": "MSCodeBase Agent"
     },
     {
