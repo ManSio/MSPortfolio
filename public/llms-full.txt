@@ -82,7 +82,7 @@
 - Endpoint (Streamable HTTP): https://msp-portfolio.mansio-dev.workers.dev/mcp
 - Health: https://msp-portfolio.mansio-dev.workers.dev/mcp/health
 - Add to Claude Code: `claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp`
-- Tools (14): get_profile, get_projects, get_engineering_principles, get_timeline, get_articles, get_commit_history, get_antipatterns, get_experiments, get_diary, get_known_issues, analyze_stack, simulate_architecture, verify_claim, verify_repo
+- Tools (16): get_profile, get_projects, get_engineering_principles, get_timeline, get_articles, get_commit_history, get_antipatterns, get_experiments, get_diary, get_known_issues, analyze_stack, simulate_architecture, verify_claim, verify_repo, verify_article, verify_package
 
 ## Lab (evidence trail)
 
@@ -91,6 +91,6 @@ The `#/lab` page renders the diaries, experiments, known issues, test suites and
 - 12 experiments with hypothesis → command → verdict (8 confirmed, 3 partial, 1 refuted) + 6 negative results
 - 20 diary entries (incidents, root causes, fixes, guards) — per project
 - 12 known issues (KI-101..KI-112) with status and temperature — per project
-- 8 test suites / 92 tests
+- 10 test suites / 101 tests
 - Per-project decision logs (considered → chosen → why → cost) and commit logs (from the hourly metrics snapshot)
 - Projects without lab logs show an honest note — their evidence is decision log + commit history

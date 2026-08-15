@@ -16,7 +16,9 @@ the browser agent demo uses (`src/lib/mcp-tools.ts`) — one source of truth.
 | `analyze_stack(required_skills)` | Compare stack vs job requirements → coverage + verdict |
 | `simulate_architecture(project_id, scenario)` | Simulate architecture under load / failure scenarios |
 | `verify_claim(claim)` | Evidence score: ground a claim about the owner against portfolio data |
-| `verify_repo(repo)` | Live GitHub verification: repo metadata + cross-check with the portfolio record |
+| `verify_repo(repo, readme?)` | Live GitHub verification: repo metadata (+README) + cross-check with the portfolio record |
+| `verify_article(query)` | Live Dev.to verification: has the owner published a matching article? |
+| `verify_package(package)` | Live npm verification: does the package exist, who maintains it? |
 
 Protocol: **Streamable HTTP** (2025-11-25 / 2026-07-28), single endpoint `POST/GET /mcp`.
 

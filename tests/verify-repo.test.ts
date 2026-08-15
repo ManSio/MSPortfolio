@@ -23,6 +23,7 @@ interface RepoResult {
     liveLanguage: string | null;
     languageMatches: boolean;
   } | null;
+  readmeExcerpt?: string | null;
   error?: string;
   note?: string;
 }
@@ -38,10 +39,10 @@ function stubGitHub(status: number, body: Record<string, unknown>) {
   );
 }
 
-const callRepo = async (repo: string): Promise<RepoResult> => {
+const callRepo = async (repo: string, readme?: boolean): Promise<RepoResult> => {
   const tool = getTool('verify_repo');
   if (!tool) throw new Error('verify_repo tool missing');
-  return (await tool.execute({ repo })) as RepoResult;
+  return (await tool.execute({ repo, readme })) as RepoResult;
 };
 
 afterEach(() => {
@@ -120,5 +121,27 @@ describe('verify_repo — live GitHub verification', () => {
     expect(res.available).toBe(false);
     expect(res.error).toContain('Provide a repository name');
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('readme:true also returns the actual README text (claims about what the repo does)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (String(url).includes('api.github.com')) {
+          return new Response(
+            JSON.stringify({ full_name: 'ManSio/mscodebase-intelligence', language: 'Python', topics: ['mcp'], stargazers_count: 2 }),
+            { status: 200, headers: { 'content-type': 'application/json' } },
+          );
+        }
+        if (String(url).includes('raw.githubusercontent.com')) {
+          return new Response('# MSCodeBase Intelligence\n\nAn async MCP server for code search.', { status: 200 });
+        }
+        throw new Error(`unexpected url ${url}`);
+      }),
+    );
+    const res = await callRepo('mscodebase-intelligence', true);
+    expect(res.exists).toBe(true);
+    expect(res.readmeExcerpt).toContain('MSCodeBase Intelligence');
+    expect(res.readmeExcerpt).toContain('MCP server');
   });
 });

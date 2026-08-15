@@ -720,7 +720,7 @@ export const TOOLS: MCPTool[] = [
   },
   {
     name: 'verify_repo',
-    description: "Verify a GitHub repository against the primary source: fetches the actual repo metadata (exists, language, description, topics, stars, last push) from the GitHub API and cross-checks it with the portfolio's project record when the repo is one of the owner's projects (language/stack agreement). Use it to ground claims like 'the repo is Python' or 'he maintains mscodebase-intelligence' with live data instead of trusting the claim. Read-only, open world (network fetch).",
+    description: "Verify a GitHub repository against the primary source: fetches the actual repo metadata (exists, language, description, topics, stars, last push) from the GitHub API and cross-checks it with the portfolio's project record when the repo is one of the owner's projects (language/stack agreement). With readme:true it also returns the actual README text, so claims about what the project does can be checked against the repository's own words. Use it to ground claims like 'the repo is Python' or 'he maintains mscodebase-intelligence' with live data instead of trusting the claim. Read-only, open world (network fetch).",
     inputSchema: {
       type: 'object',
       properties: {
@@ -728,11 +728,15 @@ export const TOOLS: MCPTool[] = [
           type: 'string',
           description: 'Repository name, e.g. "mscodebase-intelligence" (owner defaults to ManSio) or full "owner/name" or a github.com URL.',
         },
+        readme: {
+          type: 'boolean',
+          description: 'Also fetch the repository README (first ~1200 chars) for claim checks against the project\'s own description.',
+        },
       },
       required: ['repo'],
     },
     annotations: { readOnlyHint: true, openWorldHint: true },
-    async execute({ repo }) {
+    async execute({ repo, readme }) {
       const raw = String(repo ?? '').trim();
       const normalized = raw.replace(/^https?:\/\/github\.com\//, '').replace(/^@/, '').replace(/\/$/, '').trim();
       const [ownerPart, namePart] = normalized.split('/');
@@ -774,6 +778,18 @@ export const TOOLS: MCPTool[] = [
               languageMatches: !project.language || !data.language || data.language === project.language,
             }
           : null;
+        let readmeExcerpt: string | null = null;
+        if (readme === true) {
+          try {
+            const rr = await fetch(`https://raw.githubusercontent.com/${owner}/${name}/HEAD/README.md`, {
+              headers: { 'User-Agent': 'msp-portfolio-server' },
+              signal: AbortSignal.timeout(8000),
+            });
+            if (rr.ok) readmeExcerpt = (await rr.text()).slice(0, 1200);
+          } catch {
+            readmeExcerpt = null; // README is a bonus — never fail the tool on it
+          }
+        }
         return {
           repo: raw,
           available: true,
@@ -786,10 +802,115 @@ export const TOOLS: MCPTool[] = [
           pushedAt: data.pushed_at ?? null,
           archived: data.archived ?? false,
           portfolioProject,
+          readmeExcerpt,
         };
       } catch (err) {
         const message = err instanceof Error && err.name === 'AbortError' ? 'timeout after 8s' : err instanceof Error ? err.message : String(err);
         return { repo: raw, available: false, error: `GitHub unreachable: ${message}` };
+      }
+    },
+  },
+  {
+    name: 'verify_article',
+    description: "Verify an article against the primary source (Dev.to): does the owner have a published article matching the query? Fetches the live Dev.to API for the owner's articles and returns the real title/date/reactions/url when found — or an honest 'not found'. Use it to ground claims like 'he wrote about agent memory' in the platform's data instead of the portfolio's own words. Read-only, open world (network fetch).",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'Article title fragment or keyword, e.g. "agent memory" or an exact title.',
+        },
+      },
+      required: ['query'],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    async execute({ query }) {
+      const q = String(query ?? '').trim();
+      if (q.length < 3) return { query: q, available: false, error: 'Query too short — provide at least 3 characters.' };
+      try {
+        const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=100', {
+          headers: { 'User-Agent': 'msp-portfolio-server' },
+          signal: AbortSignal.timeout(8000),
+        });
+        if (!res.ok) return { query: q, available: false, error: `Dev.to API ${res.status}` };
+        const articles = (await res.json()) as Array<{
+          id: number;
+          title: string;
+          published_at?: string;
+          public_reactions_count?: number;
+          comments_count?: number;
+          url?: string;
+          tag_list?: string[];
+        }>;
+        const ql = q.toLowerCase();
+        const matches = articles
+          .filter((a) => a.title.toLowerCase().includes(ql))
+          .slice(0, 5)
+          .map((a) => ({
+            title: a.title,
+            publishedAt: a.published_at ?? null,
+            reactions: a.public_reactions_count ?? 0,
+            comments: a.comments_count ?? 0,
+            url: a.url ?? null,
+            tags: a.tag_list ?? [],
+          }));
+        return { query: q, available: true, found: matches.length > 0, matches, totalArticles: articles.length };
+      } catch (err) {
+        const message = err instanceof Error && err.name === 'AbortError' ? 'timeout after 8s' : err instanceof Error ? err.message : String(err);
+        return { query: q, available: false, error: `Dev.to unreachable: ${message}` };
+      }
+    },
+  },
+  {
+    name: 'verify_package',
+    description: "Verify an npm package against the primary source (registry.npmjs.org): does it exist, latest version, publish date, description, license, maintainers — and is the owner among them? Use it to ground claims like 'he published an npm package' in the registry's data instead of the portfolio's. Honest 'not found' when the package does not exist. Read-only, open world (network fetch).",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        package: {
+          type: 'string',
+          description: 'npm package name, e.g. "msp-portfolio" (lowercase).',
+        },
+      },
+      required: ['package'],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    async execute({ package: pkg }) {
+      const name = String(pkg ?? '').trim().toLowerCase();
+      if (!name) return { package: name, available: false, error: 'Provide a package name.' };
+      try {
+        const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}`, {
+          headers: { 'User-Agent': 'msp-portfolio-server' },
+          signal: AbortSignal.timeout(8000),
+        });
+        if (res.status === 404) {
+          return { package: name, available: true, exists: false, note: `Package "${name}" not found on npm (404).` };
+        }
+        if (!res.ok) return { package: name, available: false, error: `npm registry ${res.status}` };
+        const data = (await res.json()) as {
+          name?: string;
+          'dist-tags'?: Record<string, string>;
+          description?: string;
+          license?: string;
+          maintainers?: Array<{ name?: string }>;
+          time?: Record<string, string>;
+        };
+        const latest = data['dist-tags']?.['latest'] ?? null;
+        const maintainers = (data.maintainers ?? []).map((m) => m.name ?? '');
+        return {
+          package: data.name ?? name,
+          available: true,
+          exists: true,
+          latestVersion: latest,
+          publishedAt: (latest && data.time?.[latest]) || null,
+          description: data.description ?? null,
+          license: data.license ?? null,
+          maintainers,
+          maintainedByOwner: maintainers.some((m) => m.toLowerCase() === 'mansio'),
+        };
+      } catch (err) {
+        const message = err instanceof Error && err.name === 'AbortError' ? 'timeout after 8s' : err instanceof Error ? err.message : String(err);
+        return { package: name, available: false, error: `npm registry unreachable: ${message}` };
       }
     },
   },

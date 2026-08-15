@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 22:50] — Рекомендация 2: внешние arms проверки (verify_article, verify_package, README в verify_repo) — циркулярность убита
+**Status:** ✅ Fixed (код + тесты 101/101, typecheck, lint; деплой после коммита)
+**Root Cause:** — (владелец: «давай» на внешние источники: dev.to, npm, README)
+**Fix:** (1) `verify_article(query)` — живой Dev.to API (UA msp-portfolio-server, таймаут 8s): title-fragment матчинг по статьям владельца, found + реальные title/дата/реакции/url, честный not-found. (2) `verify_package(package)` — живой npm registry: exists/latest/дата/лицензия/мейнтейнеры + maintainedByOwner, честный 404. (3) `verify_repo` — опциональный параметр `readme:true` (фетч raw README, первые 1200 символов; сбой README не валит тул). **16 тулов всего.** Тесты: verify-article (4), verify-package (4), verify-repo +readme (9). Синхронизация 14→16: worker.test.ts, evidence-eval, llms.txt/llms-full/skill/server-README/devto-нота/test-suites (101). Ответ «проверяете себя по себе»: репо/статьи/пакеты теперь проверяются по первоисточникам (GitHub/dev.to/npm), а не по самоописанным данным.
+**Guard:** все три arms — fail-closed (сбой/лимит → честная ошибка, не ложный negative); UA-заголовок обязателен (урок KI-006); 16 тулов — следить за misrouting у слабых моделей (research P5), при проблемах — группировка.
+**Pattern:** NEW
+
 ## [2026-08-15 22:10] — Рекомендации 1+4: публичный бенчмарк (pnpm bench) + честная уборка (терминал удалён, симулятор подписан)
 **Status:** ✅ Fixed (код + тесты 92/92, typecheck, lint; деплой после коммита)
 **Root Cause:** — (владелец: «да» на рекомендации 1+4 из research-what-impresses-devs: публичный бенчмарк + убрать ерунду)

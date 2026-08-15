@@ -14,7 +14,7 @@ claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.w
 Any MCP client can instead configure a remote server pointing at the Streamable HTTP
 endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 
-## Tools (14)
+## Tools (16)
 
 | Tool | Use it to answer |
 |------|------------------|
@@ -31,7 +31,9 @@ endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 | `analyze_stack(required_skills)` | Does his stack fit a given job? Per-skill evidence + coverage. |
 | `simulate_architecture(project_id, scenario)` | How does an architecture degrade under load / failure? |
 | `verify_claim(claim)` | Is a statement about him supported by the data? Returns the evidence records. |
-| `verify_repo(repo)` | Is a repository real? Live GitHub metadata (language/topics/stars) and whether it matches the portfolio record. |
+| `verify_repo(repo, readme?)` | Is a repository real? Live GitHub metadata (language/topics/stars/README) + match vs the portfolio record. |
+| `verify_article(query)` | Did he publish an article matching this? Live Dev.to check. |
+| `verify_package(package)` | Does this npm package exist, and is he a maintainer? Live registry check. |
 
 ## Suggested flows
 
@@ -41,6 +43,8 @@ endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 - "What's still broken?" → `get_known_issues`
 - "How would his architecture handle a load spike?" → `simulate_architecture`
 - "Is that repo real? What does it actually contain?" → `verify_repo`
+- "Did he really publish an article about that?" → `verify_article`
+- "Did he publish an npm package?" → `verify_package`
 
 ## Honesty rules
 

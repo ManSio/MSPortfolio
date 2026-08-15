@@ -3,12 +3,12 @@
 *Опубликованная версия на dev.to (2026-08-14), синхронизированная с 12 тулами.
 Оригинал: https://dev.to/mansio/i-turned-my-portfolio-into-an-mcp-server-and-im-not-a-programmer-4h0a*
 
-> **Update 2026-08-15:** живой endpoint теперь отдаёт **14 тулов** — добавлены
-> `verify_claim` (evidence score: ground-ит утверждение о владельце по данным
-> портфолио и возвращает записи-источники) и `verify_repo` (живая проверка
-> репозитория через GitHub API с перекрёстной сверкой с данными портфолио).
-> Раздел «The twelve tools» ниже — дословно как опубликовано; 13-й и 14-й тулы
-> описаны в `docs/devto-article.md` (черновик).
+> **Update 2026-08-15:** живой endpoint теперь отдаёт **16 тулов** — три тула
+> проверки по **внешним первоисточникам** (убивают «проверяете себя по себе»):
+> `verify_repo` (живой GitHub + README), `verify_article` (живой Dev.to),
+> `verify_package` (живой npm), плюс `verify_claim` (evidence score по данным
+> портфолио + LLM-рука). Раздел «The twelve tools» ниже — дословно как
+> опубликовано; новые тулы описаны в `docs/devto-article.md` (черновик).
 > Правило KI-009: при перепубликации сверять число тулов с `tools/list`.
 
 ---

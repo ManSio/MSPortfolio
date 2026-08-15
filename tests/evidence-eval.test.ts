@@ -21,10 +21,10 @@ async function verify(claim: string): Promise<VerifyClaimResult> {
 }
 
 describe('verify_claim — Evidence Score v1 (deterministic arm)', () => {
-  it('is registered as the 14th tool with readOnlyHint and a required claim input', () => {
+  it('is registered as one of 16 tools with readOnlyHint and a required claim input', () => {
     const tool = TOOLS.find((t) => t.name === 'verify_claim');
     expect(tool).toBeTruthy();
-    expect(TOOLS).toHaveLength(14);
+    expect(TOOLS).toHaveLength(16);
     expect(tool?.annotations?.readOnlyHint).toBe(true);
     expect(tool?.annotations?.openWorldHint).toBe(false);
     const schema = tool?.inputSchema as { required?: string[] };

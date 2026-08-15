@@ -86,10 +86,10 @@ arm** (v2): a deterministic keyword miss may be rescued by an AI check that must
 cite the exact record behind the claim (badge `LLM arm`, source still shown) —
 and it still refuses rather than guess when no record supports the claim.
 Every chat answer ends with an `evidence:` line (tool calls · grounded · failed)
-so a visitor can see what the answer was based on. A second verification tool,
-`verify_repo`, checks a GitHub repository live (exists, language, topics, stars)
-and cross-checks it against the portfolio's record — so a claim like "that repo
-is Python" is grounded in the primary source, not the portfolio's self-description.
+so a visitor can see what the answer was based on. Three verification tools
+check claims against **external primary sources** — so the portfolio does not
+just verify itself against itself: `verify_repo` (live GitHub + README), `verify_article`
+(live Dev.to) and `verify_package` (live npm registry).
 
 The section also ships a **connect-in-30-seconds** onboarding block: one
 copy-paste `claude mcp add` command, the MCP Inspector entry point

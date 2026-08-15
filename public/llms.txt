@@ -19,7 +19,7 @@
 - Agent skill: https://github.com/ManSio/MSPortfolio/blob/main/public/msp-portfolio.skill.md
 - Add to Claude Code: `claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp`
 
-## MCP tools (14)
+## MCP tools (16)
 
 - get_profile — owner's professional summary
 - get_projects — projects with stack, highlights, decision logs (filter by stack tag)
@@ -34,7 +34,9 @@
 - analyze_stack — job-fit comparison with per-skill evidence and coverage
 - simulate_architecture — failure simulation: load spike / node loss / cache cold / LLM saturation
 - verify_claim — evidence score: ground a claim about the owner against the portfolio data
-- verify_repo — live GitHub check: does a repository exist, what does it actually say (language/topics/stars), and does it match the portfolio's record?
+- verify_repo — live GitHub check: does a repository exist, what does it actually say (language/topics/stars/README), and does it match the portfolio's record?
+- verify_article — live Dev.to check: has the owner published an article matching the query?
+- verify_package — live npm check: does a package exist, and who maintains it?
 
 ## Links
 
