@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-08-15T13:43:22.889Z",
+  "fetchedAt": "2026-08-15T13:46:35.379Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 7,
     "followers": 55,
-    "following": 65
+    "following": 66
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T13:35:36Z",
+      "pushedAt": "2026-08-15T13:46:07Z",
       "language": "TypeScript"
     },
     {
@@ -181,9 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "fdb2877240",
-      "date": "2026-08-15T13:35:08Z",
-      "message": "feat: verify_repo — live GitHub verification tool (14th) with portfolio cross-check",
+      "sha": "a32449fb9d",
+      "date": "2026-08-15T13:46:05Z",
+      "message": "feat(bench): public reproducible benchmark (pnpm bench) + honest cleanup (recommendations 1+4)",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "06c2fadeb8",
+      "date": "2026-08-15T13:40:56Z",
+      "message": "docs: honest audit of MSPortfolio vs live competitors + what impresses devs",
       "author": "ManSio"
     },
     {
