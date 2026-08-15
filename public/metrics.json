@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T10:22:15.483Z",
+  "fetchedAt": "2026-08-15T10:27:50.171Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:21:48Z",
+      "pushedAt": "2026-08-15T10:27:28Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "7f8e968c8f",
-      "date": "2026-08-15T10:21:37Z",
-      "message": "docs: P2 done (D4 quota + D5 openapi) — diary, KI-007 partial",
+      "sha": "615755e503",
+      "date": "2026-08-15T10:27:26Z",
+      "message": "feat(lab): Evidence Score panel — canonical claims ledger (5/5 supported, 5 refused) + guard tests 65/65",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "dccd73877b",
-      "date": "2026-08-15T10:21:15Z",
-      "message": "feat(worker): D4 anonymous monthly quota (KV, X-RateLimit-*) + D5 /openapi.json — tests 63/63",
+      "sha": "7f8e968c8f",
+      "date": "2026-08-15T10:21:37Z",
+      "message": "docs: P2 done (D4 quota + D5 openapi) — diary, KI-007 partial",
       "author": "ManSio"
     },
     {
