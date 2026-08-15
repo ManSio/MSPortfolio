@@ -15,6 +15,8 @@ the browser agent demo uses (`src/lib/mcp-tools.ts`) — one source of truth.
 | `get_timeline` | Engineering decision timeline |
 | `analyze_stack(required_skills)` | Compare stack vs job requirements → coverage + verdict |
 | `simulate_architecture(project_id, scenario)` | Simulate architecture under load / failure scenarios |
+| `verify_claim(claim)` | Evidence score: ground a claim about the owner against portfolio data |
+| `verify_repo(repo)` | Live GitHub verification: repo metadata + cross-check with the portfolio record |
 
 Protocol: **Streamable HTTP** (2025-11-25 / 2026-07-28), single endpoint `POST/GET /mcp`.
 

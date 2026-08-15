@@ -718,6 +718,81 @@ export const TOOLS: MCPTool[] = [
       } satisfies VerifyClaimResult;
     },
   },
+  {
+    name: 'verify_repo',
+    description: "Verify a GitHub repository against the primary source: fetches the actual repo metadata (exists, language, description, topics, stars, last push) from the GitHub API and cross-checks it with the portfolio's project record when the repo is one of the owner's projects (language/stack agreement). Use it to ground claims like 'the repo is Python' or 'he maintains mscodebase-intelligence' with live data instead of trusting the claim. Read-only, open world (network fetch).",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        repo: {
+          type: 'string',
+          description: 'Repository name, e.g. "mscodebase-intelligence" (owner defaults to ManSio) or full "owner/name" or a github.com URL.',
+        },
+      },
+      required: ['repo'],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    async execute({ repo }) {
+      const raw = String(repo ?? '').trim();
+      const normalized = raw.replace(/^https?:\/\/github\.com\//, '').replace(/^@/, '').replace(/\/$/, '').trim();
+      const [ownerPart, namePart] = normalized.split('/');
+      const name = (namePart ?? ownerPart ?? '').trim();
+      if (!name) return { repo: raw, available: false, error: 'Provide a repository name.' };
+      const owner = namePart ? ownerPart.trim() : 'ManSio';
+      try {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${name}`, {
+          headers: { 'User-Agent': 'msp-portfolio-server', Accept: 'application/vnd.github+json' },
+          signal: AbortSignal.timeout(8000),
+        });
+        if (res.status === 404) {
+          return { repo: raw, available: true, exists: false, note: `Repository ${owner}/${name} not found on GitHub (404).` };
+        }
+        if (!res.ok) {
+          return { repo: raw, available: false, error: `GitHub API ${res.status}${res.status === 403 || res.status === 429 ? ' (rate limit?)' : ''}.` };
+        }
+        const data = (await res.json()) as {
+          full_name?: string;
+          language?: string | null;
+          description?: string | null;
+          topics?: string[];
+          stargazers_count?: number;
+          pushed_at?: string;
+          archived?: boolean;
+          owner?: { login?: string };
+          name?: string;
+        };
+        // Cross-check with the curated portfolio record when this is one of the owner's projects.
+        const fullName = data.full_name ?? `${owner}/${name}`;
+        const project = projects.find((p) => p.repo?.toLowerCase() === fullName.toLowerCase());
+        const portfolioProject = project
+          ? {
+              id: project.id,
+              name: project.name,
+              claimedLanguage: project.language,
+              claimedStack: project.stack,
+              liveLanguage: data.language ?? null,
+              languageMatches: !project.language || !data.language || data.language === project.language,
+            }
+          : null;
+        return {
+          repo: raw,
+          available: true,
+          exists: true,
+          fullName,
+          language: data.language ?? null,
+          description: data.description ?? null,
+          topics: data.topics ?? [],
+          stars: data.stargazers_count ?? 0,
+          pushedAt: data.pushed_at ?? null,
+          archived: data.archived ?? false,
+          portfolioProject,
+        };
+      } catch (err) {
+        const message = err instanceof Error && err.name === 'AbortError' ? 'timeout after 8s' : err instanceof Error ? err.message : String(err);
+        return { repo: raw, available: false, error: `GitHub unreachable: ${message}` };
+      }
+    },
+  },
 ];
 
 export function getTool(name: string): MCPTool | undefined {

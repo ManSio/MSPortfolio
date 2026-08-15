@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 21:00] — 14-й тул verify_repo: живая проверка репозитория через GitHub API + сверка с портфолио
+**Status:** ✅ Fixed (код + тесты 91/91, typecheck, lint; деплой после коммита)
+**Root Cause:** — (владелец: «А» — живая проверка по репозиториям вместо поиска по чужим)
+**Fix:** `verify_repo(repo)` в mcp-tools.ts: нормализация ввода (bare name → owner ManSio, owner/name, github.com URL), fetch GitHub API (UA msp-portfolio-server, таймаут 8s), 404 → exists:false, 403/429 → честная ошибка «rate limit», сетевой сбой → «unavailable»; для своих проектов — перекрёстная сверка live-language с заявленным в портфолио (languageMatches). 8 тестов с мок-fetch (verify-repo.test.ts). **Синхронизация 13→14 тулов:** worker.test.ts (tools/list + openapi), evidence-eval.test.ts (13th→14th), llms.txt/llms-full.txt/skill-файл/server-README/devto-article-published.md, test-suites.json (91). **Решение B (поиск по чужим репо) отклонено** — другой продукт, размывает фокус «доказательства обо мне».
+**Guard:** GitHub API с воркера без токена — лимит ~60 req/h на общий egress CF; 403/429 обрабатываются честно (не ложный negative); KI-009 — число тулов сверено с tools/list во всех документах.
+**Pattern:** NEW
+
 ## [2026-08-15 20:35] — v2 этап 2 РЕАЛИЗОВАН: LLM-рука в verify_claim (arm-флаг, fail-closed), интеграция в воркер + виджет
 **Status:** ✅ Fixed (код + тесты 83/83, typecheck, lint, сквозной смоук с реальной gpt-4o-mini; прод не деплоен)
 **Root Cause:** — (владелец: «1» — включить v2 в живой тул)

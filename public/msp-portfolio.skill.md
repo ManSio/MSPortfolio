@@ -14,7 +14,7 @@ claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.w
 Any MCP client can instead configure a remote server pointing at the Streamable HTTP
 endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 
-## Tools (13)
+## Tools (14)
 
 | Tool | Use it to answer |
 |------|------------------|
@@ -31,6 +31,7 @@ endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 | `analyze_stack(required_skills)` | Does his stack fit a given job? Per-skill evidence + coverage. |
 | `simulate_architecture(project_id, scenario)` | How does an architecture degrade under load / failure? |
 | `verify_claim(claim)` | Is a statement about him supported by the data? Returns the evidence records. |
+| `verify_repo(repo)` | Is a repository real? Live GitHub metadata (language/topics/stars) and whether it matches the portfolio record. |
 
 ## Suggested flows
 
@@ -39,6 +40,7 @@ endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 - "Is he a fit for this job?" → `analyze_stack` with the job's required skills
 - "What's still broken?" → `get_known_issues`
 - "How would his architecture handle a load spike?" → `simulate_architecture`
+- "Is that repo real? What does it actually contain?" → `verify_repo`
 
 ## Honesty rules
 
