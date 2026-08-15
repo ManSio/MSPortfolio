@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T10:05:36.419Z",
+  "fetchedAt": "2026-08-15T10:10:39.863Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:05:13Z",
+      "pushedAt": "2026-08-15T10:10:18Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "a792ea2da6",
-      "date": "2026-08-15T10:05:00Z",
-      "message": "fix(registry): server.json description <= 100 chars — registry validation 422 (v1.0.0 failed, v1.0.1 valid)",
+      "sha": "fd9db53513",
+      "date": "2026-08-15T10:10:14Z",
+      "message": "ci(registry): diagnostic — capture publish output into check-run annotation",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "b8cd756f5b",
-      "date": "2026-08-15T10:02:10Z",
-      "message": "docs: research reports (MCP ecosystem + benchmarks round 2), consensus §7, diary, known issues, devto sync",
+      "sha": "a792ea2da6",
+      "date": "2026-08-15T10:05:00Z",
+      "message": "fix(registry): server.json description <= 100 chars — registry validation 422 (v1.0.0 failed, v1.0.1 valid)",
       "author": "ManSio"
     },
     {
