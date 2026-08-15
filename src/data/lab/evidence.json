@@ -1,0 +1,60 @@
+{
+  "claims": [
+    {
+      "id": "ev-01",
+      "claim": "production MCP server for codebase intelligence",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-02",
+      "claim": "LanceDB and BM25 hybrid search",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-03",
+      "claim": "Telegram assistant with memory and intent routing",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-04",
+      "claim": "React TypeScript Vite portfolio",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-05",
+      "claim": "Hybrid search with fused ranking",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-06",
+      "claim": "worked at Google",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-07",
+      "claim": "led a team of engineers at Meta",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-08",
+      "claim": "built a mobile app for iOS",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-09",
+      "claim": "ten years at Netflix as staff engineer",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-10",
+      "claim": "contributed to the Linux kernel",
+      "expected": "refused"
+    }
+  ],
+  "summary": {
+    "supported": 5,
+    "refused": 5,
+    "total": 10
+  },
+  "updatedAt": "2026-08-15"
+}

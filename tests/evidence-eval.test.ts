@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getTool, TOOLS } from '../src/lib/mcp-tools';
 import type { VerifyClaimResult } from '../src/lib/types';
 import { computeEvidence } from '../worker/index';
+import evidenceData from '../src/data/lab/evidence.json' with { type: 'json' };
 
 /**
  * D3 — Evidence Score v1 eval (deterministic arm).
@@ -66,6 +67,19 @@ describe('verify_claim — Evidence Score v1 (deterministic arm)', () => {
     const empty = await verify('');
     expect(empty.supported).toBe(false);
     expect(empty.note).toBeTruthy();
+  });
+});
+
+describe('evidence ledger — canonical claims match verify_claim (Proof-of-Portfolio)', () => {
+  it('every ledger claim receives the expected verdict from verify_claim', async () => {
+    const claims = (evidenceData as { claims: Array<{ id: string; claim: string; expected: 'supported' | 'refused' }> }).claims;
+    const results: Array<{ id: string; claim: string; expected: string; actual: string }> = [];
+    for (const c of claims) {
+      const res = await verify(c.claim);
+      results.push({ id: c.id, claim: c.claim, expected: c.expected, actual: res.supported ? 'supported' : 'refused' });
+    }
+    const mismatches = results.filter((r) => r.actual !== r.expected);
+    expect(mismatches, JSON.stringify(mismatches, null, 2)).toEqual([]);
   });
 });
 

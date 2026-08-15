@@ -3,6 +3,7 @@ import experimentsData from '../../data/lab/experiments.json';
 import diaryData from '../../data/lab/diary.json';
 import knownIssuesData from '../../data/lab/known-issues.json';
 import testSuitesData from '../../data/lab/test-suites.json';
+import evidenceData from '../../data/lab/evidence.json';
 import projectsData from '../../data/projects.json';
 import { loadFallbackSnapshot } from '../../lib/api';
 import { ARCHITECTURES, runSimulation, SCENARIOS } from '../../lib/mcp-tools';
@@ -18,6 +19,8 @@ const diary = (diaryData as { entries: DiaryEntry[] }).entries;
 const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
 const suites = (testSuitesData as { suites: { file: string; name: string; tests: number; covers: string; updatedAt: string }[]; total: number }).suites;
 const testTotal = (testSuitesData as { total: number }).total;
+const evidenceClaims = (evidenceData as { claims: { id: string; claim: string; expected: 'supported' | 'refused' }[] }).claims;
+const evidenceSummary = (evidenceData as { summary: { supported: number; refused: number; total: number } }).summary;
 const projects = (projectsData as ProjectsShape).projects;
 
 interface ProjectsShape {
@@ -522,6 +525,32 @@ export function LabPage() {
               <p className="mt-3 text-sm leading-relaxed text-muted">{s.covers}</p>
             </Card>
           ))}
+        </div>
+        <div className="mt-6">
+          <Card className="glass-card p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-sm font-semibold text-paper">Evidence score — claims verified against the data</span>
+              <span className="font-mono text-xs text-faint">verify_claim · deterministic · KI-017</span>
+            </div>
+            <p className="mt-1 text-xs leading-relaxed text-faint">
+              The same tool the MCP server exposes: a claim is <span className="text-muted">supported</span> only when ≥2
+              significant words appear in one data record; otherwise it is <span className="text-muted">refused</span> rather than guessed.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Badge tone="success">{evidenceSummary.supported} supported</Badge>
+              <Badge tone="warn">{evidenceSummary.refused} refused</Badge>
+              <Badge>{evidenceSummary.total} claims</Badge>
+            </div>
+            <ul className="mt-4 grid gap-2 md:grid-cols-2">
+              {evidenceClaims.map((c) => (
+                <li key={c.id} className="flex items-start justify-between gap-3 rounded-lg border border-line bg-surface-2/60 px-3 py-2">
+                  <span className="font-mono text-[11px] text-faint">{c.id}</span>
+                  <span className="min-w-0 flex-1 text-sm leading-snug text-muted">{c.claim}</span>
+                  <Badge tone={c.expected === 'supported' ? 'success' : 'warn'}>{c.expected}</Badge>
+                </li>
+              ))}
+            </ul>
+          </Card>
         </div>
         <div className="mt-4">
           <Card className="glass-card p-4">

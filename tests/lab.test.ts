@@ -6,6 +6,7 @@ import experimentsData from '../src/data/lab/experiments.json' with { type: 'jso
 import diaryData from '../src/data/lab/diary.json' with { type: 'json' };
 import knownIssuesData from '../src/data/lab/known-issues.json' with { type: 'json' };
 import testSuitesData from '../src/data/lab/test-suites.json' with { type: 'json' };
+import evidenceData from '../src/data/lab/evidence.json' with { type: 'json' };
 
 interface Experiment {
   id: string;
@@ -156,6 +157,23 @@ describe('lab data integrity', () => {
     }
   });
 
+  it('evidence: ids unique, expected verdicts valid, summary sums to the claim set', () => {
+    const claims = (evidenceData as { claims: { id: string; claim: string; expected: string }[] }).claims;
+    const summary = (evidenceData as { summary: { supported: number; refused: number; total: number } }).summary;
+    const ids = new Set(claims.map((c) => c.id));
+    expect(ids.size).toBe(claims.length);
+    for (const c of claims) {
+      expect(c.id).toMatch(/^ev-\d+$/);
+      expect(c.claim.length).toBeGreaterThan(10);
+      expect(['supported', 'refused']).toContain(c.expected);
+    }
+    const supported = claims.filter((c) => c.expected === 'supported').length;
+    const refused = claims.filter((c) => c.expected === 'refused').length;
+    expect(supported).toBe(summary.supported);
+    expect(refused).toBe(summary.refused);
+    expect(claims.length).toBe(summary.total);
+  });
+
   it('LabPage renders server-side with all sections + project filter', () => {
     const html = renderToStaticMarkup(createElement(LabPage));
     // Hero + numbered sections (decision logs, commit log, experiments, negative results, diary, known issues, tests, dependencies)
@@ -194,12 +212,14 @@ describe('lab data integrity', () => {
     const exps = (experimentsData as { experiments: Experiment[] }).experiments;
     const entries = (diaryData as { entries: DiaryEntry[] }).entries;
     const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
+    const claims = (evidenceData as { claims: { claim: string }[] }).claims;
     // Cyrillic is not allowed in lab projections (would leak Russian into the EN site)
     const cyrillic = /[а-яА-ЯёЁ]/;
     const texts = [
       ...exps.map((e) => e.title + e.hypothesis + e.result + e.finding),
       ...entries.map((d) => d.title + d.rootCause + d.fix + d.guard),
       ...issues.map((i) => i.problem),
+      ...claims.map((c) => c.claim),
     ];
     for (const t of texts) expect(t.match(cyrillic)).toBeNull();
   });
