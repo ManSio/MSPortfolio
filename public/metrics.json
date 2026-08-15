@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T13:35:30.074Z",
+  "fetchedAt": "2026-08-15T13:43:22.889Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T13:35:10Z",
+      "pushedAt": "2026-08-15T13:35:36Z",
       "language": "TypeScript"
     },
     {
@@ -184,13 +184,6 @@
       "sha": "fdb2877240",
       "date": "2026-08-15T13:35:08Z",
       "message": "feat: verify_repo — live GitHub verification tool (14th) with portfolio cross-check",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "80c19599e0",
-      "date": "2026-08-15T13:28:19Z",
-      "message": "fix(verify_claim): explain the too-short note — show found significant words",
       "author": "ManSio"
     },
     {
