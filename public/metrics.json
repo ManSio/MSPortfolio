@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T09:39:48.284Z",
+  "fetchedAt": "2026-08-15T10:03:00.862Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T08:44:31Z",
+      "pushedAt": "2026-08-15T10:02:44Z",
       "language": "TypeScript"
     },
     {
@@ -181,9 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "0f9154a4ef",
-      "date": "2026-08-15T08:32:26Z",
-      "message": "feat(lab): exp-1L V4 arm file_content_first — anchor bias resolved (recall 0.08->0.88 at FA 0.02-0.04)",
+      "sha": "b8cd756f5b",
+      "date": "2026-08-15T10:02:10Z",
+      "message": "docs: research reports (MCP ecosystem + benchmarks round 2), consensus §7, diary, known issues, devto sync",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "2c5c7524e2",
+      "date": "2026-08-15T10:02:04Z",
+      "message": "feat(portfolio): D1 distribution + D2 zero-friction surface + D3 evidence score",
       "author": "ManSio"
     },
     {
