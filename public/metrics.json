@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-08-15T11:33:50.770Z",
+  "fetchedAt": "2026-08-15T12:58:38.174Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 7,
-    "followers": 54,
+    "followers": 55,
     "following": 65
   },
   "repos": [
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:39:04Z",
+      "pushedAt": "2026-08-15T11:33:56Z",
       "language": "TypeScript"
     },
     {
@@ -179,13 +179,6 @@
     }
   ],
   "commits": [
-    {
-      "repo": "MSPortfolio",
-      "sha": "2754c4ef07",
-      "date": "2026-08-15T10:31:48Z",
-      "message": "feat(lab): evidence ledger 10 -> 29 claims (22 supported / 7 refused), all verdicts measured via verify_claim",
-      "author": "ManSio"
-    },
     {
       "repo": "awesome-mcp-servers",
       "sha": "cbcdf8f770",
