@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T10:10:39.863Z",
+  "fetchedAt": "2026-08-15T10:12:31.649Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:10:18Z",
+      "pushedAt": "2026-08-15T10:12:14Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "fd9db53513",
-      "date": "2026-08-15T10:10:14Z",
-      "message": "ci(registry): diagnostic — capture publish output into check-run annotation",
+      "sha": "21680d89f6",
+      "date": "2026-08-15T10:12:10Z",
+      "message": "ci(registry): raw curl publish with full server response in annotation",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "a792ea2da6",
-      "date": "2026-08-15T10:05:00Z",
-      "message": "fix(registry): server.json description <= 100 chars — registry validation 422 (v1.0.0 failed, v1.0.1 valid)",
+      "sha": "fd9db53513",
+      "date": "2026-08-15T10:10:14Z",
+      "message": "ci(registry): diagnostic — capture publish output into check-run annotation",
       "author": "ManSio"
     },
     {
