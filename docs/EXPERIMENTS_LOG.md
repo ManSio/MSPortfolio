@@ -73,3 +73,16 @@
 | Передача сырой JSON Schema в `registerTool` (server v2) | Фабрика createMcpHandler падает на каждом запросе → HTTP 500 | 2026-08-14 | exp #1 |
 | CF Rate Limiting API binding (`[[ratelimits]]`) на бесплатном тарифе | Деплой принимает биндинг, но `limit()` возвращает `success: true` всегда → enforcement отсутствует (проверено limit=10, бург 15/30/320) | 2026-08-14 | exp #7 |
 | Запуск сервера как фоновый процесс в одной shell-сессии и обращение из другой | Windows убивает фоновые процессы по завершении shell (exit 7 / 000) | 2026-08-14 | интеграционные тесты |
+| LLM-рука verify_claim (v2) на бесплатном тарифе OpenRouter | recall 38-42% (цель ≥80%) + латентность 8-55s/вызов (цель p95<3s) + массовые upstream 429 на конкретных free-моделях; false-acceptance при этом 0% (защита работает) | 2026-08-15 | exp #11 (ниже) |
+
+## [2026-08-15] — Гипотеза: LLM-рука verify_claim (v2, KI-017) достигает DoD-гейтов на бесплатном тарифе OpenRouter (recall ≥80% на 8 true-парафразах, false-acceptance ≤1%, p95 < 3s)
+**Ожидание:** современная free-модель + few-shot промпт с t=0 и жёсткими правилами (supported требует цитаты записи) распознаёт перефразировки лучше, чем v1 (0/8), сохраняя нулевую ложную поддержку. 8/8 или хотя бы 7/8 recall.
+**Команда:** `node scripts/eval-llm-arm.ts` и с `--model google/gemma-4-31b-it:free`, `--model openai/gpt-oss-20b:free`, `--model nvidia/nemotron-3-ultra-550b-a55b:free` (ключ из .env).
+**Сырой результат (сводки прогонов):**
+- `openrouter/free`: recall 3/8 (38%), false-accept 0/3, p50=3132ms p95=64952ms, 1 unparseable.
+- `google/gemma-4-31b-it:free`: **все 11 вызовов — upstream 429** (fail-closed сработал, замер невозможен).
+- `openai/gpt-oss-20b:free`: recall 3/8 (38%), false-accept 0/3, p50=278ms p95=17989ms, 6/11 вызовов 429; успешные вызовы 8-18s.
+- `nvidia/nemotron-3-ultra-550b-a55b:free`: recall 3/7 (42% на дошедших), 2 unparseable, каждый вызов 20-55s (прогон оборван по таймауту 300s).
+- Примеры верных спасений: p-05 `principles.json#fail-closed`, p-04 `projects.json#gemma_agent`, p-02 `projects.json#mscodebase-intelligence` — рука находит правильный источник.
+**Вердикт:** ❌ опровергнута для free tier. DoD-гейты держат: recall 38-42% < 80%; p95 18-65s >> 3s (очереди free-провайдеров). false-acceptance 0/9 (3 конфига × 3 контроля) — precision-guard §5 доказан. Этап 2 (интеграция в тул) заблокирован по плану — не включаем то, что не проходит гейты.
+**Урок:** бесплатный тариф OpenRouter структурно непригоден для синхронной проверки (очереди, 429, нестабильный JSON). Путь вперёд — платная модель (оценка ~$0.01-0.10 на 11 запросов) или остаться на детерминированном v1 (arm — офлайн-инструмент).

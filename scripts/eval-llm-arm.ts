@@ -14,6 +14,21 @@ import { getTool } from '../src/lib/mcp-tools.ts';
 import { verifyClaimLlmArm } from '../src/lib/llm-verify.ts';
 import { FALSE_PARAPHRASES, TRUE_PARAPHRASES } from '../src/data/paraphrase-eval.ts';
 import type { VerifyClaimResult } from '../src/lib/types.ts';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Load project-local .env (git-ignored, see .gitignore) without a dependency.
+// Values are set silently — never printed.
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+try {
+  for (const line of readFileSync(join(ROOT, '.env'), 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/i);
+    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2];
+  }
+} catch {
+  // No .env — rely on real environment variables.
+}
 
 const apiKey = process.env.OPENROUTER_API_KEY ?? '';
 const model = process.argv.includes('--model') ? process.argv[process.argv.indexOf('--model') + 1] : undefined;
@@ -45,7 +60,7 @@ async function runSet(cases: Array<{ id: string; paraphrase: string }>): Promise
   const rows: Row[] = [];
   for (const c of cases) {
     const v1 = await verifyV1(c.paraphrase);
-    const llm = await verifyClaimLlmArm(c.paraphrase, { apiKey, model });
+    const llm = await verifyClaimLlmArm(c.paraphrase, { apiKey, model, timeoutMs: 15_000 });
     rows.push({
       id: c.id,
       paraphrase: c.paraphrase,

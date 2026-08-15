@@ -1,13 +1,15 @@
 # v2 — LLM-рука для `verify_claim` (recall-проверка перефразировок)
 
-**Статус:** 🟡 этап 0 и этап 1 (машинерия) реализованы; живые числа ждут ключа OpenRouter · **Связь:** KI-017, research-mcp-portfolio-benchmarks §7 (консенсус), tests/evidence-eval.test.ts
+**Статус:** 🔴 этап 1 измерен — DoD не достигнут на бесплатном тарифе; этап 2 заблокирован по гейтам плана · **Связь:** KI-017, EXPERIMENTS_LOG#exp-11
 
 > **Прогресс 2026-08-15:** этап 0 (парафраз-набор, baseline 0/8) — ✅ в `tests/evidence-eval.test.ts`
-> и `src/data/paraphrase-eval.ts` (общий с eval-скриптом). Этап 1 — ✅ код `verifyClaimLlmArm()`
-> в `src/lib/llm-verify.ts` + `scripts/eval-llm-arm.ts` + 8 fail-closed тестов с мок-моделью
-> (`tests/llm-verify.test.ts`). Осталось: прогнать eval с реальным ключом
-> (`OPENROUTER_API_KEY=<key> node scripts/eval-llm-arm.ts`) и, если recall ≥80% и
-> false-acceptance ≤1% — перейти к этапу 2 (интеграция в тул с флагом `arm`).
+> и `src/data/paraphrase-eval.ts`. Этап 1 — ✅ код `verifyClaimLlmArm()` + `scripts/eval-llm-arm.ts`
+> + 8 fail-closed тестов (`tests/llm-verify.test.ts`). **Замер с реальным ключом (exp-11):**
+> 4 конфига free-моделей (router/gemma/gpt-oss/nemotron): recall 38-42% (цель ≥80%),
+> p95 18-65s (цель <3s), массовые upstream 429; **false-acceptance 0/9 — precision-guard §5 доказан.**
+> **Вердикт:** free tier не проходит гейты → этап 2 (интеграция в тул) заблокирован.
+> Остаточные пути: (а) платная модель (оценка дешёвая, ~$0.01-0.10 на прогон) — решение владельца;
+> (б) остаться на v1, arm — офлайн-инструмент.
 
 ---
 

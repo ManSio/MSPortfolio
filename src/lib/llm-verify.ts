@@ -43,7 +43,21 @@ Rules:
 - "supported" ONLY if the claim is fully entailed by a SINGLE record (the fact can be read directly in that record's text).
 - Partial overlap, inference, or anything not explicitly in the record text → "refused".
 - Never assume, extrapolate, or use outside knowledge. When in doubt → "refused".
-- For "supported" you MUST set "source" to exactly one of the provided record sources; otherwise the answer is rejected.`;
+- For "supported" you MUST set "source" to exactly one of the provided record sources; otherwise the answer is rejected.
+
+Example:
+Claim: "built a search engine"
+Records:
+1. [projects.json#mscodebase] (project) Async MCP server with hybrid vector + BM25 search for code.
+2. [principles.json#measure] (principle) Performance claims come from benchmarks with a command line.
+Answer: {"verdict":"refused","source":null,"reason":"No record says he built a search engine — only a code search server."}
+
+Example:
+Claim: "combines vector search with keyword ranking"
+Records:
+1. [projects.json#mscodebase] (project) Async MCP server with hybrid vector + BM25 search for code.
+2. [principles.json#measure] (principle) Performance claims come from benchmarks with a command line.
+Answer: {"verdict":"supported","source":"projects.json#mscodebase","reason":"The record describes hybrid vector + BM25 search."}`;
 
 function buildUserPrompt(claim: string, candidates: Array<{ source: string; kind: string; text: string }>): string {
   const records = candidates.map((c, i) => `${i + 1}. [${c.source}] (${c.kind}) ${c.text}`).join('\n');
@@ -70,6 +84,19 @@ function parseVerdict(
   }
 }
 
+/** Race a promise against a hard timeout; the timer is always cleared (no unhandled rejection). */
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(Object.assign(new Error('timed out'), { name: 'AbortError' })), ms);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function verifyClaimLlmArm(claim: string, config: LlmArmConfig): Promise<LlmArmResult> {
   const started = Date.now();
   const latencyMs = () => Date.now() - started;
@@ -84,30 +111,31 @@ export async function verifyClaimLlmArm(claim: string, config: LlmArmConfig): Pr
   const timeoutMs = config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
     let res: Response;
     try {
-      res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${config.apiKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://mansio.github.io/MSPortfolio/',
-          'X-Title': 'MSPortfolio verify_claim LLM arm',
-        },
-        body: JSON.stringify({
-          model: config.model ?? DEFAULT_MODEL,
-          temperature: 0,
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: buildUserPrompt(claim, candidates) },
-          ],
+      res = await withTimeout(
+        fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${config.apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://mansio.github.io/MSPortfolio/',
+            'X-Title': 'MSPortfolio verify_claim LLM arm',
+          },
+          body: JSON.stringify({
+            model: config.model ?? DEFAULT_MODEL,
+            temperature: 0,
+            messages: [
+              { role: 'system', content: SYSTEM_PROMPT },
+              { role: 'user', content: buildUserPrompt(claim, candidates) },
+            ],
+          }),
         }),
-        signal: controller.signal,
-      });
-    } finally {
-      clearTimeout(timer);
+        timeoutMs,
+      );
+    } catch (err) {
+      const isTimeout = err instanceof Error && err.name === 'AbortError';
+      throw new Error(isTimeout ? `Timeout after ${timeoutMs}ms` : err instanceof Error ? err.message : String(err));
     }
 
     if (!res.ok) {
