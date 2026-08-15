@@ -31,10 +31,14 @@ jobs:
           VERSION=${GITHUB_REF#refs/tags/v}
           jq --arg v "$VERSION" '.version = $v' server.json > server.tmp && mv server.tmp server.json
 
-      - name: Publish server to MCP Registry
+      - name: Publish server to MCP Registry (raw HTTP)
         run: |
-          set +e
-          output=$(./mcp-publisher publish 2>&1)
-          code=$?
-          echo "::error::publish exited $code: $(printf '%s' "$output" | tail -c 1500)"
-          exit $code
+          token=$(jq -r .token ~/.config/mcp-publisher/token.json)
+          out=$(curl -sS -w '\nHTTP:%{http_code}' -X POST \
+            -H "Authorization: Bearer $token" \
+            -H 'Content-Type: application/json' \
+            --data-binary @server.json \
+            https://registry.modelcontextprotocol.io/v0/publish 2>&1)
+          http_code=$(printf '%s' "$out" | grep -o 'HTTP:[0-9]*' | tail -1)
+          echo "::error::publish http=$http_code body=$(printf '%s' "$out" | sed 's/HTTP:[0-9]*$//' | tail -c 2500)"
+          if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then exit 1; fi
