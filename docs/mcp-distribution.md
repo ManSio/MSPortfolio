@@ -9,7 +9,7 @@
 
 | Каталог | Механизм | Статус |
 |---------|----------|--------|
-| Официальный MCP Registry | `server.json` + `.github/workflows/publish-mcp.yml` (OIDC) | ✅ готово — публикация по тегу `v*` |
+| Официальный MCP Registry | `server.json` + `.github/workflows/publish-mcp.yml` (OIDC) | ✅ **ОПУБЛИКОВАН v1.0.4** — io.github.ManSio/msp-portfolio, active |
 | Smithery | `smithery.yaml` в корне репо, автокравл | ✅ готово — пассивно подхватится |
 | Glama | автокравл awesome-mcp-servers | ⏳ после PR (см. ниже) |
 | punkpeye/awesome-mcp-servers | PR в README | ⏳ ручной шаг (entry ниже) |
