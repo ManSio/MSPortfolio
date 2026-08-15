@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T10:32:09.949Z",
+  "fetchedAt": "2026-08-15T10:38:57.768Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:31:50Z",
+      "pushedAt": "2026-08-15T10:32:17Z",
       "language": "TypeScript"
     },
     {
@@ -184,13 +184,6 @@
       "sha": "2754c4ef07",
       "date": "2026-08-15T10:31:48Z",
       "message": "feat(lab): evidence ledger 10 -> 29 claims (22 supported / 7 refused), all verdicts measured via verify_claim",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "615755e503",
-      "date": "2026-08-15T10:27:26Z",
-      "message": "feat(lab): Evidence Score panel — canonical claims ledger (5/5 supported, 5 refused) + guard tests 65/65",
       "author": "ManSio"
     },
     {
