@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T20:38:08.166Z",
+  "fetchedAt": "2026-08-15T21:34:36.410Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-15T19:33:58Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T08:19:50Z",
+      "pushedAt": "2026-08-15T20:46:12Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-15T20:38:14Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "f7373512bf",
+      "date": "2026-08-15T20:43:48Z",
+      "message": "chore(zed-audit): adapt to Zed 1.14-1.16 updates — MCP schema guard, price drift fix, sandbox note",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "ff104ed26c",
+      "date": "2026-08-15T08:14:53Z",
+      "message": "feat(exp-1L): V4 arm file_content_first — real file fragment closes 'anchor bias' bite #2",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "29e1365ec5",
+      "date": "2026-08-15T07:27:05Z",
+      "message": "refactor(experiments): per-experiment folders with READMEs + index",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "awesome-mcp-servers",
       "sha": "cbcdf8f770",
       "date": "2026-08-03T03:09:55Z",
@@ -217,27 +238,6 @@
       "date": "2026-07-29T10:26:20Z",
       "message": "Merge pull request #10893 from marccrutzen269-lab/add-departi-v2",
       "author": "Frank Fiegel"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "ff104ed26c",
-      "date": "2026-08-15T08:14:53Z",
-      "message": "feat(exp-1L): V4 arm file_content_first — real file fragment closes 'anchor bias' bite #2",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "29e1365ec5",
-      "date": "2026-08-15T07:27:05Z",
-      "message": "refactor(experiments): per-experiment folders with READMEs + index",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "26241b3663",
-      "date": "2026-08-15T07:25:03Z",
-      "message": "feat(exp-1L): per-category metrics + CoT vs zero-shot + server-side audit (V3/Part 5)",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio.github.io",
