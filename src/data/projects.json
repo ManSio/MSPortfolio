@@ -4,7 +4,11 @@
     "name": "Mikhail",
     "role": "AI / Backend Engineer",
     "location": "Remote-friendly",
-    "summary": "Builds MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence (LanceDB/BM25 hybrid search) in Zed."
+    "summary": "Builds MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence (LanceDB/BM25 hybrid search) in Zed.",
+    "contact": {
+      "linkedin": "https://www.linkedin.com/in/ManSio",
+      "github": "https://github.com/ManSio"
+    }
   },
   "projects": [
     {

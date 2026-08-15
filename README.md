@@ -84,6 +84,13 @@ records behind it — or an honest refusal when the data does not support it.
 Every chat answer ends with an `evidence:` line (tool calls · grounded · failed)
 so a visitor can see what the answer was based on.
 
+The section also ships a **connect-in-30-seconds** onboarding block: one
+copy-paste `claude mcp add` command, the MCP Inspector entry point
+(`npx @modelcontextprotocol/inspector`), and three pre-built questions grounded
+in real tools (`analyze_stack`, `verify_claim`, `get_known_issues`). And
+`get_profile` returns a `nextSteps` list (LinkedIn, GitHub, MCP connect) — so an
+agent that just learned about the owner knows how to continue the interview.
+
 ## Repository layout
 
 ```

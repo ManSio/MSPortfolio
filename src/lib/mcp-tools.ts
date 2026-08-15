@@ -12,7 +12,10 @@ import antipatternsData from '../data/antipatterns.json' with { type: 'json' };
 import experimentsData from '../data/lab/experiments.json' with { type: 'json' };
 import diaryData from '../data/lab/diary.json' with { type: 'json' };
 import knownIssuesData from '../data/lab/known-issues.json' with { type: 'json' };
-import type { Antipattern, DiaryEntry, ExperimentsData, KnownIssue, MCPTool, MetricsSnapshot, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis, VerifyClaimResult } from './types.js';
+import type { Antipattern, DiaryEntry, ExperimentsData, GetProfileResult, KnownIssue, MCPTool, MetricsSnapshot, NextStep, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis, VerifyClaimResult } from './types.js';
+
+/** Public MCP endpoint — same origin the site and /resume.txt advertise (D8 nextSteps). */
+const MCP_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/mcp';
 
 const projects = (projectsData as ProjectsData).projects;
 const principles = (principlesData as { principles: Principle[] }).principles;
@@ -295,11 +298,31 @@ const EVIDENCE_CORPUS = buildEvidenceCorpus();
 export const TOOLS: MCPTool[] = [
   {
     name: 'get_profile',
-    description: "Get the owner's professional profile summary.",
+    description: "Get the owner's professional profile summary, plus nextSteps — concrete ways to continue (contact channels, GitHub, MCP connect). Use it as the first tool in an interview.",
     inputSchema: { type: 'object', properties: {} },
     annotations: { readOnlyHint: true, openWorldHint: false },
     async execute() {
-      return projectsData.profile;
+      const profile = (projectsData as ProjectsData).profile;
+      const nextSteps: NextStep[] = [];
+      if (profile.contact?.linkedin) {
+        nextSteps.push({ type: 'contact', label: 'LinkedIn', hint: 'Professional intros and messages.', url: profile.contact.linkedin });
+      }
+      if (profile.contact?.github) {
+        nextSteps.push({ type: 'view', label: 'GitHub', hint: 'Public code, including this portfolio\'s source.', url: profile.contact.github });
+      }
+      if (profile.contact?.email) {
+        nextSteps.push({ type: 'contact', label: 'Email', hint: 'Direct email.', url: `mailto:${profile.contact.email}` });
+      }
+      if (profile.contact?.telegram) {
+        nextSteps.push({ type: 'contact', label: 'Telegram', hint: 'Direct chat.', url: profile.contact.telegram });
+      }
+      nextSteps.push({
+        type: 'connect',
+        label: 'Query this portfolio over MCP',
+        hint: 'Keep the interview going — connect any MCP client to the live endpoint.',
+        command: `claude mcp add --transport http msp-portfolio ${MCP_ENDPOINT}`,
+      });
+      return { ...profile, nextSteps } satisfies GetProfileResult;
     },
   },
   {

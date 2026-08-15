@@ -3,6 +3,7 @@ import { Terminal } from './components/playground/Terminal';
 import { AgentChat } from './components/mcp/AgentChat';
 import { ClaimVerifier } from './components/mcp/ClaimVerifier';
 import { McpStatsCard } from './components/mcp/McpStatsCard';
+import { OnboardingBlock } from './components/mcp/OnboardingBlock';
 import { AntipatternsGrid } from './components/antipatterns/AntipatternsGrid';
 import { BlogSection } from './components/blog/BlogSection';
 import { GithubStats } from './components/metrics/GithubStats';
@@ -193,6 +194,7 @@ export default function App() {
               <ClaimVerifier />
             </div>
           </div>
+          <OnboardingBlock />
         </Section>
 
         {/* ── Timeline ───────────────────────────────────────── */}

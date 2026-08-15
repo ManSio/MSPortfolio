@@ -5,7 +5,28 @@ export interface Profile {
   role: string;
   location: string;
   summary: string;
+  /** Public contact channels (D8). Only channels present in data are advertised. */
+  contact?: ProfileContact;
 }
+
+/** Contact channels a recruiter/agent can use to reach the owner (D8 funnel). */
+export interface ProfileContact {
+  linkedin?: string;
+  github?: string;
+  email?: string;
+  telegram?: string;
+}
+
+/** One actionable next step returned by get_profile (D8). */
+export interface NextStep {
+  type: 'contact' | 'view' | 'connect';
+  label: string;
+  hint: string;
+  url?: string;
+  command?: string;
+}
+
+export type GetProfileResult = Profile & { nextSteps: NextStep[] };
 
 export interface DecisionLogEntry {
   decision: string;

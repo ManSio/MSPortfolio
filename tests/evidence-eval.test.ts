@@ -114,3 +114,63 @@ describe('computeEvidence — chat grounding summary (deterministic)', () => {
     expect(ev.failed).toBe(1);
   });
 });
+
+/**
+ * v2 stage 0 — paraphrase eval set (KI-017 recall gap).
+ *
+ * v1 matches ≥2 significant words in ONE record; a true claim phrased with
+ * synonyms/restructured words is refused even though the fact is in the corpus.
+ * These tests pin the CURRENT baseline (the gap the v2 LLM arm must close) and
+ * guard against regressions. See docs/verify-claim-v2-llm-arm.md §6.
+ *
+ * When the v2 LLM arm lands: flip `expected` for the true paraphrases to
+ * 'supported' and update the baseline count — that is the v2 Definition of Done.
+ */
+describe('verify_claim — v2 stage 0: paraphrase eval set (recall gap baseline)', () => {
+  // Every paraphrase is TRUE about the owner (ground truth = the canonical claim
+  // in evidence.json is supported), but uses vocabulary v1 cannot match.
+  // All phrasings below were empirically verified as refused by v1.
+  const TRUE_PARAPHRASES: Array<{ id: string; canonical: string; paraphrase: string }> = [
+    { id: 'p-01', canonical: 'LanceDB and BM25 hybrid search', paraphrase: 'joins two retrieval styles to score results' },
+    { id: 'p-02', canonical: 'LanceDB and BM25 hybrid search', paraphrase: 'mixes neural vectors with plain text matching' },
+    { id: 'p-03', canonical: 'Telegram assistant with memory and intent routing', paraphrase: 'a messenger helper that keeps history and picks a handler by topic' },
+    { id: 'p-04', canonical: 'Telegram assistant with memory and intent routing', paraphrase: 'a bot for close friends that remembers the chat and routes requests' },
+    { id: 'p-05', canonical: 'must refuse rather than guess when it cannot verify', paraphrase: 'prefers declining over guessing when verification fails' },
+    { id: 'p-06', canonical: 'derived state written through a single write path', paraphrase: 'every produced artifact is written by exactly one routine' },
+    { id: 'p-07', canonical: 'claimed a fork as my own work', paraphrase: 'a repository that was copied was once labelled as his own creation' },
+    { id: 'p-08', canonical: 'joined GitHub as ManSio', paraphrase: 'his public developer account dates to 2014' },
+  ];
+
+  // Paraphrased negative controls — must STAY refused even with better recall.
+  const FALSE_PARAPHRASES: Array<{ id: string; canonical: string; paraphrase: string }> = [
+    { id: 'n-01', canonical: 'worked at Google', paraphrase: 'spent several years at the large internet company' },
+    { id: 'n-02', canonical: 'led a team of engineers at Meta', paraphrase: 'oversaw a big group of programmers at the social platform' },
+    { id: 'n-03', canonical: 'built a mobile app for iOS', paraphrase: 'delivered an app for Apple handheld devices' },
+  ];
+
+  it('true paraphrases are currently refused — this is the v1 recall gap (baseline)', async () => {
+    for (const p of TRUE_PARAPHRASES) {
+      const res = await verify(p.paraphrase);
+      // Baseline: v1 misses every paraphrase. Flip to `true` when the v2 LLM arm lands.
+      expect(res.supported, `${p.id} became supported unexpectedly`).toBe(false);
+    }
+    console.log(`[v2-stage-0] paraphrase recall baseline: 0/${TRUE_PARAPHRASES.length} rescued by v1`);
+  });
+
+  it('paraphrased negative controls stay refused (no false-acceptance from recall work)', async () => {
+    for (const p of FALSE_PARAPHRASES) {
+      const res = await verify(p.paraphrase);
+      expect(res.supported, `${p.id} must stay refused`).toBe(false);
+      expect(res.evidenceCount).toBe(0);
+    }
+  });
+
+  it('documents a v1 false-acceptance on generic words — substring collision (v2 must fix)', async () => {
+    // "search" + "engine" both occur inside unrelated records (e.g. "engineering"),
+    // so this FALSE claim currently gets supported. Pin the current behavior as a
+    // baseline; the v2 Definition of Done flips it to refused.
+    const res = await verify('spent several years at the big search engine company');
+    expect(res.supported).toBe(true);
+    expect(res.evidenceCount).toBeGreaterThan(0);
+  });
+});

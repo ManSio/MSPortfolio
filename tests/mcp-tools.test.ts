@@ -29,6 +29,21 @@ describe('MCP tools', () => {
     );
   });
 
+  it('get_profile returns nextSteps with verified contact channels and MCP connect (D8)', async () => {
+    const res = (await call('get_profile', {})) as {
+      name: string;
+      nextSteps: Array<{ type: string; label: string; url?: string; command?: string }>;
+    };
+    expect(res.name).toBe('Mikhail');
+    const contact = res.nextSteps.filter((s) => s.type === 'contact');
+    const linkedin = contact.find((s) => s.label === 'LinkedIn');
+    expect(linkedin?.url).toBe('https://www.linkedin.com/in/ManSio');
+    const github = res.nextSteps.find((s) => s.label === 'GitHub');
+    expect(github?.type).toBe('view');
+    const connect = res.nextSteps.find((s) => s.type === 'connect');
+    expect(connect?.command).toContain('/mcp');
+  });
+
   it('get_projects filters by stack tag and returns decision logs', async () => {
     const all = (await call('get_projects', {})) as { count: number; projects: Array<{ id: string }> };
     expect(all.count).toBeGreaterThanOrEqual(3);

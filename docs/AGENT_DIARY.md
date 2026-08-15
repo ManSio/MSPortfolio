@@ -2,6 +2,20 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 18:50] — v2 этап 0: парафраз-набор (baseline recall) + синхронизация llms-full.txt / test-suites.json
+**Status:** ✅ Fixed (тесты 69/69, typecheck, lint; прод не деплоен)
+**Root Cause:** — (владелец: «да» на следующий шаг — синхронизировать устаревшие статы и начать v2 по плану)
+**Fix:** (1) **v2 этап 0** (docs/verify-claim-v2-llm-arm.md §6): парафраз-набор в tests/evidence-eval.test.ts — 8 true-парафраз (все эмпирически проверены: refused у v1, baseline 0/8, лог [v2-stage-0]) + 3 парафраза негативных контролей (refused) + задокументированный false-acceptance v1: «search»+«engine» substring-collision («engineering») даёт ложное supported — тест пинит поведение, v2 DoD перевернёт его в refused. (2) Синхронизация: public/llms-full.txt — статы лаборатории по данным (12 experiments 8c/3p/1r + 6 negative; 20 diary; 12 KI-101..112; 5 suites/69 tests; было устаревшее 10/23/15/47); src/data/lab/test-suites.json — mcp-tools 18, evidence-eval 13, total 69.
+**Guard:** парафраз-набор — «живой baseline»: тесты падают при изменении поведения v1 (намеренно, переворачиваются при v2); test-suites.json — счётчики сверяются с vitest-прогоном при изменении тестов.
+**Pattern:** NEW
+
+## [2026-08-15 18:20] — P3 закрыты: D7 (onboarding-блок) + D8 (contact CTA в get_profile) + план v2 (LLM-рука verify_claim)
+**Status:** ✅ Fixed (код + тесты 66/66, typecheck, build; прод не деплоен)
+**Root Cause:** — (владелец: «2 3» — реализовать D7/D8 из бэклога и подготовить план v2)
+**Fix:** (1) **D8** — `get_profile` возвращает `nextSteps` (LinkedIn/GitHub из `profile.contact` в projects.json — только верифицированные каналы, email/telegram оставлены как опциональные поля) + connect-команду MCP. **Без новых тулов** — лимит 13 enforced тестами (worker.test.ts:41, evidence-eval.test.ts:26). (2) **D7** — `OnboardingBlock.tsx` в Agent-секции: команда с copy-кнопкой, MCP Inspector (`npx @modelcontextprotocol/inspector` — существование верифицировано в npm registry, v2.2.0), 3 примера вопросов с тегами тулов (analyze_stack/verify_claim/get_known_issues). (3) **v2** — `docs/verify-claim-v2-llm-arm.md`: план LLM-руки (второе мнение на детерминированных промахах, precision-флоор, eval-набор с парафразами, guard'ы, DoD). README — абзац про onboarding/nextSteps.
+**Guard:** nextSteps строится только из data (SSOT, не хардкод каналов); тест D8 проверяет каналы и connect; v2 — fail-closed, LLM никогда не понижает детерминированный supported.
+**Pattern:** NEW
+
 ## [2026-08-15 17:30] — Evidence-реестр расширен до 29 claims (22 supported / 7 refused), тесты 65/65
 **Status:** ✅ Fixed (локально; GH Pages обновится по push)
 **Root Cause:** — (владелец: «да» на расширение реестра до ~20-30 утверждений по всем типам данных)
