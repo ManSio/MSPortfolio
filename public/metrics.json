@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T13:46:35.379Z",
+  "fetchedAt": "2026-08-15T13:58:43.062Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T13:46:07Z",
+      "pushedAt": "2026-08-15T13:58:18Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "a32449fb9d",
-      "date": "2026-08-15T13:46:05Z",
-      "message": "feat(bench): public reproducible benchmark (pnpm bench) + honest cleanup (recommendations 1+4)",
+      "sha": "f2200ecbb9",
+      "date": "2026-08-15T13:58:16Z",
+      "message": "feat(verify): external primary-source arms — verify_article (Dev.to), verify_package (npm), README in verify_repo (recommendation 2)",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "06c2fadeb8",
-      "date": "2026-08-15T13:40:56Z",
-      "message": "docs: honest audit of MSPortfolio vs live competitors + what impresses devs",
+      "sha": "a32449fb9d",
+      "date": "2026-08-15T13:46:05Z",
+      "message": "feat(bench): public reproducible benchmark (pnpm bench) + honest cleanup (recommendations 1+4)",
       "author": "ManSio"
     },
     {
