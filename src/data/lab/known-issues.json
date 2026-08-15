@@ -23,7 +23,7 @@
     {
       "id": "KI-103",
       "project": "mscodebase-intelligence",
-      "problem": "VOR is fail-closed: live-LLM verification (qwen3.6/3.7) accepts 2-5/25 true claims and actively rejects 7-9/25 (recall 0.08-0.20) - executing such verdicts would retract almost all live memory.",
+      "problem": "VOR fail-closed was anchor bias, not model paranoia: with token strings qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm, 2026-08-15) recall jumps to 0.88 at FA 0.02-0.04. Residual hole: every remaining false-accept is a present-trap (R45/R46) - a subject check is needed.",
       "status": "Open (policy choice)",
       "temperature": "watching",
       "deadline": null,

@@ -7,9 +7,9 @@
       "title": "Memory Contamination Live-Arm: live LLM false-acceptance across 14 models",
       "hypothesis": "Real LLM verdicts on the same 50 memory facts (25 true / 25 false, v4_rep dataset) differ from the deterministic proxy agent (exp-2); false-acceptance spans ~0 to ~0.3 across models and arms (memory_first vs code_first).",
       "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm both --models qwen3.7-flash,qwen3.6-flash,qwen3.5-flash,deepseek-v4-flash,glm-4.7-flash,nemotron-3.5-lightning,nemotron-3-nano-30b,claude-sonnet-5,glm-5.2,deepseek-v4-pro --prompt-version v2 --no-reasoning --tag v2_en",
-      "result": "~3300 calls, ~$0.14. FA code_first: qwen3.6/3.7 0.00 (confirmed over 4 runs, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max incompatible with the 100-token budget (mandatory reasoning). Server-side audit: 4087 calls across >=8 upstreams (Alibaba/DeepInfra/DigitalOcean/...).",
+      "result": "~3300 calls, ~$0.14 in the base sweep. FA code_first: qwen3.6/3.7 0.00 (confirmed over 4 runs, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max incompatible with the 100-token budget (mandatory reasoning). V4 arm (file_content_first, 2026-08-15): with a real file fragment qwen3.6/3.7 recall(real) 0.08/0.20 -> 0.88/0.88 (22/25 each) at FA 0.04/0.02 - every remaining false-accept is present-trap (R45/R46), absent/silent 0/16 and 0/3. Server-side audit: 4087 calls across >=8 upstreams. Total ~7900 calls, ~$0.94.",
       "verdict": "confirmed",
-      "finding": "FA=0.00 for qwen3.6/3.7 is fail-closed, not filtering: code_first recall(real)=0.08-0.20 (2-5/25 true accepted, 7-9/25 actively rejected). CoT does not pay off for cheap VOR (x30-65 cost, glm loses 16-26% to EMPTY_CONTENT); qwen3.8-max (CoT) is the middle option (recall 0.36, FA 0.04).",
+      "finding": "The fail-closed look was anchor bias, not model paranoia: with token-string evidence qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm) recall jumps to 0.88 at FA 0.02-0.04 - and every remaining false-accept is a present-trap (token present, wrong subject). CoT does not pay off; qwen3.8-max (CoT) stays the middle option for the token-string regime.",
       "chart": [
         {
           "type": "bar",
@@ -29,7 +29,7 @@
         },
         {
           "type": "bar",
-          "title": "code_first recall on TRUE facts (25) - the fail-closed cost, %",
+          "title": "code_first recall on TRUE facts (25) - token-string evidence, %",
           "data": [
             { "label": "deepseek-v4-flash", "value": 4, "sub": "FA 0.00", "color": "#f59e0b" },
             { "label": "qwen3.6-flash", "value": 8, "sub": "FA 0.00", "color": "#f59e0b" },
@@ -40,9 +40,19 @@
             { "label": "nemotron-3-nano-30b", "value": 80, "sub": "FA 0.38", "color": "#ef4444" },
             { "label": "glm-4.7-flash", "value": 88, "sub": "FA 0.24", "color": "#ef4444" }
           ]
+        },
+        {
+          "type": "bar",
+          "title": "The same model, different evidence - recall on TRUE facts, %",
+          "data": [
+            { "label": "qwen3.6 · token string", "value": 8, "sub": "code_first arm", "color": "#f59e0b" },
+            { "label": "qwen3.6 · file fragment", "value": 88, "sub": "V4 arm · FA 0.04 (present-trap)", "color": "#10b981" },
+            { "label": "qwen3.7 · token string", "value": 20, "sub": "code_first arm", "color": "#f59e0b" },
+            { "label": "qwen3.7 · file fragment", "value": 88, "sub": "V4 arm · FA 0.02 (present-trap)", "color": "#10b981" }
+          ]
         }
       ],
-      "conclusion": "For cheap fail-closed VOR pick qwen3.6/3.7 (FA 0.00, ~$0.003 per 100 calls) but expect almost all live memory to be rejected; pick qwen3.8-max (CoT) when preserving true memory matters more than price.",
+      "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). The only remaining hole is present-trap - verify the claim's subject, not just token presence.",
       "links": ["exp-2", "exp-3"]
     },
     {

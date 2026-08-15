@@ -189,6 +189,16 @@
       "fix": "Documented as an upstream defect; glm CoT numbers are qualitative only; the harness retries and counts errors honestly.",
       "guard": "run report flags n(err) per model.",
       "pattern": "P-002-variant"
+    },
+    {
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "VOR showed token strings instead of file fragments -> recall 0.08 (anchor bias)",
+      "status": "fixed",
+      "rootCause": "The VOR layer presented bare pattern tokens ('typesense') as evidence; a model honestly answers false/unknown because a token string proves nothing (diagnosed by the V4 arm file_content_first).",
+      "fix": "VOR must show the real file fragment around the anchor (+/-12-line window): recall(real) qwen3.6 0.08 -> 0.88, qwen3.7 0.20 -> 0.88 at FA 0.02-0.04, all remaining FA being present-trap (R45/R46).",
+      "guard": "exp-1L V4 arm + per-category metrics; residual hole: present-trap subject check.",
+      "pattern": "P-001"
     }
   ]
 }
