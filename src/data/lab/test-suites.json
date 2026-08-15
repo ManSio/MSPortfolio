@@ -38,11 +38,11 @@
     {
      "file": "tests/llm-verify.test.ts",
      "name": "v2 LLM arm decision logic (mocked provider)",
-     "tests": 8,
-     "covers": "verifyClaimLlmArm fail-closed guards (v2 plan §5): supported with valid cited record, refused passthrough, garbage response, supported without source, supported with source outside candidates, HTTP error, abort/timeout, no candidates without network call",
+     "tests": 9,
+     "covers": "verifyClaimLlmArm fail-closed guards (v2 plan §5): supported with valid cited record, refused passthrough, garbage response, supported without source, supported with source outside candidates, HTTP error, abort/timeout, too-short claim without network call, zero-overlap paraphrase reaches the LLM via padded core context (p-01 fix)",
      "updatedAt": "2026-08-15"
     }
    ],
-   "total": 77,
+   "total": 78,
   "updatedAt": "2026-08-15"
 }

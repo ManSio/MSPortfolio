@@ -8,7 +8,7 @@
 // Этап 1: this module powers the offline eval (scripts/eval-llm-arm.ts) and is
 // NOT yet wired into the MCP tool — integration (этап 2) waits for eval numbers.
 
-import { evidenceCandidates } from './mcp-tools.ts';
+import { claimTokens, evidenceContext } from './mcp-tools.ts';
 
 export interface LlmArmConfig {
   apiKey: string;
@@ -34,14 +34,14 @@ export interface LlmArmResult {
 const DEFAULT_MODEL = 'openrouter/free';
 const DEFAULT_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 const DEFAULT_TIMEOUT_MS = 8000;
-const DEFAULT_MAX_CANDIDATES = 5;
+const DEFAULT_MAX_CANDIDATES = 8;
 
 const SYSTEM_PROMPT = `You verify a factual claim about a person against EXACTLY the provided data records.
 
 Rules:
 - Reply with ONLY a JSON object: {"verdict":"supported"|"refused","source":"<record source> or null","reason":"<one short sentence>"}
-- "supported" ONLY if the claim is fully entailed by a SINGLE record (the fact can be read directly in that record's text).
-- Partial overlap, inference, or anything not explicitly in the record text → "refused".
+- "supported" ONLY if the claim is entailed by a SINGLE record: the record's text expresses the same fact, including close paraphrases (synonyms, reordered or reworded phrases).
+- Refuse when the claim adds facts not present in the record, contradicts it, or only partially overlaps — the FULL claim must be supported by one record.
 - Never assume, extrapolate, or use outside knowledge. When in doubt → "refused".
 - For "supported" you MUST set "source" to exactly one of the provided record sources; otherwise the answer is rejected.
 
@@ -50,14 +50,14 @@ Claim: "built a search engine"
 Records:
 1. [projects.json#mscodebase] (project) Async MCP server with hybrid vector + BM25 search for code.
 2. [principles.json#measure] (principle) Performance claims come from benchmarks with a command line.
-Answer: {"verdict":"refused","source":null,"reason":"No record says he built a search engine — only a code search server."}
+Answer: {"verdict":"refused","source":null,"reason":"No record says he built a general search engine — only a code search server."}
 
 Example:
 Claim: "combines vector search with keyword ranking"
 Records:
 1. [projects.json#mscodebase] (project) Async MCP server with hybrid vector + BM25 search for code.
 2. [principles.json#measure] (principle) Performance claims come from benchmarks with a command line.
-Answer: {"verdict":"supported","source":"projects.json#mscodebase","reason":"The record describes hybrid vector + BM25 search."}`;
+Answer: {"verdict":"supported","source":"projects.json#mscodebase","reason":"The record describes hybrid vector + BM25 search — a close paraphrase of the claim."}`;
 
 function buildUserPrompt(claim: string, candidates: Array<{ source: string; kind: string; text: string }>): string {
   const records = candidates.map((c, i) => `${i + 1}. [${c.source}] (${c.kind}) ${c.text}`).join('\n');
@@ -101,11 +101,14 @@ export async function verifyClaimLlmArm(claim: string, config: LlmArmConfig): Pr
   const started = Date.now();
   const latencyMs = () => Date.now() - started;
 
-  const candidates = evidenceCandidates(claim, config.maxCandidates ?? DEFAULT_MAX_CANDIDATES);
-  if (candidates.length === 0) {
-    // Nothing for the LLM to check against — fail-closed, no network call.
-    return { claim, verdict: 'refused', arm: 'llm', reason: 'No candidate records overlap the claim.', latencyMs: latencyMs() };
+  // Mirror v1's "too short to verify" rule: refuse without a network call.
+  if (claimTokens(claim).length < 2) {
+    return { claim, verdict: 'refused', arm: 'llm', reason: 'Claim too short — provide at least two significant words.', latencyMs: latencyMs() };
   }
+
+  // Token-overlap candidates padded with core identity records (profile + projects + principles),
+  // so a fully-rephrased claim still shows the LLM the records that may support it.
+  const candidates = evidenceContext(claim, config.maxCandidates ?? DEFAULT_MAX_CANDIDATES);
 
   const endpoint = config.endpoint ?? DEFAULT_ENDPOINT;
   const timeoutMs = config.timeoutMs ?? DEFAULT_TIMEOUT_MS;

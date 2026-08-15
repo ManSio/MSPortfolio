@@ -288,11 +288,6 @@ function buildEvidenceCorpus(): EvidenceCorpusRecord[] {
   return records;
 }
 
-function claimTokens(claim: string): string[] {
-  const words = claim.toLowerCase().match(/[a-zа-я0-9]+/g) ?? [];
-  return words.filter((w) => w.length >= 4 && !CLAIM_STOPWORDS.has(w));
-}
-
 const EVIDENCE_CORPUS = buildEvidenceCorpus();
 
 /**
@@ -312,7 +307,34 @@ export function evidenceCandidates(claim: string, limit = 5): Array<EvidenceCorp
     .slice(0, limit);
 }
 
+/**
+ * Context for the v2 LLM arm: core identity records (profile + all projects)
+ * are ALWAYS shown — a fully-rephrased claim may share no words with the record
+ * that supports it (p-01 in the paraphrase set) — plus token-overlap candidates
+ * of every kind (timeline/antipatterns/experiments/diary/known-issues), ranked
+ * by overlap. Cap = limit (default 8; per-call cost stays negligible).
+ */
+export function evidenceContext(claim: string, limit = 8): Array<EvidenceCorpusRecord & { matchedTokens: string[] }> {
+  const overlap = evidenceCandidates(claim, limit);
+  const base: Array<EvidenceCorpusRecord & { matchedTokens: string[] }> = [];
+  const seen = new Set<string>();
+  for (const r of EVIDENCE_CORPUS) {
+    if (base.length >= limit) break;
+    if (r.kind === 'profile' || r.kind === 'project') {
+      base.push({ ...r, matchedTokens: [] });
+      seen.add(r.source);
+    }
+  }
+  const extra = overlap.filter((r) => !seen.has(r.source));
+  return [...base, ...extra].slice(0, limit);
+}
+
 export type EvidenceCandidate = EvidenceCorpusRecord & { matchedTokens: string[] };
+
+export function claimTokens(claim: string): string[] {
+  const words = claim.toLowerCase().match(/[a-zа-я0-9]+/g) ?? [];
+  return words.filter((w) => w.length >= 4 && !CLAIM_STOPWORDS.has(w));
+}
 
 export const TOOLS: MCPTool[] = [
   {

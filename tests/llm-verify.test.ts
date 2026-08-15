@@ -42,7 +42,7 @@ describe('verifyClaimLlmArm — decision logic (mocked model)', () => {
 
   it('refused verdict is passed through honestly', async () => {
     stubFetchOk('{"verdict":"refused","source":null,"reason":"No record covers this."}');
-    const res = await verifyClaimLlmArm('worked at Google', CONFIG);
+    const res = await verifyClaimLlmArm('employed at the Google company', CONFIG);
     expect(res.verdict).toBe('refused');
     expect(res.reason).toContain('No record');
   });
@@ -90,12 +90,34 @@ describe('verifyClaimLlmArm — decision logic (mocked model)', () => {
     expect(res.error).toContain('Timeout');
   });
 
-  it('no overlapping candidates: refuses WITHOUT any network call', async () => {
+  it('too-short claim (no significant tokens): refuses WITHOUT any network call', async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
-    const res = await verifyClaimLlmArm('zzzqqq unknownword nowhere', CONFIG);
+    const res = await verifyClaimLlmArm('the and for when', CONFIG);
     expect(res.verdict).toBe('refused');
-    expect(res.reason).toContain('No candidate records');
+    expect(res.reason).toContain('too short');
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('zero-overlap paraphrase still reaches the LLM with padded core records (p-01 fix)', async () => {
+    // 'joins two retrieval styles to score results' shares no words with the
+    // mscodebase record, but evidenceContext pads in the core identity records,
+    // so the model can still find and cite the right source.
+    const fetchMock = vi.fn(async (_url: string, init: { body: string }) => {
+      const body = JSON.parse(init.body as string) as { messages: Array<{ role: string; content: string }> };
+      // The padded context must include the mscodebase project record.
+      expect(body.messages[1].content).toContain('mscodebase-intelligence');
+      return new Response(
+        JSON.stringify({
+          choices: [{ message: { content: '{"verdict":"supported","source":"projects.json#mscodebase-intelligence","reason":"Hybrid vector + BM25 search is two retrieval styles."}' } }],
+        }),
+        { status: 200 },
+      );
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const res = await verifyClaimLlmArm('joins two retrieval styles to score results', CONFIG);
+    expect(res.verdict).toBe('supported');
+    expect(res.source).toBe('projects.json#mscodebase-intelligence');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
