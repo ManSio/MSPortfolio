@@ -13,6 +13,7 @@ import experimentsData from '../data/lab/experiments.json' with { type: 'json' }
 import diaryData from '../data/lab/diary.json' with { type: 'json' };
 import knownIssuesData from '../data/lab/known-issues.json' with { type: 'json' };
 import type { Antipattern, DiaryEntry, ExperimentsData, GetProfileResult, KnownIssue, MCPTool, MetricsSnapshot, NextStep, Principle, ProjectsData, SimEvent, SimulationResult, StackAnalysis, VerifyClaimResult } from './types.js';
+import { getLlmArm } from './llm-arm-registry.ts';
 
 /** Public MCP endpoint — same origin the site and /resume.txt advertise (D8 nextSteps). */
 const MCP_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/mcp';
@@ -651,6 +652,7 @@ export const TOOLS: MCPTool[] = [
           supported: false,
           evidenceCount: 0,
           evidence: [],
+          arm: 'deterministic',
           note: 'Claim too short — provide at least two significant words (length >= 4).',
         } satisfies VerifyClaimResult;
       }
@@ -663,12 +665,52 @@ export const TOOLS: MCPTool[] = [
         .sort((a, b) => b.matchedTokens.length - a.matchedTokens.length)
         .slice(0, 5)
         .map((r) => ({ kind: r.kind, source: r.source, title: r.title, matchedTokens: r.matchedTokens }));
+      if (evidence.length > 0) {
+        return {
+          claim: claimText,
+          tokens,
+          supported: true,
+          evidenceCount: evidence.length,
+          evidence,
+          arm: 'deterministic',
+        } satisfies VerifyClaimResult;
+      }
+
+      // Deterministic miss → optional LLM arm (v2, KI-017; plan docs/verify-claim-v2-llm-arm.md).
+      // Fail-closed: if the arm is unavailable or refuses, the refusal stands.
+      // The worker arms this per request via setLlmArm (browser/tests: never).
+      const arm = getLlmArm();
+      if (arm) {
+        const llm = await arm(claimText);
+        if (llm.verdict === 'supported' && llm.source) {
+          return {
+            claim: claimText,
+            tokens,
+            supported: true,
+            evidenceCount: 1,
+            evidence: [{ kind: 'llm', source: llm.source, title: 'Verified via LLM paraphrase arm', matchedTokens: [] }],
+            arm: 'llm',
+            note: llm.reason,
+          } satisfies VerifyClaimResult;
+        }
+        return {
+          claim: claimText,
+          tokens,
+          supported: false,
+          evidenceCount: 0,
+          evidence: [],
+          arm: 'llm',
+          note: llm.error ? `LLM arm unavailable — fail-closed (${llm.error})` : llm.reason ?? undefined,
+        } satisfies VerifyClaimResult;
+      }
+
       return {
         claim: claimText,
         tokens,
-        supported: evidence.length > 0,
-        evidenceCount: evidence.length,
-        evidence,
+        supported: false,
+        evidenceCount: 0,
+        evidence: [],
+        arm: 'deterministic',
       } satisfies VerifyClaimResult;
     },
   },

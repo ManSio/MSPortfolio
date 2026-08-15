@@ -81,6 +81,10 @@ Without any key the chat falls back to the deterministic rule-based engine.
 On the **Agent** section, a **Verify a claim** widget runs the same `verify_claim`
 tool the MCP server exposes: paste any claim about the owner and see the source
 records behind it — or an honest refusal when the data does not support it.
+When the worker has an OpenRouter key, the tool also uses a **LLM paraphrase
+arm** (v2): a deterministic keyword miss may be rescued by an AI check that must
+cite the exact record behind the claim (badge `LLM arm`, source still shown) —
+and it still refuses rather than guess when no record supports the claim.
 Every chat answer ends with an `evidence:` line (tool calls · grounded · failed)
 so a visitor can see what the answer was based on.
 

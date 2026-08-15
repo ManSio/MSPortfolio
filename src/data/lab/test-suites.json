@@ -41,8 +41,15 @@
      "tests": 9,
      "covers": "verifyClaimLlmArm fail-closed guards (v2 plan §5): supported with valid cited record, refused passthrough, garbage response, supported without source, supported with source outside candidates, HTTP error, abort/timeout, too-short claim without network call, zero-overlap paraphrase reaches the LLM via padded core context (p-01 fix)",
      "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/llm-arm-integration.test.ts",
+     "name": "verify_claim + LLM arm integration (stage 2)",
+     "tests": 5,
+     "covers": "arm absent -> deterministic v1 (arm:deterministic), arm rescues miss with cited source (arm:llm), arm refusal keeps refusal, arm error fail-closed, deterministic hit never consults the arm",
+     "updatedAt": "2026-08-15"
     }
    ],
-   "total": 78,
+   "total": 83,
   "updatedAt": "2026-08-15"
 }

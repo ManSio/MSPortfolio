@@ -16,6 +16,7 @@ interface VerifyResult {
   evidenceCount: number;
   evidence: EvidenceRecord[];
   note?: string;
+  arm?: 'deterministic' | 'llm';
 }
 
 /**
@@ -88,6 +89,7 @@ export function ClaimVerifier() {
               <Badge tone="warn">not supported</Badge>
             )}
             {mode === 'live' ? <Badge tone="success">LIVE</Badge> : <Badge tone="warn">local</Badge>}
+            {result.arm === 'llm' && <Badge tone="primary">LLM arm</Badge>}
           </div>
           {result.note ? (
             <p className="text-faint">{result.note}</p>

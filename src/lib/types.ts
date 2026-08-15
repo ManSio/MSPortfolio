@@ -335,4 +335,6 @@ export interface VerifyClaimResult {
   evidenceCount: number;
   evidence: EvidenceRecord[];
   note?: string;
+  /** Which verification arm produced the verdict (v2, KI-017). */
+  arm?: 'deterministic' | 'llm';
 }

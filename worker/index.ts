@@ -19,6 +19,8 @@
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 import { getTool, TOOLS } from '../src/lib/mcp-tools.ts';
+import { setLlmArm } from '../src/lib/llm-arm-registry.ts';
+import { verifyClaimLlmArm } from '../src/lib/llm-verify.ts';
 
 const NAME = 'msp-portfolio';
 const VERSION = '1.0.0';
@@ -569,6 +571,20 @@ Source: https://github.com/ManSio/MSPortfolio
 
     const limited = await enforceRateLimit(env, '/mcp', request);
     if (limited) return finalize(limited, cors);
+
+    // v2 (KI-017): arm verify_claim with the LLM paraphrase arm when a key is
+    // configured. Fail-closed: no key → deterministic-only. Set per request
+    // because env is per-request in Workers; the value is identical across
+    // requests of the same deployment, so last-write-wins is harmless.
+    setLlmArm(
+      env.OPENROUTER_API_KEY
+        ? (claim) =>
+            verifyClaimLlmArm(claim, {
+              apiKey: env.OPENROUTER_API_KEY as string,
+              model: env.OPENROUTER_MODEL,
+            })
+        : undefined,
+    );
 
     let res = await handler.fetch(request);
     if (quota) {

@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 20:35] — v2 этап 2 РЕАЛИЗОВАН: LLM-рука в verify_claim (arm-флаг, fail-closed), интеграция в воркер + виджет
+**Status:** ✅ Fixed (код + тесты 83/83, typecheck, lint, сквозной смоук с реальной gpt-4o-mini; прод не деплоен)
+**Root Cause:** — (владелец: «1» — включить v2 в живой тул)
+**Fix:** (1) `src/lib/llm-arm-registry.ts` — бесконфликтное подключение (mcp-tools → registry → worker, type-only импорт, без цикла). (2) `verify_claim` (mcp-tools.ts): детерминированный хит → `arm:'deterministic'` без обращения к руке; промах → вызов руки, supported только с источником (arm:'llm'), отказ/ошибка → fail-closed. (3) Воркер: `setLlmArm` per-request при OPENROUTER_API_KEY (env per-request; без ключа — чистый v1). (4) `VerifyClaimResult.arm` + бейдж «LLM arm» в ClaimVerifier. (5) 5 тестов интеграции (83/83). Смоук с реальной моделью: перефразировка → supported:true, arm:llm, источник mscodebase. **Стоимость:** ~$0.001-0.003/промах, лимит KV-квотой 100 calls/IP/month.
+**Guard:** рука никогда не пересматривает детерминированный supported (тест); fail-closed без ключа (воркер-тесты не менялись); этап 2 закоммичен, но прод включится только после cf:deploy.
+**Pattern:** NEW
+
 ## [2026-08-15 20:10] — v2 DoD ДОСТИГНУТ на gpt-4o-mini (88% recall, 0 FA, p95 2.1s); этап 2 — решение владельца
 **Status:** ✅ Fixed (измерено: EXPERIMENTS_LOG#exp-12; код + тесты 78/78; этап 2 НЕ интегрирован — ждёт решения о стоимости на публичном эндпоинте)
 **Root Cause:** — (владелец: «попробуй платную»)
