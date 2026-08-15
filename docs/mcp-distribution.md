@@ -32,6 +32,8 @@ curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.Man
 - Namespace `io.github.Mansio/...` привязан к GitHub-аккаунту (проверено: login = ManSio).
 - Схема: https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json
 - Версия в `server.json` перезаписывается из тега workflow'ом (шаг Set version).
+- **`description` — максимум 100 символов** (официальный registry, 422-ошибка валидации;
+  поймано на v1.0.0, исправлено в v1.0.1). Длинное описание — только в smithery.yaml, там лимит больше.
 
 ## PR в punkpeye/awesome-mcp-servers (ручной шаг)
 
