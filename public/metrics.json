@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T10:21:37.791Z",
+  "fetchedAt": "2026-08-15T10:22:15.483Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:21:17Z",
+      "pushedAt": "2026-08-15T10:21:48Z",
       "language": "TypeScript"
     },
     {
@@ -180,6 +180,20 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "7f8e968c8f",
+      "date": "2026-08-15T10:21:37Z",
+      "message": "docs: P2 done (D4 quota + D5 openapi) — diary, KI-007 partial",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "dccd73877b",
+      "date": "2026-08-15T10:21:15Z",
+      "message": "feat(worker): D4 anonymous monthly quota (KV, X-RateLimit-*) + D5 /openapi.json — tests 63/63",
+      "author": "ManSio"
+    },
+    {
       "repo": "awesome-mcp-servers",
       "sha": "cbcdf8f770",
       "date": "2026-08-03T03:09:55Z",
@@ -199,20 +213,6 @@
       "date": "2026-07-29T10:26:20Z",
       "message": "Merge pull request #10893 from marccrutzen269-lab/add-departi-v2",
       "author": "Frank Fiegel"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "dccd73877b",
-      "date": "2026-08-15T10:21:15Z",
-      "message": "feat(worker): D4 anonymous monthly quota (KV, X-RateLimit-*) + D5 /openapi.json — tests 63/63",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "788482abf1",
-      "date": "2026-08-15T10:14:52Z",
-      "message": "docs: D1 closed — published to official MCP registry (io.github.ManSio/msp-portfolio v1.0.4), KI-016 partial",
-      "author": "ManSio"
     },
     {
       "repo": "mscodebase-intelligence",
