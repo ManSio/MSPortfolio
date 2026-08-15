@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T13:08:55.177Z",
+  "fetchedAt": "2026-08-15T13:11:25.033Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T13:08:32Z",
+      "pushedAt": "2026-08-15T13:11:05Z",
       "language": "TypeScript"
     },
     {
@@ -181,23 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "9f5b08c3fa",
+      "date": "2026-08-15T13:10:56Z",
+      "message": "fix(v2): LLM arm must default to DoD-proven gpt-4o-mini, not openrouter/free",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "feaa43dd55",
       "date": "2026-08-15T12:59:24Z",
       "message": "feat(v2 stage 2): verify_claim LLM arm integrated — registry, worker wiring, arm flag, UI badge",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "b4bf3925e0",
-      "date": "2026-08-15T12:45:40Z",
-      "message": "feat(v2): DoD MET on gpt-4o-mini — core-context fix + paraphrase prompt (recall 7/8, FA 0/3, p95 2.1s) (exp-12)",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "5a0f8d63a1",
-      "date": "2026-08-15T12:09:50Z",
-      "message": "feat(v2): measure LLM arm on live OpenRouter — free tier fails DoD gates, precision guard proven (exp-11)",
       "author": "ManSio"
     },
     {
