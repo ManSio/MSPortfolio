@@ -31,7 +31,7 @@ export interface LlmArmResult {
   latencyMs: number;
 }
 
-const DEFAULT_MODEL = 'openrouter/free';
+const DEFAULT_MODEL = 'openai/gpt-4o-mini';
 const DEFAULT_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 const DEFAULT_TIMEOUT_MS = 8000;
 const DEFAULT_MAX_CANDIDATES = 8;

@@ -71,8 +71,10 @@ interface Env {
   ALLOWED_ORIGINS?: string;
   /** Optional server-side OpenRouter key for the /chat agent demo. */
   OPENROUTER_API_KEY?: string;
-  /** OpenRouter model id (default: a free model with function calling). */
+  /** OpenRouter model id for /chat (default: a free model with function calling). */
   OPENROUTER_MODEL?: string;
+  /** OpenRouter model id for the verify_claim LLM arm (default: the DoD-proven gpt-4o-mini). */
+  OPENROUTER_VERIFY_MODEL?: string;
   /** CF Rate Limiting API binding for /mcp (wrangler.toml [[ratelimits]]). Absent in local tests. */
   MCP_RATE_LIMITER?: RateLimiter;
   /** CF Rate Limiting API binding for /chat. Absent in local tests. */
@@ -581,7 +583,9 @@ Source: https://github.com/ManSio/MSPortfolio
         ? (claim) =>
             verifyClaimLlmArm(claim, {
               apiKey: env.OPENROUTER_API_KEY as string,
-              model: env.OPENROUTER_MODEL,
+              // The arm has its own model knob: OPENROUTER_MODEL belongs to /chat
+              // (free chain), while the arm default is the DoD-proven gpt-4o-mini.
+              model: env.OPENROUTER_VERIFY_MODEL ?? 'openai/gpt-4o-mini',
             })
         : undefined,
     );
