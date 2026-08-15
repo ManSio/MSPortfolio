@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T18:47:00.117Z",
+  "fetchedAt": "2026-08-15T19:33:52.367Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T17:34:41Z",
+      "pushedAt": "2026-08-15T18:47:05Z",
       "language": "TypeScript"
     },
     {
@@ -52,6 +52,24 @@
   "npm": [],
   "devto": [
     {
+      "id": 4405950,
+      "title": "Went down a rabbit hole testing whether LLMs can actually verify agent memory claims on their own. Turns out the evidence format matters way more than the model — bare token strings barely work, real code context changes everything.",
+      "description": "Bare tokens vs real code: an 11x recall jump in LLM memory verification (3400 calls, 14...",
+      "readingTimeMinutes": 1,
+      "url": "https://dev.to/mansio/went-down-a-rabbit-hole-testing-whether-llms-can-actually-verify-agent-memory-claims-on-their-own-2la2",
+      "tags": [
+        "agents",
+        "ai",
+        "llm",
+        "testing"
+      ],
+      "reactions": 0,
+      "comments": 0,
+      "coverImage": null,
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fpc9y2wlmad35ybzu67et.png",
+      "readablePublishDate": "Aug 15"
+    },
+    {
       "id": 4399317,
       "title": "Bare tokens vs real code: an 11x recall jump in LLM memory verification (3400 calls, 14 models",
       "description": "14 models, 4 arms, ~3400 API calls. No model balanced false-accept and recall with pattern strings. With real file snippets: recall 0.08→0.88 at FA=0.02. The problem was the evidence, not the model.",
@@ -81,7 +99,7 @@
         "cloudflare",
         "portfolio"
       ],
-      "reactions": 10,
+      "reactions": 11,
       "comments": 0,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
