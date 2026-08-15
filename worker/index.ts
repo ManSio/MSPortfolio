@@ -57,7 +57,7 @@ interface AnalyticsEngine {
 
 interface KVNamespaceLike {
   get(key: string): Promise<string | null>;
-  put(key: string, value: string): Promise<void>;
+  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
 }
 
 interface ExecutionContextLike {
@@ -136,6 +136,80 @@ async function bumpAgentCounter(stats: KVNamespaceLike): Promise<void> {
   } catch {
     // best-effort — a failed counter write must never fail the request
   }
+}
+
+/**
+ * Anonymous monthly quota per IP (KV-backed, eventually consistent — D4).
+ * Fail-open when the binding is absent (local tests / misconfig). This is the
+ * quota fallback that works on Cloudflare's free tier (KI-007: the CF Rate
+ * Limiting API binding does not enforce until a paid plan).
+ */
+const DEFAULT_ANON_MONTHLY_QUOTA = 100;
+const QUOTA_TTL_SECONDS = 60 * 60 * 24 * 31;
+
+async function checkAndIncrementQuota(
+  stats: KVNamespaceLike | undefined,
+  ip: string,
+): Promise<{ allowed: boolean; used: number; limit: number } | null> {
+  if (!stats) return null;
+  const month = new Date().toISOString().slice(0, 7);
+  const key = `quota:${ip}:${month}`;
+  try {
+    const raw = await stats.get(key);
+    const used = (Number(raw) || 0) + 1;
+    await stats.put(key, String(used), { expirationTtl: QUOTA_TTL_SECONDS });
+    return { allowed: used <= DEFAULT_ANON_MONTHLY_QUOTA, used, limit: DEFAULT_ANON_MONTHLY_QUOTA };
+  } catch {
+    return null; // fail open — a broken counter must never break the server
+  }
+}
+
+/** OpenAPI 3.0 document for the worker's HTTP surface (D5) — generated from the same TOOLS. */
+function buildOpenApi(): Record<string, unknown> {
+  const toolNames = TOOLS.map((t) => t.name).join(', ');
+  return {
+    openapi: '3.0.3',
+    info: {
+      title: 'MSPortfolio MCP Server',
+      version: VERSION,
+      description: `MCP-native engineering portfolio. MCP tools: ${toolNames}. Machine-readable server description: /llms.txt. Plain-text CV: /resume.txt.`,
+    },
+    servers: [{ url: PUBLIC_BASE }],
+    paths: {
+      '/mcp': {
+        post: {
+          summary: 'MCP Streamable HTTP endpoint (JSON-RPC 2.0)',
+          description: `Tools: ${toolNames}. Send initialize → tools/list → tools/call. See /llms.txt for details.`,
+          requestBody: {
+            content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } },
+          },
+          responses: {
+            '200': { description: 'MCP response (JSON or SSE, depending on Accept)' },
+            '429': { description: 'Rate limited or anonymous monthly quota exceeded' },
+          },
+        },
+      },
+      '/mcp/health': {
+        get: { summary: 'Health probe + tool list', responses: { '200': { description: 'OK' } } },
+      },
+      '/mcp/stats': {
+        get: { summary: 'Agent counter (today / total)', responses: { '200': { description: 'Counters' } } },
+      },
+      '/resume.txt': {
+        get: { summary: 'Plain-text CV (rendered from the same tools)', responses: { '200': { description: 'text/plain' } } },
+      },
+      '/llms.txt': {
+        get: { summary: 'Server self-description for AI search', responses: { '200': { description: 'text/plain' } } },
+      },
+      '/chat': {
+        post: {
+          summary: 'Grounded LLM chat over the portfolio tools',
+          responses: { '200': { description: 'chat answer + tool steps + evidence summary' } },
+        },
+      },
+    },
+    'x-mcp-tools': TOOLS.map((t) => ({ name: t.name, description: t.description, inputSchema: t.inputSchema })),
+  };
 }
 
 /** Plain-text CV rendered from the SAME tools the MCP server exposes (single source of truth). */
@@ -376,6 +450,13 @@ export default {
       return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total }), cors);
     }
 
+    if (url.pathname === '/openapi.json') {
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        return finalize(new Response('Method not allowed', { status: 405 }), cors);
+      }
+      return finalize(Response.json(buildOpenApi()), cors);
+    }
+
     // Public self-documentation endpoints (curl-friendly, distribution-facing).
     if (url.pathname === '/llms.txt') {
       if (request.method !== 'GET' && request.method !== 'HEAD') {
@@ -392,6 +473,8 @@ export default {
 - Endpoint (Streamable HTTP): ${PUBLIC_BASE}/mcp
 - Add to Claude Code: claude mcp add --transport http msp-portfolio ${PUBLIC_BASE}/mcp
 - Plain-text CV: ${PUBLIC_BASE}/resume.txt
+- OpenAPI: ${PUBLIC_BASE}/openapi.json
+- Anonymous quota: 100 calls/IP/month (X-RateLimit-* headers)
 
 ## Tools (${TOOLS.length})
 ${tools}
@@ -440,6 +523,8 @@ Source: https://github.com/ManSio/MSPortfolio
       return finalize(new Response(null, { status: 204 }), cors);
     }
 
+    let quota: { allowed: boolean; used: number; limit: number } | null = null;
+
     // Fire-and-forget telemetry + agent counter. Never blocks or fails the request.
     // NOTE: must run inside ctx.waitUntil — pending work that is not awaited is
     // cancelled by the workerd runtime once the response returns (KV was empty
@@ -447,6 +532,17 @@ Source: https://github.com/ManSio/MSPortfolio
     if (request.method === 'POST') {
       const analytics = env.ANALYTICS;
       const stats = env.MCP_STATS;
+      // Anonymous monthly quota per IP (D4) — counted BEFORE the request is served.
+      quota = await checkAndIncrementQuota(stats, request.headers.get('cf-connecting-ip') ?? 'unknown');
+      if (quota && !quota.allowed) {
+        return finalize(
+          new Response('Anonymous monthly quota exceeded (100 calls/IP/month). See /llms.txt.', {
+            status: 429,
+            headers: { 'X-RateLimit-Limit': String(quota.limit), 'X-RateLimit-Remaining': '0' },
+          }),
+          cors,
+        );
+      }
       if (analytics || stats) {
         const task = request
           .clone()
@@ -474,7 +570,13 @@ Source: https://github.com/ManSio/MSPortfolio
     const limited = await enforceRateLimit(env, '/mcp', request);
     if (limited) return finalize(limited, cors);
 
-    const res = await handler.fetch(request);
+    let res = await handler.fetch(request);
+    if (quota) {
+      const headers = new Headers(res.headers);
+      headers.set('X-RateLimit-Limit', String(quota.limit));
+      headers.set('X-RateLimit-Remaining', String(Math.max(0, quota.limit - quota.used)));
+      res = new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+    }
     return finalize(res, cors);
   },
 };

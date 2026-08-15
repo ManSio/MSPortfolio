@@ -17,8 +17,8 @@
     {
       "file": "tests/worker.test.ts",
       "name": "Worker /mcp integration",
-      "tests": 19,
-      "covers": "tools/list (13 tools + annotations), health without rate limit, /mcp/stats (KV), tools/call counter, 429 MCP/CHAT, security headers, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), 8-way concurrency with filter correctness, /resume.txt + /llms.txt + 405",
+      "tests": 22,
+      "covers": "tools/list (13 tools + annotations), health without rate limit, /mcp/stats (KV), tools/call counter, 429 MCP/CHAT, security headers, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), 8-way concurrency with filter correctness, /resume.txt + /llms.txt + 405, anonymous quota (D4: headers + 429), /openapi.json (D5)",
       "updatedAt": "2026-08-15"
     },
     {
@@ -36,6 +36,6 @@
       "updatedAt": "2026-08-15"
     }
   ],
-  "total": 60,
+  "total": 63,
   "updatedAt": "2026-08-15"
 }
