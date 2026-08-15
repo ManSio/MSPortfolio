@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-08-15T10:15:14.661Z",
+  "fetchedAt": "2026-08-15T10:21:37.791Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 6,
+    "publicRepos": 7,
     "followers": 54,
     "following": 65
   },
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T10:14:55Z",
+      "pushedAt": "2026-08-15T10:21:17Z",
       "language": "TypeScript"
     },
     {
@@ -180,17 +180,38 @@
   ],
   "commits": [
     {
+      "repo": "awesome-mcp-servers",
+      "sha": "cbcdf8f770",
+      "date": "2026-08-03T03:09:55Z",
+      "message": "Merge pull request #11415 from Fronesis-Labs/add-dcl-trust-oracle",
+      "author": "Frank Fiegel"
+    },
+    {
+      "repo": "awesome-mcp-servers",
+      "sha": "1ee742c7a7",
+      "date": "2026-08-03T02:28:02Z",
+      "message": "Add DCL Trust Oracle to Security",
+      "author": "KeyKeeper42"
+    },
+    {
+      "repo": "awesome-mcp-servers",
+      "sha": "375407c729",
+      "date": "2026-07-29T10:26:20Z",
+      "message": "Merge pull request #10893 from marccrutzen269-lab/add-departi-v2",
+      "author": "Frank Fiegel"
+    },
+    {
       "repo": "MSPortfolio",
-      "sha": "788482abf1",
-      "date": "2026-08-15T10:14:52Z",
-      "message": "docs: D1 closed — published to official MCP registry (io.github.ManSio/msp-portfolio v1.0.4), KI-016 partial",
+      "sha": "dccd73877b",
+      "date": "2026-08-15T10:21:15Z",
+      "message": "feat(worker): D4 anonymous monthly quota (KV, X-RateLimit-*) + D5 /openapi.json — tests 63/63",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "e2721efd51",
-      "date": "2026-08-15T10:13:31Z",
-      "message": "fix(registry): server name must match GitHub login case-sensitively — io.github.ManSio (403 root cause)",
+      "sha": "788482abf1",
+      "date": "2026-08-15T10:14:52Z",
+      "message": "docs: D1 closed — published to official MCP registry (io.github.ManSio/msp-portfolio v1.0.4), KI-016 partial",
       "author": "ManSio"
     },
     {
