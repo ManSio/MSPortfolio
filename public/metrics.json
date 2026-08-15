@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T15:34:23.336Z",
+  "fetchedAt": "2026-08-15T16:40:48.585Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T14:38:25Z",
+      "pushedAt": "2026-08-15T15:34:29Z",
       "language": "TypeScript"
     },
     {
@@ -179,13 +179,6 @@
     }
   ],
   "commits": [
-    {
-      "repo": "MSPortfolio",
-      "sha": "f2200ecbb9",
-      "date": "2026-08-15T13:58:16Z",
-      "message": "feat(verify): external primary-source arms — verify_article (Dev.to), verify_package (npm), README in verify_repo (recommendation 2)",
-      "author": "ManSio"
-    },
     {
       "repo": "awesome-mcp-servers",
       "sha": "cbcdf8f770",
