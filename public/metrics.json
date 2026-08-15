@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T13:11:25.033Z",
+  "fetchedAt": "2026-08-15T13:28:45.290Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T13:11:05Z",
+      "pushedAt": "2026-08-15T13:28:22Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "9f5b08c3fa",
-      "date": "2026-08-15T13:10:56Z",
-      "message": "fix(v2): LLM arm must default to DoD-proven gpt-4o-mini, not openrouter/free",
+      "sha": "80c19599e0",
+      "date": "2026-08-15T13:28:19Z",
+      "message": "fix(verify_claim): explain the too-short note — show found significant words",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "feaa43dd55",
-      "date": "2026-08-15T12:59:24Z",
-      "message": "feat(v2 stage 2): verify_claim LLM arm integrated — registry, worker wiring, arm flag, UI badge",
+      "sha": "9f5b08c3fa",
+      "date": "2026-08-15T13:10:56Z",
+      "message": "fix(v2): LLM arm must default to DoD-proven gpt-4o-mini, not openrouter/free",
       "author": "ManSio"
     },
     {
