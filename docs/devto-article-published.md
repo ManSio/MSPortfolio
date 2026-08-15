@@ -3,6 +3,12 @@
 *Опубликованная версия на dev.to (2026-08-14), синхронизированная с 12 тулами.
 Оригинал: https://dev.to/mansio/i-turned-my-portfolio-into-an-mcp-server-and-im-not-a-programmer-4h0a*
 
+> **Update 2026-08-15:** живой endpoint теперь отдаёт **13 тулов** — добавлен
+> `verify_claim` (evidence score: ground-ит утверждение о владельце по данным
+> портфолио и возвращает записи-источники). Раздел «The twelve tools» ниже —
+> дословно как опубликовано; 13-й тул описан в `docs/devto-article.md` (черновик).
+> Правило KI-009: при перепубликации сверять число тулов с `tools/list`.
+
 ---
 
 My background is civil engineering. I don't write code — I direct AI agents to write it while I handle architecture, decisions, and QA.

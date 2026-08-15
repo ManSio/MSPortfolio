@@ -107,7 +107,7 @@ export default {
 
 > 💡 **Pitfall:** `toNodeHandler()` breaks on Workers. The web-standard path is the whole point of the v2 SDK — use `handler.fetch()` directly.
 
-### 3.4 The twelve tools
+### 3.4 The thirteen tools
 
 | Tool | What it does |
 |---|---|
@@ -123,6 +123,7 @@ export default {
 | `get_known_issues` | The known-issues board (KI-*): open debt with status, temperature and deadlines |
 | `analyze_stack` | Compares the owner's stack against a job's required skills — per-skill evidence + coverage |
 | `simulate_architecture` | Simulates a project's architecture under load spike / node loss / cache cold / LLM saturation; returns p50 / p95 / throughput / bottleneck / failure events |
+| `verify_claim` | The evidence score: grounds a claim about the owner against the portfolio data and returns the source records behind it |
 
 `analyze_stack` is the recruiters' favorite: paste a job description, get a per-skill match with evidence — instead of a human's "I know Kubernetes."
 

@@ -2,6 +2,43 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 15:00] — D3 видим посетителю: evidence-блок в чате + виджет Verify a claim (сайт)
+**Status:** ✅ Fixed (тесты 60/60, typecheck, build 103.26 kB gzip)
+**Root Cause:** — (владелец: «да» на обновление сайта — D3 должен быть публичным доказательством)
+**Fix:** (1) `src/lib/evidence.ts` — общий browser-safe `computeChatEvidence`/`evidenceLabel` (SSOT: воркер и сайт; воркер re-экспортирует — worker.test.ts не сломан). (2) `AgentChat.tsx`: новый evidence-фрейм после каждого ответа — «evidence: N tool calls · N grounded · N failed» / «⚠ ungrounded»; работает в LLM-режиме (из ответа /chat) и в rules-режиме (локально из результатов). (3) Новый `ClaimVerifier.tsx`: виджет «verify a claim — evidence score» — тот же тул `verify_claim` (live /mcp при доступности, иначе локальный движок), показывает supported/refused + записи-источники (kind · title · source · +tokens). (4) `App.tsx`: виджет в правой колонке Agent-секции; README — описание виджета и evidence-строки.
+**Guard:** evidence детерминирован и считается из тех же шагов, что показаны в трейсе; виджет вызывает тот же тул, что MCP-сервер (SSOT, никакого дублирования логики).
+**Pattern:** NEW
+
+## [2026-08-15 14:00] — Консенсус с внешним ИИ + D3: verify_claim (Evidence Score v1) + evidence-блок /chat
+**Status:** ✅ Fixed (код + тесты 60/60, typecheck чистый)
+**Root Cause:** — (владелец: «предложения внешнего ИИ — найти консенсус по протоколу»)
+**Fix:** Консенсус (`docs/research-mcp-portfolio-benchmarks-2026-08-15.md` §7): приняты рефрейм «доказать moat, не adoption», D3>D6, Evidence Score (с модификацией — детерминированный, не LLM), финальная фраза; отклонён LLM-скоринг для v1. Реализовано: (1) **13-й MCP-тул `verify_claim`** — корпус из тех же данных, что остальные тулы (SSOT), supported при ≥2 значимых словах в одной записи, возвращает source-пути (projects.json#id / lab/*.json#id); (2) **evidence-блок в /chat** — `computeEvidence` (toolCalls/grounded/failed/ungrounded), детерминированно из шагов; (3) `tests/evidence-eval.test.ts` (9 тестов: позитив/негатив-контроли/короткие claims + computeEvidence); (4) README — позиционирование «verifiable, agent-native» + строка «And here is how I know when it is wrong»; (5) синхронизированы llms.txt/smithery.yaml/skill-файл/test-suites.json (13 тулов, total 60), devto-драфт → 13 тулов, зеркало публикации — update-нота.
+**Guard:** verify_claim не дублирует данные (корпус из тех же JSON); D3-эвал — детерминированная рука в CI; KI-017 зафиксировал recall-ограничение v1 (precision-first).
+**Pattern:** NEW
+
+## [2026-08-15 13:30] — Реализация D1+D2: дистрибуция (registry/Smithery/awesome-mcp) + /resume.txt + skill-файл
+**Status:** ✅ Fixed (код + тесты 51/51, typecheck чистый)
+**Root Cause:** — (владелец: «да» на предложение реализовать D1+D2 из research Round 2)
+**Fix:** (1) **D1**: `server.json` (официальная схема registry, remote streamable-http, namespace io.github.Mansio/msp-portfolio — верифицирован из гайдов registry), `smithery.yaml` (формат из sec-edgar-mcp), `.github/workflows/publish-mcp.yml` (OIDC, официальный шаблон, remote-only без npm), чеклист `docs/mcp-distribution.md` (+ готовый сниппет для PR в awesome-mcp). (2) **D2**: воркер — `/resume.txt` (генерируется из get_profile/get_projects — тот же SSOT, что MCP) и `/llms.txt` (self-doc сервера, частично закрывает D5); `public/msp-portfolio.skill.md` (публичный Agent Skill); `public/llms.txt` обновлён. (3) Тесты: +3 в worker.test.ts (resume/llms/405); server/README.md — секция дистрибуции.
+**Guard:** /resume.txt и /llms.txt рендерятся из тулов (не дублируют данные); версия в server.json берётся из git-тега workflow'ем.
+**Pattern:** NEW
+
+## [2026-08-15 13:00] — Research Round 2: 5 бенчмарков-людей + новый конкурент rubenmarcus; решения для MSPortfolio
+**Status:** ✅ Fixed (документ)
+**Root Cause:** — (владелец: «так же проведи полный, нам надо решения идеи что мы можем сделать лучше» + входящий анализ другого ИИ)
+**Fix:** `docs/research-mcp-portfolio-benchmarks-2026-08-15.md` — **все цифры верифицированы** GitHub API: OrchestKit 219★/20f/88i (105 skills/36 agents/217 hooks) ✅; Nina: agent-memory-engine с published benchmark ✅, но 78%/93% — с её сайта ⚠️, и анализ недооценил её honest-agent/idk-layer (наша ось!); Ayush/Nishikanta ✅ проще нас. **НОВОЕ:** найден `rubenmarcus/portfolio` — portfolio-MCP В официальном реестре + Agent Skill + llms.txt + резюме по curl — живой прецедент нашего гэпа дистрибуции.
+**Решения (P1):** D1 дистрибуция (server.json + mcp-publisher + smithery.yaml + awesome-mcp PR, закрывает KI-016); D2 /resume.txt по curl + публичный skill-файл (нулевой порог входа); D3 eval harness для MCP-тулов (deterministic + LLM arm, эвал «правильно ли отвечает рекрутеру»). P2: KV-квота (KI-007), /llms.txt+/openapi.json, adoption-метрика на сайте. P3: onboarding-блок, contact CTA. Отказ: OrchestKit-масштаб, мульти-реестры, WebGL, монетизация.
+**Guard:** вердикты отчёта — основа бэклога; при реализации D1-D3 сверяться с §3 документа.
+**Pattern:** NEW
+
+## [2026-08-15 12:00] — Research: экосистема MCP-портфолио (5 источников, вскрытие до исходников)
+**Status:** ✅ Fixed (документ)
+**Root Cause:** — (запрос владельца: полноценное исследование 5 источников, «есть ли идеи лучше наших»)
+**Fix:** `docs/research-mcp-ecosystem-2026-08-15.md` — вскрыт до исходников L2M/TensorGreed, официальный registry, MCP Pure (13 серверов на 1 воркере), Prakhar (sec-edgar-mcp целиком: самописный JSON-RPC, KV-квоты по тирам, Dodo, smithery.yaml, дистрибуция по 8 каталогам), srikanth-mcp-portfolio (dual-stack stdio, данные-submodule). Сравнительная таблица + вердикты.
+**Главные выводы:** (1) P1-гэп: у нас 0 листингов в MCP-каталогах при живом endpoint (у Prakhar — 136 сабмитов); (2) KV-квота анонима — рабочий fallback к CF rate limit (закрывает KI-007 частично, ~30 LOC, работает на free tier); (3) /llms.txt + /openapi.json на воркере; (4) 12 тулов = верхняя граница (Prakhar: 9-12 до misrouting) — не группировать без признаков misrouting; (5) мы впереди: single source of truth (один модуль → сервер/воркер/сайт/lab/чат), dual-hosting, live/snapshot-fallback, lab+симулятор как MCP-тулы.
+**Guard:** KI-016 заведён (дистрибуция) — вердикты отчёта сверять при доработках.
+**Pattern:** NEW
+
 ## [2026-08-14 23:50] — Lab #/lab v5: кривые нагрузки (load curves) из движка simulate_architecture
 **Status:** ✅ Fixed
 **Root Cause:** — (запрос владельца: «добавить ещё визуализаций — кривые нагрузки на LabPage»)
