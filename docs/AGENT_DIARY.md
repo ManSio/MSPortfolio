@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-15 17:00] — P2: D4 (KV-квота анонима) + D5 (/openapi.json) + PR в awesome-mcp (#12210)
+**Status:** ✅ Fixed (прод: воркер задеплоен a6ef377a, тесты 63/63)
+**Root Cause:** — (владелец: «да» на закрытие хвостов: PR в awesome-mcp + P2 D4/D5)
+**Fix:** (1) **awesome-mcp PR #12210** открыт (fork ManSio, ветка add-msp-portfolio, секция Other Tools, 📇☁️, Glama-бейдж) — после мержа Glama подхватит листинг. (2) **D4**: KV-квота анонима 100 calls/IP/month (ключ `quota:<ip>:<YYYY-MM>`, expirationTtl 31д, fail-open без биндинга) + X-RateLimit-Limit/Remaining на успешных ответах — рабочий fallback к CF rate limit на free tier (KI-007). (3) **D5**: `/openapi.json` — OpenAPI 3.0.3 из TOOLS (paths для /mcp,/health,/stats,/resume.txt,/llms.txt,/chat + x-mcp-tools). Тесты +3 (квота-заголовки, 429, openapi). Прод-проверка: openapi 200, X-RateLimit-Limit=100/Remaining=99.
+**Guard:** квота — eventually-consistent (допускает небольшой перебор, как у Prakhar); счётчик-тест tools/list обновлён (квота добавляет KV-ключ); теги для реестра — только после валидации (`mcp-publisher validate`).
+**Pattern:** NEW
+
 ## [2026-08-15 16:30] — D1 ЗАКРЫТ: сервер опубликован в официальном реестре MCP (io.github.ManSio/msp-portfolio v1.0.4, active)
 **Status:** ✅ Fixed (прод: registry v1.0.4 active; воркер задеплоен; тесты 60/60)
 **Root Cause:** — (владелец: «делай» — закрыть D1: деплой + публикация)
