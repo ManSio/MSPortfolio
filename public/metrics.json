@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T08:29:05.176Z",
+  "fetchedAt": "2026-08-15T08:33:01.041Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T08:28:42Z",
+      "pushedAt": "2026-08-15T08:32:33Z",
       "language": "TypeScript"
     },
     {
@@ -181,16 +181,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "317f1b6e7f",
-      "date": "2026-08-15T08:28:28Z",
-      "message": "fix(articles): bust stale dev.to Varnish entry — per_page 6->8 + fallback for the new post",
+      "sha": "0f9154a4ef",
+      "date": "2026-08-15T08:32:26Z",
+      "message": "feat(lab): exp-1L V4 arm file_content_first — anchor bias resolved (recall 0.08->0.88 at FA 0.02-0.04)",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "128df093bc",
-      "date": "2026-08-15T08:00:39Z",
-      "message": "feat(lab): full MScodebase experiment set — per-experiment charts, conclusions, related links",
+      "sha": "317f1b6e7f",
+      "date": "2026-08-15T08:28:28Z",
+      "message": "fix(articles): bust stale dev.to Varnish entry — per_page 6->8 + fallback for the new post",
       "author": "ManSio"
     },
     {
