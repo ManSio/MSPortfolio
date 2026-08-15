@@ -1,5 +1,4 @@
 import { ArchitectureSimulator } from './components/playground/ArchitectureSimulator';
-import { Terminal } from './components/playground/Terminal';
 import { AgentChat } from './components/mcp/AgentChat';
 import { ClaimVerifier } from './components/mcp/ClaimVerifier';
 import { McpStatsCard } from './components/mcp/McpStatsCard';
@@ -8,6 +7,7 @@ import { AntipatternsGrid } from './components/antipatterns/AntipatternsGrid';
 import { BlogSection } from './components/blog/BlogSection';
 import { GithubStats } from './components/metrics/GithubStats';
 import { ExternalWidgets } from './components/metrics/ExternalWidgets';
+import { BenchmarksPanel } from './components/metrics/BenchmarksPanel';
 import { ProjectsGrid } from './components/projects/ProjectsGrid';
 import { PrinciplesGrid } from './components/projects/PrinciplesGrid';
 import { Timeline } from './components/timeline/Timeline';
@@ -147,6 +147,9 @@ export default function App() {
           <div className="mt-4">
             <ExternalWidgets />
           </div>
+          <div className="mt-4">
+            <BenchmarksPanel />
+          </div>
         </Section>
 
         {/* ── Projects ───────────────────────────────────────── */}
@@ -166,6 +169,9 @@ export default function App() {
 
         {/* ── Simulator ──────────────────────────────────────── */}
         <Section id="simulator" kicker="05 · live system design" title="Break it. Watch it degrade.">
+          <p className="-mt-4 mb-5 font-mono text-xs text-faint">
+            Interactive model with hand-tuned parameters — illustrative of the failure modes, not a production measurement.
+          </p>
           <ArchitectureSimulator />
         </Section>
 
@@ -227,11 +233,6 @@ export default function App() {
         {/* ── Antipatterns ──────────────────────────────── */}
         <Section id="antipatterns" kicker="09 · the museum" title="Antipattern museum — the mistakes that taught the most">
           <AntipatternsGrid />
-        </Section>
-
-        {/* ── Terminal ───────────────────────────────────── */}
-        <Section id="terminal" kicker="10 · the shell" title="Drop into a terminal">
-          <Terminal />
         </Section>
           </>
         )}

@@ -91,6 +91,6 @@ The `#/lab` page renders the diaries, experiments, known issues, test suites and
 - 12 experiments with hypothesis → command → verdict (8 confirmed, 3 partial, 1 refuted) + 6 negative results
 - 20 diary entries (incidents, root causes, fixes, guards) — per project
 - 12 known issues (KI-101..KI-112) with status and temperature — per project
-- 8 test suites / 91 tests
+- 8 test suites / 92 tests
 - Per-project decision logs (considered → chosen → why → cost) and commit logs (from the hourly metrics snapshot)
 - Projects without lab logs show an honest note — their evidence is decision log + commit history

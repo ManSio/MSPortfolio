@@ -22,11 +22,11 @@
       "updatedAt": "2026-08-15"
     },
     {
-      "file": "tests/lab.test.ts",
-      "name": "Lab data integrity + SSR render",
-      "tests": 9,
-      "covers": "Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, test-suite sum = total, evidence ledger ids/verdicts/summary, LabPage SSR (7 sections + filter), EN-only projections (incl. evidence claims)",
-      "updatedAt": "2026-08-15"
+     "file": "tests/lab.test.ts",
+     "name": "Lab data integrity + SSR render + benchmarks snapshot",
+     "tests": 10,
+     "covers": "Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, test-suite sum = total, evidence ledger ids/verdicts/summary, LabPage SSR (7 sections + filter), EN-only projections (incl. evidence claims), benchmarks.json sanity (DoD gates: llm recall ≥80%, 0 false-accepts, p95 < 3s)",
+     "updatedAt": "2026-08-15"
     },
     {
      "file": "tests/evidence-eval.test.ts",
@@ -57,6 +57,6 @@
      "updatedAt": "2026-08-15"
     }
    ],
-   "total": 91,
+   "total": 92,
   "updatedAt": "2026-08-15"
 }

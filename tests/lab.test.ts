@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { readFileSync } from 'node:fs';
 import { LabPage } from '../src/components/lab/LabPage';
 import experimentsData from '../src/data/lab/experiments.json' with { type: 'json' };
 import diaryData from '../src/data/lab/diary.json' with { type: 'json' };
@@ -206,6 +207,31 @@ describe('lab data integrity', () => {
     // Per-experiment charts and conclusions are rendered too
     expect(html).toContain('False-accept rate, code_first arm');
     expect(html).toContain('conclusion: ');
+  });
+
+  it('benchmarks.json (recommendation 1): committed snapshot is sane and matches the measured DoD gates', () => {
+    const bench = JSON.parse(readFileSync(new URL('../public/benchmarks.json', import.meta.url), 'utf8')) as {
+      updatedAt: string;
+      claimVerification: {
+        paraphrases: number;
+        negativeControls: number;
+        v1RecallPct: number;
+        llmArm: { recallPct: number; falseAcceptance: number; p50Ms: number; p95Ms: number } | null;
+      };
+      mutationTesting: { beforePct: number; afterPct: number; verdict: string } | null;
+      concurrency: { workers: number; correct: number };
+    };
+    expect(bench.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    // Deterministic v1 baseline on the paraphrase set is 0% (documented in evidence-eval).
+    expect(bench.claimVerification.v1RecallPct).toBe(0);
+    expect(bench.claimVerification.paraphrases).toBeGreaterThanOrEqual(8);
+    expect(bench.claimVerification.negativeControls).toBeGreaterThanOrEqual(3);
+    // The LLM arm must hold the v2 DoD gates (recall ≥80%, 0 false-accepts, p95 < 3s).
+    expect(bench.claimVerification.llmArm?.recallPct).toBeGreaterThanOrEqual(80);
+    expect(bench.claimVerification.llmArm?.falseAcceptance).toBe(0);
+    expect(bench.claimVerification.llmArm?.p95Ms).toBeLessThan(3000);
+    expect(bench.mutationTesting?.afterPct).toBeGreaterThan(bench.mutationTesting?.beforePct ?? 0);
+    expect(bench.concurrency.correct).toBe(bench.concurrency.workers);
   });
 
   it('lab data is English (site language); only docs/*.md stay Russian', () => {

@@ -12,6 +12,7 @@
     "server": "node server/index.ts",
     "typecheck": "tsc -b && tsc -p server/tsconfig.json && tsc -p worker/tsconfig.json",
     "metrics": "node scripts/update-metrics.ts",
+    "bench": "node scripts/bench-claims.ts",
     "cf:dev": "npx --yes wrangler@4 dev",
     "cf:deploy": "npx --yes wrangler@4 deploy"
   },

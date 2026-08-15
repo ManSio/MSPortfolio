@@ -98,6 +98,11 @@ in real tools (`analyze_stack`, `verify_claim`, `get_known_issues`). And
 `get_profile` returns a `nextSteps` list (LinkedIn, GitHub, MCP connect) — so an
 agent that just learned about the owner knows how to continue the interview.
 
+The **Metrics** section includes a **Benchmarks** panel with the portfolio's
+measured numbers (LLM-arm claim verification 88% recall / 0 false accepts /
+p95 < 2.3 s, mutation testing 8% → 100%, concurrency 8/8) — every number is
+reproduced by `pnpm bench`, which writes `public/benchmarks.json`.
+
 ## Repository layout
 
 ```
