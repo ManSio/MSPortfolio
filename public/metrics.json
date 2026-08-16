@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T07:44:56.132Z",
+  "fetchedAt": "2026-08-16T08:46:30.759Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T06:58:41Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-15T20:46:12Z",
+      "pushedAt": "2026-08-16T08:43:10Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T07:45:02Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "f7373512bf",
-      "date": "2026-08-15T20:43:48Z",
-      "message": "chore(zed-audit): adapt to Zed 1.14-1.16 updates — MCP schema guard, price drift fix, sandbox note",
+      "sha": "47e09ef50a",
+      "date": "2026-08-16T08:40:53Z",
+      "message": "fix(exp): RED TEAM 3 — shuffle влияет (4/50), StreamLake=404 (не 'unreadable'), Known weaknesses 7 пунктов",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "ff104ed26c",
-      "date": "2026-08-15T08:14:53Z",
-      "message": "feat(exp-1L): V4 arm file_content_first — real file fragment closes 'anchor bias' bite #2",
+      "sha": "efa61e6f78",
+      "date": "2026-08-16T08:26:50Z",
+      "message": "docs(exp): статья part 3 — ревизия по отзывам 3 ИИ (hook, recap, columns, meta-lesson, frontmatter, honest gap)",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "29e1365ec5",
-      "date": "2026-08-15T07:27:05Z",
-      "message": "refactor(experiments): per-experiment folders with READMEs + index",
+      "sha": "6cbe8fd78d",
+      "date": "2026-08-16T08:14:30Z",
+      "message": "docs(exp): статья part 3 — StreamLake reproduction note + пометка FA 0.02 (old labels)",
       "author": "MSCodeBase Agent"
     },
     {
