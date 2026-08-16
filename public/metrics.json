@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T09:33:28.792Z",
+  "fetchedAt": "2026-08-16T09:40:45.548Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T09:33:07Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T09:23:02Z",
+      "pushedAt": "2026-08-16T09:37:08Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T09:40:22Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,18 +198,18 @@
   ],
   "commits": [
     {
-      "repo": "MSPortfolio",
-      "sha": "4e92aafe7c",
-      "date": "2026-08-16T09:22:29Z",
-      "message": "feat(lab): TL;DR entry point — 3 architecture-changing findings (EN/RU)",
-      "author": "ManSio"
+      "repo": "mscodebase-intelligence",
+      "sha": "39be602d2d",
+      "date": "2026-08-16T09:34:50Z",
+      "message": "docs(exp): статья part 3 — H1 в теле → H2 (доступность dev.to: title из frontmatter)",
+      "author": "MSCodeBase Agent"
     },
     {
-      "repo": "MSPortfolio",
-      "sha": "4d7a69308a",
-      "date": "2026-08-16T09:21:17Z",
-      "message": "feat(i18n): RU version + corrected lab claims + 8 experiments (20 total)",
-      "author": "ManSio"
+      "repo": "mscodebase-intelligence",
+      "sha": "cc4e0c6005",
+      "date": "2026-08-16T09:32:00Z",
+      "message": "docs(exp): статья part 3 — вычищена внутренняя терминология (ADR/1-L/v4_rep/P-00X) для читателя dev.to; Known weaknesses №3 — языковой контроль измерен",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
@@ -219,18 +219,18 @@
       "author": "MSCodeBase Agent"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "76af03c5d9",
-      "date": "2026-08-16T09:11:06Z",
-      "message": "feat(exp): E5 — расширенная trap-категория (P-00X): present-trap массов (10-75% FA), graph вдвое снижает FA у deepseek (75→40%)",
-      "author": "MSCodeBase Agent"
+      "repo": "MSPortfolio",
+      "sha": "e8cf9f8746",
+      "date": "2026-08-16T09:40:08Z",
+      "message": "feat(lab): add exp-21 (E5 extended trap category) + exp-22 (pinned-rerun), correct exp-18/19",
+      "author": "ManSio"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "47e09ef50a",
-      "date": "2026-08-16T08:40:53Z",
-      "message": "fix(exp): RED TEAM 3 — shuffle влияет (4/50), StreamLake=404 (не 'unreadable'), Known weaknesses 7 пунктов",
-      "author": "MSCodeBase Agent"
+      "repo": "MSPortfolio",
+      "sha": "4e92aafe7c",
+      "date": "2026-08-16T09:22:29Z",
+      "message": "feat(lab): TL;DR entry point — 3 architecture-changing findings (EN/RU)",
+      "author": "ManSio"
     },
     {
       "repo": "awesome-mcp-servers",
