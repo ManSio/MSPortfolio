@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T11:33:34.224Z",
+  "fetchedAt": "2026-08-16T13:00:29.459Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T11:33:40Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-16T11:16:01Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T10:39:18Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -51,6 +51,24 @@
   ],
   "npm": [],
   "devto": [
+    {
+      "id": 4409809,
+      "title": "The Dataset Was Lying: 4 of 6 \"False\" Facts Were True",
+      "description": "We red-teamed our own memory-verification experiment: 4 of 6 'false' trap facts were true, the conclusions inverted, and the real fix for temporal claims was a verb tense.",
+      "readingTimeMinutes": 9,
+      "url": "https://dev.to/mansio/the-dataset-was-lying-4-of-6-false-facts-were-true-13ok",
+      "tags": [
+        "ai",
+        "agents",
+        "testing",
+        "mcp"
+      ],
+      "reactions": 4,
+      "comments": 0,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
+      "readablePublishDate": "Aug 16"
+    },
     {
       "id": 4405950,
       "title": "Went down a rabbit hole testing whether LLMs can actually verify agent memory claims on their own. Turns out the evidence format matters way more than the model — bare token strings barely work, real code context changes everything.",
@@ -176,24 +194,6 @@
       "coverImage": null,
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F7zqwuyw5onysh9hvpy7p.png",
       "readablePublishDate": "Jul 22"
-    },
-    {
-      "id": 4200301,
-      "title": "The Silent Vector Contamination Bug: Why Your Concurrent Embeddings Might Be Lying to You",
-      "description": "How a subtle race condition in async inference queues returned syntactically valid embeddings for the wrong inputs — and how to catch it with a cosine contamination test.",
-      "readingTimeMinutes": 4,
-      "url": "https://dev.to/mansio/the-silent-vector-contamination-bug-why-your-concurrent-embeddings-might-be-lying-to-you-5fg7",
-      "tags": [
-        "machinelearning",
-        "python",
-        "rag",
-        "openvino"
-      ],
-      "reactions": 1,
-      "comments": 0,
-      "coverImage": null,
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh0yqnvxw2c8wsznehyc9.png",
-      "readablePublishDate": "Jul 21"
     }
   ],
   "commits": [
