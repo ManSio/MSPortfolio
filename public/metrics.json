@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T18:46:52.247Z",
+  "fetchedAt": "2026-08-16T19:32:29.733Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T18:07:23Z",
+      "pushedAt": "2026-08-16T19:26:07Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T17:33:17Z",
+      "pushedAt": "2026-08-16T18:46:58Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "c0960e0fce",
+      "date": "2026-08-16T19:04:55Z",
+      "message": "docs: pass-2 audit — fix description drift (embedder llama.cpp, log paths, intel counts)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "96de7b55cc",
+      "date": "2026-08-16T18:38:31Z",
+      "message": "fix(docs): verify-инструмент падал на пустых референсах; актуализированы числа README ×3",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "96d89d4093",
       "date": "2026-08-16T16:24:55Z",
       "message": "fix(indexing): gitignore_parser dir-семантика — 'generated/' исключает вложенные (git-корректно)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "e95de7edba",
-      "date": "2026-08-16T15:54:43Z",
-      "message": "ci: fix evalmut probe path after per-experiment folders refactor",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "80c1711021",
-      "date": "2026-08-16T15:36:44Z",
-      "message": "fix(ci, docs): POSIX-путь в zed_config PYTHONPATH; DocGenerator skip build-каталогов",
       "author": "MSCodeBase Agent"
     },
     {
