@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T09:41:26.463Z",
+  "fetchedAt": "2026-08-16T10:39:11.593Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T09:40:52Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T09:37:08Z",
+      "pushedAt": "2026-08-16T10:03:27Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T09:41:32Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,32 +198,32 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "c3856def46",
+      "date": "2026-08-16T10:01:07Z",
+      "message": "docs(exp): статья part 3 — финальный блок: убраны обещания ('roadmap') и суждения о чужих системах, оставлена только благодарность",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "88942609bc",
+      "date": "2026-08-16T09:51:46Z",
+      "message": "docs(exp): статья part 3 — правки по 4-му ревью: интро-парадокс, 'exhibited' вместо 'universal', 40/40 обезврежен, лестница атак в meta-lesson, parenthetical сокращён",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "a5ef905dae",
+      "date": "2026-08-16T09:44:37Z",
+      "message": "docs(exp): frontmatter title — одинарные кавычки YAML (надёжный парсинг кавычек в заголовке)",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "MSPortfolio",
       "sha": "e8cf9f8746",
       "date": "2026-08-16T09:40:08Z",
       "message": "feat(lab): add exp-21 (E5 extended trap category) + exp-22 (pinned-rerun), correct exp-18/19",
       "author": "ManSio"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "39be602d2d",
-      "date": "2026-08-16T09:34:50Z",
-      "message": "docs(exp): статья part 3 — H1 в теле → H2 (доступность dev.to: title из frontmatter)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "cc4e0c6005",
-      "date": "2026-08-16T09:32:00Z",
-      "message": "docs(exp): статья part 3 — вычищена внутренняя терминология (ADR/1-L/v4_rep/P-00X) для читателя dev.to; Known weaknesses №3 — языковой контроль измерен",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "8a0ee9fd61",
-      "date": "2026-08-16T09:18:33Z",
-      "message": "docs(exp): статья part 3 — перепроверка комментариев dev.to: Skillselion pkg:-якоря УЖЕ реализованы (ADR-0005), + Glen Allen (freshness), + 473185670 (Resolution Loop)",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "awesome-mcp-servers",
