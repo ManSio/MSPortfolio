@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T08:46:30.759Z",
+  "fetchedAt": "2026-08-16T09:33:28.792Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T08:43:10Z",
-      "language": "Python"
-    },
-    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T07:45:02Z",
+      "pushedAt": "2026-08-16T09:33:07Z",
       "language": "TypeScript"
+    },
+    {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T09:23:02Z",
+      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -198,24 +198,38 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "4e92aafe7c",
+      "date": "2026-08-16T09:22:29Z",
+      "message": "feat(lab): TL;DR entry point — 3 architecture-changing findings (EN/RU)",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "4d7a69308a",
+      "date": "2026-08-16T09:21:17Z",
+      "message": "feat(i18n): RU version + corrected lab claims + 8 experiments (20 total)",
+      "author": "ManSio"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "8a0ee9fd61",
+      "date": "2026-08-16T09:18:33Z",
+      "message": "docs(exp): статья part 3 — перепроверка комментариев dev.to: Skillselion pkg:-якоря УЖЕ реализованы (ADR-0005), + Glen Allen (freshness), + 473185670 (Resolution Loop)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "76af03c5d9",
+      "date": "2026-08-16T09:11:06Z",
+      "message": "feat(exp): E5 — расширенная trap-категория (P-00X): present-trap массов (10-75% FA), graph вдвое снижает FA у deepseek (75→40%)",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "47e09ef50a",
       "date": "2026-08-16T08:40:53Z",
       "message": "fix(exp): RED TEAM 3 — shuffle влияет (4/50), StreamLake=404 (не 'unreadable'), Known weaknesses 7 пунктов",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "efa61e6f78",
-      "date": "2026-08-16T08:26:50Z",
-      "message": "docs(exp): статья part 3 — ревизия по отзывам 3 ИИ (hook, recap, columns, meta-lesson, frontmatter, honest gap)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "6cbe8fd78d",
-      "date": "2026-08-16T08:14:30Z",
-      "message": "docs(exp): статья part 3 — StreamLake reproduction note + пометка FA 0.02 (old labels)",
       "author": "MSCodeBase Agent"
     },
     {
