@@ -462,7 +462,7 @@
       "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm code_first/file_content_first/graph_first --models qwen3.7-flash,deepseek-v4-flash,glm-4.7-flash --prompt-version v2 --no-reasoning --tag 2e_e1/e2/e3; summarize_1L_categories.py --markdown (calls=450, errors=0, ~$0.007)",
       "result": "Rung1->2 confirmed by all 3: qwen recall 0.24->0.92, deepseek 0.04->0.84, glm 0.60->0.68. Rung2->3 non-uniform: qwen graph recall 0.92->0.76 but FA total 0.02->0.000; deepseek graph recall 0.84->0.44 (unknown 0.66 - distrust instead of checking); glm graph recall 0.68->0.84 but FA rises. Reproducibility control: qwen file_content 0.92 vs V4 0.88 (2026-08-15) - inter-run stability confirmed. CORRECTED (RED TEAM on ground truth, 2026-08-15): trap-category numbers of this run are on the mislabeled dataset - real trap-FA = 0 on corrected labels (29T/21F); the file-fragment recall result stands.",
       "verdict": "partial",
-      "finding": "Evidence form is a per-model knob, not a global answer: the file fragment is the strongest recall driver for all models; the graph closes the trap failure mode only for evidence-honest models (and on corrected labels the trap gap itself was a label issue). Fail-open models (glm family) are not cured by ANY evidence form - that is a model property, not an evidence property.",
+      "finding": "Evidence form is a per-model knob, not a global answer: the file fragment is the strongest recall driver for all models; the graph closes the trap failure mode only for evidence-honest models (and on corrected labels the trap gap itself was a label issue). Fail-open models (glm family) are not cured by ANY evidence form - that is a model property, not an evidence property. CORRECTED (E5, 2026-08-16): on the extended subject-validated trap category (20 false / 10 true) the graph really closes present-trap for deepseek (75%->40%) - the 'graph does not help' reading was an N=1 statistical issue; for glm the graph still does not help (14/20).",
       "chart": [
         {
           "type": "bar",
@@ -486,9 +486,9 @@
       "title": "Evidence Ladder E3b+E4: file+graph hybrid is NOT additive; git-provenance distinguishes existed-then vs exists-now",
       "hypothesis": "(E3b) a file+graph hybrid is additive (file recall + graph trap-zero); (E4) git-provenance (commit+date+branch in evidence) lets models tell 'existed until C' from 'exists at HEAD'.",
       "command": "python scripts/run_1L_live_arm.py --arm file_graph_first (tag 2e_e4) and temporal_first with temporal facts/contexts (tag 2e_e5) - qwen3.7-flash, deepseek-v4-flash, glm-4.7-flash; calls=294, errors=0 (temporal dataset: 48 facts = 12 removed / 28 real / 8 absent, ground truth from git)",
-      "result": "HYBRID (v4_rep N=50): qwen acc 0.900 (vs file 0.940 - hybrid is worse than file alone), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek and glm 48/48 (FA=0.00) - 'existed until C' vs 'exists' recognized perfectly on existence-claims; qwen3.7 accepted 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) - token-level familiarity/noise. CORRECTED: (E3b) 'graph closes trap (1/6->0/6)' was a mislabeled-data artifact - R45 is true; the non-additivity result stands. (E4b, 2026-08-16): 'deepseek/glm are temporal-robust, qwen is not' was a prompt-hint artifact - WITHOUT the 'NOT FOUND AT HEAD' hint NO model is robust; temporal present-trap is universal, and a past-tense formulation solves it.",
+      "result": "HYBRID (v4_rep N=50): qwen acc 0.900 (vs file 0.940 - hybrid is worse than file alone), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek and glm 48/48 (FA=0.00) - 'existed until C' vs 'exists' recognized perfectly on existence-claims; qwen3.7 accepted 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) - token-level familiarity/noise. CORRECTED: (E3b) 'graph closes trap (1/6->0/6)' was a mislabeled-data issue - R45 is true; the non-additivity result stands. (E4b, 2026-08-16): 'deepseek/glm are temporal-robust, qwen is not' was a prompt-hint issue - WITHOUT the 'NOT FOUND AT HEAD' hint NO model is robust; temporal present-trap is universal, and a past-tense formulation solves it. (E5, 2026-08-16): 'graph does not help against trap' was a N=1 statistical issue - on the extended subject-validated trap category (20 false / 10 true) graph really closes present-trap for deepseek (75%->40%).",
       "verdict": "refuted",
-      "finding": "Hybridity is NOT additive: with a file fragment present, token presence dominates and the graph adds nothing (acc 0.900 < file 0.940) - VOR design must pick ONE evidence format: fragment for recall OR graph for trap-precision. Git-provenance is a cheap, powerful temporal signal for 2/3 models on existence-claims but does not cure qwen-family; the 'robust 2/3' framing was itself a hint artifact (E4b) - temporal present-trap is universal and formulation solves it.",
+      "finding": "Hybridity is NOT additive: with a file fragment present, token presence dominates and the graph adds nothing (acc 0.900 < file 0.940) - VOR design must pick ONE evidence format: fragment for recall OR graph for trap-precision. Git-provenance is a cheap, powerful temporal signal for 2/3 models on existence-claims but does not cure qwen-family; the 'robust 2/3' framing was itself a hint issue (E4b) - temporal present-trap is universal and formulation solves it. CORRECTED (E5): the trap-precision claim below was measured on a single false fact (R42) - statistically meaningless; on the extended category graph closes trap for deepseek (75->40%) and does not for glm (14/20).",
       "chart": [
         {
           "type": "bar",
@@ -500,7 +500,7 @@
           ]
         }
       ],
-      "conclusion": "VOR evidence format is chosen by the target metric: fragment for recall, graph for trap-precision - the hybrid is the worst of both (acc 0.90). Git-provenance in evidence is a cheap temporal signal, but the universal temporal present-trap is solved by claim formulation, not by evidence.",
+      "conclusion": "VOR evidence format is chosen by the target metric: fragment for recall, graph for trap-precision - the hybrid is the worst of both (acc 0.90). Git-provenance in evidence is a cheap temporal signal, but the universal temporal present-trap is solved by claim formulation, not by evidence. CORRECTED (E5): 'graph for trap-precision' is real for deepseek (75->40% on the extended category), not for glm; the N=1 trap measurement that suggested otherwise was a statistical issue.",
       "links": ["exp-1", "exp-18"]
     },
     {
@@ -525,6 +525,58 @@
       ],
       "conclusion": "Off-by-one paths in src/core/embedder/ are copied between files - when touching paths there, use parents[3] or verify path.exists() on all search_paths; remote_embedder already uses get_extension_dir correctly.",
       "links": []
+    },
+    {
+      "id": "exp-21",
+      "date": "2026-08-16",
+      "project": "mscodebase-intelligence",
+      "title": "Evidence Ladder E5: extended trap category (N=20, subject-validated labels) - present-trap is mass, graph really helps deepseek (75%->40%)",
+      "hypothesis": "'FA trap = 0' on the v4_rep category rested on a single false fact (R42) - statistically meaningless. With a trap category extended to 20 false / 10 true and labels validated per subject (grep subject = 0), present-trap is measurable and the graph arm's true effect can be estimated.",
+      "command": "trap_facts_generator.py (20 false-trap: value in >=2 project files, NOT in the subject file - grep subject=0; 10 true-trap) + file_content_first/graph_first x 3 models (pinned: qwen->Alibaba, deepseek/glm->DeepInfra; first run with Alibaba for all = 404 glm, redone). fp 138f306dbe14b66e -> cb6f822b9eb66afd",
+      "result": "FA on 20 real false-trap / recall on 10 true-trap: file_content qwen 2/20, 2/10; deepseek 15/20, 6/10; glm 13/20, 7/10. graph_first qwen 2/20, 3/10; deepseek 8/20, 5/10; glm 14/20, 9/10.",
+      "verdict": "confirmed",
+      "finding": "Present-trap is NOT a mislabel issue: on honest subject-validated labels file_content FA is 2-15/20 (10-75%) - the earlier 'residual trap hole' was distorted by N=1. Graph evidence REALLY closes present-trap for deepseek (75%->40% FA); for glm it does not (14/20); qwen already has low FA (2/20) but pays recall (2-3/10 - fail-closed).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False-accept on 20 real present-traps, file vs graph",
+          "data": [
+            { "label": "deepseek · file", "value": 15, "sub": "75% FA", "color": "#ef4444" },
+            { "label": "deepseek · graph", "value": 8, "sub": "40% FA - graph closes", "color": "#10b981" },
+            { "label": "glm · file", "value": 13, "sub": "65%", "color": "#ef4444" },
+            { "label": "glm · graph", "value": 14, "sub": "graph does not help", "color": "#f59e0b" },
+            { "label": "qwen · file", "value": 2, "sub": "fail-closed", "color": "#10b981" },
+            { "label": "qwen · graph", "value": 2, "sub": "recall 2-3/10", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "'FA trap = 0' on a category with N=1 is a meaningless number; extending the category with subject validation (P-00X) is the only honest way to measure present-trap. Graph evidence is a real trap-closer for deepseek, not for glm - per-model evidence format is confirmed even more strongly.",
+      "links": ["exp-18", "exp-19"]
+    },
+    {
+      "id": "exp-22",
+      "date": "2026-08-16",
+      "project": "mscodebase-intelligence",
+      "title": "Pinned-rerun on the corrected dataset (fp e6ce7b90): canonical series numbers, routing band removed",
+      "hypothesis": "Unpinned OpenRouter routing (>=8 upstreams, KI-105) adds per-run variance; pinning providers (qwen->Alibaba, deepseek/glm->DeepInfra per the pinned-probe) removes the routing band and gives canonical numbers for the series.",
+      "command": "15 runs (5 arms x 3 models), --pin-provider: qwen->Alibaba, deepseek/glm->DeepInfra (per pinned-probe; StreamLake/Cloudflare-deepseek broken pinned). corrected dataset e6ce7b902d0a20a9 (R44 truth=None). Tags 2e_pin_*. +resume for qwen error-facts. Cost ~$0.02",
+      "result": "file_content qwen 0.88/0/3, deepseek 0.80/1/2, glm 0.68/2/1; graph_first qwen 0.72/0/4, deepseek 0.48/0/2, glm 0.84/1/0; file_graph qwen 0.84/0/3, deepseek 0.92/1/2, glm 0.80/2/1 (rec / FA-trap / miss_true). temporal NOW removed-FA: qwen 12/12, deepseek 9/12, glm 12/12; temporal PAST: all 40/40. FA absent/silent: 0 in all pinned cells.",
+      "verdict": "confirmed",
+      "finding": "Routing band removed but per-model conclusions unchanged: file_content is the best recall arm for qwen (0.88), graph for glm (0.84, FA trap 1), hybrid for deepseek (0.92); temporal present-trap is universal (NOW 12/12, 9/12, 12/12), past solved by formulation (40/40). glm stays non-deterministic even pinned (unpin 6FA -> pin-force1 2FA -> pin-force2 1FA) - pinning removed routing, not model variance (+/-0.02-0.04 FA). FA absent/silent = 0 in all pinned evidence arms - the corrected 1-L picture (trap miss_true 4/5 for fail-closed) is routing-independent.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall(real) per arm, pinned run, %",
+          "data": [
+            { "label": "qwen · file", "value": 88, "sub": "best recall arm", "color": "#10b981" },
+            { "label": "deepseek · file+graph", "value": 92, "sub": "best for deepseek", "color": "#10b981" },
+            { "label": "glm · graph", "value": 84, "sub": "best for glm, FA trap 1", "color": "#6366f1" },
+            { "label": "qwen · graph", "value": 72, "sub": "pays recall", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "conclusion": "Pinned-rerun confirmed every series conclusion is robust to routing; glm non-determinism is a model property (even on a single backend); StreamLake (top-1 unpinned for glm) pinned returns no JSON - volume does not equal quality, and pinning also protects against 'popular but broken' upstreams.",
+      "links": ["exp-18", "exp-19", "exp-21"]
     }
   ],
   "negativeResults": [

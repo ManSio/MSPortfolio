@@ -462,7 +462,7 @@
       "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm code_first/file_content_first/graph_first --models qwen3.7-flash,deepseek-v4-flash,glm-4.7-flash --prompt-version v2 --no-reasoning --tag 2e_e1/e2/e3; summarize_1L_categories.py --markdown (calls=450, errors=0, ~$0.007)",
       "result": "Ступень 1->2 подтверждена всеми 3: qwen recall 0.24->0.92, deepseek 0.04->0.84, glm 0.60->0.68. Ступень 2->3 неоднородна: qwen graph recall 0.92->0.76, но FA total 0.02->0.000; deepseek graph recall 0.84->0.44 (unknown 0.66 — недоверие вместо проверки); glm graph recall 0.68->0.84, но FA растёт. Контроль воспроизводимости: qwen file_content 0.92 против V4 0.88 (2026-08-15) — межпрогонная стабильность подтверждена. CORRECTED (RED TEAM по ground truth, 2026-08-15): trap-цифры этого прогона на mislabeled датасете — реальный trap-FA = 0 на corrected-лейблах (29T/21F); результат по фрагменту файла остаётся в силе.",
       "verdict": "partial",
-      "finding": "Форма evidence — per-model ручка, а не глобальный ответ: фрагмент файла — сильнейший драйвер recall для всех моделей; граф закрывает режим отказа trap только для evidence-честных моделей (а на corrected-лейблах сама trap-дыра была артефактом разметки). Fail-open модели (семейство glm) не лечатся НИКАКОЙ формой evidence — это свойство модели, а не evidence.",
+      "finding": "Форма evidence — per-model ручка, а не глобальный ответ: фрагмент файла — сильнейший драйвер recall для всех моделей; граф закрывает режим отказа trap только для evidence-честных моделей (а на corrected-лейблах сама trap-дыра была артефактом разметки). Fail-open модели (семейство glm) не лечатся НИКАКОЙ формой evidence — это свойство модели, а не evidence. CORRECTED (E5, 2026-08-16): на расширенной trap-категории с валидацией по субъекту (20 false / 10 true) граф РЕАЛЬНО закрывает present-trap для deepseek (75%->40%) — прочтение «граф не помогает» было статистическим артефактом N=1; для glm граф по-прежнему не помогает (14/20).",
       "chart": [
         {
           "type": "bar",
@@ -486,9 +486,9 @@
       "title": "Evidence Ladder E3b+E4: гибрид file+graph НЕ аддитивен; git-провенанс отличает «было тогда» от «есть сейчас»",
       "hypothesis": "(E3b) гибрид file+graph аддитивен (recall файла + trap-ноль графа); (E4) git-провенанс (commit+date+branch в evidence) позволяет моделям отличать «существовал до C» от «существует на HEAD».",
       "command": "python scripts/run_1L_live_arm.py --arm file_graph_first (tag 2e_e4) и temporal_first с temporal-фактами/контекстами (tag 2e_e5) - qwen3.7-flash, deepseek-v4-flash, glm-4.7-flash; calls=294, errors=0 (temporal-датасет: 48 фактов = 12 removed / 28 real / 8 absent, ground truth из git)",
-      "result": "ГИБРИД (v4_rep N=50): qwen acc 0.900 (против file 0.940 — гибрид хуже одного файла), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek и glm 48/48 (FA=0.00) — «существовал до C» против «существует» распознаётся идеально на existence-claims; qwen3.7 принял 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) — токен-уровневая фамильярность/шум. CORRECTED: (E3b) «граф закрывает trap (1/6->0/6)» был артефактом mislabeled-данных — R45 истинен; результат неаддитивности в силе. (E4b, 2026-08-16): «deepseek/glm temporal-устойчивы, qwen нет» был артефактом подсказки — БЕЗ подсказки «NOT FOUND AT HEAD» устойчивых НЕТ; temporal present-trap универсален, и решается он формулировкой в прошедшем времени.",
+      "result": "ГИБРИД (v4_rep N=50): qwen acc 0.900 (против file 0.940 — гибрид хуже одного файла), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek и glm 48/48 (FA=0.00) — «существовал до C» против «существует» распознаётся идеально на existence-claims; qwen3.7 принял 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) — токен-уровневая фамильярность/шум. CORRECTED: (E3b) «граф закрывает trap (1/6->0/6)» был артефактом mislabeled-данных — R45 истинен; результат неаддитивности в силе. (E4b, 2026-08-16): «deepseek/glm temporal-устойчивы, qwen нет» был артефактом подсказки — БЕЗ подсказки «NOT FOUND AT HEAD» устойчивых НЕТ; temporal present-trap универсален, и решается он формулировкой в прошедшем времени. (E5, 2026-08-16): «граф не помогает против trap» был статистическим артефактом N=1 — на расширенной категории с валидацией по субъекту (20 false / 10 true) граф реально закрывает present-trap для deepseek (75%->40%).",
       "verdict": "refuted",
-      "finding": "Гибридность НЕ аддитивна: когда есть фрагмент файла, доминирует токен-присутствие и граф ничего не добавляет (acc 0.900 < file 0.940) — VOR-дизайн обязан выбрать ОДИН формат evidence: фрагмент для recall ИЛИ граф для trap-точности. Git-провенанс — дешёвый, мощный временной сигнал для 2/3 моделей на existence-claims, но не лечит семейство qwen; сам фрейминг «устойчивы 2/3» был артефактом подсказки (E4b) — temporal present-trap универсален, и решается формулировкой.",
+      "finding": "Гибридность НЕ аддитивна: когда есть фрагмент файла, доминирует токен-присутствие и граф ничего не добавляет (acc 0.900 < file 0.940) — VOR-дизайн обязан выбрать ОДИН формат evidence: фрагмент для recall ИЛИ граф для trap-точности. Git-провенанс — дешёвый, мощный временной сигнал для 2/3 моделей на existence-claims, но не лечит семейство qwen; сам фрейминг «устойчивы 2/3» был артефактом подсказки (E4b) — temporal present-trap универсален, и решается формулировкой. CORRECTED (E5): заявление о trap-точности ниже измерено на одном ложном факте (R42) — статистически бессмысленно; на расширенной категории граф закрывает trap для deepseek (75->40%) и не закрывает для glm (14/20).",
       "chart": [
         {
           "type": "bar",
@@ -500,7 +500,7 @@
           ]
         }
       ],
-      "conclusion": "Формат evidence для VOR выбирается по целевой метрике: фрагмент для recall, граф для trap-точности — гибрид худшее из обоих (acc 0.90). Git-провенанс в evidence — дешёвый временной сигнал, но универсальный temporal present-trap решается формулировкой заявления, а не evidence.",
+      "conclusion": "Формат evidence для VOR выбирается по целевой метрике: фрагмент для recall, граф для trap-точности — гибрид худшее из обоих (acc 0.90). Git-провенанс в evidence — дешёвый временной сигнал, но универсальный temporal present-trap решается формулировкой заявления, а не evidence. CORRECTED (E5): «граф для trap-точности» реален для deepseek (75->40% на расширенной категории), не для glm; замер trap на N=1, намекавший на обратное, был статистическим артефактом.",
       "links": ["exp-1", "exp-18"]
     },
     {
@@ -525,6 +525,58 @@
       ],
       "conclusion": "Off-by-one пути в src/core/embedder/ копируются между файлами — при работе с путями там используй parents[3] или проверяй path.exists() на всех search_paths; remote_embedder уже использует get_extension_dir корректно.",
       "links": []
+    },
+    {
+      "id": "exp-21",
+      "date": "2026-08-16",
+      "project": "mscodebase-intelligence",
+      "title": "Evidence Ladder E5: расширенная trap-категория (N=20, лейблы по субъекту) — present-trap МАССОВ, граф реально помогает deepseek (75%->40%)",
+      "hypothesis": "«FA trap = 0» на категории v4_rep держался на одном ложном факте (R42) — статистически бессмысленно. С расширенной trap-категорией (20 false / 10 true) и лейблами, валидированными по субъекту (grep субъекта = 0), present-trap измерим, а реальный эффект графа оцениваем.",
+      "command": "trap_facts_generator.py (20 false-trap: value в >=2 файлах проекта, НЕ в файле субъекта — grep субъекта=0; 10 true-trap) + file_content_first/graph_first x 3 модели (pinned: qwen->Alibaba, deepseek/glm->DeepInfra; первый прогон с Alibaba для всех = 404 glm, переделано). fp 138f306dbe14b66e -> cb6f822b9eb66afd",
+      "result": "FA на 20 реальных false-trap / recall на 10 true-trap: file_content qwen 2/20, 2/10; deepseek 15/20, 6/10; glm 13/20, 7/10. graph_first qwen 2/20, 3/10; deepseek 8/20, 5/10; glm 14/20, 9/10.",
+      "verdict": "confirmed",
+      "finding": "Present-trap — НЕ артефакт разметки: на честных лейблах по субъекту FA file_content 2-15/20 (10-75%) — прежняя «остаточная trap-дыра» была искажена N=1. Graph evidence РЕАЛЬНО закрывает present-trap для deepseek (75%->40% FA); для glm — нет (14/20); у qwen уже низкий FA (2/20), но платит recall (2-3/10 — fail-closed).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Ложные принятия на 20 реальных present-trap, файл против графа",
+          "data": [
+            { "label": "deepseek · файл", "value": 15, "sub": "75% FA", "color": "#ef4444" },
+            { "label": "deepseek · граф", "value": 8, "sub": "40% FA — граф закрывает", "color": "#10b981" },
+            { "label": "glm · файл", "value": 13, "sub": "65%", "color": "#ef4444" },
+            { "label": "glm · граф", "value": 14, "sub": "граф не помогает", "color": "#f59e0b" },
+            { "label": "qwen · файл", "value": 2, "sub": "fail-closed", "color": "#10b981" },
+            { "label": "qwen · граф", "value": 2, "sub": "recall 2-3/10", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "«FA trap = 0» на категории с N=1 — бессмысленное число; расширение категории с валидацией по субъекту (P-00X) — единственный честный способ измерить present-trap. Граф — реальный закрыватель trap для deepseek, но не для glm — per-model формат evidence подтверждён ещё сильнее.",
+      "links": ["exp-18", "exp-19"]
+    },
+    {
+      "id": "exp-22",
+      "date": "2026-08-16",
+      "project": "mscodebase-intelligence",
+      "title": "Pinned-rerun на corrected-датасете (fp e6ce7b90): канонические числа серии, полоса маршрутизации убрана",
+      "hypothesis": "Unpinned маршрутизация OpenRouter (>=8 апстримов, KI-105) добавляет дисперсию между прогонами; пининг провайдеров (qwen->Alibaba, deepseek/glm->DeepInfra по pinned-probe) убирает полосу маршрутизации и даёт канонические числа серии.",
+      "command": "15 прогонов (5 армов x 3 модели), --pin-provider: qwen->Alibaba, deepseek/glm->DeepInfra (по pinned-probe; StreamLake/Cloudflare-deepseek битые pinned). corrected-датасет e6ce7b902d0a20a9 (R44 truth=None). Теги 2e_pin_*. +resume для error-фактов qwen. Стоимость ~$0.02",
+      "result": "file_content qwen 0.88/0/3, deepseek 0.80/1/2, glm 0.68/2/1; graph_first qwen 0.72/0/4, deepseek 0.48/0/2, glm 0.84/1/0; file_graph qwen 0.84/0/3, deepseek 0.92/1/2, glm 0.80/2/1 (rec / FA-trap / miss_true). temporal NOW removed-FA: qwen 12/12, deepseek 9/12, glm 12/12; temporal PAST: все 40/40. FA absent/silent: 0 во всех pinned-ячейках.",
+      "verdict": "confirmed",
+      "finding": "Полоса маршрутизации убрана, но per-model выводы не изменились: file_content — лучший recall-арм для qwen (0.88), граф — для glm (0.84, FA trap 1), гибрид — для deepseek (0.92); temporal present-trap универсален (NOW 12/12, 9/12, 12/12), прошлое решается формулировкой (40/40). glm остаётся недетерминированной даже pinned (unpin 6FA -> pin-force1 2FA -> pin-force2 1FA) — пининг убрал маршрутизацию, не вариацию модели (+/-0.02-0.04 FA). FA absent/silent = 0 во всех pinned evidence-армах — corrected-картина 1-L (trap miss_true 4/5 у fail-closed) не зависит от маршрутизации.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall(real) по арму, pinned-прогон, %",
+          "data": [
+            { "label": "qwen · файл", "value": 88, "sub": "лучший recall-арм", "color": "#10b981" },
+            { "label": "deepseek · file+graph", "value": 92, "sub": "лучший для deepseek", "color": "#10b981" },
+            { "label": "glm · граф", "value": 84, "sub": "лучший для glm, FA trap 1", "color": "#6366f1" },
+            { "label": "qwen · граф", "value": 72, "sub": "платит recall", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "conclusion": "Pinned-rerun подтвердил устойчивость всех выводов серии к маршрутизации; недетерминизм glm — свойство модели (даже на одном бэкенде); StreamLake (топ-1 unpinned у glm) pinned не отдаёт JSON — объём не равен качеству, и пининг также защищает от «популярного, но битого» апстрима.",
+      "links": ["exp-18", "exp-19", "exp-21"]
     }
   ],
   "negativeResults": [
