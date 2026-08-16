@@ -1,0 +1,27 @@
+{
+  "events": [
+    {
+      "date": "2026-08",
+      "title": "MSPortfolio: портфолио, которое заодно и MCP-сервер",
+      "decision": "Построил портфолио, чьё CV машинно-читаемо через MCP и чьи заявления подкреплены живыми метриками и браузерной демо агентного цикла.",
+      "link": "https://github.com/ManSio/MSPortfolio"
+    },
+    {
+      "date": "2026",
+      "title": "MSCodeBase Intelligence: гибридный поиск по коду",
+      "decision": "Выбрал гибридный поиск LanceDB + BM25 вместо SQLite FTS5/Elasticsearch для встраиваемого, zero-ops, memory-safe MCP-сервера поиска кода для Zed.",
+      "link": "https://github.com/ManSio/mscodebase-intelligence"
+    },
+    {
+      "date": "2026",
+      "title": "Gemma Agent: memory-first ассистент",
+      "decision": "Спроектировал Telegram-ассистента вокруг извлечённой памяти (ровная стоимость токенов) вместо воспроизведения полного транскрипта.",
+      "link": "https://github.com/ManSio/gemma_agent"
+    },
+    {
+      "date": "2014",
+      "title": "Присоединился к GitHub как ManSio",
+      "decision": "Начал публичный инженерный след, который это портфолио проверяет вживую."
+    }
+  ]
+}

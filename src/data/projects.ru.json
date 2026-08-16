@@ -1,0 +1,113 @@
+{
+  "owner": "ManSio",
+  "profile": {
+    "name": "Михаил",
+    "role": "AI / Backend инженер",
+    "location": "Remote-friendly",
+    "summary": "Строит MCP-нативные инструменты и AI-инфраструктуру. Автор продакшн MCP-сервера для анализа кода (LanceDB/BM25 гибридный поиск) в Zed.",
+    "contact": {
+      "linkedin": "https://www.linkedin.com/in/ManSio",
+      "github": "https://github.com/ManSio"
+    }
+  },
+  "projects": [
+    {
+      "id": "mscodebase-intelligence",
+      "name": "MSCodeBase Intelligence",
+      "repo": "ManSio/mscodebase-intelligence",
+      "url": "https://github.com/ManSio/mscodebase-intelligence",
+      "language": "Python",
+      "stack": ["Python", "MCP", "LanceDB", "BM25", "RAG", "Zed"],
+      "stars": 2,
+      "forks": 0,
+      "tagline": "Интеллектуальный поиск и индексация кода для Zed",
+      "description": "Асинхронный MCP-сервер с гибридным поиском LanceDB/BM25, многобакетным RAG и автономными self-healing процессами. Высокопроизводительная, memory-safe, production-ready система анализа кода.",
+      "highlights": [
+        "Гибридный поиск (вектор + BM25) со слиянием рангов",
+        "Многобакетный RAG по сущностям кода",
+        "Автономный self-healing: watchdog + восстановление после переиндексации",
+        "Memory-safe конвейер индексации (без утечек под нагрузкой)"
+      ],
+      "decisionLog": [
+        {
+          "decision": "LanceDB вместо обычного SQLite FTS для эмбеддингов",
+          "alternatives": ["SQLite FTS5", "Elasticsearch", "pgvector"],
+          "reason": "Встраиваемое векторное хранилище с zero-ops деплоем; токенизация FTS5 ломает релевантность русской стемминга.",
+          "tradeoff": "API LanceDB меняется между минорными версиями — зафиксирован с обоснованием."
+        },
+        {
+          "decision": "Асинхронный MCP-сервер (один процесс, async loop)",
+          "alternatives": ["Мультипроцессные воркеры", "Пул потоков"],
+          "reason": "Вызовы MCP-инструментов I/O-bound; async держит память ровной и избегает конкуренции за GIL на пути индексации.",
+          "tradeoff": "CPU-bound переиндексацию нужно выносить в фоновую задачу с событиями прогресса."
+        },
+        {
+          "decision": "Гибридный поиск вместо только векторного",
+          "alternatives": ["Только эмбеддинги", "Только BM25"],
+          "reason": "Точные совпадения идентификаторов бьют нечёткий векторный поиск для кода; слияние даёт и то и другое.",
+          "tradeoff": "Два индекса нужно держать консистентными — решено единым путём записи."
+        }
+      ],
+      "metrics": { "type": "github" }
+    },
+    {
+      "id": "gemma_agent",
+      "name": "Gemma Agent",
+      "repo": "ManSio/gemma_agent",
+      "url": "https://github.com/ManSio/gemma_agent",
+      "language": "Python",
+      "stack": ["Python", "Telegram", "LLM", "Agents"],
+      "stars": 2,
+      "forks": 0,
+      "tagline": "Telegram-ассистент для маленького доверенного круга",
+      "description": "Telegram-ассистент с памятью, роутингом и инструментами, когда нужно — для маленького доверенного круга, а не как продукт Google Gemma.",
+      "highlights": [
+        "Постоянная память между сессиями",
+        "Роутинг намерений до диспетчеризации инструментов",
+        "Использование инструментов ограничено правами"
+      ],
+      "decisionLog": [
+        {
+          "decision": "Память как first-class состояние, а не впихивание контекста чата",
+          "alternatives": ["Полное воспроизведение транскрипта"],
+          "reason": "Транскрипты растут безгранично и разбавляют сигнал; извлечённая память держит стоимость токенов ровной.",
+          "tradeoff": "Суммаризация памяти может терять контекст — смягчено retrieval по ключам."
+        }
+      ],
+      "metrics": { "type": "github" }
+    },
+    {
+      "id": "msp-portfolio",
+      "name": "MSPortfolio (этот сайт)",
+      "repo": "ManSio/MSPortfolio",
+      "url": "https://github.com/ManSio/MSPortfolio",
+      "language": "TypeScript",
+      "stack": ["React", "TypeScript", "Vite", "Tailwind", "MCP", "Fastify"],
+      "stars": 0,
+      "forks": 0,
+      "tagline": "MCP-нативное портфолио, которое вы читаете прямо сейчас",
+      "description": "Портфолио, которое одновременно является статическим дашбордом, MCP-сервером об опыте владельца и интерактивным proof-of-work движком.",
+      "highlights": [
+        "MCP-эндпоинт: любой AI-агент может запросить CV",
+        "Демо агентного цикла в браузере, показывающее вызовы инструментов вживую",
+        "Живые метрики со свежестью + статический fallback",
+        "Симулятор архитектуры со сценариями «сломай меня»"
+      ],
+      "decisionLog": [
+        {
+          "decision": "Один репозиторий: статический сайт + MCP-сервер, общие файлы данных",
+          "alternatives": ["Два репозитория", "MCP на отдельной инфраструктуре"],
+          "reason": "Единый источник правды для projects.json; MCP деплоится туда, где может работать процесс (локально / Worker / Space), сайт — на GitHub Pages.",
+          "tradeoff": "GitHub Pages не может хостить сам MCP-процесс — документировано в server/README.md."
+        },
+        {
+          "decision": "Браузерная демо агента вместо хостированного LLM-чата",
+          "alternatives": ["Vercel AI SDK + LLM-ключ", "Serverless-функция"],
+          "reason": "У статического хостинга нет бэкенда и секретов; показ сырых вызовов инструментов доказывает работу лучше, чем непрозрачный ответ LLM.",
+          "tradeoff": "Нет свободного диалога — смягчено intent-matched сценариями."
+        }
+      ],
+      "metrics": { "type": "github" }
+    }
+  ]
+}

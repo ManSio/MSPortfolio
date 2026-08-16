@@ -7,9 +7,9 @@
       "title": "Memory Contamination Live-Arm: live LLM false-acceptance across 14 models",
       "hypothesis": "Real LLM verdicts on the same 50 memory facts (25 true / 25 false, v4_rep dataset) differ from the deterministic proxy agent (exp-2); false-acceptance spans ~0 to ~0.3 across models and arms (memory_first vs code_first).",
       "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm both --models qwen3.7-flash,qwen3.6-flash,qwen3.5-flash,deepseek-v4-flash,glm-4.7-flash,nemotron-3.5-lightning,nemotron-3-nano-30b,claude-sonnet-5,glm-5.2,deepseek-v4-pro --prompt-version v2 --no-reasoning --tag v2_en",
-      "result": "~3300 calls, ~$0.14 in the base sweep. FA code_first: qwen3.6/3.7 0.00 (confirmed over 4 runs, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max incompatible with the 100-token budget (mandatory reasoning). V4 arm (file_content_first, 2026-08-15): with a real file fragment qwen3.6/3.7 recall(real) 0.08/0.20 -> 0.88/0.88 (22/25 each) at FA 0.04/0.02 - every remaining false-accept is present-trap (R45/R46), absent/silent 0/16 and 0/3. Server-side audit: 4087 calls across >=8 upstreams. Total ~7900 calls, ~$0.94.",
+      "result": "~3300 calls, ~$0.14 in the base sweep. FA code_first: qwen3.6/3.7 0.00 (confirmed over 4 runs, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max incompatible with the 100-token budget (mandatory reasoning). V4 arm (file_content_first, 2026-08-15): with a real file fragment qwen3.6/3.7 recall(real) 0.08/0.20 -> 0.88/0.88 (22/25 each) at FA 0.04/0.02, absent/silent 0/16 and 0/3. CORRECTED (RED TEAM on ground truth, 2026-08-15): R43/R45/R46/R47 are TRUE facts mislabeled by the generator (checked value != real_value, not the subject's absence) - real trap-FA (R42 only) = 0 across all models; corrected dataset 29 true / 21 false (fp e5f7373d). Server-side audit: 4087 calls across >=8 upstreams. Total ~7900 calls, ~$0.94.",
       "verdict": "confirmed",
-      "finding": "The fail-closed look was anchor bias, not model paranoia: with token-string evidence qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm) recall jumps to 0.88 at FA 0.02-0.04 - and every remaining false-accept is a present-trap (token present, wrong subject). CoT does not pay off; qwen3.8-max (CoT) stays the middle option for the token-string regime.",
+      "finding": "The fail-closed look was anchor bias, not model paranoia: with token-string evidence qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm) recall jumps to 0.88 at FA 0.02-0.04. CORRECTED: the earlier 'every remaining false-accept is present-trap (R45/R46)' claim was a mislabeled-data issue - those facts are true, so real trap-FA = 0. The corrected labels expose a different, previously hidden gap: trap miss_true (fail-closed models qwen 4/5, deepseek 4/5 reject true usage-claims - truth loss invisible in old metrics). CoT does not pay off; qwen3.8-max (CoT) stays the middle option for the token-string regime.",
       "chart": [
         {
           "type": "bar",
@@ -46,13 +46,13 @@
           "title": "The same model, different evidence - recall on TRUE facts, %",
           "data": [
             { "label": "qwen3.6 · token string", "value": 8, "sub": "code_first arm", "color": "#f59e0b" },
-            { "label": "qwen3.6 · file fragment", "value": 88, "sub": "V4 arm · FA 0.04 (present-trap)", "color": "#10b981" },
+            { "label": "qwen3.6 · file fragment", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" },
             { "label": "qwen3.7 · token string", "value": 20, "sub": "code_first arm", "color": "#f59e0b" },
-            { "label": "qwen3.7 · file fragment", "value": 88, "sub": "V4 arm · FA 0.02 (present-trap)", "color": "#10b981" }
+            { "label": "qwen3.7 · file fragment", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" }
           ]
         }
       ],
-      "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). The only remaining hole is present-trap - verify the claim's subject, not just token presence.",
+      "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). CORRECTED: the earlier claim 'the only remaining hole is present-trap (R45/R46)' was a mislabeled-data issue - real trap-FA = 0. The corrected labels expose the actual next gap: trap miss_true, fail-closed models silently lose true usage-claims - verify the claim's subject AND measure truth loss, not just false-acceptance.",
       "links": ["exp-2", "exp-3"]
     },
     {
@@ -343,6 +343,188 @@
       ],
       "conclusion": "The scaffold is the deliverable: 12 evidence-backed reasoning tasks plus 8 keyword probes give the next harness a differentiated yardstick.",
       "links": ["exp-4"]
+    },
+    {
+      "id": "exp-13",
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Server unavailable during reindex: sync update_all blocks the event loop (P0 root cause)",
+      "hypothesis": "The ~13-min MCP request timeouts during a full reindex are NOT caused by indexing itself (it runs in run_in_executor, loop stays free) but by the synchronous AutoDocUpdater.update_all() (generate_docs + README + KNOWN_ISSUES, rglob over docs/) called in the main event loop after indexing.",
+      "command": "intel_trigger_reindex(mode=full) + request series (job_status/hotspots/passport) during and after; wmic/tasklist for process state; code read (layer.py L672-808, auto_doc_updater.py L114-163)",
+      "result": "job 0d27f125 ETA 18s but all requests timed out for ~13 min (Context server request timeout, incl. intel_get_job_status); get_logs: Timeout after 771664ms; job completed 7383/7383 in 552s (ETA 18s vs 552s, x30); after that process 19728 dead - Zed killed MCP; code: update_all() called SYNCHRONOUSLY in an async task on the main loop.",
+      "verdict": "confirmed",
+      "finding": "552s indexing + ~220s update_all = 771s unavailability, in line with the log. Indexing-in-executor (H1) refuted; fast-fail search while is_reindexing exists; the blocker was the sync update_all (same class as BS-11: run_full_diagnostic had already been moved to asyncio.to_thread).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Reindex ETA vs actual unavailability, s",
+          "data": [
+            { "label": "promised ETA", "value": 18, "sub": "job 0d27f125", "color": "#10b981" },
+            { "label": "indexing", "value": 552, "sub": "7383/7383 files", "color": "#f59e0b" },
+            { "label": "+ sync update_all", "value": 771, "sub": "total unavailability", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "Any synchronous call of a heavy method (rglob/generation) inside an async function blocks ALL requests; the canonical pattern is asyncio.to_thread + wait_for (BS-11). Guard: test_reindex_responsive.py - loop ticks must not freeze during update_all (max_gap < 0.3s).",
+      "links": []
+    },
+    {
+      "id": "exp-14",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Vacuous-test scan: 1133/1143 tests are provable (hypothesis refuted in the good way)",
+      "hypothesis": "A share of tests cannot syntactically fail (no assert/raises/warns/fail/raise) - 'vacuous' like the 33-unproven miniature; expectation 5-15%.",
+      "command": "python experiments/misc_probes/exp_vacuous_scan.py - AST scan of tests/test_*.py (1143 test functions); proven = has assert / pytest.raises/warns/xfail/fail / raise / mock assert_* (after update)",
+      "result": "1143 tests total: proven 1133 | vacuous 3 | skip 7 | vacuous share 0.3%. Vacuous: test_assignments.py:396, test_ast_cache_invalidation.py:60, test_sandbox.py:46. First scan found 5, two (test_move_chunks.py:351, test_indexer_fts5_sync.py:55) used mock assertions (assert_called_once/assert_not_called - Call, not ast.Assert) - scanner updated, honest recount 3.",
+      "verdict": "refuted",
+      "finding": "The suite is almost fully provable - 1133/1143 (99.7%) contain a failing construct; the 3 'vacuous' are smoke tests that can still fail via exception propagation from helpers (discrimination weaker, not zero). MSCodeBase is NOT in the fintech state (7/40 proven) - which is precisely why its negative controls are valuable: they are few (0-3) but maximally informative.",
+      "chart": [
+        {
+          "type": "donut",
+          "title": "Test provability scan (1143 tests)",
+          "data": [
+            { "label": "proven", "value": 1133, "color": "#10b981" },
+            { "label": "vacuous", "value": 3, "color": "#ef4444" },
+            { "label": "skipped", "value": 7, "color": "#6366f1" }
+          ]
+        }
+      ],
+      "conclusion": "Vacuous-scan traps for any scanner: mock assert_* methods (Call nodes, not ast.Assert) and exception propagation. A suite this provable makes the few negative controls the most valuable outputs.",
+      "links": []
+    },
+    {
+      "id": "exp-15",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "ln.strip() bug class replayed: broken assert-extractor gives 3/8 false passes",
+      "hypothesis": "An assert-extractor that filters by ln.strip() but emits the raw ln yields false verified for a wrong answer when the nested assert's indent lands AFTER return in the function body; expectation >=2/8 false passes.",
+      "command": "python experiments/misc_probes/exp_ln_strip_repro.py - 8 call forms (col 0 / 4-space / 8-space / 12-space, before/after return), wrong answer add_two(1,2)=4, module = answer + raw assert lines, exit 0 = verified",
+      "result": "Broken extractor: 3/8 false passes (forms 2,3,8 - assert on 4-space after return); correct extractor: 0/8. Example module (form 2): def add_two(a,b): return a+b+1; assert add_two(1,2)==3 # dead code AFTER return - valid Python, exit 0.",
+      "verdict": "confirmed",
+      "finding": "Bug class replayed: valid Python that never executes, exit 0, 'verified:true' for a wrong answer. The form count differs (3/8 vs fintech's 5/8) but the essence is identical - signature/exit-code verify the PROCESS, not the SEMANTICS ('ask for the output, not the exit code').",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False passes on 8 call forms",
+          "data": [
+            { "label": "broken extractor", "value": 3, "sub": "emit raw ln", "color": "#ef4444" },
+            { "label": "correct extractor", "value": 0, "sub": "emit ln.strip()", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Any code that extracts/recompiles fragments (assert extraction, doc examples, code-gen) must normalize indentation BEFORE emission; the negative control for an extractor is a fixture with assert-after-return that must fail.",
+      "links": []
+    },
+    {
+      "id": "exp-16",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Population blind spot: '0 eligible' is indistinguishable from '0 collected'",
+      "hypothesis": "An empty population (empty index - healthy idle) and a broken collector (garbage) emit the SAME signal: search_quality_passed=0 + warning 'no real results'; eligible_seen before selection is not measured.",
+      "command": "python experiments/misc_probes/exp_population_blindspot.py - real src/core/intelligence/health.py (importlib direct-load, stdlib-only), FakeSearcher: [] vs garbage vs real vs raising",
+      "result": "(a) EMPTY population ([]): passed=0, warning 'no real results (0 raw - all empty/garbage chunks)'; (b) GARBAGE: passed=0, warning 'no real results (2 raw - all empty/garbage chunks)'; (b2) searcher ERROR: passed=0, warning 'searcher finished with error: embedder down'; (c) CONTROL (real): passed=3, no warning.",
+      "verdict": "confirmed",
+      "finding": "(a) and (b) share the same failure signal (passed=0, same warning class) - and (a)'s message claims 'empty/garbage chunks' when raw results were 0, a false explanation. '0 rows with 0 eligible' (healthy idle) is indistinguishable from '0 rows with N eligible' (broken collector). Searcher error (b2) is a separate class that does differ.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Quality metric under four populations",
+          "data": [
+            { "label": "empty index", "value": 0, "sub": "warning: no real results", "color": "#ef4444" },
+            { "label": "garbage chunks", "value": 0, "sub": "SAME warning", "color": "#ef4444" },
+            { "label": "searcher error", "value": 0, "sub": "different warning", "color": "#f59e0b" },
+            { "label": "control (real)", "value": 3, "sub": "no warning", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "A metric must carry both numbers: population_size (after) and eligible_seen (before selection); the gap between them is the auditable quantity. In health: report raw count + index size in the warning, and mark '0 eligible' as INFO (healthy idle), not failure.",
+      "links": []
+    },
+    {
+      "id": "exp-17",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "verify_clean_state.sh falsifiability: the drift-gate is structurally unable to fail",
+      "hypothesis": "(A) the drift-gate (lines 55-71) can fail on pin-vs-lock drift; (B) a vacuous suite (0 asserts) passes -> 'CLEAN STATE VERIFICATION: PASSED' - reproducibility without falsifiability.",
+      "command": "bash experiments/misc_probes/exp_verify_gate.sh (drift loop verbatim from the script, temp pyproject/lock; pytest on temp suite) + re-run of the gate code on the project's real files",
+      "result": "Part A: injected drift (lancedb 0.12.0 pin vs 0.13.0 lock) -> 'drift NOT detected -> exit 0 FAIL'; real files: lancedb PINNED='' LOCKED='0.34.0', mcp PINNED='' LOCKED='1.28.1', tree-sitter PINNED='' LOCKED='0.26.0'. Part B: vacuous suite -> 3 passed in 0.21s, exit 0 -> gate would print PASSED. Correct parse (grep -oE pkg==[0-9.]+): lancedb PINNED=0.34.0 = lock OK; simulated drift (lancedb==0.99.0) -> DRIFT DETECTED.",
+      "verdict": "partial",
+      "finding": "(B) confirmed: the gate prints PASSED for a suite with zero asserts - semantic blindness. (A) refuted in reverse: the drift-gate is STRUCTURALLY unable to fire - its grep -iE '^pkg==' requires the pin at line start, but pins live in a TOML array ('    \"lancedb==0.34.0\",') so PINNED is always empty and the DRIFT=1 branch is unreachable for all 3 packages. A live instance of the 'guard cannot fail' class. Bonus (curiosity): scripts/stale_detector.py is a placeholder 'No drifts detected', always exit 0, wired into the pre-commit hook - a second guard of the same class.",
+      "conclusion": "grep-anchored parsing of TOML arrays (^) is a dead pattern; fix = grep -oE 'pkg==[0-9.]+' or python tomllib; a negative control (fixture with known drift, must exit 1) is mandatory for any gate. Sweep for sibling guards that cannot fail (stale_detector was one).",
+      "links": []
+    },
+    {
+      "id": "exp-18",
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "Evidence Ladder E1-E3: evidence form (anchor -> file fragment -> graph) vs verification quality",
+      "hypothesis": "Rung 1 (anchor string) is weak; rung 2 (file fragment) jumps recall; rung 3 (graph) either matches file (structure does not pay off) or beats it on present-trap (structural layer closes the failure mode). One matrix run: 3 models x 3 arms x 50 facts v4_rep.",
+      "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm code_first/file_content_first/graph_first --models qwen3.7-flash,deepseek-v4-flash,glm-4.7-flash --prompt-version v2 --no-reasoning --tag 2e_e1/e2/e3; summarize_1L_categories.py --markdown (calls=450, errors=0, ~$0.007)",
+      "result": "Rung1->2 confirmed by all 3: qwen recall 0.24->0.92, deepseek 0.04->0.84, glm 0.60->0.68. Rung2->3 non-uniform: qwen graph recall 0.92->0.76 but FA total 0.02->0.000; deepseek graph recall 0.84->0.44 (unknown 0.66 - distrust instead of checking); glm graph recall 0.68->0.84 but FA rises. Reproducibility control: qwen file_content 0.92 vs V4 0.88 (2026-08-15) - inter-run stability confirmed. CORRECTED (RED TEAM on ground truth, 2026-08-15): trap-category numbers of this run are on the mislabeled dataset - real trap-FA = 0 on corrected labels (29T/21F); the file-fragment recall result stands.",
+      "verdict": "partial",
+      "finding": "Evidence form is a per-model knob, not a global answer: the file fragment is the strongest recall driver for all models; the graph closes the trap failure mode only for evidence-honest models (and on corrected labels the trap gap itself was a label issue). Fail-open models (glm family) are not cured by ANY evidence form - that is a model property, not an evidence property.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall(real) by evidence rung, %",
+          "data": [
+            { "label": "qwen · anchor", "value": 24, "sub": "code_first", "color": "#f59e0b" },
+            { "label": "qwen · file", "value": 92, "sub": "rung 2", "color": "#10b981" },
+            { "label": "qwen · graph", "value": 76, "sub": "rung 3", "color": "#6366f1" },
+            { "label": "deepseek · file", "value": 84, "sub": "rung 2", "color": "#10b981" },
+            { "label": "deepseek · graph", "value": 44, "sub": "unknown 0.66", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "For VOR: recall engine = file fragment (~25 lines); graph = a separate subject-check signal against traps, but only for evidence-honest models; exclude fail-open models (glm family) from the VOR pipeline.",
+      "links": ["exp-1", "exp-2", "exp-19"]
+    },
+    {
+      "id": "exp-19",
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "Evidence Ladder E3b+E4: file+graph hybrid is NOT additive; git-provenance distinguishes existed-then vs exists-now",
+      "hypothesis": "(E3b) a file+graph hybrid is additive (file recall + graph trap-zero); (E4) git-provenance (commit+date+branch in evidence) lets models tell 'existed until C' from 'exists at HEAD'.",
+      "command": "python scripts/run_1L_live_arm.py --arm file_graph_first (tag 2e_e4) and temporal_first with temporal facts/contexts (tag 2e_e5) - qwen3.7-flash, deepseek-v4-flash, glm-4.7-flash; calls=294, errors=0 (temporal dataset: 48 facts = 12 removed / 28 real / 8 absent, ground truth from git)",
+      "result": "HYBRID (v4_rep N=50): qwen acc 0.900 (vs file 0.940 - hybrid is worse than file alone), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek and glm 48/48 (FA=0.00) - 'existed until C' vs 'exists' recognized perfectly on existence-claims; qwen3.7 accepted 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) - token-level familiarity/noise. CORRECTED: (E3b) 'graph closes trap (1/6->0/6)' was a mislabeled-data artifact - R45 is true; the non-additivity result stands. (E4b, 2026-08-16): 'deepseek/glm are temporal-robust, qwen is not' was a prompt-hint artifact - WITHOUT the 'NOT FOUND AT HEAD' hint NO model is robust; temporal present-trap is universal, and a past-tense formulation solves it.",
+      "verdict": "refuted",
+      "finding": "Hybridity is NOT additive: with a file fragment present, token presence dominates and the graph adds nothing (acc 0.900 < file 0.940) - VOR design must pick ONE evidence format: fragment for recall OR graph for trap-precision. Git-provenance is a cheap, powerful temporal signal for 2/3 models on existence-claims but does not cure qwen-family; the 'robust 2/3' framing was itself a hint artifact (E4b) - temporal present-trap is universal and formulation solves it.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Hybrid vs single-format accuracy, %",
+          "data": [
+            { "label": "file alone (qwen)", "value": 94, "sub": "E2 file_content", "color": "#10b981" },
+            { "label": "file+graph hybrid", "value": 90, "sub": "not additive", "color": "#ef4444" },
+            { "label": "graph alone (qwen)", "value": 91, "sub": "trap-precision", "color": "#6366f1" }
+          ]
+        }
+      ],
+      "conclusion": "VOR evidence format is chosen by the target metric: fragment for recall, graph for trap-precision - the hybrid is the worst of both (acc 0.90). Git-provenance in evidence is a cheap temporal signal, but the universal temporal present-trap is solved by claim formulation, not by evidence.",
+      "links": ["exp-1", "exp-18"]
+    },
+    {
+      "id": "exp-20",
+      "date": "2026-08-03",
+      "project": "mscodebase-intelligence",
+      "title": "ONNX embedder down: off-by-one project paths (not the model or ports)",
+      "hypothesis": "Fixing PROJECT_ROOT (parent x3 -> parents[3]) in onnx_client/onnx_server restores the ONNX mode: the server finds the script and the model, /embed returns 384-dim.",
+      "command": "cd <ext> && PYTHONPATH=<ext> venv/Scripts/python.exe D:/Project/MSCodeBase/.local/onnx_client_check.py; curl -X POST http://127.0.0.1:9876/embed -d '{\"text\":\"test\"}'",
+      "result": "[1] ensure_server_running: True; [2] embed status=200; [3] dim=384 first3=[0.037, -0.058, -0.041]; ONNX CLIENT PATH: PASSED. Before the fix: FileNotFoundError 'Model directory not found for: multilingual-e5-small-int8'; server logs: 'failed to load E5-base ONNX' x5/day.",
+      "verdict": "confirmed",
+      "finding": "Root cause is paths, not model/ports: (1) onnx_client looked for '...src/src/core/embedder/onnx_server.py' (duplicated src), (2) onnx_server looked for the model in '.../src/.codebase_models/...' (not the root). The off-by-one was copied between files (onnx_client <- onnx_server).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Embed endpoint before/after path fix",
+          "data": [
+            { "label": "before", "value": 0, "sub": "FileNotFoundError", "color": "#ef4444" },
+            { "label": "after", "value": 384, "sub": "dim, status 200", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Off-by-one paths in src/core/embedder/ are copied between files - when touching paths there, use parents[3] or verify path.exists() on all search_paths; remote_embedder already uses get_extension_dir correctly.",
+      "links": []
     }
   ],
   "negativeResults": [

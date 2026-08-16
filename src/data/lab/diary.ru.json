@@ -1,0 +1,204 @@
+{
+  "entries": [
+    {
+      "date": "2026-07-05",
+      "project": "mscodebase-intelligence",
+      "title": "Кастомный Python LSP не может зарегистрироваться в Zed (WONTFIX)",
+      "status": "fixed",
+      "rootCause": "settings.json в Zed может переопределять только ИЗВЕСТНЫЕ LSP; сервер на pygls никогда не запускается (проверено на Zed 1.9.0 и 1.14.2).",
+      "fix": "Мост LSP->MCP объявлен устаревшим (writer удалён 2026-07-20); заменён на LspClient, запускающий basedpyright как субпроцесс -> 3 MCP-инструмента (lsp_find_references / lsp_find_definition / lsp_document_symbols).",
+      "guard": "docs/en/investigations/LSP_WONTFIX.md документирует тупик.",
+      "pattern": "P-002-variant"
+    },
+    {
+      "date": "2026-07-08",
+      "project": "mscodebase-intelligence",
+      "title": "Миграция на ONNX: 7 критических багов исправлено при уходе с LM Studio",
+      "status": "fixed",
+      "rootCause": "LM Studio — внешний процесс, требующий ручного запуска; статус-API хардкодил 'lm_studio' как провайдера, поэтому врал, когда порт 1234 был закрыт.",
+      "fix": "Хардкод-строка провайдера заменена реальным пробом порта; эмбеддинги + реранкинг мигрированы на локальный ONNX Runtime; все 50 инструментов работают в ONNX-режиме (v2.7.0).",
+      "guard": "intel_get_runtime_status теперь отражает реальный рантайм; docs/en/investigations/ONNX_SESSION_REPORT.md.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Lock-zombie: загрузка MCP заблокирована до 30s устаревшим DB PID-lock",
+      "status": "fixed",
+      "rootCause": "Загрузка fail-closed на DB PID-lock до 30s, превышая таймаут Zed; сервер убивался, зомби оставался, а _is_pid_alive не мог отличить здоровый MCP от осиротевшего.",
+      "fix": "Классификация владельца (DEAD/HEALTHY/ORPHAN/AMBIGUOUS) с TOCTOU guard и retry-unlink в src/core/database_lock.py; orphan self-heal за 120ms.",
+      "guard": "tests/test_database_lock_selfhealing.py (+17); benchmark_selfhealing.py.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Проб-скрипт затенил продакшн-символ build_call_graph",
+      "status": "fixed",
+      "rootCause": "run_experiment_pagerank.py определял то же имя, что и продакшн build_call_graph; проб молча затенил его в graph-модуле.",
+      "fix": "Проб переименован и загорожен; одноразовые эксперимент-скрипты теперь живут в своей папке или _archive (правило experiments/README).",
+      "guard": "grep на коллизии имён перед добавлением пробов.",
+      "pattern": "P-002-variant"
+    },
+    {
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Дефекты контекст-агрегатора D1-D3, найденные харнессом",
+      "status": "partial",
+      "rootCause": "Intent-фильтры git_history/verify_change молча возвращали пусто в B-схеме; дыры харнесса (D1-D3) скрывали отказы.",
+      "fix": "Задокументировано в KNOWN_ISSUES (жёлтый); повторный прогон после фикса запланирован.",
+      "guard": "покрытие интентов утверждается по задаче в bench_v2.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Late enrichment: метаданные импортов = 0.0 на поисковых чанках",
+      "status": "partial",
+      "rootCause": "Чанки из поискового конвейера (~186 токенов) не несут метаданных импортов; обогащение на этапе запроса нечего было добавлять.",
+      "fix": "Оставлено за флагом MSCODEBASE_LATE_ENRICHMENT; вывод записан в KNOWN_ISSUES.",
+      "guard": "флаг выключен; гипотеза перепроверяется до включения.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Контаминация памяти: слой памяти принимает ложные заявления",
+      "status": "fixed",
+      "rootCause": "Память проекта была add-only без ретракции и без валидации против кода; ложные заявления распространялись в контекст.",
+      "fix": "ADR-0002 (ретракция + статусы) и ADR-0003 (ленивый verify-on-read); измеренное падение adoption 1.0 -> 0.12 -> 0.0 в экспериментах 1-R / 1-V.",
+      "guard": "tests/test_memory_retraction.py + tests/test_verify_on_read.py.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Shadow canary fail-open: 5/5 атак прошли",
+      "status": "fixed",
+      "rootCause": "Canary доверял пустым ответам и проваленному baseline (fail-open); метрика качества была относительной, поэтому коллапс-в-константу проходил.",
+      "fix": "Fail-closed на пустой canary и провал baseline, абсолютный якорь _ABS_MIN_QUALITY 0.5, детектор коллапса (variance < 1e-3).",
+      "guard": "tests/test_shadow_canary.py 13/13 (реалистичные пары векторов).",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "cache-hit hybrid_search_async пропускает dense-тир",
+      "status": "partial",
+      "rootCause": "Попадание в кэш эмбеддингов возвращалось раньше времени, молча пропуская векторный тир поиска; повторные запросы теряли векторный recall (первый multi-RAG прогон был полностью искажён).",
+      "fix": "Изоляция кэша по рукам в абляциях; продакшн-фикс отслеживается в KNOWN_ISSUES (hybrid-cache).",
+      "guard": "абляционный харнесс обязан изолировать кэш по рукам.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Конкурентность: 0 ошибок не означало верные данные",
+      "status": "fixed",
+      "rootCause": "Замена примитива thread-safety создала новую поверхность гонки (общий словарь результатов, общий correlation id, подмена результатов между входами), которую прогоны без исключений не вскрывают.",
+      "fix": "Правило §2.3: результаты собираются на вызов; стресс-тесты обязаны проверять правильный вход -> правильный выход (adversarial probe EXP-7).",
+      "guard": "тесты корректности результатов при конкурентности N=2 и N=8.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-12",
+      "project": "mscodebase-intelligence",
+      "title": "Memory v2: фильтр SUPERSEDED + метрика ложных ретракций не закоммичены",
+      "status": "partial",
+      "rootCause": "Каскадное поведение ADR-0004 (пропагация REFUTED) было спроектировано и провалидировано, но осталось незакоммиченным в конце сессии.",
+      "fix": "Записано как техдолг; коммит запланирован со следующей партией памяти.",
+      "guard": "чек-лист конца сессии: закоммитить или припарковать эксперименты.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Сервер недоступен во время/после индексации",
+      "status": "fixed",
+      "rootCause": "Синхронный update_all в главном loop блокировал сервер во время индексации.",
+      "fix": "update_all вынесен с горячего пути; индексация больше не блокирует вызовы инструментов.",
+      "guard": "get_health_report smoke после полной переиндексации.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "extract_anchors давал мусорные якоря -> ложные VOR-ретракции",
+      "status": "fixed",
+      "rootCause": "Извлечение якорей пере-матчило идентификаторы, поэтому verify-on-read отзывал валидную память.",
+      "fix": "Извлечение якорей ужесточено; проверено на датасете памяти.",
+      "guard": "tests/test_verify_on_read.py (кейсы качества якорей).",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Реранкер весь день офлайн: переиспользование PID в _is_pid_alive",
+      "status": "fixed",
+      "rootCause": "Завершённый объект процесса классифицировался как живой через переиспользование PID, поэтому процесс реранкера считался запущенным, когда был мёртв.",
+      "fix": "Проверка состояния объекта процесса перед живучестью PID; реранкер перезапускается по требованию.",
+      "guard": "проб статуса рантайма показывает реальное состояние процесса.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Дубликат серверов при двух окнах Zed",
+      "status": "fixed",
+      "rootCause": "Лок брался до Popen, а не до готовности порта; второе окно запускало дубликат сервера.",
+      "fix": "Взятие лока перенесено после проверки готовности порта; multi-window PID-lock задокументирован.",
+      "guard": "запись multi-window PID-lock в KNOWN_ISSUES.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "Grader validate_scores: 11 дыр (NaN/Infinity проходят)",
+      "status": "fixed",
+      "rootCause": "Валидация типа без валидации значения: NaN/Infinity проходили isinstance, клампились и получали максимальный балл.",
+      "fix": "P-006: math.isfinite, отказ на дубликатах, regex-путь через validate_scores; мутационный счёт 8% -> 100%.",
+      "guard": "tests/test_reranker.py (+13); evalmut-проба в CI.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "MCP-инструмент stale_detector: 11 ложных drifts",
+      "status": "fixed",
+      "rootCause": "Детектор устаревания сообщал о drifts, которые на деле были переименованиями/перестановками; у severity_overrides есть Windows-причуда.",
+      "fix": "Исправлены 11 ложных drifts; Windows-причуда остаётся открытой в KNOWN_ISSUES.",
+      "guard": "негативные контроли (протокол Тома).",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "fastmcp dist-name против import-path: 7 ложных REFUTED",
+      "status": "fixed",
+      "rootCause": "VOR-якоря (file/import/env) не отличали dist-имя от import-пути; класс fastmcp отзывался как отсутствующий.",
+      "fix": "ADR-0005: pkg: якоря из манифеста (pyproject.toml + requirements) как замкнутый мир; 7 ложных REFUTED -> 0.",
+      "guard": "tests/test_verify_on_read.py (+7).",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "CoT arm: glm-4.7 апстримный EMPTY_CONTENT",
+      "status": "partial",
+      "rootCause": "В режиме reasoning апстрим возвращает finish=stop с пустым телом (reasoning_tokens ~6) для 16-26% ответов; доля нестабильна между прогонами.",
+      "fix": "Задокументировано как апстримный дефект; CoT-числа glm качественные; харнесс ретраит и честно считает ошибки.",
+      "guard": "отчёт прогона флагает n(err) по модели.",
+      "pattern": "P-002-variant"
+    },
+    {
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "VOR показывал токен-строки вместо фрагментов файла -> recall 0.08 (anchor bias)",
+      "status": "fixed",
+      "rootCause": "VOR-слой подавал голые паттерн-токены ('typesense') как evidence; модель честно отвечает false/unknown, потому что токен-строка ничего не доказывает (диагностировано V4 arm file_content_first).",
+      "fix": "VOR обязан показывать реальный фрагмент файла вокруг якоря (окно ±12 строк): recall(real) qwen3.6 0.08 -> 0.88, qwen3.7 0.20 -> 0.88 при FA 0.02-0.04. CORRECTED (RED TEAM по ground truth, 2026-08-15): формулировка «все оставшиеся FA — present-trap (R45/R46)» была артефактом неверной разметки — R43/R45/R46/R47 истинны, реальный trap-FA = 0; corrected-лейблы вскрывают вместо этого trap miss_true.",
+      "guard": "exp-1L V4 arm + per-category метрики на corrected-датасете (29 true / 21 false, fp e5f7373d); следующий разрыв: trap miss_true (fail-closed модели теряют истинные usage-claims).",
+      "pattern": "P-001"
+    }
+  ]
+}

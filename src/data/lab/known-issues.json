@@ -23,8 +23,8 @@
     {
       "id": "KI-103",
       "project": "mscodebase-intelligence",
-      "problem": "VOR fail-closed was anchor bias, not model paranoia: with token strings qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm, 2026-08-15) recall jumps to 0.88 at FA 0.02-0.04. Residual hole: every remaining false-accept is a present-trap (R45/R46) - a subject check is needed.",
-      "status": "Open (policy choice)",
+      "problem": "VOR fail-closed was anchor bias, not model paranoia: with token strings qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm, 2026-08-15) recall jumps to 0.88. CORRECTED (RED TEAM on ground truth, 2026-08-15): the apparent residual hole 'every remaining false-accept is present-trap (R45/R46)' was a mislabeled-data issue - R43/R45/R46/R47 are TRUE facts (the generator checked value != real_value, not the subject's absence), so real trap-FA = 0 across all models. The corrected labels (29 true / 21 false, fp e5f7373d) expose the actual remaining gap instead: trap miss_true - fail-closed models (qwen 4/5, deepseek 4/5) reject true usage-claims, a truth loss invisible in the old metrics. V4-claim 'FA 0.02-0.04 residual trap hole' is retracted: the hole was in the labels, not in the models.",
+      "status": "Open (research)",
       "temperature": "watching",
       "deadline": null,
       "owner": "owner",

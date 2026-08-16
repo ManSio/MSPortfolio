@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync } from 'node:fs';
 import { LabPage } from '../src/components/lab/LabPage';
+import { LangProvider } from '../src/i18n/LangContext';
 import experimentsData from '../src/data/lab/experiments.json' with { type: 'json' };
 import diaryData from '../src/data/lab/diary.json' with { type: 'json' };
 import knownIssuesData from '../src/data/lab/known-issues.json' with { type: 'json' };
@@ -209,6 +210,22 @@ describe('lab data integrity', () => {
     expect(html).toContain('conclusion: ');
   });
 
+  it('LabPage renders the RU translation when the language is set to ru', () => {
+    const original = globalThis.localStorage;
+    // LangProvider reads localStorage in readInitial(); emulate a RU visitor.
+    (globalThis as Record<string, unknown>).localStorage = { getItem: () => 'ru', setItem: () => {} };
+    try {
+      const html = renderToStaticMarkup(createElement(LangProvider, { children: createElement(LabPage) }));
+      expect(html).toContain('След доказательств'); // lab hero (ru)
+      expect(html).toContain('Все проекты'); // project filter (ru)
+      expect(html).toContain('Эксперименты'); // metric label (ru)
+      expect(html).toContain('подтверждён'); // verdict label (ru)
+      expect(html).toContain('Memory Contamination Live-Arm: живые вердикты'); // translated exp-1 title
+    } finally {
+      (globalThis as Record<string, unknown>).localStorage = original;
+    }
+  });
+
   it('benchmarks.json (recommendation 1): committed snapshot is sane and matches the measured DoD gates', () => {
     const bench = JSON.parse(readFileSync(new URL('../public/benchmarks.json', import.meta.url), 'utf8')) as {
       updatedAt: string;
@@ -248,5 +265,64 @@ describe('lab data integrity', () => {
       ...claims.map((c) => c.claim),
     ];
     for (const t of texts) expect(t.match(cyrillic)).toBeNull();
+  });
+
+  it('RU lab data is a congruent translation: same ids, verdicts, counts; no gaps', () => {
+    const enExps = (experimentsData as { experiments: Experiment[] }).experiments;
+    const ruExps = (JSON.parse(readFileSync(new URL('../src/data/lab/experiments.ru.json', import.meta.url), 'utf8')) as { experiments: Experiment[] }).experiments;
+    expect(ruExps.map((e) => e.id)).toEqual(enExps.map((e) => e.id));
+    for (let i = 0; i < enExps.length; i++) {
+      expect(ruExps[i].verdict).toBe(enExps[i].verdict); // verdicts must not drift between languages
+      expect(ruExps[i].title.length).toBeGreaterThan(5);
+      expect(ruExps[i].result.length).toBeGreaterThan(10);
+    }
+
+    const enEntries = (diaryData as { entries: DiaryEntry[] }).entries;
+    const ruEntries = (JSON.parse(readFileSync(new URL('../src/data/lab/diary.ru.json', import.meta.url), 'utf8')) as { entries: DiaryEntry[] }).entries;
+    expect(ruEntries.map((d) => d.date)).toEqual(enEntries.map((d) => d.date));
+    for (let i = 0; i < enEntries.length; i++) {
+      expect(ruEntries[i].status).toBe(enEntries[i].status);
+      expect(ruEntries[i].title.length).toBeGreaterThan(5);
+      expect(ruEntries[i].rootCause.length).toBeGreaterThan(0);
+    }
+
+    const enIssues = (knownIssuesData as { issues: KnownIssue[] }).issues;
+    const ruIssues = (JSON.parse(readFileSync(new URL('../src/data/lab/known-issues.ru.json', import.meta.url), 'utf8')) as { issues: KnownIssue[] }).issues;
+    expect(ruIssues.map((i) => i.id)).toEqual(enIssues.map((i) => i.id));
+    for (let i = 0; i < enIssues.length; i++) expect(ruIssues[i].temperature).toBe(enIssues[i].temperature);
+
+    const enSuites = (testSuitesData as { suites: TestSuite[]; total: number });
+    const ruSuites = JSON.parse(readFileSync(new URL('../src/data/lab/test-suites.ru.json', import.meta.url), 'utf8')) as { suites: TestSuite[]; total: number };
+    expect(ruSuites.suites.map((s) => s.file)).toEqual(enSuites.suites.map((s) => s.file));
+    expect(ruSuites.suites.map((s) => s.tests)).toEqual(enSuites.suites.map((s) => s.tests));
+    expect(ruSuites.total).toBe(enSuites.total);
+
+    const enEv = (evidenceData as { claims: { id: string; expected: string }[]; summary: { supported: number; refused: number; total: number } });
+    const ruEv = JSON.parse(readFileSync(new URL('../src/data/lab/evidence.ru.json', import.meta.url), 'utf8')) as typeof enEv;
+    expect(ruEv.claims.map((c) => c.id)).toEqual(enEv.claims.map((c) => c.id));
+    expect(ruEv.claims.map((c) => c.expected)).toEqual(enEv.claims.map((c) => c.expected));
+    expect(ruEv.summary).toEqual(enEv.summary);
+
+    // Every RU projection actually contains Cyrillic — a translation, not a copy of the EN file.
+    const ruText = JSON.stringify(ruExps) + JSON.stringify(ruEntries) + JSON.stringify(ruIssues) + JSON.stringify(ruSuites) + JSON.stringify(ruEv);
+    expect(ruText.match(/[а-яА-ЯёЁ]/)).not.toBeNull();
+  });
+
+  it('RU main-page data mirrors the EN projects/principles/timeline/antipatterns sets', () => {
+    const enProjects = JSON.parse(readFileSync(new URL('../src/data/projects.json', import.meta.url), 'utf8')) as { projects: { id: string }[] };
+    const ruProjects = JSON.parse(readFileSync(new URL('../src/data/projects.ru.json', import.meta.url), 'utf8')) as { projects: { id: string }[] };
+    expect(ruProjects.projects.map((p) => p.id)).toEqual(enProjects.projects.map((p) => p.id));
+
+    const enPrin = JSON.parse(readFileSync(new URL('../src/data/principles.json', import.meta.url), 'utf8')) as { principles: { id: string }[] };
+    const ruPrin = JSON.parse(readFileSync(new URL('../src/data/principles.ru.json', import.meta.url), 'utf8')) as { principles: { id: string }[] };
+    expect(ruPrin.principles.map((p) => p.id)).toEqual(enPrin.principles.map((p) => p.id));
+
+    const enTl = JSON.parse(readFileSync(new URL('../src/data/timeline.json', import.meta.url), 'utf8')) as { events: { date: string }[] };
+    const ruTl = JSON.parse(readFileSync(new URL('../src/data/timeline.ru.json', import.meta.url), 'utf8')) as { events: { date: string }[] };
+    expect(ruTl.events.map((e) => e.date)).toEqual(enTl.events.map((e) => e.date));
+
+    const enAnti = JSON.parse(readFileSync(new URL('../src/data/antipatterns.json', import.meta.url), 'utf8')) as { antipatterns: { id: string }[] };
+    const ruAnti = JSON.parse(readFileSync(new URL('../src/data/antipatterns.ru.json', import.meta.url), 'utf8')) as { antipatterns: { id: string }[] };
+    expect(ruAnti.antipatterns.map((a) => a.id)).toEqual(enAnti.antipatterns.map((a) => a.id));
   });
 });

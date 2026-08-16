@@ -1,7 +1,10 @@
 import timelineData from '../../data/timeline.json';
+import timelineRu from '../../data/timeline.ru.json';
+import { useLang } from '../../i18n/LangContext';
 
 export function Timeline() {
-  const events = [...timelineData.events].reverse();
+  const { isRu } = useLang();
+  const events = [...(isRu ? timelineRu : timelineData).events].reverse();
   return (
     <ol className="relative border-l border-line pl-6">
       {events.map((ev) => (

@@ -1,21 +1,28 @@
 import projectsData from '../../data/projects.json';
+import projectsRu from '../../data/projects.ru.json';
 import type { Project, ProjectsData } from '../../lib/types';
+import { useLang } from '../../i18n/LangContext';
+import { useUi } from '../../i18n/ui';
 import { Badge } from '../ui/Badge';
 import { Card, CardHeader } from '../ui/Card';
 
 const data = projectsData as ProjectsData;
+const dataRu = projectsRu as ProjectsData;
 
 export function ProjectsGrid() {
+  const { isRu } = useLang();
+  const ui = useUi();
+  const d = isRu ? dataRu : data;
   return (
     <div className="grid gap-5 md:grid-cols-2">
-      {data.projects.map((p, i) => (
-        <ProjectCard key={p.id} project={p} glassy={i % 3 === 2} />
+      {d.projects.map((p, i) => (
+        <ProjectCard key={p.id} project={p} glassy={i % 3 === 2} ui={ui} />
       ))}
     </div>
   );
 }
 
-function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolean }) {
+function ProjectCard({ project: p, glassy, ui }: { project: Project; glassy?: boolean; ui: ReturnType<typeof useUi> }) {
   return (
     <Card className={`reveal flex flex-col ${glassy ? 'glass-card hover-lift' : ''}`}>
       <CardHeader>
@@ -49,7 +56,7 @@ function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolea
 
       <details className="group mt-4 border-t border-line pt-3">
         <summary className="cursor-pointer text-sm font-semibold text-muted transition-colors hover:text-accent">
-          Decision log ({p.decisionLog.length})
+          {ui.projects.decisionLog} ({p.decisionLog.length})
         </summary>
         <div className="mt-3 space-y-4">
           {p.decisionLog.map((d, i) => (
@@ -57,7 +64,7 @@ function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolea
               <p className="text-sm font-semibold">{d.decision}</p>
               {d.alternatives.length > 0 && (
                 <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="text-faint">considered</span>
+                  <span className="text-faint">{ui.projects.considered}</span>
                   {d.alternatives.map((alt, j) => (
                     <span
                       key={j}
@@ -68,16 +75,16 @@ function ProjectCard({ project: p, glassy }: { project: Project; glassy?: boolea
                   ))}
                   <span className="text-faint">→</span>
                   <span className="rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-accent">
-                    this one
+                    {ui.projects.thisOne}
                   </span>
                 </div>
               )}
               <p className="mt-2 text-sm text-muted">
-                <span className="text-faint">Why: </span>
+                <span className="text-faint">{ui.projects.why} </span>
                 {d.reason}
               </p>
               <p className="mt-1.5 text-xs text-amber-600/80 dark:text-amber-400/80">
-                <span className="text-faint">What it cost: </span>
+                <span className="text-faint">{ui.projects.cost} </span>
                 {d.tradeoff}
               </p>
             </div>

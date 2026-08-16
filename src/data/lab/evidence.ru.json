@@ -1,0 +1,155 @@
+{
+  "claims": [
+    {
+      "id": "ev-01",
+      "claim": "продакшн MCP-сервер для анализа кода",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-02",
+      "claim": "гибридный поиск LanceDB и BM25",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-03",
+      "claim": "Telegram-ассистент с памятью и роутингом намерений",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-04",
+      "claim": "React TypeScript Vite портфолио",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-05",
+      "claim": "гибридный поиск со слиянием рангов",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-06",
+      "claim": "должен отказать, а не гадать, когда не может проверить",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-07",
+      "claim": "заявления о производительности берутся из бенчмарков с командной строкой",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-08",
+      "claim": "производное состояние пишется через единый путь записи",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-09",
+      "claim": "watchdogs и триггеры переиндексации восстанавливают детерминированно",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-10",
+      "claim": "один сервер, потребляемый Claude Code и Cursor",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-11",
+      "claim": "выбрал LanceDB и BM25 вместо SQLite FTS5",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-12",
+      "claim": "присоединился к GitHub как ManSio",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-13",
+      "claim": "выдал форк за свою работу",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-14",
+      "claim": "хардкод цветов тёмной темы сломал светлую",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-15",
+      "claim": "mutation testing для grader'а реранкера",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-16",
+      "claim": "только FTS5 бьёт полный конвейер по recall",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-17",
+      "claim": "живые ложные принятия LLM на 14 моделях",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-18",
+      "claim": "ноль ошибок не означало верные данные",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-19",
+      "claim": "реранкер был офлайн из-за переиспользования PID",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-20",
+      "claim": "OpenRouter роутит один промпт через несколько апстримов",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-21",
+      "claim": "два окна Zed могут запустить дубликаты серверов",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-22",
+      "claim": "late enrichment не нашёл импортов на поисковых чанках",
+      "expected": "supported"
+    },
+    {
+      "id": "ev-23",
+      "claim": "работал в Google",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-24",
+      "claim": "руководил командой инженеров в Meta",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-25",
+      "claim": "создал мобильное приложение для iOS",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-26",
+      "claim": "десять лет в Netflix как staff-инженер",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-27",
+      "claim": "контрибьютил в ядро Linux",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-28",
+      "claim": "получил премию Тьюринга",
+      "expected": "refused"
+    },
+    {
+      "id": "ev-29",
+      "claim": "CTO стартапа серии B",
+      "expected": "refused"
+    }
+  ],
+  "summary": {
+    "supported": 22,
+    "refused": 7,
+    "total": 29
+  },
+  "updatedAt": "2026-08-15"
+}

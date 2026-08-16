@@ -1,33 +1,65 @@
 import { useEffect, useMemo, useState } from 'react';
 import experimentsData from '../../data/lab/experiments.json';
+import experimentsRu from '../../data/lab/experiments.ru.json';
 import diaryData from '../../data/lab/diary.json';
+import diaryRu from '../../data/lab/diary.ru.json';
 import knownIssuesData from '../../data/lab/known-issues.json';
+import knownIssuesRu from '../../data/lab/known-issues.ru.json';
 import testSuitesData from '../../data/lab/test-suites.json';
+import testSuitesRu from '../../data/lab/test-suites.ru.json';
 import evidenceData from '../../data/lab/evidence.json';
+import evidenceRu from '../../data/lab/evidence.ru.json';
 import projectsData from '../../data/projects.json';
+import projectsRu from '../../data/projects.ru.json';
 import { loadFallbackSnapshot } from '../../lib/api';
 import { ARCHITECTURES, runSimulation, SCENARIOS } from '../../lib/mcp-tools';
 import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project, CommitEntry, LabChart, LabBarDatum, LabDonutSegment, LabLineSeries } from '../../lib/types';
+import { useLang } from '../../i18n/LangContext';
+import { useUi } from '../../i18n/ui';
 import { Badge } from '../ui/Badge';
 import { Card, CardHeader } from '../ui/Card';
 import { MetricCard } from '../metrics/MetricCard';
 import { BarList, Donut, LineChart, StackedBar, type BarDatum, type DonutSegment, type LineSeries } from './charts';
 
-const experiments = (experimentsData as { experiments: Experiment[]; negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] }).experiments;
-const negativeResults = (experimentsData as { negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] }).negativeResults;
-const diary = (diaryData as { entries: DiaryEntry[] }).entries;
-const issues = (knownIssuesData as { issues: KnownIssue[] }).issues;
-const suites = (testSuitesData as { suites: { file: string; name: string; tests: number; covers: string; updatedAt: string }[]; total: number }).suites;
-const testTotal = (testSuitesData as { total: number }).total;
-const evidenceClaims = (evidenceData as { claims: { id: string; claim: string; expected: 'supported' | 'refused' }[] }).claims;
-const evidenceSummary = (evidenceData as { summary: { supported: number; refused: number; total: number } }).summary;
-const projects = (projectsData as ProjectsShape).projects;
+const ALL = 'all';
+
+type ExperimentShape = { experiments: Experiment[]; negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] };
+type DiaryShape = { entries: DiaryEntry[] };
+type IssuesShape = { issues: KnownIssue[] };
+type SuitesShape = { suites: { file: string; name: string; tests: number; covers: string; updatedAt: string }[]; total: number };
+type EvidenceShape = { claims: { id: string; claim: string; expected: 'supported' | 'refused' }[]; summary: { supported: number; refused: number; total: number } };
 
 interface ProjectsShape {
   projects: Project[];
 }
 
-const ALL = 'all';
+const enExperiments = experimentsData as ExperimentShape;
+const ruExperiments = experimentsRu as ExperimentShape;
+const enDiary = diaryData as DiaryShape;
+const ruDiary = diaryRu as DiaryShape;
+const enIssues = knownIssuesData as IssuesShape;
+const ruIssues = knownIssuesRu as IssuesShape;
+const enSuites = testSuitesData as SuitesShape;
+const ruSuites = testSuitesRu as SuitesShape;
+const enEvidence = evidenceData as EvidenceShape;
+const ruEvidence = evidenceRu as EvidenceShape;
+const enProjects = projectsData as ProjectsShape;
+const ruProjects = projectsRu as ProjectsShape;
+
+/** Lab data bundle per language — components pick the file by `lang` (EN default). */
+function useLabData() {
+  const { isRu } = useLang();
+  const experiments = (isRu ? ruExperiments : enExperiments).experiments;
+  const negativeResults = (isRu ? ruExperiments : enExperiments).negativeResults;
+  const diary = (isRu ? ruDiary : enDiary).entries;
+  const issues = (isRu ? ruIssues : enIssues).issues;
+  const suites = (isRu ? ruSuites : enSuites).suites;
+  const testTotal = (isRu ? ruSuites : enSuites).total;
+  const evidenceClaims = (isRu ? ruEvidence : enEvidence).claims;
+  const evidenceSummary = (isRu ? ruEvidence : enEvidence).summary;
+  const projects = (isRu ? ruProjects : enProjects).projects;
+  return { experiments, negativeResults, diary, issues, suites, testTotal, evidenceClaims, evidenceSummary, projects };
+}
 
 const VERDICT_COLORS: Record<ExperimentVerdict, string> = {
   confirmed: '#10b981', // emerald-500
@@ -39,13 +71,8 @@ const VERDICT_TONES: Record<ExperimentVerdict, 'success' | 'danger' | 'warn'> = 
   refuted: 'danger',
   partial: 'warn',
 };
-const VERDICT_LABELS: Record<ExperimentVerdict, string> = {
-  confirmed: 'confirmed',
-  refuted: 'refuted',
-  partial: 'partial',
-};
 
-function projectName(id: string): string {
+function projectName(projects: Project[], id: string): string {
   return projects.find((p) => p.id === id)?.name ?? id;
 }
 
@@ -54,22 +81,22 @@ function repoName(p: Project): string {
   return p.repo.split('/')[1] ?? p.repo;
 }
 
-function verdictSegments(list: Experiment[]): DonutSegment[] {
+function verdictSegments(list: Experiment[], ui: ReturnType<typeof useUi>): DonutSegment[] {
   const counts = { confirmed: 0, refuted: 0, partial: 0 };
   for (const e of list) counts[e.verdict]++;
   return [
-    { label: 'Confirmed', value: counts.confirmed, color: VERDICT_COLORS.confirmed },
-    { label: 'Partial', value: counts.partial, color: VERDICT_COLORS.partial },
-    { label: 'Refuted', value: counts.refuted, color: VERDICT_COLORS.refuted },
+    { label: ui.lab.verdicts.confirmed, value: counts.confirmed, color: VERDICT_COLORS.confirmed },
+    { label: ui.lab.verdicts.partial, value: counts.partial, color: VERDICT_COLORS.partial },
+    { label: ui.lab.verdicts.refuted, value: counts.refuted, color: VERDICT_COLORS.refuted },
   ].filter((s) => s.value > 0);
 }
 
-function diaryStatus(list: DiaryEntry[]): DonutSegment[] {
+function diaryStatus(list: DiaryEntry[], ui: ReturnType<typeof useUi>): DonutSegment[] {
   const fixed = list.filter((d) => d.status === 'fixed').length;
   const partial = list.filter((d) => d.status === 'partial').length;
   return [
-    { label: 'Fixed', value: fixed, color: '#10b981' },
-    { label: 'Partial', value: partial, color: '#f59e0b' },
+    { label: ui.lab.diaryStatus.fixed, value: fixed, color: '#10b981' },
+    { label: ui.lab.diaryStatus.partial, value: partial, color: '#f59e0b' },
   ].filter((s) => s.value > 0);
 }
 
@@ -111,7 +138,7 @@ function patternCounts(list: DiaryEntry[]) {
 }
 
 /** Project × technology dependency matrix from the same data that feeds get_projects. */
-function stackMatrix() {
+function stackMatrix(projects: Project[]) {
   const techs = [...new Set(projects.flatMap((p) => p.stack))].sort();
   return { techs, projects };
 }
@@ -134,7 +161,9 @@ function useCommits() {
 }
 
 export function LabPage() {
-  const { techs, projects: projs } = stackMatrix();
+  const { experiments, negativeResults, diary, issues, suites, testTotal, evidenceClaims, evidenceSummary, projects } = useLabData();
+  const ui = useUi();
+  const { techs, projects: projs } = stackMatrix(projects);
   const [project, setProject] = useState<string>(ALL);
   const commits = useCommits();
 
@@ -154,7 +183,7 @@ export function LabPage() {
     if (!proj) return [];
     const name = repoName(proj);
     return commits.filter((c) => c.repo.toLowerCase() === name.toLowerCase());
-  }, [commits, project]);
+  }, [commits, project, projects]);
 
   const commitCounts = useMemo(() => {
     if (!commits) return [];
@@ -165,10 +194,10 @@ export function LabPage() {
         sub: repoName(p),
       }))
       .sort((a, b) => b.value - a.value);
-  }, [commits]);
+  }, [commits, projects]);
 
   const tabs = [ALL, ...projects.map((p) => p.id)];
-  const status = diaryStatus(scoped.diary);
+  const status = diaryStatus(scoped.diary, ui);
   const hasLabData = project === ALL || scoped.experiments.length > 0 || scoped.diary.length > 0 || scoped.issues.length > 0;
   const projectHasNoLab = project !== ALL && !hasLabData;
 
@@ -178,26 +207,20 @@ export function LabPage() {
       <section className="pt-16 pb-10 sm:pt-24">
         <div className="reveal">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="accent">The Laboratory</Badge>
-            <Badge>diaries · experiments · tests</Badge>
-            <Badge tone="success">real data, rendered from source</Badge>
+            <Badge tone="accent">{ui.lab.badge1}</Badge>
+            <Badge>{ui.lab.badge2}</Badge>
+            <Badge tone="success">{ui.lab.badge3}</Badge>
           </div>
           <h1 className="mt-5 text-4xl leading-tight font-extrabold tracking-tight sm:text-6xl">
-            The evidence trail behind{' '}
-            <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">this portfolio</span>
+            {ui.lab.title}{' '}
+            <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">{ui.lab.titleAccent}</span>
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            Every claim on the front page is backed by a logged experiment, a diary entry, a test, or a commit. This
-            page is the machine-readable projection of those logs — the same data the MCP tools{' '}
-            <span className="font-mono text-accent">get_experiments</span>, <span className="font-mono text-accent">get_diary</span>,{' '}
-            <span className="font-mono text-accent">get_known_issues</span> and <span className="font-mono text-accent">get_commit_history</span>{' '}
-            expose to agents.
-          </p>
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">{ui.lab.blurb}</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard label="Experiments" value={String(experiments.length)} hint="lab-wide · hypothesis → verdict" tone="accent" />
-            <MetricCard label="Diary entries" value={String(diary.length)} hint="lab-wide · incidents, guards" />
-            <MetricCard label="Known issues" value={String(issues.length)} hint="lab-wide · open debt" />
-            <MetricCard label="Tests" value={String(testTotal)} hint={`${suites.length} suites`} />
+            <MetricCard label={ui.lab.metricExperiments} value={String(experiments.length)} hint={ui.lab.metricExperimentsHint} tone="accent" />
+            <MetricCard label={ui.lab.metricDiary} value={String(diary.length)} hint={ui.lab.metricDiaryHint} />
+            <MetricCard label={ui.lab.metricIssues} value={String(issues.length)} hint={ui.lab.metricIssuesHint} />
+            <MetricCard label={ui.lab.metricTests} value={String(testTotal)} hint={`${suites.length} ${ui.lab.metricTestsHint}`} />
           </div>
         </div>
       </section>
@@ -212,23 +235,20 @@ export function LabPage() {
               id === project ? 'border-accent/60 bg-accent/10 text-accent shadow-[0_0_20px_-6px_var(--color-accent)]' : 'border-line text-muted hover:border-accent/40 hover:text-paper'
             }`}
           >
-            {id === ALL ? 'All projects' : projectName(id)}
+            {id === ALL ? ui.lab.allProjects : projectName(projects, id)}
           </button>
         ))}
         <span className="ml-auto hidden text-xs text-faint sm:block">
-          {project === ALL ? 'full lab' : `showing ${projectName(project)}`}
+          {project === ALL ? ui.lab.fullLab : `${ui.lab.showing} ${projectName(projects, project)}`}
         </span>
       </div>
 
       {/* ── Decision logs per project ────────────────────────── */}
       <section className="pt-8 sm:pt-10">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">01 · decision logs</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Architecture decisions, per project</h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted">
-            From <span className="font-mono">src/data/projects.json</span> — the same single source of truth that feeds{' '}
-            <span className="font-mono">get_projects</span>. Each entry: considered → chosen → why → what it cost.
-          </p>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secDecisionLog.kicker}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secDecisionLog.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secDecisionLogNote}</p>
         </div>
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {(project === ALL ? projs : projs.filter((p) => p.id === project)).map((p) => (
@@ -248,15 +268,15 @@ export function LabPage() {
                     <div key={i} className="group">
                       <p className="text-sm font-medium text-paper transition-colors group-hover:text-accent">▸ {d.decision}</p>
                       <p className="mt-1 text-xs leading-relaxed text-faint">
-                        <span className="text-muted">considered: </span>
+                        <span className="text-muted">{ui.lab.considered} </span>
                         {d.alternatives.join(' · ')}
                       </p>
                       <p className="mt-0.5 text-xs leading-relaxed text-faint">
-                        <span className="text-muted">why: </span>
+                        <span className="text-muted">{ui.lab.why} </span>
                         {d.reason}
                       </p>
                       <p className="mt-0.5 text-xs leading-relaxed text-amber-600/90 dark:text-amber-400/90">
-                        <span className="text-faint">cost: </span>
+                        <span className="text-faint">{ui.lab.cost} </span>
                         {d.tradeoff}
                       </p>
                     </div>
@@ -271,12 +291,9 @@ export function LabPage() {
       {/* ── Commit log per project ───────────────────────────── */}
       <section className="pt-16 sm:pt-20">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">02 · commit log</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">What was shipped, per project</h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted">
-            From <span className="font-mono">public/metrics.json</span> — the hourly CI snapshot behind{' '}
-            <span className="font-mono">get_commit_history</span>. Every project has its own commits here.
-          </p>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secCommitLog.kicker}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secCommitLog.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secCommitLogNote}</p>
         </div>
 
         {commitCounts.length > 0 ? (
@@ -287,9 +304,9 @@ export function LabPage() {
 
         <div className="mt-6 space-y-2">
           {scopedCommits === null ? (
-            <p className="text-sm text-faint">loading commit snapshot…</p>
+            <p className="text-sm text-faint">{ui.lab.loading}</p>
           ) : scopedCommits.length === 0 ? (
-            <p className="text-sm text-faint">no commits in the snapshot for this project.</p>
+            <p className="text-sm text-faint">{ui.lab.noCommits}</p>
           ) : (
             scopedCommits.map((c) => (
               <div key={c.sha} className="glass-card group flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-lg border px-3 py-2 text-sm transition-colors hover:border-accent/40">
@@ -307,16 +324,16 @@ export function LabPage() {
       {scoped.experiments.length > 0 ? (
         <section className="pt-16 sm:pt-20">
           <div className="reveal">
-            <p className="font-mono text-xs tracking-widest text-accent uppercase">03 · experiments</p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Hypotheses, commands, verdicts</h2>
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secExperiments.kicker}</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secExperiments.title}</h2>
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr]">
             <Card className="glass-card self-start p-5 transition-all duration-300 hover:border-accent/30">
               <CardHeader>
-                <span className="text-sm font-semibold">Verdict distribution</span>
+                <span className="text-sm font-semibold">{ui.lab.verdictDistribution}</span>
               </CardHeader>
-              <Donut segments={verdictSegments(scoped.experiments)} centerLabel="experiments" />
+              <Donut segments={verdictSegments(scoped.experiments, ui)} centerLabel={ui.lab.experimentsCenter} />
             </Card>
 
             <div className="space-y-4">
@@ -326,31 +343,31 @@ export function LabPage() {
                     <div className="min-w-0">
                       <p className="font-mono text-[11px] text-faint">
                         {e.date} · {e.id}
-                        {e.project ? <span className="ml-2 text-accent">#{projectName(e.project)}</span> : null}
+                        {e.project ? <span className="ml-2 text-accent">#{projectName(projects, e.project)}</span> : null}
                       </p>
                       <h3 className="mt-0.5 font-semibold text-paper">{e.title}</h3>
                     </div>
-                    <Badge tone={VERDICT_TONES[e.verdict]}>{VERDICT_LABELS[e.verdict]}</Badge>
+                    <Badge tone={VERDICT_TONES[e.verdict]}>{ui.lab.verdicts[e.verdict]}</Badge>
                   </div>
                   <details className="group mt-3">
                     <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">
-                      hypothesis · command · raw result
+                      {ui.lab.summary}
                     </summary>
                     <div className="mt-3 space-y-3 text-sm">
                       <div>
-                        <p className="font-mono text-[11px] text-faint">hypothesis</p>
+                        <p className="font-mono text-[11px] text-faint">{ui.lab.fieldHypothesis}</p>
                         <p className="mt-0.5 leading-relaxed text-muted">{e.hypothesis}</p>
                       </div>
                       <div>
-                        <p className="font-mono text-[11px] text-faint">command</p>
+                        <p className="font-mono text-[11px] text-faint">{ui.lab.fieldCommand}</p>
                         <pre className="mt-0.5 overflow-x-auto rounded-lg border border-line bg-surface-2/60 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre-wrap text-paper">{e.command}</pre>
                       </div>
                       <div>
-                        <p className="font-mono text-[11px] text-faint">raw result</p>
+                        <p className="font-mono text-[11px] text-faint">{ui.lab.fieldResult}</p>
                         <p className="mt-0.5 leading-relaxed text-muted">{e.result}</p>
                       </div>
                       <div className="border-t border-line pt-2">
-                        <span className="font-mono text-[11px] text-accent">finding: </span>
+                        <span className="font-mono text-[11px] text-accent">{ui.lab.finding} </span>
                         <span className="text-muted">{e.finding}</span>
                       </div>
                     </div>
@@ -358,13 +375,13 @@ export function LabPage() {
                   {e.chart ? <ExperimentChart chart={e.chart} /> : null}
                   {e.conclusion ? (
                     <p className="mt-3 rounded-lg border border-accent/25 bg-accent/5 px-3 py-2 text-sm leading-relaxed text-muted">
-                      <span className="font-mono text-[11px] text-accent">conclusion: </span>
+                      <span className="font-mono text-[11px] text-accent">{ui.lab.conclusion} </span>
                       {e.conclusion}
                     </p>
                   ) : null}
                   {e.links && e.links.length > 0 ? (
                     <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                      <span className="font-mono text-[11px] text-faint">related:</span>
+                      <span className="font-mono text-[11px] text-faint">{ui.lab.related}:</span>
                       {e.links.map((id) => {
                         const target = experiments.find((x) => x.id === id);
                         if (!target) return null;
@@ -387,11 +404,9 @@ export function LabPage() {
       {project === ALL ? (
         <section className="pt-16 sm:pt-20">
           <div className="reveal">
-            <p className="font-mono text-xs tracking-widest text-amber-600 uppercase dark:text-amber-400">04 · do not repeat</p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Negative results</h2>
-            <p className="mt-2 max-w-2xl text-sm text-muted">
-              Approaches that were tried and failed — recorded so a future agent or the owner never re-runs them.
-            </p>
+            <p className="font-mono text-xs tracking-widest text-amber-600 uppercase dark:text-amber-400">{ui.lab.secNegative.kicker}</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secNegative.title}</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secNegativeNote}</p>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {negativeResults.map((n) => (
@@ -399,7 +414,7 @@ export function LabPage() {
                 <p className="font-mono text-[11px] text-faint">{n.date} · {n.ref}</p>
                 <h3 className="mt-1 text-sm font-semibold text-paper">{n.attempt}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  <span className="text-red-500/90 dark:text-red-400/90">why it failed: </span>
+                  <span className="text-red-500/90 dark:text-red-400/90">{ui.lab.whyFailed} </span>
                   {n.whyFailed}
                 </p>
               </Card>
@@ -412,21 +427,21 @@ export function LabPage() {
       {scoped.diary.length > 0 ? (
         <section className="pt-16 sm:pt-20">
           <div className="reveal">
-            <p className="font-mono text-xs tracking-widest text-accent uppercase">05 · the diary</p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Incidents, root causes, guards</h2>
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secDiary.kicker}</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secDiary.title}</h2>
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr]">
             <div className="space-y-4">
               <Card className="glass-card p-5 transition-all duration-300 hover:border-accent/30">
                 <CardHeader>
-                  <span className="text-sm font-semibold">Status</span>
+                  <span className="text-sm font-semibold">{ui.lab.status}</span>
                 </CardHeader>
-                <Donut segments={status} centerLabel="entries" />
+                <Donut segments={status} centerLabel={ui.lab.entriesCenter} />
               </Card>
               <Card className="glass-card p-5 transition-all duration-300 hover:border-accent/30">
                 <CardHeader>
-                  <span className="text-sm font-semibold">Patterns</span>
+                  <span className="text-sm font-semibold">{ui.lab.patterns}</span>
                 </CardHeader>
                 <BarList data={patternCounts(scoped.diary)} />
               </Card>
@@ -439,21 +454,21 @@ export function LabPage() {
                     <div className="min-w-0">
                       <p className="font-mono text-[11px] text-faint">
                         {d.date}
-                        {d.project ? <span className="ml-2 text-accent">#{projectName(d.project)}</span> : null}
+                        {d.project ? <span className="ml-2 text-accent">#{projectName(projects, d.project)}</span> : null}
                       </p>
                       <h3 className="mt-0.5 font-semibold text-paper">{d.title}</h3>
                     </div>
                     <div className="flex gap-1.5">
-                      <Badge tone={d.status === 'fixed' ? 'success' : 'warn'}>{d.status}</Badge>
+                      <Badge tone={d.status === 'fixed' ? 'success' : 'warn'}>{ui.lab.diaryStatus[d.status]}</Badge>
                       <Badge>{d.pattern}</Badge>
                     </div>
                   </div>
                   <details className="group mt-2">
-                    <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">root cause · fix · guard</summary>
+                    <summary className="cursor-pointer font-mono text-xs text-accent select-none transition-colors hover:text-paper">{ui.lab.rootCauseSummary}</summary>
                     <div className="mt-3 space-y-2 text-sm">
-                      <p className="leading-relaxed text-muted"><span className="text-faint">root cause: </span>{d.rootCause}</p>
-                      <p className="leading-relaxed text-muted"><span className="text-faint">fix: </span>{d.fix}</p>
-                      <p className="leading-relaxed text-muted"><span className="text-faint">guard: </span>{d.guard}</p>
+                      <p className="leading-relaxed text-muted"><span className="text-faint">{ui.lab.rootCause} </span>{d.rootCause}</p>
+                      <p className="leading-relaxed text-muted"><span className="text-faint">{ui.lab.fix} </span>{d.fix}</p>
+                      <p className="leading-relaxed text-muted"><span className="text-faint">{ui.lab.guard} </span>{d.guard}</p>
                     </div>
                   </details>
                 </Card>
@@ -467,8 +482,8 @@ export function LabPage() {
       {scoped.issues.length > 0 ? (
         <section className="pt-16 sm:pt-20">
           <div className="reveal">
-            <p className="font-mono text-xs tracking-widest text-accent uppercase">06 · known issues</p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Open debt, with temperature</h2>
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secIssues.kicker}</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secIssues.title}</h2>
           </div>
           <div className="mt-8 space-y-3">
             {scoped.issues.map((i) => (
@@ -477,7 +492,7 @@ export function LabPage() {
                   <div className="min-w-0">
                     <p className="font-mono text-[11px] text-accent">
                       {i.id}
-                      {i.project ? <span className="ml-2 text-faint">#{projectName(i.project)}</span> : null}
+                      {i.project ? <span className="ml-2 text-faint">#{projectName(projects, i.project)}</span> : null}
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-muted">{i.problem}</p>
                   </div>
@@ -486,7 +501,7 @@ export function LabPage() {
                     <Badge tone={i.status.includes('Fixed') ? 'success' : i.status.includes('Fix in code') ? 'warn' : 'default'}>{i.status}</Badge>
                   </div>
                 </div>
-                {i.deadline ? <p className="mt-2 font-mono text-xs text-faint">deadline: {i.deadline}</p> : null}
+                {i.deadline ? <p className="mt-2 font-mono text-xs text-faint">{ui.lab.deadline} {i.deadline}</p> : null}
               </Card>
             ))}
           </div>
@@ -497,14 +512,9 @@ export function LabPage() {
       {projectHasNoLab ? (
         <section className="pt-16 sm:pt-20">
           <div className="reveal">
-            <p className="font-mono text-xs tracking-widest text-accent uppercase">03 · lab logs</p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">No lab pages for this project</h2>
-            <p className="mt-2 max-w-2xl text-sm text-muted">
-              The portfolio lab (<span className="font-mono">get_experiments</span> · <span className="font-mono">get_diary</span> ·{' '}
-              <span className="font-mono">get_known_issues</span>) documents the build of this portfolio itself. Other
-              projects keep their evidence in their own repositories — see their decision log (01) and commit history
-              (02) above, or query <span className="font-mono">get_commit_history</span> for the live snapshot.
-            </p>
+            <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secNoLab.kicker}</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secNoLab.title}</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secNoLabNote}</p>
           </div>
         </section>
       ) : null}
@@ -512,8 +522,8 @@ export function LabPage() {
       {/* ── Tests ────────────────────────────────────────────── */}
       <section className="pt-16 sm:pt-20">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">07 · tests</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">The suites behind the claims</h2>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secTests.kicker}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secTests.title}</h2>
         </div>
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {suites.map((s) => (
@@ -521,7 +531,7 @@ export function LabPage() {
               <p className="font-mono text-[11px] text-faint">{s.file}</p>
               <h3 className="mt-1 font-semibold text-paper">{s.name}</h3>
               <p className="mt-3 font-mono text-3xl font-bold tabular-nums text-accent">{s.tests}</p>
-              <p className="mt-1 text-xs text-faint">tests · {s.updatedAt}</p>
+              <p className="mt-1 text-xs text-faint">{ui.lab.testsLabel} · {s.updatedAt}</p>
               <p className="mt-3 text-sm leading-relaxed text-muted">{s.covers}</p>
             </Card>
           ))}
@@ -529,24 +539,21 @@ export function LabPage() {
         <div className="mt-6">
           <Card className="glass-card p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-sm font-semibold text-paper">Evidence score — claims verified against the data</span>
-              <span className="font-mono text-xs text-faint">verify_claim · deterministic · KI-017</span>
+              <span className="text-sm font-semibold text-paper">{ui.lab.evidenceScoreTitle}</span>
+              <span className="font-mono text-xs text-faint">{ui.lab.evidenceScoreSub}</span>
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-faint">
-              The same tool the MCP server exposes: a claim is <span className="text-muted">supported</span> only when ≥2
-              significant words appear in one data record; otherwise it is <span className="text-muted">refused</span> rather than guessed.
-            </p>
+            <p className="mt-1 text-xs leading-relaxed text-faint">{ui.lab.evidenceScoreNote}</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Badge tone="success">{evidenceSummary.supported} supported</Badge>
-              <Badge tone="warn">{evidenceSummary.refused} refused</Badge>
-              <Badge>{evidenceSummary.total} claims</Badge>
+              <Badge tone="success">{evidenceSummary.supported} {ui.lab.supported}</Badge>
+              <Badge tone="warn">{evidenceSummary.refused} {ui.lab.refused}</Badge>
+              <Badge>{evidenceSummary.total} {ui.lab.claims}</Badge>
             </div>
             <ul className="mt-4 grid gap-2 md:grid-cols-2">
               {evidenceClaims.map((c) => (
                 <li key={c.id} className="flex items-start justify-between gap-3 rounded-lg border border-line bg-surface-2/60 px-3 py-2">
                   <span className="font-mono text-[11px] text-faint">{c.id}</span>
                   <span className="min-w-0 flex-1 text-sm leading-snug text-muted">{c.claim}</span>
-                  <Badge tone={c.expected === 'supported' ? 'success' : 'warn'}>{c.expected}</Badge>
+                  <Badge tone={c.expected === 'supported' ? 'success' : 'warn'}>{c.expected === 'supported' ? ui.lab.supported : ui.lab.refused}</Badge>
                 </li>
               ))}
             </ul>
@@ -555,7 +562,7 @@ export function LabPage() {
         <div className="mt-4">
           <Card className="glass-card p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted">Total</span>
+              <span className="text-sm text-muted">{ui.lab.total}</span>
               <span className="font-mono text-xl font-bold tabular-nums text-paper">{testTotal}</span>
             </div>
             <StackedBar
@@ -569,18 +576,15 @@ export function LabPage() {
       {/* ── Dependencies ─────────────────────────────────────── */}
       <section className="pt-16 sm:pt-20">
         <div className="reveal">
-          <p className="font-mono text-xs tracking-widest text-accent uppercase">08 · dependencies</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Project × technology matrix</h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted">
-            The same single source of truth (<span className="font-mono">src/data/projects.json</span>) that feeds{' '}
-            <span className="font-mono">get_projects</span> and <span className="font-mono">analyze_stack</span>.
-          </p>
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secDeps.kicker}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secDeps.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secDepsNote}</p>
         </div>
         <div className="glass-card mt-8 overflow-x-auto rounded-xl border border-line bg-surface/70">
           <table className="w-full min-w-[560px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line">
-                <th className="px-4 py-3 text-left font-mono text-xs font-medium text-faint">project</th>
+                <th className="px-4 py-3 text-left font-mono text-xs font-medium text-faint">{ui.lab.project}</th>
                 {techs.map((t) => (
                   <th key={t} className="px-2 py-3 text-center font-mono text-[11px] font-medium text-faint">{t}</th>
                 ))}
@@ -616,6 +620,8 @@ export function LabPage() {
 function LoadCurves() {
   const [projectId, setProjectId] = useState<string>(Object.keys(ARCHITECTURES)[0]);
   const [scenario, setScenario] = useState<string>(SCENARIOS[0].id);
+  const { projects } = useLabData();
+  const ui = useUi();
 
   const curves = useMemo(() => buildCurves(projectId, scenario), [projectId, scenario]);
   const sim = useMemo(() => {
@@ -628,18 +634,15 @@ function LoadCurves() {
   return (
     <section className="pt-16 sm:pt-20">
       <div className="reveal">
-        <p className="font-mono text-xs tracking-widest text-accent uppercase">09 · load curves</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Watch latency degrade under load</h2>
-        <p className="mt-2 max-w-2xl text-sm text-muted">
-          The same engine the <span className="font-mono">simulate_architecture</span> MCP tool exposes — real p50/p95
-          percentiles per load step, per project, per failure scenario.
-        </p>
+        <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secLoadCurves.kicker}</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secLoadCurves.title}</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secLoadCurvesNote}</p>
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[240px_1fr]">
         <div className="space-y-4">
           <div>
-            <p className="mb-2 font-mono text-[11px] text-faint">project</p>
+            <p className="mb-2 font-mono text-[11px] text-faint">{ui.lab.project}</p>
             <div className="flex flex-wrap gap-1.5">
               {Object.keys(ARCHITECTURES).map((id) => (
                 <button
@@ -649,7 +652,7 @@ function LoadCurves() {
                     id === projectId ? 'border-accent/60 bg-accent/10 text-accent' : 'border-line text-muted hover:border-accent/40'
                   }`}
                 >
-                  {projectName(id)}
+                  {projectName(projects, id)}
                 </button>
               ))}
             </div>

@@ -1,0 +1,568 @@
+{
+  "experiments": [
+    {
+      "id": "exp-1",
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "Memory Contamination Live-Arm: живые вердикты LLM, ложные принятия на 14 моделях",
+      "hypothesis": "Реальные вердикты LLM по тем же 50 фактам памяти (25 true / 25 false, датасет v4_rep) отличаются от детерминированного прокси-агента (exp-2); ложные принятия лежат в диапазоне ~0–0.3 по моделям и рукам (memory_first vs code_first).",
+      "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm both --models qwen3.7-flash,qwen3.6-flash,qwen3.5-flash,deepseek-v4-flash,glm-4.7-flash,nemotron-3.5-lightning,nemotron-3-nano-30b,claude-sonnet-5,glm-5.2,deepseek-v4-pro --prompt-version v2 --no-reasoning --tag v2_en",
+      "result": "~3300 вызовов, ~$0.14 в базовом прогоне. FA code_first: qwen3.6/3.7 0.00 (подтверждено 4 прогонами, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max несовместим с бюджетом 100 токенов (обязательный reasoning). V4 arm (file_content_first, 2026-08-15): с реальным фрагментом файла recall(real) qwen3.6/3.7 0.08/0.20 -> 0.88/0.88 (22/25 каждая) при FA 0.04/0.02, absent/silent 0/16 и 0/3. CORRECTED (RED TEAM по ground truth, 2026-08-15): R43/R45/R46/R47 — ИСТИННЫЕ факты, неверно размеченные генератором (проверял value != real_value, а не отсутствие у субъекта) — реальный trap-FA (только R42) = 0 у всех моделей; corrected-датасет 29 true / 21 false (fp e5f7373d). Серверный аудит: 4087 вызовов через >=8 апстримов. Итого ~7900 вызовов, ~$0.94.",
+      "verdict": "confirmed",
+      "finding": "Fail-closed вид был anchor bias, а не паранойей модели: с токен-строковым evidence qwen3.6/3.7 принимали 2-5/25 истинных заявлений (recall 0.08-0.20); с реальным фрагментом файла (V4 arm) recall прыгает до 0.88 при FA 0.02-0.04. CORRECTED: прежнее заявление «каждое оставшееся ложное принятие — present-trap (R45/R46)» было артефактом неверной разметки — те факты истинны, реальный trap-FA = 0. Corrected-лейблы вскрывают другую, ранее скрытую дыру: trap miss_true (fail-closed модели qwen 4/5, deepseek 4/5 отвергают истинные usage-claims — потеря правды, невидимая в старых метриках). CoT не окупается; qwen3.8-max (CoT) остаётся средним вариантом для токен-строкового режима.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Доля ложных принятий, code_first arm (V2-EN, %)",
+          "data": [
+            { "label": "qwen3.7-flash", "value": 0, "color": "#10b981" },
+            { "label": "qwen3.6-flash", "value": 0, "color": "#10b981" },
+            { "label": "claude-sonnet-5", "value": 0, "color": "#10b981" },
+            { "label": "deepseek-v4-pro", "value": 0, "color": "#10b981" },
+            { "label": "deepseek-v4-flash", "value": 0, "color": "#10b981" },
+            { "label": "qwen3.5-flash", "value": 0, "color": "#10b981" },
+            { "label": "glm-5.2", "value": 2, "color": "#f59e0b" },
+            { "label": "nemotron-3.5-lightning", "value": 4, "color": "#f59e0b" },
+            { "label": "glm-4.7-flash", "value": 24, "color": "#ef4444" },
+            { "label": "nemotron-3-nano-30b", "value": 38, "color": "#ef4444" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "code_first recall по истинным фактам (25) — токен-строковое evidence, %",
+          "data": [
+            { "label": "deepseek-v4-flash", "value": 4, "sub": "FA 0.00", "color": "#f59e0b" },
+            { "label": "qwen3.6-flash", "value": 8, "sub": "FA 0.00", "color": "#f59e0b" },
+            { "label": "qwen3.7-flash", "value": 20, "sub": "FA 0.00", "color": "#f59e0b" },
+            { "label": "qwen3.8-max (CoT)", "value": 36, "sub": "FA 0.04", "color": "#10b981" },
+            { "label": "claude-sonnet-5", "value": 44, "sub": "FA 0.00", "color": "#10b981" },
+            { "label": "nemotron-3.5-lightning", "value": 52, "sub": "FA 0.04", "color": "#10b981" },
+            { "label": "nemotron-3-nano-30b", "value": 80, "sub": "FA 0.38", "color": "#ef4444" },
+            { "label": "glm-4.7-flash", "value": 88, "sub": "FA 0.24", "color": "#ef4444" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Та же модель, разное evidence — recall по истинным фактам, %",
+          "data": [
+            { "label": "qwen3.6 · токен-строка", "value": 8, "sub": "code_first arm", "color": "#f59e0b" },
+            { "label": "qwen3.6 · фрагмент файла", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" },
+            { "label": "qwen3.7 · токен-строка", "value": 20, "sub": "code_first arm", "color": "#f59e0b" },
+            { "label": "qwen3.7 · фрагмент файла", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Дайте VOR-слою реальный код: фрагмент файла ±12 строк вокруг якоря превращает дешёвые qwen3.6/3.7 в «лови ложь и сохраняй правду» (recall 0.88 при FA ~0.02-0.04). CORRECTED: прежнее заявление «единственная оставшаяся дыра — present-trap (R45/R46)» было артефактом неверной разметки — реальный trap-FA = 0. Corrected-лейблы вскрывают фактический следующий разрыв: trap miss_true — fail-closed модели молча теряют истинные usage-claims; проверяй субъект заявления И измеряй потерю правды, а не только ложные принятия.",
+      "links": ["exp-2", "exp-3"]
+    },
+    {
+      "id": "exp-2",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Memory Contamination proxy-control: ретракция −88%, adoption verify-on-read до 0.0",
+      "hypothesis": "Детерминированный прокси-агент («проверь заявление по паттернам в коде») измеряет контаминацию памяти без шума LLM; ретракция (ADR-0002) и ленивая валидация (ADR-0003) снижают adoption ложной памяти.",
+      "command": "python experiments/1V_memory_contamination/memory_contamination_verify.py experiments/1V_memory_contamination/memory_contamination_facts_v4_rep.json",
+      "result": "1-V (N=24): code_contradictability 0.714, correction_capability 1.0; 1-R: устойчивая контаминация −88%, adoption memory_first 1.0->0.12; verify-on-read: adoption code_first ->0.0 (было 0.12), steady-state 0.6ms; 1-V-REP (N=50, v4_rep): adoption 0.0 воспроизведён, 0 ложных REFUTED истинных фактов при типизированных якорях.",
+      "verdict": "confirmed",
+      "finding": "Прокси всегда решает (unknown=0) и false_accept=0 по построению — заголовочные числа это свойство эвристики, а не поведения LLM; живую руку (exp-1) измеряет реальный разрыв.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Adoption ложной памяти по политике (прокси-агент)",
+          "data": [
+            { "label": "memory_first (до)", "value": 1.0, "sub": "код не показан", "color": "#ef4444" },
+            { "label": "после ретракции (1-R)", "value": 0.12, "sub": "ADR-0002", "color": "#f59e0b" },
+            { "label": "code_first verify-on-read", "value": 0, "sub": "ADR-0003, 0.6ms steady-state", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Verify-on-read плюс ретракция устраняют ложный adoption в прокси, но слепота к present-trap (заявление о существующем файле с неверным субъектом) структурна и сохраняется.",
+      "links": ["exp-1", "exp-3"]
+    },
+    {
+      "id": "exp-3",
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "Manifest anchoring (pkg: якоря, ADR-0005): closed-world манифест убирает 7 ложных REFUTED",
+      "hypothesis": "Манифест (pyproject.toml + requirements) как замкнутый мир — отсутствие там есть доказательство — ловит SILENT-trap прозу, которую пропускают file/import/env якоря; fastmcp dist-name != import-path давал 7 ложных REFUTED.",
+      "command": "python experiments/1M_manifest_anchoring/exp_1M_manifest_anchoring.md && pytest tests/test_verify_on_read.py -q",
+      "result": "4-й тип якоря pkg: добавлен в verify_on_read.py; 7 ложных REFUTED [G07,G25,G11,G24,G23,G18,G21] падают до 0 на датасете v4_rep; +7 тестов.",
+      "verdict": "confirmed",
+      "finding": "Замкнутый манифест — более сильный источник evidence, чем голые токены; фикс проверен 1-V-REP (0 ложных REFUTED истинных фактов).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Ложные REFUTED истинных фактов на v4_rep (N=50)",
+          "data": [
+            { "label": "file/import/env якоря", "value": 7, "sub": "fastmcp dist name vs import path", "color": "#ef4444" },
+            { "label": "с pkg: якорями (ADR-0005)", "value": 0, "sub": "closed-world манифест", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Evidence должен приходить из замкнутого мира: манифест решает, токены лишь подсказывают.",
+      "links": ["exp-2"]
+    },
+    {
+      "id": "exp-4",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Context aggregator vs multi-tool: 1 вызов вместо 4-5, −78% вызовов при паритете recall",
+      "hypothesis": "Один агрегатор в стиле get_edit_context бьёт 4-5 отдельных MCP-вызовов для сбора контекста агентом.",
+      "command": "python experiments/context_engine/bench_v2.py",
+      "result": "D v3 (N=30): recall B vs C2 неразличим (дельта +0.025, CI ±0.054, ничьи 27/30) — разрыв v2 был шумом; токены B ниже на ~980; B-схема (intent filter): recall 0.900 >= A 0.875 при 1 RT и 275 токенах. D v1 (N=4): −78% вызовов инструментов, −89% латентности, −19% токенов при паритете успеха.",
+      "verdict": "confirmed",
+      "finding": "B-схема (intent filter) — оптимум: тот же recall, что у multi-tool, при 1 запросе и 275 токенах; прежний разрыв recall был шумом, а не сигналом.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Стоимость сбора контекста, агрегатор vs multi-tool (снижение, %)",
+          "data": [
+            { "label": "вызовы инструментов", "value": 78, "sub": "4-5 вызовов -> 1", "color": "#10b981" },
+            { "label": "латентность", "value": 89, "sub": "−89%", "color": "#10b981" },
+            { "label": "токены", "value": 19, "sub": "−19%", "color": "#10b981" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Recall по схеме (D v3, N=30)",
+          "data": [
+            { "label": "A multi-tool", "value": 0.875, "color": "#6366f1" },
+            { "label": "B агрегатор (intent filter)", "value": 0.9, "sub": "1 RT, 275 токенов", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Один агрегатор с intent filter — оптимум: тот же recall, 1 запрос, 275 токенов — путь multi-tool стоит в 4-5 раз дороже за тот же ответ.",
+      "links": ["exp-5"]
+    },
+    {
+      "id": "exp-5",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Multi-RAG ablation: FTS5-only бьёт полный конвейер по recall; H1 опровергнута",
+      "hypothesis": "H1: multi-RAG (vector+BM25+FTS5+graph) бьёт любой одиночный компонент по recall. H2: инкрементальные вклады компонентов положительны. H3: graph помогает relationship-задачам. H5: BM25 и FTS5 избыточны.",
+      "command": "python experiments/context_engine/multi_rag_ablation.py",
+      "result": "H1 опровергнута: fts5_only 0.825 >= full 0.775; multi-RAG выигрывает в точности (quality 0.719 vs fts5 0.523); приросты: BM25 над vector +0.430, FTS5 над V+BM25 +0.178, vector над BM25 −0.098 (вредит), graph 0.000; H3 подтверждена: graph_only recall максимум на find_caller_callee 0.625 / find_impact 0.583, минимум git_history 0.000 при 12ms/121 токен; H5 опровергнута: FTS5 +0.178 recall над V+BM25, противоположные профили.",
+      "verdict": "refuted",
+      "finding": "Recall дают keyword-тиры (FTS5/BM25), точность покупается реранкером, а векторный тир слабейший на символьных задачах. Найден продакшн-баг: cache-hit hybrid_search_async молча пропускает dense-тир — изоляция кэша по рукам обязательна в абляциях (первый прогон полностью искажён).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall по конвейеру (30 задач) — H1 опровергнута",
+          "data": [
+            { "label": "fts5_only", "value": 0.825, "sub": "одиночный компонент", "color": "#10b981" },
+            { "label": "полный (без rerank)", "value": 0.775, "color": "#f59e0b" },
+            { "label": "полный + quality", "value": 0.756, "sub": "точность 0.719", "color": "#6366f1" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Инкрементальная дельта recall над предыдущим тиром",
+          "data": [
+            { "label": "BM25 над vector", "value": 0.43, "sub": "+0.430 значимо", "color": "#10b981" },
+            { "label": "FTS5 над V+BM25", "value": 0.178, "sub": "+0.178 значимо", "color": "#10b981" },
+            { "label": "graph обогащение", "value": 0, "sub": "метаданные, не текст", "color": "#f59e0b" },
+            { "label": "vector над BM25", "value": 0.098, "sub": "−0.098 (вредит)", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "Больше тиров не значит лучше по recall: FTS5-only — максимум recall, реранкер покупает точность, а ценность graph живёт в метаданных, которые текстовые метрики evidence видеть не могут.",
+      "links": ["exp-4"]
+    },
+    {
+      "id": "exp-6",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Shadow-canary fail-open: 5/5 атак проходили до фикса, 0 после",
+      "hypothesis": "Коллапс-в-константу векторы, пустой canary и проваленный baseline трактуются как доверие теневым canary эмбеддера (fail-open).",
+      "command": "python experiments/canary_shadow/exp_canary_attack.py",
+      "result": "EXP-1: 5/5 атак прошли до фикса. Фикс (2026-08-12, P2): fail-closed на пустой canary и провал baseline, абсолютный якорь _ABS_MIN_QUALITY 0.5, детектор коллапса (variance < 1e-3), eligible_seen в логе; tests/test_shadow_canary.py 13/13 с реалистичными парами векторов.",
+      "verdict": "confirmed",
+      "finding": "Относительные метрики атакуемы: отсутствие сигнала (пустой canary) обязано fail-closed, а минимальный порог качества обязан быть абсолютным, а не относительным.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Canary-атаки, которые прошли (EXP-1, 2026-08-11)",
+          "data": [
+            { "label": "до фикса", "value": 5, "sub": "5/5 прошли", "color": "#ef4444" },
+            { "label": "после fail-closed фикса", "value": 0, "sub": "13/13 регрессионных тестов", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Fail-closed на отсутствие сигнала, абсолютный якорь качества (0.5) и детектор коллапса — вот guard; одних относительных сравнений недостаточно, они атакуемы.",
+      "links": []
+    },
+    {
+      "id": "exp-7",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Конкурентность vs семантическая корректность: «0 ошибок» ≠ верные данные под гонкой",
+      "hypothesis": "Замена примитива thread-safety (lock -> pool -> queue) создаёт новую поверхность гонки; отсутствие исключений не доказывает корректность результата.",
+      "command": "python experiments/concurrency/experiment_concurrency_vs_semantic.py && python experiments/concurrency/experiment_concurrency_vs_semantic_attacks.py",
+      "result": "EXP-6: VC/Merkle принял 2 галлюцинированные лжи, VOR 0 (иллюстрация, не доказательство — критика фальсифицируемости). EXP-7 adversarial probe: A1b гибрид (равные права входа) FP=0; A2 VOR ложь о реальном импорте FP=1; A3 без якоря UNCHECKABLE; A4a VC косметическое изменение FN=1; A4b VC конфликт записи REJECTED (уникальное покрытие); A5 отравленный truth-список FP=1; A6 мутация сценария переворачивает вердикт.",
+      "verdict": "confirmed",
+      "finding": "VC и VOR — комплементарные слои: консистентность (VC) ловит потерянные записи, семантика (VOR) — ложь. Вердикт, который переворачивается при изменении одной переменной сценария (A6), — иллюстрация, а не закон.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Галлюцинированные лжи, принятые рукой валидатора",
+          "data": [
+            { "label": "VC/Merkle (без семантических входов)", "value": 2, "color": "#ef4444" },
+            { "label": "Verify-On-Read (якорь)", "value": 0, "color": "#10b981" },
+            { "label": "гибрид, равные права", "value": 0, "sub": "A1b", "color": "#10b981" }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Слепые зоны, найденные adversarial probe (FP / FN)",
+          "data": [
+            { "label": "A1a VC baseline", "value": 2, "sub": "FP — без семантики", "color": "#ef4444" },
+            { "label": "A2 VOR ложь о реальном импорте", "value": 1, "sub": "FP", "color": "#ef4444" },
+            { "label": "A4a VC косметическое изменение", "value": 1, "sub": "FN — page hash слишком груб", "color": "#f59e0b" },
+            { "label": "A5 VOR отравленный truth-список", "value": 1, "sub": "FP", "color": "#ef4444" },
+            { "label": "A6 мутация сценария", "value": 1, "sub": "FN — вердикт переворачивается", "color": "#f59e0b" },
+            { "label": "A4b VC потерянная запись", "value": 1, "sub": "поймано — уникальное покрытие", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Важен внешний слой grounding плюс слой консистентности плюс качество извлечения якорей — а не выбор «VC или VOR»; и каждый тест конкурентности обязан проверять, что вернувшийся результат принадлежит правильному входу.",
+      "links": ["exp-2", "exp-1"]
+    },
+    {
+      "id": "exp-8",
+      "date": "2026-08-14",
+      "project": "mscodebase-intelligence",
+      "title": "Mutation testing для grader'а реранкера: мутационный счёт 8% -> 100%",
+      "hypothesis": "validate_scores имеет дыры, которые не видит обычное тестирование: NaN/Infinity проходят isinstance, потом clamp, потом получают максимальный балл.",
+      "command": "python experiments/evalmut/probe_evalmut_transfer.py",
+      "result": "12 мутаций из каталога evalmut адаптированы к validate_scores; мутационный счёт 8% -> 100% (11/11 полярных дыр) после фикса (P-006: валидация типа без валидации значения). Фикс: math.isfinite, отказ на дубликатах, regex-путь через validate_scores; +13 тестов в tests/test_reranker.py.",
+      "verdict": "confirmed",
+      "finding": "Валидируй значения, а не только типы — иначе NaN/Infinity молча получают максимальный балл.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Мутационный счёт на validate_scores (12 мутаций)",
+          "data": [
+            { "label": "до фикса", "value": 8, "sub": "8%", "color": "#ef4444" },
+            { "label": "после фикса P-006", "value": 100, "sub": "11/11 полярных дыр закрыто", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Mutation testing — guard для grader'ов: обычные тесты доказывают happy path, мутации доказывают дыры.",
+      "links": []
+    },
+    {
+      "id": "exp-9",
+      "date": "2026-07-22",
+      "project": "mscodebase-intelligence",
+      "title": "Аудит предсказания корневых причин: top-1 точность 0.13 на 31 инциденте",
+      "hypothesis": "Предсказания движка корневых причин по датасету инцидентов можно оценить против золотого стандарта; аудит количественно фиксирует текущее качество как базовую линию, которую надо побить.",
+      "command": "python experiments/root_cause_eval/evaluate_root_cause.py",
+      "result": "31 инцидент; top1_accuracy 0.129, avg_similarity 0.175, avg_term_overlap 0.158; построены золотой стандарт + валидационный датасет; исследовательский статус (жёлтый).",
+      "verdict": "partial",
+      "finding": "Предсказание корневых причин далеко от решения: аудиторный датасет и золотой стандарт — базовая линия, а текущая top-1 точность движка — 13%.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Качество движка корневых причин на аудиторном датасете (31 инцидент), %",
+          "data": [
+            { "label": "top-1 точность", "value": 13, "sub": "%", "color": "#ef4444" },
+            { "label": "avg similarity", "value": 17, "sub": "%", "color": "#f59e0b" },
+            { "label": "avg term overlap", "value": 16, "sub": "%", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "conclusion": "Актив — датасет инцидентов плюс золотой стандарт; 13% top-1 точности — честная отправная точка для улучшения.",
+      "links": []
+    },
+    {
+      "id": "exp-10",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "PID-lock self-healing: ожидание осиротевшего лока 30s -> 120ms",
+      "hypothesis": "Классификация владельца DB PID-lock (DEAD/HEALTHY/ORPHAN/AMBIGUOUS) вместо fail-closed на устаревшем локе устраняет зомби-цикл загрузки.",
+      "command": "python experiments/lock_zombie/benchmark_selfhealing.py",
+      "result": "orphan 30s -> 120ms, healthy 30s -> 1.5s мягкое, free/stale без изменений; фикс в src/core/database_lock.py (классификация владельца, TOCTOU guard, retry-unlink); +17 тестов в tests/test_database_lock_selfhealing.py; 1022 passed, ruff чист.",
+      "verdict": "confirmed",
+      "finding": "Никогда не блокируй загрузку на локе, чей владелец может быть зомби: классифицируй владельца и self-heal, а не fail-closed на 30 секунд.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Ожидание загрузки на DB PID-lock (секунды)",
+          "data": [
+            { "label": "осиротевший лок (до)", "value": 30, "sub": "boot timeout -> зомби-цикл", "color": "#ef4444" },
+            { "label": "осиротевший лок (после)", "value": 0.12, "sub": "self-healing", "color": "#10b981" },
+            { "label": "живой владелец (после)", "value": 1.5, "sub": "мягкое ожидание", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Классификация владельца плюс TOCTOU guards превращают 30-секундный зомби-дедлок в self-heal за 120ms.",
+      "links": []
+    },
+    {
+      "id": "exp-11",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Late enrichment: метаданные импортов покрывают 0.0% поисковых чанков",
+      "hypothesis": "Обогащение результатов поиска метаданными (импорты, вызовы) во время запроса (late) вместо времени индексации улучшает релевантность.",
+      "command": "python experiments/late_enrichment/bench.py",
+      "result": "Замер на реальных чанках проекта (~186 токенов/чанк): imports=0.0 на поисковых чанках — вывод, стоящий за KNOWN_ISSUES; late enrichment остаётся за флагом MSCODEBASE_LATE_ENRICHMENT.",
+      "verdict": "partial",
+      "finding": "Обогащение на этапе индексации ничего не дало для поисковых чанков: покрытие импортов 0.0, поэтому late-путь держится за флагом, пока гипотеза не будет перепроверена.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Покрытие импортов на поисковых чанках",
+          "data": [
+            { "label": "покрытие импортов", "value": 0, "sub": "~186 токенов/чанк", "color": "#f59e0b" },
+            { "label": "чанки с любыми метаданными", "value": 0, "sub": "вывод -> KNOWN_ISSUES", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "Гипотеза обогащения открыта: извлечение метаданных дало 0.0 на поисковых чанках, флаг остаётся выключенным до лучшего проба.",
+      "links": ["exp-4"]
+    },
+    {
+      "id": "exp-12",
+      "date": "2026-08-08",
+      "project": "mscodebase-intelligence",
+      "title": "Benchmark 2.0 scaffold: 12 задач рассуждения о репозитории уровней L3-L5",
+      "hypothesis": "RepoReason (широта интеграции, а не число файлов) и Active-SWE мотивируют измерять качество рассуждения (L3 объясни, L4 влияние, L5 скрытый баг) вместо запрос -> 5 результатов -> латентность.",
+      "command": "python experiments/benchmark2/runner.py && python experiments/benchmark2/runner.py --keywords",
+      "result": "tasks.jsonl: 12 задач (архитектура / влияние / история / скрытые баги / консистентность) с evidence, пробами и критериями проверки; keywords.jsonl: 8 коротких keyword-запросов — CoREB: короткие запросы крушат nDCG@10 для всех моделей; scaffold v1 (жёлтый статус).",
+      "verdict": "partial",
+      "finding": "Бенчмарк качества рассуждения требует задач L3-L5 с evidence и проверками; короткие keyword-запросы — отдельный режим отказа (CoREB), который нужно измерять независимо.",
+      "chart": [
+        {
+          "type": "donut",
+          "title": "Каталог Benchmark 2.0",
+          "data": [
+            { "label": "задачи рассуждения (L3-L5)", "value": 12, "color": "#6366f1" },
+            { "label": "keyword-пробы", "value": 8, "color": "#06b6d4" }
+          ]
+        }
+      ],
+      "conclusion": "Scaffold и есть результат: 12 задач с evidence плюс 8 keyword-проб дают следующему харнесу дифференцированный измеритель.",
+      "links": ["exp-4"]
+    },
+    {
+      "id": "exp-13",
+      "date": "2026-08-13",
+      "project": "mscodebase-intelligence",
+      "title": "Сервер недоступен при переиндексации: синхронный update_all блокирует event loop (P0 root cause)",
+      "hypothesis": "Таймауты MCP-запросов ~13 мин при полной переиндексации вызваны НЕ самой индексацией (она в run_in_executor, loop свободен), а синхронным AutoDocUpdater.update_all() (generate_docs + README + KNOWN_ISSUES, rglob по docs/), вызванным в главном event loop после индексации.",
+      "command": "intel_trigger_reindex(mode=full) + серия запросов (job_status/hotspots/passport) во время и после; wmic/tasklist для состояния процесса; чтение кода (layer.py L672-808, auto_doc_updater.py L114-163)",
+      "result": "job 0d27f125 с ETA 18s, но все запросы таймаутили ~13 мин (Context server request timeout, включая intel_get_job_status); get_logs: Timeout after 771664ms; job завершён 7383/7383 за 552s (ETA 18s против 552s, x30); после этого процесс 19728 мёртв — Zed убил MCP; код: update_all() вызывается СИНХРОННО в async-задаче на главном loop.",
+      "verdict": "confirmed",
+      "finding": "552s индексации + ~220s update_all = 771s недоступности, сходится с логом. Индексация-в-executor (H1) опровергнута; fast-fail поиск при is_reindexing есть; блокировал именно синхронный update_all (тот же класс, что BS-11: run_full_diagnostic уже был вынесен в asyncio.to_thread).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "ETA переиндексации vs фактическая недоступность, s",
+          "data": [
+            { "label": "обещанный ETA", "value": 18, "sub": "job 0d27f125", "color": "#10b981" },
+            { "label": "индексация", "value": 552, "sub": "7383/7383 файлов", "color": "#f59e0b" },
+            { "label": "+ синхронный update_all", "value": 771, "sub": "итоговая недоступность", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "Любой синхронный вызов тяжёлого метода (rglob/генерация) внутри async-функции блокирует ВСЕ запросы; эталонный паттерн — asyncio.to_thread + wait_for (BS-11). Guard: test_reindex_responsive.py — тики loop не должны замирать во время update_all (max_gap < 0.3s).",
+      "links": []
+    },
+    {
+      "id": "exp-14",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Скан вакуумных тестов: 1133/1143 тестов доказуемы (гипотеза опровергнута в хорошем смысле)",
+      "hypothesis": "Доля тестов синтаксически не может упасть (нет assert/raises/warns/fail/raise) — «вакуумные», как миниатюра 33-unproven; ожидание 5-15%.",
+      "command": "python experiments/misc_probes/exp_vacuous_scan.py - AST-скан tests/test_*.py (1143 тест-функции); proven = есть assert / pytest.raises/warns/xfail/fail / raise / mock assert_* (после правки)",
+      "result": "Всего тестов 1143: proven 1133 | вакуумных 3 | skip 7 | доля вакуумных 0.3%. Вакуумные: test_assignments.py:396, test_ast_cache_invalidation.py:60, test_sandbox.py:46. Первый скан дал 5, два (test_move_chunks.py:351, test_indexer_fts5_sync.py:55) использовали mock-утверждения (assert_called_once/assert_not_called — Call, не ast.Assert) — сканер обновлён, честный пересчёт 3.",
+      "verdict": "refuted",
+      "finding": "Сьют почти полностью доказуем — 1133/1143 (99.7%) содержат падающую конструкцию; 3 «вакуумных» — smoke-тесты, способные упасть через проброс исключений из хелперов (дискриминация слабее, но не нулевая). MSCodeBase НЕ в состоянии fintech (7/40 proven) — именно поэтому его отрицательные контроли ценны: их мало (0-3), но они максимально информативны.",
+      "chart": [
+        {
+          "type": "donut",
+          "title": "Скан доказуемости тестов (1143 теста)",
+          "data": [
+            { "label": "доказуемы", "value": 1133, "color": "#10b981" },
+            { "label": "вакуумные", "value": 3, "color": "#ef4444" },
+            { "label": "пропущены", "value": 7, "color": "#6366f1" }
+          ]
+        }
+      ],
+      "conclusion": "Ловушки сканера вакуумности: mock assert_* методы (узлы Call, а не ast.Assert) и проброс исключений. Настолько доказуемый сьют делает немногие отрицательные контроли самыми ценными результатами.",
+      "links": []
+    },
+    {
+      "id": "exp-15",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Класс бага ln.strip() переигран: сломанный assert-экстрактор даёт 3/8 ложных проходов",
+      "hypothesis": "Assert-экстрактор, фильтрующий по ln.strip(), но эмитирующий сырую ln, даёт ложный verified для неверного ответа, когда отступ вложенного assert-а попадает ПОСЛЕ return в теле функции; ожидание >=2/8 ложных проходов.",
+      "command": "python experiments/misc_probes/exp_ln_strip_repro.py - 8 форм вызова (col 0 / 4-space / 8-space / 12-space, до/после return), неверный ответ add_two(1,2)=4, модуль = ответ + сырые assert-строки, exit 0 = verified",
+      "result": "Сломанный экстрактор: 3/8 ложных проходов (формы 2,3,8 — assert на 4-space после return); правильный экстрактор: 0/8. Пример модуля (форма 2): def add_two(a,b): return a+b+1; assert add_two(1,2)==3 # мёртвый код ПОСЛЕ return - валидный Python, exit 0.",
+      "verdict": "confirmed",
+      "finding": "Класс бага переигран: валидный Python, который никогда не исполняется, exit 0, 'verified:true' для неверного ответа. Число форм отличается (3/8 против fintech 5/8), но суть идентична — сигнатура/exit-код верифицируют ПРОЦЕСС, а не СЕМАНТИКУ («проси результат, а не exit-код»).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Ложные проходы на 8 формах вызова",
+          "data": [
+            { "label": "сломанный экстрактор", "value": 3, "sub": "эмитит сырую ln", "color": "#ef4444" },
+            { "label": "правильный экстрактор", "value": 0, "sub": "эмитит ln.strip()", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Любой код, извлекающий/перекомпилирующий фрагменты (assert-экстракция, док-примеры, code-gen), обязан нормализовать отступы ПЕРЕД эмиссией; отрицательный контроль для экстрактора — фикстура с assert-после-return, которая обязана упасть.",
+      "links": []
+    },
+    {
+      "id": "exp-16",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Слепое пятно популяции: «0 eligible» неотличимо от «0 собрано»",
+      "hypothesis": "Пустая популяция (пустой индекс — здоровый idle) и сломанный коллектор (мусор) дают ОДИНАКОВЫЙ сигнал: search_quality_passed=0 + warning «нет реальных результатов»; eligible_seen до селекции не измеряется.",
+      "command": "python experiments/misc_probes/exp_population_blindspot.py - реальный src/core/intelligence/health.py (importlib direct-load, stdlib-only), FakeSearcher: [] vs мусор vs реальные vs raising",
+      "result": "(a) ПУСТАЯ популяция ([]): passed=0, warning «нет реальных результатов (0 сырых — все пустые/мусорные чанки)»; (b) МУСОР: passed=0, warning «нет реальных результатов (2 сырых — все пустые/мусорные чанки)»; (b2) ОШИБКА searcher: passed=0, warning «searcher завершился с ошибкой: embedder down»; (c) КОНТРОЛЬ (реальные): passed=3, без warning.",
+      "verdict": "confirmed",
+      "finding": "(a) и (b) делят один сигнал отказа (passed=0, тот же класс warning) — и сообщение (a) утверждает «пустые/мусорные чанки», когда сырых результатов было 0, ложное объяснение. «0 строк с 0 eligible» (здоровый idle) неотличимо от «0 строк с N eligible» (сломанный коллектор). Ошибка searcher (b2) — отдельный класс, который различается.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Метрика качества под четырьмя популяциями",
+          "data": [
+            { "label": "пустой индекс", "value": 0, "sub": "warning: нет реальных результатов", "color": "#ef4444" },
+            { "label": "мусорные чанки", "value": 0, "sub": "ТОТ ЖЕ warning", "color": "#ef4444" },
+            { "label": "ошибка searcher", "value": 0, "sub": "другой warning", "color": "#f59e0b" },
+            { "label": "контроль (реальные)", "value": 3, "sub": "без warning", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Метрика обязана нести оба числа: population_size (после) и eligible_seen (до селекции); разрыв между ними — аудируемая величина. В health: сообщать raw-счёт + размер индекса в warning, а «0 eligible» маркировать INFO (здоровый idle), а не отказом.",
+      "links": []
+    },
+    {
+      "id": "exp-17",
+      "date": "2026-08-11",
+      "project": "mscodebase-intelligence",
+      "title": "Falsifiability verify_clean_state.sh: drift-гейт структурно не способен упасть",
+      "hypothesis": "(A) drift-гейт (строки 55-71) умеет падать на рассинхроне pin vs lock; (B) вакуумная сюита (0 asserts) проходит -> «CLEAN STATE VERIFICATION: PASSED» — воспроизводимость без фальсифицируемости.",
+      "command": "bash experiments/misc_probes/exp_verify_gate.sh (drift-цикл дословно из скрипта, temp pyproject/lock; pytest на temp-сьюте) + повторный прогон гейт-кода на реальных файлах проекта",
+      "result": "Часть A: внедрённый drift (lancedb 0.12.0 pin против 0.13.0 lock) -> «drift НЕ обнаружен -> exit 0 FAIL»; реальные файлы: lancedb PINNED='' LOCKED='0.34.0', mcp PINNED='' LOCKED='1.28.1', tree-sitter PINNED='' LOCKED='0.26.0'. Часть B: вакуумная сюита -> 3 passed за 0.21s, exit 0 -> гейт напечатал бы PASSED. Корректный парсинг (grep -oE pkg==[0-9.]+): lancedb PINNED=0.34.0 = lock OK; симулированный drift (lancedb==0.99.0) -> DRIFT DETECTED.",
+      "verdict": "partial",
+      "finding": "(B) подтверждена: гейт печатает PASSED для сьюта с нулём asserts — семантическая слепота. (A) опровергнута наоборот: drift-гейт СТРУКТУРНО не способен сработать — его grep -iE '^pkg==' требует pin в начале строки, но пины лежат в TOML-массиве ('    \"lancedb==0.34.0\",'), поэтому PINNED всегда пуст и ветка DRIFT=1 недостижима для всех 3 пакетов. Живой экземпляр класса «guard не может упасть». Бонус (любопытство): scripts/stale_detector.py — заглушка «No drifts detected», всегда exit 0, подключена к pre-commit хуку — второй guard того же класса.",
+      "conclusion": "grep-парсинг TOML-массивов по якорю (^) — мёртвый паттерн; фикс = grep -oE 'pkg==[0-9.]+' или python tomllib; отрицательный контроль (фикстура с заведомым drift, обязана дать exit 1) обязателен для любого гейта. Сканировать на соседние guards, которые не могут упасть (stale_detector — один из них).",
+      "links": []
+    },
+    {
+      "id": "exp-18",
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "Evidence Ladder E1-E3: форма evidence (якорь -> фрагмент файла -> граф) против качества верификации",
+      "hypothesis": "Ступень 1 (якорная строка) слаба; ступень 2 (фрагмент файла) прыгает по recall; ступень 3 (граф) либо повторяет файл (структура не окупается), либо бьёт его на present-trap (структурный слой закрывает режим отказа). Один матричный прогон: 3 модели x 3 руки x 50 фактов v4_rep.",
+      "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm code_first/file_content_first/graph_first --models qwen3.7-flash,deepseek-v4-flash,glm-4.7-flash --prompt-version v2 --no-reasoning --tag 2e_e1/e2/e3; summarize_1L_categories.py --markdown (calls=450, errors=0, ~$0.007)",
+      "result": "Ступень 1->2 подтверждена всеми 3: qwen recall 0.24->0.92, deepseek 0.04->0.84, glm 0.60->0.68. Ступень 2->3 неоднородна: qwen graph recall 0.92->0.76, но FA total 0.02->0.000; deepseek graph recall 0.84->0.44 (unknown 0.66 — недоверие вместо проверки); glm graph recall 0.68->0.84, но FA растёт. Контроль воспроизводимости: qwen file_content 0.92 против V4 0.88 (2026-08-15) — межпрогонная стабильность подтверждена. CORRECTED (RED TEAM по ground truth, 2026-08-15): trap-цифры этого прогона на mislabeled датасете — реальный trap-FA = 0 на corrected-лейблах (29T/21F); результат по фрагменту файла остаётся в силе.",
+      "verdict": "partial",
+      "finding": "Форма evidence — per-model ручка, а не глобальный ответ: фрагмент файла — сильнейший драйвер recall для всех моделей; граф закрывает режим отказа trap только для evidence-честных моделей (а на corrected-лейблах сама trap-дыра была артефактом разметки). Fail-open модели (семейство glm) не лечатся НИКАКОЙ формой evidence — это свойство модели, а не evidence.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall(real) по ступени evidence, %",
+          "data": [
+            { "label": "qwen · якорь", "value": 24, "sub": "code_first", "color": "#f59e0b" },
+            { "label": "qwen · файл", "value": 92, "sub": "ступень 2", "color": "#10b981" },
+            { "label": "qwen · граф", "value": 76, "sub": "ступень 3", "color": "#6366f1" },
+            { "label": "deepseek · файл", "value": 84, "sub": "ступень 2", "color": "#10b981" },
+            { "label": "deepseek · граф", "value": 44, "sub": "unknown 0.66", "color": "#ef4444" }
+          ]
+        }
+      ],
+      "conclusion": "Для VOR: движок recall = фрагмент файла (~25 строк); граф = отдельный сигнал проверки субъекта против traps, но только для evidence-честных моделей; исключить fail-open модели (семейство glm) из VOR-конвейера.",
+      "links": ["exp-1", "exp-2", "exp-19"]
+    },
+    {
+      "id": "exp-19",
+      "date": "2026-08-15",
+      "project": "mscodebase-intelligence",
+      "title": "Evidence Ladder E3b+E4: гибрид file+graph НЕ аддитивен; git-провенанс отличает «было тогда» от «есть сейчас»",
+      "hypothesis": "(E3b) гибрид file+graph аддитивен (recall файла + trap-ноль графа); (E4) git-провенанс (commit+date+branch в evidence) позволяет моделям отличать «существовал до C» от «существует на HEAD».",
+      "command": "python scripts/run_1L_live_arm.py --arm file_graph_first (tag 2e_e4) и temporal_first с temporal-фактами/контекстами (tag 2e_e5) - qwen3.7-flash, deepseek-v4-flash, glm-4.7-flash; calls=294, errors=0 (temporal-датасет: 48 фактов = 12 removed / 28 real / 8 absent, ground truth из git)",
+      "result": "ГИБРИД (v4_rep N=50): qwen acc 0.900 (против file 0.940 — гибрид хуже одного файла), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek и glm 48/48 (FA=0.00) — «существовал до C» против «существует» распознаётся идеально на existence-claims; qwen3.7 принял 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) — токен-уровневая фамильярность/шум. CORRECTED: (E3b) «граф закрывает trap (1/6->0/6)» был артефактом mislabeled-данных — R45 истинен; результат неаддитивности в силе. (E4b, 2026-08-16): «deepseek/glm temporal-устойчивы, qwen нет» был артефактом подсказки — БЕЗ подсказки «NOT FOUND AT HEAD» устойчивых НЕТ; temporal present-trap универсален, и решается он формулировкой в прошедшем времени.",
+      "verdict": "refuted",
+      "finding": "Гибридность НЕ аддитивна: когда есть фрагмент файла, доминирует токен-присутствие и граф ничего не добавляет (acc 0.900 < file 0.940) — VOR-дизайн обязан выбрать ОДИН формат evidence: фрагмент для recall ИЛИ граф для trap-точности. Git-провенанс — дешёвый, мощный временной сигнал для 2/3 моделей на existence-claims, но не лечит семейство qwen; сам фрейминг «устойчивы 2/3» был артефактом подсказки (E4b) — temporal present-trap универсален, и решается формулировкой.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Точность гибрида против одиночного формата, %",
+          "data": [
+            { "label": "только файл (qwen)", "value": 94, "sub": "E2 file_content", "color": "#10b981" },
+            { "label": "гибрид file+graph", "value": 90, "sub": "не аддитивен", "color": "#ef4444" },
+            { "label": "только граф (qwen)", "value": 91, "sub": "trap-точность", "color": "#6366f1" }
+          ]
+        }
+      ],
+      "conclusion": "Формат evidence для VOR выбирается по целевой метрике: фрагмент для recall, граф для trap-точности — гибрид худшее из обоих (acc 0.90). Git-провенанс в evidence — дешёвый временной сигнал, но универсальный temporal present-trap решается формулировкой заявления, а не evidence.",
+      "links": ["exp-1", "exp-18"]
+    },
+    {
+      "id": "exp-20",
+      "date": "2026-08-03",
+      "project": "mscodebase-intelligence",
+      "title": "ONNX embedder лежит: off-by-one пути проекта (не модель и не порты)",
+      "hypothesis": "Исправление PROJECT_ROOT (parent x3 -> parents[3]) в onnx_client/onnx_server возвращает ONNX-режим: сервер найдёт скрипт и модель, /embed вернёт 384-dim.",
+      "command": "cd <ext> && PYTHONPATH=<ext> venv/Scripts/python.exe D:/Project/MSCodeBase/.local/onnx_client_check.py; curl -X POST http://127.0.0.1:9876/embed -d '{\"text\":\"test\"}'",
+      "result": "[1] ensure_server_running: True; [2] embed status=200; [3] dim=384 first3=[0.037, -0.058, -0.041]; ONNX CLIENT PATH: PASSED. До фикса: FileNotFoundError 'Model directory not found for: multilingual-e5-small-int8'; логи сервера: «failed to load E5-base ONNX» x5/день.",
+      "verdict": "confirmed",
+      "finding": "Корневая причина — пути, а не модель/порты: (1) onnx_client искал '...src/src/core/embedder/onnx_server.py' (задвоенный src), (2) onnx_server искал модель в '.../src/.codebase_models/...' (не в корне). Off-by-one был скопирован между файлами (onnx_client <- onnx_server).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Embed-эндпоинт до/после фикса путей",
+          "data": [
+            { "label": "до", "value": 0, "sub": "FileNotFoundError", "color": "#ef4444" },
+            { "label": "после", "value": 384, "sub": "dim, status 200", "color": "#10b981" }
+          ]
+        }
+      ],
+      "conclusion": "Off-by-one пути в src/core/embedder/ копируются между файлами — при работе с путями там используй parents[3] или проверяй path.exists() на всех search_paths; remote_embedder уже использует get_extension_dir корректно.",
+      "links": []
+    }
+  ],
+  "negativeResults": [
+    {
+      "attempt": "scip-python как pip-зависимость (SCIP-бэкенд для Python)",
+      "whyFailed": "Пакета нет на PyPI (404) — только репозитории Sourcegraph CLI с node/native сборками.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "cypher-sqlite как готовая Cypher-библиотека",
+      "whyFailed": "Пакета нет на PyPI (404); собственный CypherExecutor уже был реализован.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "Извлечение символов на 371 язык через tree-sitter-language-pack",
+      "whyFailed": "Манифест перечисляет 371 грамматику, но только у 71 (19%) есть tags.scm — остальные парсят AST без символов.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "pylint-django как детектор дублирования кода",
+      "whyFailed": "Это плагин для Django-фреймворка (типы ForeignKey/Model), а не dup-детектор — по официальному описанию на PyPI.",
+      "date": "2026-08-08",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "CoT-промптинг для дешёвого verify-on-read",
+      "whyFailed": "Стоимость x30-65 и токены x20-70 ради маргинального прироста recall (qwen3.6 code_first 0.08 -> 0.20); glm-4.7 теряет 16-26% ответов из-за апстримного EMPTY_CONTENT.",
+      "date": "2026-08-15",
+      "ref": "exp-1"
+    },
+    {
+      "attempt": "Первый прогон multi-RAG абляции без изоляции кэша по рукам",
+      "whyFailed": "Cache-hit hybrid_search_async пропускает dense-тир — векторный тир молча исчезает на повторных запросах, и первый прогон был полностью искажён (vector_bm25 == bm25_only 30/30).",
+      "date": "2026-08-11",
+      "ref": "exp-5"
+    }
+  ]
+}

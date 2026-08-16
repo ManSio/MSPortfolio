@@ -1,0 +1,124 @@
+{
+  "issues": [
+    {
+      "id": "KI-101",
+      "project": "mscodebase-intelligence",
+      "problem": "hybrid_search_async: cache-hit эмбеддингов молча пропускает dense-тир — повторные запросы теряют векторный recall (найдено multi-RAG абляцией; первый прогон был полностью искажён).",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": "after re-run",
+      "owner": "owner",
+      "link": "src/core/search/engine.py"
+    },
+    {
+      "id": "KI-102",
+      "project": "mscodebase-intelligence",
+      "problem": "Слепота к present-trap структурна: заявления о существующем файле/импорте с неверным субъектом или значением не ловятся якорной верификацией (adoption memory_first 0.24 в proxy-контроле).",
+      "status": "Open (by design)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/intelligence/verify_on_read.py"
+    },
+    {
+      "id": "KI-103",
+      "project": "mscodebase-intelligence",
+      "problem": "Fail-closed VOR был anchor bias, а не паранойей модели: с токен-строками qwen3.6/3.7 принимали 2-5/25 истинных заявлений (recall 0.08-0.20); с реальным фрагментом файла (V4 arm, 2026-08-15) recall прыгает до 0.88. CORRECTED (RED TEAM по ground truth, 2026-08-15): кажущаяся остаточная дыра «каждое оставшееся ложное принятие — present-trap (R45/R46)» была артефактом неверной разметки — R43/R45/R46/R47 ИСТИННЫЕ факты (генератор проверял value != real_value, а не отсутствие у субъекта), поэтому реальный trap-FA = 0 у всех моделей. Corrected-лейблы (29 true / 21 false, fp e5f7373d) вскрывают вместо этого фактический оставшийся разрыв: trap miss_true — fail-closed модели (qwen 4/5, deepseek 4/5) отвергают истинные usage-claims, потеря правды, невидимая в старых метриках. V4-заявление «FA 0.02-0.04 остаточная trap-дыра» отозвано: дыра была в лейблах, не в моделях.",
+      "status": "Open (research)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/1L_live_arm/report.md"
+    },
+    {
+      "id": "KI-104",
+      "project": "mscodebase-intelligence",
+      "problem": "glm-4.7-flash в режиме reasoning возвращает 16-26% EMPTY_CONTENT (finish=stop, пустое тело) — апстримный дефект; его CoT-числа только качественные.",
+      "status": "Open (upstream)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "upstream",
+      "link": "experiments/1L_live_arm/report.md"
+    },
+    {
+      "id": "KI-105",
+      "project": "mscodebase-intelligence",
+      "problem": "OpenRouter роутит один промпт через >=8 апстримов (Alibaba/DeepInfra/DigitalOcean/Cloudflare/Novita/Baidu/StreamLake/Bedrock): дисперсия вердиктов между прогонами (FA ±0.05-0.10) ожидаема; детерминизм при temp=0 — иллюзия.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/1L_live_arm/openrouter_activity_2026-08-15.csv"
+    },
+    {
+      "id": "KI-106",
+      "project": "mscodebase-intelligence",
+      "problem": "Late enrichment: imports=0.0 на поисковых чанках (~186 токенов/чанк); флаг MSCODEBASE_LATE_ENRICHMENT остаётся выключенным, пока гипотеза не перепроверена.",
+      "status": "Open (research)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/late_enrichment/README.md"
+    },
+    {
+      "id": "KI-107",
+      "project": "mscodebase-intelligence",
+      "problem": "Векторный тир (multilingual-e5-small) слабейший на символьных задачах (recall 0.083-0.167); recall несут keyword-тиры, точность — реранкер.",
+      "status": "Open (by design)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/context_engine/README.md"
+    },
+    {
+      "id": "KI-108",
+      "project": "mscodebase-intelligence",
+      "problem": "Graph-обогащение добавляет метаданные (callers/callees), а не текст: текстовые evidence-метрики его не видят; нужен отдельный протокол вклада графа.",
+      "status": "Open (research)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "experiments/context_engine/README.md"
+    },
+    {
+      "id": "KI-109",
+      "project": "mscodebase-intelligence",
+      "problem": "P1: propagation_engine.py невидим для поиска кода и символьного графа — корневая причина пока не установлена.",
+      "status": "Open (P1)",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/intelligence/propagation_engine.py"
+    },
+    {
+      "id": "KI-110",
+      "project": "mscodebase-intelligence",
+      "problem": "Хранение путей разрозненно, GC нет: накопилось 2481 мусорных папок; открыта задача очистки.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-111",
+      "project": "mscodebase-intelligence",
+      "problem": "severity_overrides имеет Windows-причуду (stale_detector) — поведение различается между платформами.",
+      "status": "Open",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "scripts/stale_detector"
+    },
+    {
+      "id": "KI-112",
+      "project": "mscodebase-intelligence",
+      "problem": "Два окна Zed могут запустить дубликаты серверов: лок берётся до Popen, а не до готовности порта (смягчено 2026-08-13).",
+      "status": "Open (mitigated)",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/database_lock.py"
+    }
+  ]
+}

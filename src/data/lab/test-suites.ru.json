@@ -1,0 +1,76 @@
+{
+  "suites": [
+    {
+      "file": "tests/intents.test.ts",
+      "name": "Сопоставление намерений (RU/EN)",
+      "tests": 7,
+      "covers": "Роутинг намерений агента: проекты, фильтры стека, принципы, статьи, таймлайн, fallback",
+      "updatedAt": "2026-08-14"
+    },
+    {
+     "file": "tests/mcp-tools.test.ts",
+     "name": "MCP-инструменты + модели архитектуры",
+     "tests": 18,
+     "covers": "Поверхность инструментов, get_profile nextSteps (D8), фильтры, честность analyze_stack, симуляция (5 точек, валидация, llm_saturation, события), снимок коммитов, антипаттерны, lab-инструменты, аннотации, все архитектуры × все сценарии",
+     "updatedAt": "2026-08-15"
+    },
+    {
+      "file": "tests/worker.test.ts",
+      "name": "Интеграция Worker /mcp",
+      "tests": 22,
+      "covers": "tools/list (13 инструментов + аннотации), health без rate limit, /mcp/stats (KV), счётчик tools/call, 429 MCP/CHAT, security-заголовки, CORS allow/deny, 404, adversarial (битый JSON, неизвестный инструмент/метод), 8-путевая конкурентность с корректностью фильтра, /resume.txt + /llms.txt + 405, анонимная квота (D4: заголовки + 429), /openapi.json (D5)",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/lab.test.ts",
+     "name": "Целостность lab-данных + SSR-рендер + снимок бенчмарков",
+     "tests": 10,
+     "covers": "Полнота/вердикты экспериментов + теги проектов, ссылки отрицательных результатов, полнота/статусы дневника + теги проектов, id/температуры KI + теги проектов, сумма test-suite = total, id/вердикты/сводка evidence-ledger, SSR LabPage (7 секций + фильтр), EN-only проекции (вкл. evidence-claims), sanity benchmarks.json (DoD-гейты: llm recall ≥80%, 0 ложных принятий, p95 < 3s)",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/evidence-eval.test.ts",
+     "name": "Evidence Score v1 (D3 детерминированная рука) + v2 stage-0 парафраз-сет",
+     "tests": 13,
+     "covers": "verify_claim: регистрация 13-го инструмента + обязательный claim-вход, поддержанное истинное заявление (profile evidence), заявление с проектной трассировкой, отрицательные контроли (Google/Meta отклонены), заметки о слишком коротком/пустом заявлении; computeEvidence: счётчики toolCalls/grounded/failed, флаг ungrounded, null результат = failed; evidence-ledger: вердикт каждого канонического заявления совпадает с verify_claim; v2 stage 0: 8 истинных парафраз отклоняются v1 (baseline recall-разрыва, KI-017), 3 парафразированных отрицательных контроля остаются отклонёнными, задокументировано ложное принятие по подстроке (search+engine)",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/llm-verify.test.ts",
+     "name": "Логика решений v2 LLM arm (мокнутый провайдер)",
+     "tests": 9,
+     "covers": "verifyClaimLlmArm fail-closed guards (план v2 §5): supported с валидной процитированной записью, refused passthrough, мусорный ответ, supported без источника, supported с источником вне кандидатов, HTTP-ошибка, abort/таймаут, слишком короткое заявление без сетевого вызова, парафраз с нулевым пересечением достигает LLM через padded core context (фикс p-01)",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/llm-arm-integration.test.ts",
+     "name": "Интеграция verify_claim + LLM arm (этап 2)",
+     "tests": 5,
+     "covers": "arm отсутствует -> детерминированный v1 (arm:deterministic), arm спасает промах с процитированным источником (arm:llm), отказ arm сохраняет отказ, ошибка arm fail-closed, детерминированное попадание никогда не обращается к arm",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/verify-repo.test.ts",
+     "name": "verify_repo — живая GitHub-верификация (мок)",
+     "tests": 9,
+     "covers": "Голое имя по умолчанию = ManSio + перекрёстная проверка портфолио (languageMatches), полное owner/name, честное несовпадение языка с курируемой записью, 404 = не существует, 403/429 rate limit сообщается честно, сетевой сбой, нормализация github.com URL, пустой вход без сетевого вызова, readme:true возвращает реальный текст README",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/verify-article.test.ts",
+     "name": "verify_article — живая Dev.to верификация (мок)",
+     "tests": 4,
+     "covers": "Совпадение фрагмента заголовка с данными платформы, честное not-found, сбой API честной ошибкой, короткий запрос отклонён без сетевого вызова",
+     "updatedAt": "2026-08-15"
+    },
+    {
+     "file": "tests/verify-package.test.ts",
+     "name": "verify_package — живая npm-верификация (мок)",
+     "tests": 4,
+     "covers": "Существующий пакет + проверка мейнтейнера (case-insensitive), честный 404 not-found, сбой реестра честной ошибкой, пустой вход без сетевого вызова",
+     "updatedAt": "2026-08-15"
+    }
+   ],
+   "total": 101,
+  "updatedAt": "2026-08-15"
+}
