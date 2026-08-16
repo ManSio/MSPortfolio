@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T17:33:11.682Z",
+  "fetchedAt": "2026-08-16T18:46:52.247Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T16:41:24Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T16:14:10Z",
+      "pushedAt": "2026-08-16T18:07:23Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T17:33:17Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "96d89d4093",
+      "date": "2026-08-16T16:24:55Z",
+      "message": "fix(indexing): gitignore_parser dir-семантика — 'generated/' исключает вложенные (git-корректно)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "e95de7edba",
       "date": "2026-08-16T15:54:43Z",
       "message": "ci: fix evalmut probe path after per-experiment folders refactor",
@@ -209,13 +216,6 @@
       "sha": "80c1711021",
       "date": "2026-08-16T15:36:44Z",
       "message": "fix(ci, docs): POSIX-путь в zed_config PYTHONPATH; DocGenerator skip build-каталогов",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "88ce889f87",
-      "date": "2026-08-16T14:56:12Z",
-      "message": "feat(vor): per-node MATCHED/DELIVERED counters — starved detection (Том, раунд 2)",
       "author": "MSCodeBase Agent"
     },
     {
