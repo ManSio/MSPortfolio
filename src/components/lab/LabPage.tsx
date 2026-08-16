@@ -225,6 +225,25 @@ export function LabPage() {
         </div>
       </section>
 
+      {/* ── TL;DR — entry point for first-time visitors ─────── */}
+      <section className="pt-6 pb-2">
+        <div className="reveal">
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.tlDr.kicker}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.tlDr.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.tlDr.note}</p>
+        </div>
+        <div className="mt-6 grid gap-5 md:grid-cols-3">
+          {ui.lab.tlDr.items.map((f) => (
+            <a key={f.id} href={`#${f.id}`} className="group flex flex-col rounded-xl border border-line bg-surface/60 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50">
+              <p className="font-mono text-[10px] text-accent">{f.id}</p>
+              <h3 className="mt-1 text-sm font-semibold text-paper transition-colors group-hover:text-accent">{f.title}</h3>
+              <p className="mt-2 flex-1 text-xs leading-relaxed text-muted">{f.text}</p>
+              <p className="mt-3 font-mono text-[10px] text-faint">→ {ui.lab.tlDr.openRecord}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
       {/* ── Project filter ───────────────────────────────────── */}
       <div className="reveal -mt-2 mb-10 flex flex-wrap items-center gap-2">
         {tabs.map((id) => (
@@ -338,7 +357,7 @@ export function LabPage() {
 
             <div className="space-y-4">
               {scoped.experiments.map((e) => (
-                <Card key={e.id} className="glass-card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40">
+                <Card key={e.id} id={e.id} className="glass-card scroll-mt-28 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-mono text-[11px] text-faint">

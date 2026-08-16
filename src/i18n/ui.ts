@@ -77,6 +77,31 @@ export const UI = {
       allProjects: 'All projects',
       fullLab: 'full lab',
       showing: 'showing',
+      // TL;DR entry point — 3 findings that changed the architecture (per the
+      // portfolio review: give first-time visitors a map before the ocean of data)
+      tlDr: {
+        kicker: '00 · in two minutes',
+        title: 'Three findings that changed the architecture',
+        note: 'Start here if this is your first visit — the full records are one click below each finding.',
+        items: [
+          {
+            id: 'exp-1',
+            title: 'Anchor bias, not model paranoia',
+            text: 'The VOR layer showed bare token strings; a model honestly answers “unknown” to a token that proves nothing. Give it a real file fragment and recall jumps 0.08 → 0.88. The apparent “present-trap hole” was a mislabeled-data artifact — real trap-FA = 0; the actual next gap is trap miss_true.',
+          },
+          {
+            id: 'exp-3',
+            title: 'Evidence must come from a closed world',
+            text: 'File/import/env anchors cannot tell a dist name from an import path (7 false REFUTED). A manifest (pyproject.toml + requirements) as a closed world decides: absence there is proof. ADR-0005.',
+          },
+          {
+            id: 'exp-19',
+            title: 'Evidence form is a per-model knob — hybrid is not additive',
+            text: 'File fragment is the recall engine, graph is trap-precision — but combining them gives the worst of both (acc 0.90 < file 0.94). VOR design picks ONE evidence format per target metric; temporal present-trap is solved by claim formulation, not evidence.',
+          },
+        ],
+        openRecord: 'full record',
+      },
       // sections
       secDecisionLog: { kicker: '01 · decision logs', title: 'Architecture decisions, per project' },
       secDecisionLogNote:
@@ -232,6 +257,30 @@ export const UI = {
       allProjects: 'Все проекты',
       fullLab: 'вся лаборатория',
       showing: 'показать',
+      // Точка входа TL;DR — 3 находки, изменившие архитектуру
+      tlDr: {
+        kicker: '00 · за две минуты',
+        title: 'Три находки, изменившие архитектуру',
+        note: 'Начните здесь, если вы впервые — полные записи в один клик под каждой находкой.',
+        items: [
+          {
+            id: 'exp-1',
+            title: 'Anchor bias, а не паранойя модели',
+            text: 'VOR-слой показывал голые токен-строки; модель честно отвечает «неизвестно» на токен, который ничего не доказывает. Дайте реальный фрагмент файла — recall прыгает 0.08 → 0.88. Кажущаяся «present-trap дыра» была артефактом неверной разметки — реальный trap-FA = 0; фактический следующий разрыв — trap miss_true.',
+          },
+          {
+            id: 'exp-3',
+            title: 'Evidence должен приходить из замкнутого мира',
+            text: 'Якоря file/import/env не отличают dist-имя от import-пути (7 ложных REFUTED). Манифест (pyproject.toml + requirements) как замкнутый мир решает: отсутствие там — доказательство. ADR-0005.',
+          },
+          {
+            id: 'exp-19',
+            title: 'Форма evidence — per-model ручка: гибрид не аддитивен',
+            text: 'Фрагмент файла — движок recall, граф — trap-точность, но их сочетание даёт худшее из обоих (acc 0.90 < file 0.94). Дизайн VOR выбирает ОДИН формат evidence под целевую метрику; temporal present-trap решается формулировкой заявления, а не evidence.',
+          },
+        ],
+        openRecord: 'полная запись',
+      },
       secDecisionLog: { kicker: '01 · журналы решений', title: 'Архитектурные решения, по проектам' },
       secDecisionLogNote:
         'Из src/data/projects.json — того же единого источника, что питает get_projects. Каждая запись: рассмотрено → выбрано → почему → цена.',
