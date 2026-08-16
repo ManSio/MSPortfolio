@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T09:40:45.548Z",
+  "fetchedAt": "2026-08-16T09:41:26.463Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T09:40:52Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-16T09:37:08Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T09:40:22Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,13 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "e8cf9f8746",
+      "date": "2026-08-16T09:40:08Z",
+      "message": "feat(lab): add exp-21 (E5 extended trap category) + exp-22 (pinned-rerun), correct exp-18/19",
+      "author": "ManSio"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "39be602d2d",
       "date": "2026-08-16T09:34:50Z",
@@ -217,20 +224,6 @@
       "date": "2026-08-16T09:18:33Z",
       "message": "docs(exp): статья part 3 — перепроверка комментариев dev.to: Skillselion pkg:-якоря УЖЕ реализованы (ADR-0005), + Glen Allen (freshness), + 473185670 (Resolution Loop)",
       "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "e8cf9f8746",
-      "date": "2026-08-16T09:40:08Z",
-      "message": "feat(lab): add exp-21 (E5 extended trap category) + exp-22 (pinned-rerun), correct exp-18/19",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "4e92aafe7c",
-      "date": "2026-08-16T09:22:29Z",
-      "message": "feat(lab): TL;DR entry point — 3 architecture-changing findings (EN/RU)",
-      "author": "ManSio"
     },
     {
       "repo": "awesome-mcp-servers",
