@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T14:37:42.208Z",
+  "fetchedAt": "2026-08-16T15:35:22.298Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T13:44:31Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-16T11:16:01Z",
+      "pushedAt": "2026-08-16T15:01:42Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-16T14:37:48Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "88ce889f87",
+      "date": "2026-08-16T14:56:12Z",
+      "message": "feat(vor): per-node MATCHED/DELIVERED counters — starved detection (Том, раунд 2)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "aa5b116360",
       "date": "2026-08-16T11:13:36Z",
       "message": "docs(exp): статья part 3 — оформление по правилам dev.to: details для Known weaknesses, CTA на репозиторий, alt для cover",
@@ -209,13 +216,6 @@
       "sha": "919ae15e51",
       "date": "2026-08-16T11:10:14Z",
       "message": "docs(exp): статья part 3 — синхронизация с редактором dev.to: cover image, 2 картинки (5957/5989), intro",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "296bc2b1a3",
-      "date": "2026-08-16T11:01:07Z",
-      "message": "Add blog post screenshots and fix graph context file selection in live",
       "author": "MSCodeBase Agent"
     },
     {
