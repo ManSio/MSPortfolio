@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T22:40:07.769Z",
+  "fetchedAt": "2026-08-17T23:35:19.715Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,11 +9,19 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-17T23:27:54Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-17T21:39:56Z",
+      "pushedAt": "2026-08-17T22:40:13Z",
       "language": "TypeScript"
     },
     {
@@ -23,14 +31,6 @@
       "openIssues": 0,
       "pushedAt": "2026-08-14T14:20:00Z",
       "language": "HTML"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-16T19:56:43Z",
-      "language": "Python"
     },
     {
       "name": "ManSio",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "e8ffb67195",
+      "date": "2026-08-17T23:23:46Z",
+      "message": "fix(search): doc-chunks no longer outrank code on identifier queries",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "677c3d88b9",
+      "date": "2026-08-17T23:13:52Z",
+      "message": "docs: log MCP bug-hunt fixes (deep/auto, monitor progress) in diary/issues",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "58bc700f61",
+      "date": "2026-08-17T23:11:16Z",
+      "message": "chore(download_model): clarify torch.eval() and clean lint",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "awesome-mcp-servers",
       "sha": "cbcdf8f770",
       "date": "2026-08-03T03:09:55Z",
@@ -238,27 +259,6 @@
       "date": "2026-08-14T13:30:34Z",
       "message": "feat: llms.txt for agent discovery (points to MCP portfolio)",
       "author": "ManSio"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "211519ea7a",
-      "date": "2026-08-16T19:54:14Z",
-      "message": "docs: mirror pass-2 fixes to ru/zh + INSTALL_MODELS/SECURITY/HANDFOFF/QUIRKS (embedder llama.cpp, data_root paths)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "c0960e0fce",
-      "date": "2026-08-16T19:04:55Z",
-      "message": "docs: pass-2 audit — fix description drift (embedder llama.cpp, log paths, intel counts)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "96de7b55cc",
-      "date": "2026-08-16T18:38:31Z",
-      "message": "fix(docs): verify-инструмент падал на пустых референсах; актуализированы числа README ×3",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio",
