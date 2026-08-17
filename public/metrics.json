@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T18:57:18.824Z",
+  "fetchedAt": "2026-08-17T19:41:39.367Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,11 +9,19 @@
   },
   "repos": [
     {
+      "name": "ManSio.github.io",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T14:20:00Z",
+      "language": "HTML"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-17T17:44:22Z",
+      "pushedAt": "2026-08-17T18:57:25Z",
       "language": "TypeScript"
     },
     {
@@ -23,14 +31,6 @@
       "openIssues": 0,
       "pushedAt": "2026-08-16T19:56:43Z",
       "language": "Python"
-    },
-    {
-      "name": "ManSio.github.io",
-      "stars": 0,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-14T14:20:00Z",
-      "language": "HTML"
     },
     {
       "name": "ManSio",
@@ -198,27 +198,6 @@
   ],
   "commits": [
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "211519ea7a",
-      "date": "2026-08-16T19:54:14Z",
-      "message": "docs: mirror pass-2 fixes to ru/zh + INSTALL_MODELS/SECURITY/HANDFOFF/QUIRKS (embedder llama.cpp, data_root paths)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "c0960e0fce",
-      "date": "2026-08-16T19:04:55Z",
-      "message": "docs: pass-2 audit — fix description drift (embedder llama.cpp, log paths, intel counts)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "96de7b55cc",
-      "date": "2026-08-16T18:38:31Z",
-      "message": "fix(docs): verify-инструмент падал на пустых референсах; актуализированы числа README ×3",
-      "author": "MSCodeBase Agent"
-    },
-    {
       "repo": "awesome-mcp-servers",
       "sha": "cbcdf8f770",
       "date": "2026-08-03T03:09:55Z",
@@ -259,6 +238,27 @@
       "date": "2026-08-14T13:30:34Z",
       "message": "feat: llms.txt for agent discovery (points to MCP portfolio)",
       "author": "ManSio"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "211519ea7a",
+      "date": "2026-08-16T19:54:14Z",
+      "message": "docs: mirror pass-2 fixes to ru/zh + INSTALL_MODELS/SECURITY/HANDFOFF/QUIRKS (embedder llama.cpp, data_root paths)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "c0960e0fce",
+      "date": "2026-08-16T19:04:55Z",
+      "message": "docs: pass-2 audit — fix description drift (embedder llama.cpp, log paths, intel counts)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "96de7b55cc",
+      "date": "2026-08-16T18:38:31Z",
+      "message": "fix(docs): verify-инструмент падал на пустых референсах; актуализированы числа README ×3",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio",
