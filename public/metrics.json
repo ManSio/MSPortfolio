@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-18T01:50:33.874Z",
+  "fetchedAt": "2026-08-18T03:08:16.035Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-17T23:47:11Z",
+      "pushedAt": "2026-08-18T03:07:32Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-17T23:35:25Z",
+      "pushedAt": "2026-08-18T01:50:40Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "1973e68282",
+      "date": "2026-08-18T03:05:10Z",
+      "message": "docs: log pytest fd-capture incident (bare pytest rootdir) in diary/issues",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "be02a3cecc",
+      "date": "2026-08-18T03:02:35Z",
+      "message": "docs(experiments): commit agentic-eval protocol results + README test badge",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "8375259ff6",
       "date": "2026-08-17T23:44:43Z",
       "message": "chore(tests): exclude experiments/ from pytest auto-discovery",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "e8ffb67195",
-      "date": "2026-08-17T23:23:46Z",
-      "message": "fix(search): doc-chunks no longer outrank code on identifier queries",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "677c3d88b9",
-      "date": "2026-08-17T23:13:52Z",
-      "message": "docs: log MCP bug-hunt fixes (deep/auto, monitor progress) in diary/issues",
       "author": "MSCodeBase Agent"
     },
     {
