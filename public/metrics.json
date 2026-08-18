@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-18T16:47:57.636Z",
+  "fetchedAt": "2026-08-18T17:42:23.227Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-18T16:40:40Z",
+      "pushedAt": "2026-08-18T17:05:43Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-18T15:46:08Z",
+      "pushedAt": "2026-08-18T16:48:06Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "528736d8d3",
+      "date": "2026-08-18T16:54:14Z",
+      "message": "docs: sync AGENT_DIARY and KNOWN_ISSUES (sandbox escape incident)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "5a90ffab6f",
+      "date": "2026-08-18T16:46:59Z",
+      "message": "fix(sandbox): block __dict__ introspection escape and neutralize builtins open/eval/exec",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "d4e7cfe32c",
       "date": "2026-08-18T16:32:13Z",
       "message": "fix(deps): pin runtime deps to exact versions",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "1973e68282",
-      "date": "2026-08-18T03:05:10Z",
-      "message": "docs: log pytest fd-capture incident (bare pytest rootdir) in diary/issues",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "be02a3cecc",
-      "date": "2026-08-18T03:02:35Z",
-      "message": "docs(experiments): commit agentic-eval protocol results + README test badge",
       "author": "MSCodeBase Agent"
     },
     {
