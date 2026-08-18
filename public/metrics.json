@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-18T15:46:01.782Z",
+  "fetchedAt": "2026-08-18T16:47:57.636Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-18T14:52:23Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-18T03:07:32Z",
+      "pushedAt": "2026-08-18T16:40:40Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-18T15:46:08Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "d4e7cfe32c",
+      "date": "2026-08-18T16:32:13Z",
+      "message": "fix(deps): pin runtime deps to exact versions",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "1973e68282",
       "date": "2026-08-18T03:05:10Z",
       "message": "docs: log pytest fd-capture incident (bare pytest rootdir) in diary/issues",
@@ -209,13 +216,6 @@
       "sha": "be02a3cecc",
       "date": "2026-08-18T03:02:35Z",
       "message": "docs(experiments): commit agentic-eval protocol results + README test badge",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "8375259ff6",
-      "date": "2026-08-17T23:44:43Z",
-      "message": "chore(tests): exclude experiments/ from pytest auto-discovery",
       "author": "MSCodeBase Agent"
     },
     {
