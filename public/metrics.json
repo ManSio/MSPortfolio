@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-08-19T15:45:46.193Z",
+  "fetchedAt": "2026-08-19T16:46:07.254Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 7,
-    "followers": 59,
-    "following": 66
+    "followers": 58,
+    "following": 65
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-19T14:53:13Z",
+      "pushedAt": "2026-08-19T15:45:51Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-19T15:38:43Z",
+      "pushedAt": "2026-08-19T16:43:08Z",
       "language": "Python"
     },
     {
