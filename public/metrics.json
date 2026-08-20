@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-20T21:43:17.830Z",
+  "fetchedAt": "2026-08-20T22:44:39.015Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-20T20:46:12Z",
+      "pushedAt": "2026-08-20T21:43:23Z",
       "language": "TypeScript"
     },
     {
@@ -64,7 +64,7 @@
         "mcp"
       ],
       "reactions": 8,
-      "comments": 6,
+      "comments": 8,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
       "readablePublishDate": "Aug 16"
@@ -99,8 +99,8 @@
         "agents",
         "benchmark"
       ],
-      "reactions": 8,
-      "comments": 2,
+      "reactions": 12,
+      "comments": 4,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
       "readablePublishDate": "Aug 14"
