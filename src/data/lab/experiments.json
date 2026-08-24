@@ -15,45 +15,148 @@
           "type": "bar",
           "title": "False-accept rate, code_first arm (V2-EN, %)",
           "data": [
-            { "label": "qwen3.7-flash", "value": 0, "color": "#10b981" },
-            { "label": "qwen3.6-flash", "value": 0, "color": "#10b981" },
-            { "label": "claude-sonnet-5", "value": 0, "color": "#10b981" },
-            { "label": "deepseek-v4-pro", "value": 0, "color": "#10b981" },
-            { "label": "deepseek-v4-flash", "value": 0, "color": "#10b981" },
-            { "label": "qwen3.5-flash", "value": 0, "color": "#10b981" },
-            { "label": "glm-5.2", "value": 2, "color": "#f59e0b" },
-            { "label": "nemotron-3.5-lightning", "value": 4, "color": "#f59e0b" },
-            { "label": "glm-4.7-flash", "value": 24, "color": "#ef4444" },
-            { "label": "nemotron-3-nano-30b", "value": 38, "color": "#ef4444" }
+            {
+              "label": "qwen3.7-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.6-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "claude-sonnet-5",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek-v4-pro",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek-v4-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.5-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "glm-5.2",
+              "value": 2,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "nemotron-3.5-lightning",
+              "value": 4,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "glm-4.7-flash",
+              "value": 24,
+              "color": "#ef4444"
+            },
+            {
+              "label": "nemotron-3-nano-30b",
+              "value": 38,
+              "color": "#ef4444"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "code_first recall on TRUE facts (25) - token-string evidence, %",
           "data": [
-            { "label": "deepseek-v4-flash", "value": 4, "sub": "FA 0.00", "color": "#f59e0b" },
-            { "label": "qwen3.6-flash", "value": 8, "sub": "FA 0.00", "color": "#f59e0b" },
-            { "label": "qwen3.7-flash", "value": 20, "sub": "FA 0.00", "color": "#f59e0b" },
-            { "label": "qwen3.8-max (CoT)", "value": 36, "sub": "FA 0.04", "color": "#10b981" },
-            { "label": "claude-sonnet-5", "value": 44, "sub": "FA 0.00", "color": "#10b981" },
-            { "label": "nemotron-3.5-lightning", "value": 52, "sub": "FA 0.04", "color": "#10b981" },
-            { "label": "nemotron-3-nano-30b", "value": 80, "sub": "FA 0.38", "color": "#ef4444" },
-            { "label": "glm-4.7-flash", "value": 88, "sub": "FA 0.24", "color": "#ef4444" }
+            {
+              "label": "deepseek-v4-flash",
+              "value": 4,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.6-flash",
+              "value": 8,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.7-flash",
+              "value": 20,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.8-max (CoT)",
+              "value": 36,
+              "sub": "FA 0.04",
+              "color": "#10b981"
+            },
+            {
+              "label": "claude-sonnet-5",
+              "value": 44,
+              "sub": "FA 0.00",
+              "color": "#10b981"
+            },
+            {
+              "label": "nemotron-3.5-lightning",
+              "value": 52,
+              "sub": "FA 0.04",
+              "color": "#10b981"
+            },
+            {
+              "label": "nemotron-3-nano-30b",
+              "value": 80,
+              "sub": "FA 0.38",
+              "color": "#ef4444"
+            },
+            {
+              "label": "glm-4.7-flash",
+              "value": 88,
+              "sub": "FA 0.24",
+              "color": "#ef4444"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "The same model, different evidence - recall on TRUE facts, %",
           "data": [
-            { "label": "qwen3.6 · token string", "value": 8, "sub": "code_first arm", "color": "#f59e0b" },
-            { "label": "qwen3.6 · file fragment", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" },
-            { "label": "qwen3.7 · token string", "value": 20, "sub": "code_first arm", "color": "#f59e0b" },
-            { "label": "qwen3.7 · file fragment", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" }
+            {
+              "label": "qwen3.6 · token string",
+              "value": 8,
+              "sub": "code_first arm",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.6 · file fragment",
+              "value": 88,
+              "sub": "V4 arm · trap-FA 0.00 (corrected)",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.7 · token string",
+              "value": 20,
+              "sub": "code_first arm",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.7 · file fragment",
+              "value": 88,
+              "sub": "V4 arm · trap-FA 0.00 (corrected)",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). CORRECTED: the earlier claim 'the only remaining hole is present-trap (R45/R46)' was a mislabeled-data issue - real trap-FA = 0. The corrected labels expose the actual next gap: trap miss_true, fail-closed models silently lose true usage-claims - verify the claim's subject AND measure truth loss, not just false-acceptance.",
-      "links": ["exp-2", "exp-3"]
+      "links": [
+        "exp-2",
+        "exp-3"
+      ]
     },
     {
       "id": "exp-2",
@@ -70,14 +173,32 @@
           "type": "bar",
           "title": "Adoption of false memory by policy (proxy agent)",
           "data": [
-            { "label": "memory_first (pre)", "value": 1.0, "sub": "no code shown", "color": "#ef4444" },
-            { "label": "after retraction (1-R)", "value": 0.12, "sub": "ADR-0002", "color": "#f59e0b" },
-            { "label": "code_first verify-on-read", "value": 0, "sub": "ADR-0003, 0.6ms steady-state", "color": "#10b981" }
+            {
+              "label": "memory_first (pre)",
+              "value": 1.0,
+              "sub": "no code shown",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after retraction (1-R)",
+              "value": 0.12,
+              "sub": "ADR-0002",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "code_first verify-on-read",
+              "value": 0,
+              "sub": "ADR-0003, 0.6ms steady-state",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Verify-on-read plus retraction eliminate false adoption in the proxy, but present-trap blindness (claim about an existing file with the wrong subject) is structural and survives.",
-      "links": ["exp-1", "exp-3"]
+      "links": [
+        "exp-1",
+        "exp-3"
+      ]
     },
     {
       "id": "exp-3",
@@ -94,13 +215,25 @@
           "type": "bar",
           "title": "False REFUTED of TRUE facts on v4_rep (N=50)",
           "data": [
-            { "label": "file/import/env anchors", "value": 7, "sub": "fastmcp dist name vs import path", "color": "#ef4444" },
-            { "label": "with pkg: anchors (ADR-0005)", "value": 0, "sub": "closed-world manifest", "color": "#10b981" }
+            {
+              "label": "file/import/env anchors",
+              "value": 7,
+              "sub": "fastmcp dist name vs import path",
+              "color": "#ef4444"
+            },
+            {
+              "label": "with pkg: anchors (ADR-0005)",
+              "value": 0,
+              "sub": "closed-world manifest",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Evidence must come from a closed world: the manifest decides, tokens only hint.",
-      "links": ["exp-2"]
+      "links": [
+        "exp-2"
+      ]
     },
     {
       "id": "exp-4",
@@ -117,22 +250,48 @@
           "type": "bar",
           "title": "Context gathering cost, aggregator vs multi-tool (reduction %)",
           "data": [
-            { "label": "tool calls", "value": 78, "sub": "4-5 calls -> 1", "color": "#10b981" },
-            { "label": "latency", "value": 89, "sub": "-89%", "color": "#10b981" },
-            { "label": "tokens", "value": 19, "sub": "-19%", "color": "#10b981" }
+            {
+              "label": "tool calls",
+              "value": 78,
+              "sub": "4-5 calls -> 1",
+              "color": "#10b981"
+            },
+            {
+              "label": "latency",
+              "value": 89,
+              "sub": "-89%",
+              "color": "#10b981"
+            },
+            {
+              "label": "tokens",
+              "value": 19,
+              "sub": "-19%",
+              "color": "#10b981"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Recall by scheme (D v3, N=30)",
           "data": [
-            { "label": "A multi-tool", "value": 0.875, "color": "#6366f1" },
-            { "label": "B aggregator (intent filter)", "value": 0.9, "sub": "1 RT, 275 tokens", "color": "#10b981" }
+            {
+              "label": "A multi-tool",
+              "value": 0.875,
+              "color": "#6366f1"
+            },
+            {
+              "label": "B aggregator (intent filter)",
+              "value": 0.9,
+              "sub": "1 RT, 275 tokens",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "One aggregator with an intent filter is the optimum: same recall, 1 request, 275 tokens - the multi-tool path is 4-5x the cost for the same answer.",
-      "links": ["exp-5"]
+      "links": [
+        "exp-5"
+      ]
     },
     {
       "id": "exp-5",
@@ -149,24 +308,60 @@
           "type": "bar",
           "title": "Recall by pipeline (30 tasks) - H1 refuted",
           "data": [
-            { "label": "fts5_only", "value": 0.825, "sub": "single component", "color": "#10b981" },
-            { "label": "full (no rerank)", "value": 0.775, "color": "#f59e0b" },
-            { "label": "full + quality", "value": 0.756, "sub": "precision 0.719", "color": "#6366f1" }
+            {
+              "label": "fts5_only",
+              "value": 0.825,
+              "sub": "single component",
+              "color": "#10b981"
+            },
+            {
+              "label": "full (no rerank)",
+              "value": 0.775,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "full + quality",
+              "value": 0.756,
+              "sub": "precision 0.719",
+              "color": "#6366f1"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Incremental recall delta over the previous tier",
           "data": [
-            { "label": "BM25 over vector", "value": 0.43, "sub": "+0.430 significant", "color": "#10b981" },
-            { "label": "FTS5 over V+BM25", "value": 0.178, "sub": "+0.178 significant", "color": "#10b981" },
-            { "label": "graph enrichment", "value": 0, "sub": "metadata, not text", "color": "#f59e0b" },
-            { "label": "vector over BM25", "value": 0.098, "sub": "-0.098 (hurts)", "color": "#ef4444" }
+            {
+              "label": "BM25 over vector",
+              "value": 0.43,
+              "sub": "+0.430 significant",
+              "color": "#10b981"
+            },
+            {
+              "label": "FTS5 over V+BM25",
+              "value": 0.178,
+              "sub": "+0.178 significant",
+              "color": "#10b981"
+            },
+            {
+              "label": "graph enrichment",
+              "value": 0,
+              "sub": "metadata, not text",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "vector over BM25",
+              "value": 0.098,
+              "sub": "-0.098 (hurts)",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
       "conclusion": "More tiers is not better by recall: FTS5-only is the recall max, the reranker buys precision, and graph value lives in metadata that text-based evidence metrics cannot see.",
-      "links": ["exp-4"]
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-6",
@@ -183,8 +378,18 @@
           "type": "bar",
           "title": "Canary attacks that passed (EXP-1, 2026-08-11)",
           "data": [
-            { "label": "before fix", "value": 5, "sub": "5/5 passed", "color": "#ef4444" },
-            { "label": "after fail-closed fix", "value": 0, "sub": "13/13 regression tests", "color": "#10b981" }
+            {
+              "label": "before fix",
+              "value": 5,
+              "sub": "5/5 passed",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after fail-closed fix",
+              "value": 0,
+              "sub": "13/13 regression tests",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -206,26 +411,72 @@
           "type": "bar",
           "title": "Hallucinated lies accepted by validator arm",
           "data": [
-            { "label": "VC/Merkle (no semantic inputs)", "value": 2, "color": "#ef4444" },
-            { "label": "Verify-On-Read (anchor)", "value": 0, "color": "#10b981" },
-            { "label": "hybrid, equal rights", "value": 0, "sub": "A1b", "color": "#10b981" }
+            {
+              "label": "VC/Merkle (no semantic inputs)",
+              "value": 2,
+              "color": "#ef4444"
+            },
+            {
+              "label": "Verify-On-Read (anchor)",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "hybrid, equal rights",
+              "value": 0,
+              "sub": "A1b",
+              "color": "#10b981"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Blind spots found by the adversarial probe (FP / FN)",
           "data": [
-            { "label": "A1a VC baseline", "value": 2, "sub": "FP - no semantics", "color": "#ef4444" },
-            { "label": "A2 VOR real-import lie", "value": 1, "sub": "FP", "color": "#ef4444" },
-            { "label": "A4a VC cosmetic change", "value": 1, "sub": "FN - page hash too coarse", "color": "#f59e0b" },
-            { "label": "A5 VOR poisoned truth list", "value": 1, "sub": "FP", "color": "#ef4444" },
-            { "label": "A6 scenario mutation", "value": 1, "sub": "FN - verdict flips", "color": "#f59e0b" },
-            { "label": "A4b VC lost write", "value": 1, "sub": "caught - unique coverage", "color": "#10b981" }
+            {
+              "label": "A1a VC baseline",
+              "value": 2,
+              "sub": "FP - no semantics",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A2 VOR real-import lie",
+              "value": 1,
+              "sub": "FP",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A4a VC cosmetic change",
+              "value": 1,
+              "sub": "FN - page hash too coarse",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "A5 VOR poisoned truth list",
+              "value": 1,
+              "sub": "FP",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A6 scenario mutation",
+              "value": 1,
+              "sub": "FN - verdict flips",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "A4b VC lost write",
+              "value": 1,
+              "sub": "caught - unique coverage",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "What matters is an external grounding layer plus a consistency layer plus anchor-extraction quality - not choosing 'VC or VOR'; and every concurrency test must verify that the returned result belongs to the right input.",
-      "links": ["exp-2", "exp-1"]
+      "links": [
+        "exp-2",
+        "exp-1"
+      ]
     },
     {
       "id": "exp-8",
@@ -242,8 +493,18 @@
           "type": "bar",
           "title": "Mutation score on validate_scores (12 mutations)",
           "data": [
-            { "label": "before fix", "value": 8, "sub": "8%", "color": "#ef4444" },
-            { "label": "after P-006 fix", "value": 100, "sub": "11/11 polarity holes closed", "color": "#10b981" }
+            {
+              "label": "before fix",
+              "value": 8,
+              "sub": "8%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after P-006 fix",
+              "value": 100,
+              "sub": "11/11 polarity holes closed",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -265,9 +526,24 @@
           "type": "bar",
           "title": "Root-cause engine quality on the audit dataset (31 incidents), %",
           "data": [
-            { "label": "top-1 accuracy", "value": 13, "sub": "%", "color": "#ef4444" },
-            { "label": "avg similarity", "value": 17, "sub": "%", "color": "#f59e0b" },
-            { "label": "avg term overlap", "value": 16, "sub": "%", "color": "#f59e0b" }
+            {
+              "label": "top-1 accuracy",
+              "value": 13,
+              "sub": "%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "avg similarity",
+              "value": 17,
+              "sub": "%",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "avg term overlap",
+              "value": 16,
+              "sub": "%",
+              "color": "#f59e0b"
+            }
           ]
         }
       ],
@@ -289,9 +565,24 @@
           "type": "bar",
           "title": "Boot wait on the DB PID-lock (seconds)",
           "data": [
-            { "label": "orphan lock (before)", "value": 30, "sub": "boot timeout -> zombie loop", "color": "#ef4444" },
-            { "label": "orphan lock (after)", "value": 0.12, "sub": "self-healing", "color": "#10b981" },
-            { "label": "healthy holder (after)", "value": 1.5, "sub": "soft wait", "color": "#10b981" }
+            {
+              "label": "orphan lock (before)",
+              "value": 30,
+              "sub": "boot timeout -> zombie loop",
+              "color": "#ef4444"
+            },
+            {
+              "label": "orphan lock (after)",
+              "value": 0.12,
+              "sub": "self-healing",
+              "color": "#10b981"
+            },
+            {
+              "label": "healthy holder (after)",
+              "value": 1.5,
+              "sub": "soft wait",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -313,13 +604,25 @@
           "type": "bar",
           "title": "Imports coverage on search chunks",
           "data": [
-            { "label": "imports coverage", "value": 0, "sub": "~186 tokens/chunk", "color": "#f59e0b" },
-            { "label": "chunks with any metadata", "value": 0, "sub": "finding -> KNOWN_ISSUES", "color": "#ef4444" }
+            {
+              "label": "imports coverage",
+              "value": 0,
+              "sub": "~186 tokens/chunk",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "chunks with any metadata",
+              "value": 0,
+              "sub": "finding -> KNOWN_ISSUES",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
       "conclusion": "The enrichment hypothesis is open: metadata extraction produced 0.0 on search chunks, so the flag stays off until a better probe.",
-      "links": ["exp-4"]
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-12",
@@ -336,13 +639,23 @@
           "type": "donut",
           "title": "Benchmark 2.0 catalog",
           "data": [
-            { "label": "reasoning tasks (L3-L5)", "value": 12, "color": "#6366f1" },
-            { "label": "keyword probes", "value": 8, "color": "#06b6d4" }
+            {
+              "label": "reasoning tasks (L3-L5)",
+              "value": 12,
+              "color": "#6366f1"
+            },
+            {
+              "label": "keyword probes",
+              "value": 8,
+              "color": "#06b6d4"
+            }
           ]
         }
       ],
       "conclusion": "The scaffold is the deliverable: 12 evidence-backed reasoning tasks plus 8 keyword probes give the next harness a differentiated yardstick.",
-      "links": ["exp-4"]
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-13",
@@ -359,9 +672,24 @@
           "type": "bar",
           "title": "Reindex ETA vs actual unavailability, s",
           "data": [
-            { "label": "promised ETA", "value": 18, "sub": "job 0d27f125", "color": "#10b981" },
-            { "label": "indexing", "value": 552, "sub": "7383/7383 files", "color": "#f59e0b" },
-            { "label": "+ sync update_all", "value": 771, "sub": "total unavailability", "color": "#ef4444" }
+            {
+              "label": "promised ETA",
+              "value": 18,
+              "sub": "job 0d27f125",
+              "color": "#10b981"
+            },
+            {
+              "label": "indexing",
+              "value": 552,
+              "sub": "7383/7383 files",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "+ sync update_all",
+              "value": 771,
+              "sub": "total unavailability",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
@@ -383,9 +711,21 @@
           "type": "donut",
           "title": "Test provability scan (1143 tests)",
           "data": [
-            { "label": "proven", "value": 1133, "color": "#10b981" },
-            { "label": "vacuous", "value": 3, "color": "#ef4444" },
-            { "label": "skipped", "value": 7, "color": "#6366f1" }
+            {
+              "label": "proven",
+              "value": 1133,
+              "color": "#10b981"
+            },
+            {
+              "label": "vacuous",
+              "value": 3,
+              "color": "#ef4444"
+            },
+            {
+              "label": "skipped",
+              "value": 7,
+              "color": "#6366f1"
+            }
           ]
         }
       ],
@@ -407,8 +747,18 @@
           "type": "bar",
           "title": "False passes on 8 call forms",
           "data": [
-            { "label": "broken extractor", "value": 3, "sub": "emit raw ln", "color": "#ef4444" },
-            { "label": "correct extractor", "value": 0, "sub": "emit ln.strip()", "color": "#10b981" }
+            {
+              "label": "broken extractor",
+              "value": 3,
+              "sub": "emit raw ln",
+              "color": "#ef4444"
+            },
+            {
+              "label": "correct extractor",
+              "value": 0,
+              "sub": "emit ln.strip()",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -430,10 +780,30 @@
           "type": "bar",
           "title": "Quality metric under four populations",
           "data": [
-            { "label": "empty index", "value": 0, "sub": "warning: no real results", "color": "#ef4444" },
-            { "label": "garbage chunks", "value": 0, "sub": "SAME warning", "color": "#ef4444" },
-            { "label": "searcher error", "value": 0, "sub": "different warning", "color": "#f59e0b" },
-            { "label": "control (real)", "value": 3, "sub": "no warning", "color": "#10b981" }
+            {
+              "label": "empty index",
+              "value": 0,
+              "sub": "warning: no real results",
+              "color": "#ef4444"
+            },
+            {
+              "label": "garbage chunks",
+              "value": 0,
+              "sub": "SAME warning",
+              "color": "#ef4444"
+            },
+            {
+              "label": "searcher error",
+              "value": 0,
+              "sub": "different warning",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "control (real)",
+              "value": 3,
+              "sub": "no warning",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -468,16 +838,45 @@
           "type": "bar",
           "title": "Recall(real) by evidence rung, %",
           "data": [
-            { "label": "qwen · anchor", "value": 24, "sub": "code_first", "color": "#f59e0b" },
-            { "label": "qwen · file", "value": 92, "sub": "rung 2", "color": "#10b981" },
-            { "label": "qwen · graph", "value": 76, "sub": "rung 3", "color": "#6366f1" },
-            { "label": "deepseek · file", "value": 84, "sub": "rung 2", "color": "#10b981" },
-            { "label": "deepseek · graph", "value": 44, "sub": "unknown 0.66", "color": "#ef4444" }
+            {
+              "label": "qwen · anchor",
+              "value": 24,
+              "sub": "code_first",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen · file",
+              "value": 92,
+              "sub": "rung 2",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen · graph",
+              "value": 76,
+              "sub": "rung 3",
+              "color": "#6366f1"
+            },
+            {
+              "label": "deepseek · file",
+              "value": 84,
+              "sub": "rung 2",
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek · graph",
+              "value": 44,
+              "sub": "unknown 0.66",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
       "conclusion": "For VOR: recall engine = file fragment (~25 lines); graph = a separate subject-check signal against traps, but only for evidence-honest models; exclude fail-open models (glm family) from the VOR pipeline.",
-      "links": ["exp-1", "exp-2", "exp-19"]
+      "links": [
+        "exp-1",
+        "exp-2",
+        "exp-19"
+      ]
     },
     {
       "id": "exp-19",
@@ -494,14 +893,32 @@
           "type": "bar",
           "title": "Hybrid vs single-format accuracy, %",
           "data": [
-            { "label": "file alone (qwen)", "value": 94, "sub": "E2 file_content", "color": "#10b981" },
-            { "label": "file+graph hybrid", "value": 90, "sub": "not additive", "color": "#ef4444" },
-            { "label": "graph alone (qwen)", "value": 91, "sub": "trap-precision", "color": "#6366f1" }
+            {
+              "label": "file alone (qwen)",
+              "value": 94,
+              "sub": "E2 file_content",
+              "color": "#10b981"
+            },
+            {
+              "label": "file+graph hybrid",
+              "value": 90,
+              "sub": "not additive",
+              "color": "#ef4444"
+            },
+            {
+              "label": "graph alone (qwen)",
+              "value": 91,
+              "sub": "trap-precision",
+              "color": "#6366f1"
+            }
           ]
         }
       ],
       "conclusion": "VOR evidence format is chosen by the target metric: fragment for recall, graph for trap-precision - the hybrid is the worst of both (acc 0.90). Git-provenance in evidence is a cheap temporal signal, but the universal temporal present-trap is solved by claim formulation, not by evidence. CORRECTED (E5): 'graph for trap-precision' is real for deepseek (75->40% on the extended category), not for glm; the N=1 trap measurement that suggested otherwise was a statistical issue.",
-      "links": ["exp-1", "exp-18"]
+      "links": [
+        "exp-1",
+        "exp-18"
+      ]
     },
     {
       "id": "exp-20",
@@ -518,8 +935,18 @@
           "type": "bar",
           "title": "Embed endpoint before/after path fix",
           "data": [
-            { "label": "before", "value": 0, "sub": "FileNotFoundError", "color": "#ef4444" },
-            { "label": "after", "value": 384, "sub": "dim, status 200", "color": "#10b981" }
+            {
+              "label": "before",
+              "value": 0,
+              "sub": "FileNotFoundError",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after",
+              "value": 384,
+              "sub": "dim, status 200",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -541,17 +968,50 @@
           "type": "bar",
           "title": "False-accept on 20 real present-traps, file vs graph",
           "data": [
-            { "label": "deepseek · file", "value": 15, "sub": "75% FA", "color": "#ef4444" },
-            { "label": "deepseek · graph", "value": 8, "sub": "40% FA - graph closes", "color": "#10b981" },
-            { "label": "glm · file", "value": 13, "sub": "65%", "color": "#ef4444" },
-            { "label": "glm · graph", "value": 14, "sub": "graph does not help", "color": "#f59e0b" },
-            { "label": "qwen · file", "value": 2, "sub": "fail-closed", "color": "#10b981" },
-            { "label": "qwen · graph", "value": 2, "sub": "recall 2-3/10", "color": "#10b981" }
+            {
+              "label": "deepseek · file",
+              "value": 15,
+              "sub": "75% FA",
+              "color": "#ef4444"
+            },
+            {
+              "label": "deepseek · graph",
+              "value": 8,
+              "sub": "40% FA - graph closes",
+              "color": "#10b981"
+            },
+            {
+              "label": "glm · file",
+              "value": 13,
+              "sub": "65%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "glm · graph",
+              "value": 14,
+              "sub": "graph does not help",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen · file",
+              "value": 2,
+              "sub": "fail-closed",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen · graph",
+              "value": 2,
+              "sub": "recall 2-3/10",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "'FA trap = 0' on a category with N=1 is a meaningless number; extending the category with subject validation (P-00X) is the only honest way to measure present-trap. Graph evidence is a real trap-closer for deepseek, not for glm - per-model evidence format is confirmed even more strongly.",
-      "links": ["exp-18", "exp-19"]
+      "links": [
+        "exp-18",
+        "exp-19"
+      ]
     },
     {
       "id": "exp-22",
@@ -568,15 +1028,80 @@
           "type": "bar",
           "title": "Recall(real) per arm, pinned run, %",
           "data": [
-            { "label": "qwen · file", "value": 88, "sub": "best recall arm", "color": "#10b981" },
-            { "label": "deepseek · file+graph", "value": 92, "sub": "best for deepseek", "color": "#10b981" },
-            { "label": "glm · graph", "value": 84, "sub": "best for glm, FA trap 1", "color": "#6366f1" },
-            { "label": "qwen · graph", "value": 72, "sub": "pays recall", "color": "#f59e0b" }
+            {
+              "label": "qwen · file",
+              "value": 88,
+              "sub": "best recall arm",
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek · file+graph",
+              "value": 92,
+              "sub": "best for deepseek",
+              "color": "#10b981"
+            },
+            {
+              "label": "glm · graph",
+              "value": 84,
+              "sub": "best for glm, FA trap 1",
+              "color": "#6366f1"
+            },
+            {
+              "label": "qwen · graph",
+              "value": 72,
+              "sub": "pays recall",
+              "color": "#f59e0b"
+            }
           ]
         }
       ],
       "conclusion": "Pinned-rerun confirmed every series conclusion is robust to routing; glm non-determinism is a model property (even on a single backend); StreamLake (top-1 unpinned for glm) pinned returns no JSON - volume does not equal quality, and pinning also protects against 'popular but broken' upstreams.",
-      "links": ["exp-18", "exp-19", "exp-21"]
+      "links": [
+        "exp-18",
+        "exp-19",
+        "exp-21"
+      ]
+    },
+    {
+      "id": "exp-23",
+      "date": "2026-08-19",
+      "project": "mscodebase-intelligence",
+      "title": "LSP live probe: call hierarchy + semantic tokens confirmed on pyright; type hierarchy / moniker NOT advertised",
+      "hypothesis": "Of the advanced LSP features (call hierarchy, type hierarchy, semantic tokens, moniker, indexing gate), a real pyright-fork server (basedpyright) actually implements a subset; a feature being present in the 3.17 spec does not guarantee every server implements it.",
+      "command": "pip install basedpyright (venv, no npm); venv/Scripts/python.exe experiments/lsp/lsp_live_pyright.py; venv/Scripts/python.exe experiments/lsp/lsp_client_demo.py; wire-probe experiments/lsp/lsp_wire_probe.py on pinned lsprotocol==2025.0.0",
+      "result": "basedpyright 1.39.10 advertises callHierarchyProvider + semanticTokensProvider(full); typeHierarchyProvider=None, monikerProvider=None; pyright/beginIndexing..endIndexing gate not observed in 8s. Live call hierarchy: report->[ShapeManager, total_area, build] + incoming main() with exact ranges (incl. print->builtins.pyi); semantic tokens 62 delta-encoded with result_id. Thin LspClient (src/core/lsp_client.py) + demo emit graph-ready CALLS edges and decoded spans.",
+      "verdict": "partial",
+      "finding": "Spec-present != server-implemented. On the pyright family the graph really gets call hierarchy (compiler-accurate cross-file CALLS edges) and semantic tokens (exact spans/kinds); type hierarchy (3.17) and moniker (3.16) are NOT advertised by pyright -> dormant until a server supports them. Existing tree-sitter path kept as source of truth; LSP layer is capability-gated (ADR-0006).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "LSP feature availability on pyright fork (2026-08-19)",
+          "data": [
+            {
+              "label": "call_hierarchy",
+              "value": 1
+            },
+            {
+              "label": "semantic_tokens",
+              "value": 1
+            },
+            {
+              "label": "type_hierarchy",
+              "value": 0
+            },
+            {
+              "label": "moniker",
+              "value": 0
+            },
+            {
+              "label": "indexing_gate",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "conclusion": "For a Python code graph, LSP adds real value via call hierarchy and semantic tokens; type hierarchy / moniker must wait for another server. Verified live, not assumed.",
+      "links": []
     }
   ],
   "negativeResults": [
@@ -615,6 +1140,12 @@
       "whyFailed": "The hybrid_search_async embedding cache-hit skips the dense tier - the vector tier silently disappears on repeated queries and the first run was fully distorted (vector_bm25 == bm25_only 30/30).",
       "date": "2026-08-11",
       "ref": "exp-5"
+    },
+    {
+      "attempt": "Assume LSP type hierarchy (3.17) and moniker (3.16) are usable for the Python code graph because they exist in the spec",
+      "whyFailed": "basedpyright (pyright fork) does not advertise typeHierarchyProvider or monikerProvider, and does not emit pyright/beginIndexing/endIndexing. Spec-present != server-implemented - must probe the real server instead of assuming from the spec.",
+      "date": "2026-08-19",
+      "ref": "exp-23"
     }
   ]
 }

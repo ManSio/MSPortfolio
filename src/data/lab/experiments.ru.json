@@ -15,45 +15,148 @@
           "type": "bar",
           "title": "Доля ложных принятий, code_first arm (V2-EN, %)",
           "data": [
-            { "label": "qwen3.7-flash", "value": 0, "color": "#10b981" },
-            { "label": "qwen3.6-flash", "value": 0, "color": "#10b981" },
-            { "label": "claude-sonnet-5", "value": 0, "color": "#10b981" },
-            { "label": "deepseek-v4-pro", "value": 0, "color": "#10b981" },
-            { "label": "deepseek-v4-flash", "value": 0, "color": "#10b981" },
-            { "label": "qwen3.5-flash", "value": 0, "color": "#10b981" },
-            { "label": "glm-5.2", "value": 2, "color": "#f59e0b" },
-            { "label": "nemotron-3.5-lightning", "value": 4, "color": "#f59e0b" },
-            { "label": "glm-4.7-flash", "value": 24, "color": "#ef4444" },
-            { "label": "nemotron-3-nano-30b", "value": 38, "color": "#ef4444" }
+            {
+              "label": "qwen3.7-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.6-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "claude-sonnet-5",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek-v4-pro",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek-v4-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.5-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "glm-5.2",
+              "value": 2,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "nemotron-3.5-lightning",
+              "value": 4,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "glm-4.7-flash",
+              "value": 24,
+              "color": "#ef4444"
+            },
+            {
+              "label": "nemotron-3-nano-30b",
+              "value": 38,
+              "color": "#ef4444"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "code_first recall по истинным фактам (25) — токен-строковое evidence, %",
           "data": [
-            { "label": "deepseek-v4-flash", "value": 4, "sub": "FA 0.00", "color": "#f59e0b" },
-            { "label": "qwen3.6-flash", "value": 8, "sub": "FA 0.00", "color": "#f59e0b" },
-            { "label": "qwen3.7-flash", "value": 20, "sub": "FA 0.00", "color": "#f59e0b" },
-            { "label": "qwen3.8-max (CoT)", "value": 36, "sub": "FA 0.04", "color": "#10b981" },
-            { "label": "claude-sonnet-5", "value": 44, "sub": "FA 0.00", "color": "#10b981" },
-            { "label": "nemotron-3.5-lightning", "value": 52, "sub": "FA 0.04", "color": "#10b981" },
-            { "label": "nemotron-3-nano-30b", "value": 80, "sub": "FA 0.38", "color": "#ef4444" },
-            { "label": "glm-4.7-flash", "value": 88, "sub": "FA 0.24", "color": "#ef4444" }
+            {
+              "label": "deepseek-v4-flash",
+              "value": 4,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.6-flash",
+              "value": 8,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.7-flash",
+              "value": 20,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.8-max (CoT)",
+              "value": 36,
+              "sub": "FA 0.04",
+              "color": "#10b981"
+            },
+            {
+              "label": "claude-sonnet-5",
+              "value": 44,
+              "sub": "FA 0.00",
+              "color": "#10b981"
+            },
+            {
+              "label": "nemotron-3.5-lightning",
+              "value": 52,
+              "sub": "FA 0.04",
+              "color": "#10b981"
+            },
+            {
+              "label": "nemotron-3-nano-30b",
+              "value": 80,
+              "sub": "FA 0.38",
+              "color": "#ef4444"
+            },
+            {
+              "label": "glm-4.7-flash",
+              "value": 88,
+              "sub": "FA 0.24",
+              "color": "#ef4444"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Та же модель, разное evidence — recall по истинным фактам, %",
           "data": [
-            { "label": "qwen3.6 · токен-строка", "value": 8, "sub": "code_first arm", "color": "#f59e0b" },
-            { "label": "qwen3.6 · фрагмент файла", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" },
-            { "label": "qwen3.7 · токен-строка", "value": 20, "sub": "code_first arm", "color": "#f59e0b" },
-            { "label": "qwen3.7 · фрагмент файла", "value": 88, "sub": "V4 arm · trap-FA 0.00 (corrected)", "color": "#10b981" }
+            {
+              "label": "qwen3.6 · токен-строка",
+              "value": 8,
+              "sub": "code_first arm",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.6 · фрагмент файла",
+              "value": 88,
+              "sub": "V4 arm · trap-FA 0.00 (corrected)",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.7 · токен-строка",
+              "value": 20,
+              "sub": "code_first arm",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.7 · фрагмент файла",
+              "value": 88,
+              "sub": "V4 arm · trap-FA 0.00 (corrected)",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Дайте VOR-слою реальный код: фрагмент файла ±12 строк вокруг якоря превращает дешёвые qwen3.6/3.7 в «лови ложь и сохраняй правду» (recall 0.88 при FA ~0.02-0.04). CORRECTED: прежнее заявление «единственная оставшаяся дыра — present-trap (R45/R46)» было артефактом неверной разметки — реальный trap-FA = 0. Corrected-лейблы вскрывают фактический следующий разрыв: trap miss_true — fail-closed модели молча теряют истинные usage-claims; проверяй субъект заявления И измеряй потерю правды, а не только ложные принятия.",
-      "links": ["exp-2", "exp-3"]
+      "links": [
+        "exp-2",
+        "exp-3"
+      ]
     },
     {
       "id": "exp-2",
@@ -70,14 +173,32 @@
           "type": "bar",
           "title": "Adoption ложной памяти по политике (прокси-агент)",
           "data": [
-            { "label": "memory_first (до)", "value": 1.0, "sub": "код не показан", "color": "#ef4444" },
-            { "label": "после ретракции (1-R)", "value": 0.12, "sub": "ADR-0002", "color": "#f59e0b" },
-            { "label": "code_first verify-on-read", "value": 0, "sub": "ADR-0003, 0.6ms steady-state", "color": "#10b981" }
+            {
+              "label": "memory_first (до)",
+              "value": 1.0,
+              "sub": "код не показан",
+              "color": "#ef4444"
+            },
+            {
+              "label": "после ретракции (1-R)",
+              "value": 0.12,
+              "sub": "ADR-0002",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "code_first verify-on-read",
+              "value": 0,
+              "sub": "ADR-0003, 0.6ms steady-state",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Verify-on-read плюс ретракция устраняют ложный adoption в прокси, но слепота к present-trap (заявление о существующем файле с неверным субъектом) структурна и сохраняется.",
-      "links": ["exp-1", "exp-3"]
+      "links": [
+        "exp-1",
+        "exp-3"
+      ]
     },
     {
       "id": "exp-3",
@@ -94,13 +215,25 @@
           "type": "bar",
           "title": "Ложные REFUTED истинных фактов на v4_rep (N=50)",
           "data": [
-            { "label": "file/import/env якоря", "value": 7, "sub": "fastmcp dist name vs import path", "color": "#ef4444" },
-            { "label": "с pkg: якорями (ADR-0005)", "value": 0, "sub": "closed-world манифест", "color": "#10b981" }
+            {
+              "label": "file/import/env якоря",
+              "value": 7,
+              "sub": "fastmcp dist name vs import path",
+              "color": "#ef4444"
+            },
+            {
+              "label": "с pkg: якорями (ADR-0005)",
+              "value": 0,
+              "sub": "closed-world манифест",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Evidence должен приходить из замкнутого мира: манифест решает, токены лишь подсказывают.",
-      "links": ["exp-2"]
+      "links": [
+        "exp-2"
+      ]
     },
     {
       "id": "exp-4",
@@ -117,22 +250,48 @@
           "type": "bar",
           "title": "Стоимость сбора контекста, агрегатор vs multi-tool (снижение, %)",
           "data": [
-            { "label": "вызовы инструментов", "value": 78, "sub": "4-5 вызовов -> 1", "color": "#10b981" },
-            { "label": "латентность", "value": 89, "sub": "−89%", "color": "#10b981" },
-            { "label": "токены", "value": 19, "sub": "−19%", "color": "#10b981" }
+            {
+              "label": "вызовы инструментов",
+              "value": 78,
+              "sub": "4-5 вызовов -> 1",
+              "color": "#10b981"
+            },
+            {
+              "label": "латентность",
+              "value": 89,
+              "sub": "−89%",
+              "color": "#10b981"
+            },
+            {
+              "label": "токены",
+              "value": 19,
+              "sub": "−19%",
+              "color": "#10b981"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Recall по схеме (D v3, N=30)",
           "data": [
-            { "label": "A multi-tool", "value": 0.875, "color": "#6366f1" },
-            { "label": "B агрегатор (intent filter)", "value": 0.9, "sub": "1 RT, 275 токенов", "color": "#10b981" }
+            {
+              "label": "A multi-tool",
+              "value": 0.875,
+              "color": "#6366f1"
+            },
+            {
+              "label": "B агрегатор (intent filter)",
+              "value": 0.9,
+              "sub": "1 RT, 275 токенов",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Один агрегатор с intent filter — оптимум: тот же recall, 1 запрос, 275 токенов — путь multi-tool стоит в 4-5 раз дороже за тот же ответ.",
-      "links": ["exp-5"]
+      "links": [
+        "exp-5"
+      ]
     },
     {
       "id": "exp-5",
@@ -149,24 +308,60 @@
           "type": "bar",
           "title": "Recall по конвейеру (30 задач) — H1 опровергнута",
           "data": [
-            { "label": "fts5_only", "value": 0.825, "sub": "одиночный компонент", "color": "#10b981" },
-            { "label": "полный (без rerank)", "value": 0.775, "color": "#f59e0b" },
-            { "label": "полный + quality", "value": 0.756, "sub": "точность 0.719", "color": "#6366f1" }
+            {
+              "label": "fts5_only",
+              "value": 0.825,
+              "sub": "одиночный компонент",
+              "color": "#10b981"
+            },
+            {
+              "label": "полный (без rerank)",
+              "value": 0.775,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "полный + quality",
+              "value": 0.756,
+              "sub": "точность 0.719",
+              "color": "#6366f1"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Инкрементальная дельта recall над предыдущим тиром",
           "data": [
-            { "label": "BM25 над vector", "value": 0.43, "sub": "+0.430 значимо", "color": "#10b981" },
-            { "label": "FTS5 над V+BM25", "value": 0.178, "sub": "+0.178 значимо", "color": "#10b981" },
-            { "label": "graph обогащение", "value": 0, "sub": "метаданные, не текст", "color": "#f59e0b" },
-            { "label": "vector над BM25", "value": 0.098, "sub": "−0.098 (вредит)", "color": "#ef4444" }
+            {
+              "label": "BM25 над vector",
+              "value": 0.43,
+              "sub": "+0.430 значимо",
+              "color": "#10b981"
+            },
+            {
+              "label": "FTS5 над V+BM25",
+              "value": 0.178,
+              "sub": "+0.178 значимо",
+              "color": "#10b981"
+            },
+            {
+              "label": "graph обогащение",
+              "value": 0,
+              "sub": "метаданные, не текст",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "vector над BM25",
+              "value": 0.098,
+              "sub": "−0.098 (вредит)",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
       "conclusion": "Больше тиров не значит лучше по recall: FTS5-only — максимум recall, реранкер покупает точность, а ценность graph живёт в метаданных, которые текстовые метрики evidence видеть не могут.",
-      "links": ["exp-4"]
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-6",
@@ -183,8 +378,18 @@
           "type": "bar",
           "title": "Canary-атаки, которые прошли (EXP-1, 2026-08-11)",
           "data": [
-            { "label": "до фикса", "value": 5, "sub": "5/5 прошли", "color": "#ef4444" },
-            { "label": "после fail-closed фикса", "value": 0, "sub": "13/13 регрессионных тестов", "color": "#10b981" }
+            {
+              "label": "до фикса",
+              "value": 5,
+              "sub": "5/5 прошли",
+              "color": "#ef4444"
+            },
+            {
+              "label": "после fail-closed фикса",
+              "value": 0,
+              "sub": "13/13 регрессионных тестов",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -206,26 +411,72 @@
           "type": "bar",
           "title": "Галлюцинированные лжи, принятые рукой валидатора",
           "data": [
-            { "label": "VC/Merkle (без семантических входов)", "value": 2, "color": "#ef4444" },
-            { "label": "Verify-On-Read (якорь)", "value": 0, "color": "#10b981" },
-            { "label": "гибрид, равные права", "value": 0, "sub": "A1b", "color": "#10b981" }
+            {
+              "label": "VC/Merkle (без семантических входов)",
+              "value": 2,
+              "color": "#ef4444"
+            },
+            {
+              "label": "Verify-On-Read (якорь)",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "гибрид, равные права",
+              "value": 0,
+              "sub": "A1b",
+              "color": "#10b981"
+            }
           ]
         },
         {
           "type": "bar",
           "title": "Слепые зоны, найденные adversarial probe (FP / FN)",
           "data": [
-            { "label": "A1a VC baseline", "value": 2, "sub": "FP — без семантики", "color": "#ef4444" },
-            { "label": "A2 VOR ложь о реальном импорте", "value": 1, "sub": "FP", "color": "#ef4444" },
-            { "label": "A4a VC косметическое изменение", "value": 1, "sub": "FN — page hash слишком груб", "color": "#f59e0b" },
-            { "label": "A5 VOR отравленный truth-список", "value": 1, "sub": "FP", "color": "#ef4444" },
-            { "label": "A6 мутация сценария", "value": 1, "sub": "FN — вердикт переворачивается", "color": "#f59e0b" },
-            { "label": "A4b VC потерянная запись", "value": 1, "sub": "поймано — уникальное покрытие", "color": "#10b981" }
+            {
+              "label": "A1a VC baseline",
+              "value": 2,
+              "sub": "FP — без семантики",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A2 VOR ложь о реальном импорте",
+              "value": 1,
+              "sub": "FP",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A4a VC косметическое изменение",
+              "value": 1,
+              "sub": "FN — page hash слишком груб",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "A5 VOR отравленный truth-список",
+              "value": 1,
+              "sub": "FP",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A6 мутация сценария",
+              "value": 1,
+              "sub": "FN — вердикт переворачивается",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "A4b VC потерянная запись",
+              "value": 1,
+              "sub": "поймано — уникальное покрытие",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "Важен внешний слой grounding плюс слой консистентности плюс качество извлечения якорей — а не выбор «VC или VOR»; и каждый тест конкурентности обязан проверять, что вернувшийся результат принадлежит правильному входу.",
-      "links": ["exp-2", "exp-1"]
+      "links": [
+        "exp-2",
+        "exp-1"
+      ]
     },
     {
       "id": "exp-8",
@@ -242,8 +493,18 @@
           "type": "bar",
           "title": "Мутационный счёт на validate_scores (12 мутаций)",
           "data": [
-            { "label": "до фикса", "value": 8, "sub": "8%", "color": "#ef4444" },
-            { "label": "после фикса P-006", "value": 100, "sub": "11/11 полярных дыр закрыто", "color": "#10b981" }
+            {
+              "label": "до фикса",
+              "value": 8,
+              "sub": "8%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "после фикса P-006",
+              "value": 100,
+              "sub": "11/11 полярных дыр закрыто",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -265,9 +526,24 @@
           "type": "bar",
           "title": "Качество движка корневых причин на аудиторном датасете (31 инцидент), %",
           "data": [
-            { "label": "top-1 точность", "value": 13, "sub": "%", "color": "#ef4444" },
-            { "label": "avg similarity", "value": 17, "sub": "%", "color": "#f59e0b" },
-            { "label": "avg term overlap", "value": 16, "sub": "%", "color": "#f59e0b" }
+            {
+              "label": "top-1 точность",
+              "value": 13,
+              "sub": "%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "avg similarity",
+              "value": 17,
+              "sub": "%",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "avg term overlap",
+              "value": 16,
+              "sub": "%",
+              "color": "#f59e0b"
+            }
           ]
         }
       ],
@@ -289,9 +565,24 @@
           "type": "bar",
           "title": "Ожидание загрузки на DB PID-lock (секунды)",
           "data": [
-            { "label": "осиротевший лок (до)", "value": 30, "sub": "boot timeout -> зомби-цикл", "color": "#ef4444" },
-            { "label": "осиротевший лок (после)", "value": 0.12, "sub": "self-healing", "color": "#10b981" },
-            { "label": "живой владелец (после)", "value": 1.5, "sub": "мягкое ожидание", "color": "#10b981" }
+            {
+              "label": "осиротевший лок (до)",
+              "value": 30,
+              "sub": "boot timeout -> зомби-цикл",
+              "color": "#ef4444"
+            },
+            {
+              "label": "осиротевший лок (после)",
+              "value": 0.12,
+              "sub": "self-healing",
+              "color": "#10b981"
+            },
+            {
+              "label": "живой владелец (после)",
+              "value": 1.5,
+              "sub": "мягкое ожидание",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -313,13 +604,25 @@
           "type": "bar",
           "title": "Покрытие импортов на поисковых чанках",
           "data": [
-            { "label": "покрытие импортов", "value": 0, "sub": "~186 токенов/чанк", "color": "#f59e0b" },
-            { "label": "чанки с любыми метаданными", "value": 0, "sub": "вывод -> KNOWN_ISSUES", "color": "#ef4444" }
+            {
+              "label": "покрытие импортов",
+              "value": 0,
+              "sub": "~186 токенов/чанк",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "чанки с любыми метаданными",
+              "value": 0,
+              "sub": "вывод -> KNOWN_ISSUES",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
       "conclusion": "Гипотеза обогащения открыта: извлечение метаданных дало 0.0 на поисковых чанках, флаг остаётся выключенным до лучшего проба.",
-      "links": ["exp-4"]
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-12",
@@ -336,13 +639,23 @@
           "type": "donut",
           "title": "Каталог Benchmark 2.0",
           "data": [
-            { "label": "задачи рассуждения (L3-L5)", "value": 12, "color": "#6366f1" },
-            { "label": "keyword-пробы", "value": 8, "color": "#06b6d4" }
+            {
+              "label": "задачи рассуждения (L3-L5)",
+              "value": 12,
+              "color": "#6366f1"
+            },
+            {
+              "label": "keyword-пробы",
+              "value": 8,
+              "color": "#06b6d4"
+            }
           ]
         }
       ],
       "conclusion": "Scaffold и есть результат: 12 задач с evidence плюс 8 keyword-проб дают следующему харнесу дифференцированный измеритель.",
-      "links": ["exp-4"]
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-13",
@@ -359,9 +672,24 @@
           "type": "bar",
           "title": "ETA переиндексации vs фактическая недоступность, s",
           "data": [
-            { "label": "обещанный ETA", "value": 18, "sub": "job 0d27f125", "color": "#10b981" },
-            { "label": "индексация", "value": 552, "sub": "7383/7383 файлов", "color": "#f59e0b" },
-            { "label": "+ синхронный update_all", "value": 771, "sub": "итоговая недоступность", "color": "#ef4444" }
+            {
+              "label": "обещанный ETA",
+              "value": 18,
+              "sub": "job 0d27f125",
+              "color": "#10b981"
+            },
+            {
+              "label": "индексация",
+              "value": 552,
+              "sub": "7383/7383 файлов",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "+ синхронный update_all",
+              "value": 771,
+              "sub": "итоговая недоступность",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
@@ -383,9 +711,21 @@
           "type": "donut",
           "title": "Скан доказуемости тестов (1143 теста)",
           "data": [
-            { "label": "доказуемы", "value": 1133, "color": "#10b981" },
-            { "label": "вакуумные", "value": 3, "color": "#ef4444" },
-            { "label": "пропущены", "value": 7, "color": "#6366f1" }
+            {
+              "label": "доказуемы",
+              "value": 1133,
+              "color": "#10b981"
+            },
+            {
+              "label": "вакуумные",
+              "value": 3,
+              "color": "#ef4444"
+            },
+            {
+              "label": "пропущены",
+              "value": 7,
+              "color": "#6366f1"
+            }
           ]
         }
       ],
@@ -407,8 +747,18 @@
           "type": "bar",
           "title": "Ложные проходы на 8 формах вызова",
           "data": [
-            { "label": "сломанный экстрактор", "value": 3, "sub": "эмитит сырую ln", "color": "#ef4444" },
-            { "label": "правильный экстрактор", "value": 0, "sub": "эмитит ln.strip()", "color": "#10b981" }
+            {
+              "label": "сломанный экстрактор",
+              "value": 3,
+              "sub": "эмитит сырую ln",
+              "color": "#ef4444"
+            },
+            {
+              "label": "правильный экстрактор",
+              "value": 0,
+              "sub": "эмитит ln.strip()",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -430,10 +780,30 @@
           "type": "bar",
           "title": "Метрика качества под четырьмя популяциями",
           "data": [
-            { "label": "пустой индекс", "value": 0, "sub": "warning: нет реальных результатов", "color": "#ef4444" },
-            { "label": "мусорные чанки", "value": 0, "sub": "ТОТ ЖЕ warning", "color": "#ef4444" },
-            { "label": "ошибка searcher", "value": 0, "sub": "другой warning", "color": "#f59e0b" },
-            { "label": "контроль (реальные)", "value": 3, "sub": "без warning", "color": "#10b981" }
+            {
+              "label": "пустой индекс",
+              "value": 0,
+              "sub": "warning: нет реальных результатов",
+              "color": "#ef4444"
+            },
+            {
+              "label": "мусорные чанки",
+              "value": 0,
+              "sub": "ТОТ ЖЕ warning",
+              "color": "#ef4444"
+            },
+            {
+              "label": "ошибка searcher",
+              "value": 0,
+              "sub": "другой warning",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "контроль (реальные)",
+              "value": 3,
+              "sub": "без warning",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -468,16 +838,45 @@
           "type": "bar",
           "title": "Recall(real) по ступени evidence, %",
           "data": [
-            { "label": "qwen · якорь", "value": 24, "sub": "code_first", "color": "#f59e0b" },
-            { "label": "qwen · файл", "value": 92, "sub": "ступень 2", "color": "#10b981" },
-            { "label": "qwen · граф", "value": 76, "sub": "ступень 3", "color": "#6366f1" },
-            { "label": "deepseek · файл", "value": 84, "sub": "ступень 2", "color": "#10b981" },
-            { "label": "deepseek · граф", "value": 44, "sub": "unknown 0.66", "color": "#ef4444" }
+            {
+              "label": "qwen · якорь",
+              "value": 24,
+              "sub": "code_first",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen · файл",
+              "value": 92,
+              "sub": "ступень 2",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen · граф",
+              "value": 76,
+              "sub": "ступень 3",
+              "color": "#6366f1"
+            },
+            {
+              "label": "deepseek · файл",
+              "value": 84,
+              "sub": "ступень 2",
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek · граф",
+              "value": 44,
+              "sub": "unknown 0.66",
+              "color": "#ef4444"
+            }
           ]
         }
       ],
       "conclusion": "Для VOR: движок recall = фрагмент файла (~25 строк); граф = отдельный сигнал проверки субъекта против traps, но только для evidence-честных моделей; исключить fail-open модели (семейство glm) из VOR-конвейера.",
-      "links": ["exp-1", "exp-2", "exp-19"]
+      "links": [
+        "exp-1",
+        "exp-2",
+        "exp-19"
+      ]
     },
     {
       "id": "exp-19",
@@ -494,14 +893,32 @@
           "type": "bar",
           "title": "Точность гибрида против одиночного формата, %",
           "data": [
-            { "label": "только файл (qwen)", "value": 94, "sub": "E2 file_content", "color": "#10b981" },
-            { "label": "гибрид file+graph", "value": 90, "sub": "не аддитивен", "color": "#ef4444" },
-            { "label": "только граф (qwen)", "value": 91, "sub": "trap-точность", "color": "#6366f1" }
+            {
+              "label": "только файл (qwen)",
+              "value": 94,
+              "sub": "E2 file_content",
+              "color": "#10b981"
+            },
+            {
+              "label": "гибрид file+graph",
+              "value": 90,
+              "sub": "не аддитивен",
+              "color": "#ef4444"
+            },
+            {
+              "label": "только граф (qwen)",
+              "value": 91,
+              "sub": "trap-точность",
+              "color": "#6366f1"
+            }
           ]
         }
       ],
       "conclusion": "Формат evidence для VOR выбирается по целевой метрике: фрагмент для recall, граф для trap-точности — гибрид худшее из обоих (acc 0.90). Git-провенанс в evidence — дешёвый временной сигнал, но универсальный temporal present-trap решается формулировкой заявления, а не evidence. CORRECTED (E5): «граф для trap-точности» реален для deepseek (75->40% на расширенной категории), не для glm; замер trap на N=1, намекавший на обратное, был статистическим артефактом.",
-      "links": ["exp-1", "exp-18"]
+      "links": [
+        "exp-1",
+        "exp-18"
+      ]
     },
     {
       "id": "exp-20",
@@ -518,8 +935,18 @@
           "type": "bar",
           "title": "Embed-эндпоинт до/после фикса путей",
           "data": [
-            { "label": "до", "value": 0, "sub": "FileNotFoundError", "color": "#ef4444" },
-            { "label": "после", "value": 384, "sub": "dim, status 200", "color": "#10b981" }
+            {
+              "label": "до",
+              "value": 0,
+              "sub": "FileNotFoundError",
+              "color": "#ef4444"
+            },
+            {
+              "label": "после",
+              "value": 384,
+              "sub": "dim, status 200",
+              "color": "#10b981"
+            }
           ]
         }
       ],
@@ -541,17 +968,50 @@
           "type": "bar",
           "title": "Ложные принятия на 20 реальных present-trap, файл против графа",
           "data": [
-            { "label": "deepseek · файл", "value": 15, "sub": "75% FA", "color": "#ef4444" },
-            { "label": "deepseek · граф", "value": 8, "sub": "40% FA — граф закрывает", "color": "#10b981" },
-            { "label": "glm · файл", "value": 13, "sub": "65%", "color": "#ef4444" },
-            { "label": "glm · граф", "value": 14, "sub": "граф не помогает", "color": "#f59e0b" },
-            { "label": "qwen · файл", "value": 2, "sub": "fail-closed", "color": "#10b981" },
-            { "label": "qwen · граф", "value": 2, "sub": "recall 2-3/10", "color": "#10b981" }
+            {
+              "label": "deepseek · файл",
+              "value": 15,
+              "sub": "75% FA",
+              "color": "#ef4444"
+            },
+            {
+              "label": "deepseek · граф",
+              "value": 8,
+              "sub": "40% FA — граф закрывает",
+              "color": "#10b981"
+            },
+            {
+              "label": "glm · файл",
+              "value": 13,
+              "sub": "65%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "glm · граф",
+              "value": 14,
+              "sub": "граф не помогает",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen · файл",
+              "value": 2,
+              "sub": "fail-closed",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen · граф",
+              "value": 2,
+              "sub": "recall 2-3/10",
+              "color": "#10b981"
+            }
           ]
         }
       ],
       "conclusion": "«FA trap = 0» на категории с N=1 — бессмысленное число; расширение категории с валидацией по субъекту (P-00X) — единственный честный способ измерить present-trap. Граф — реальный закрыватель trap для deepseek, но не для glm — per-model формат evidence подтверждён ещё сильнее.",
-      "links": ["exp-18", "exp-19"]
+      "links": [
+        "exp-18",
+        "exp-19"
+      ]
     },
     {
       "id": "exp-22",
@@ -568,15 +1028,80 @@
           "type": "bar",
           "title": "Recall(real) по арму, pinned-прогон, %",
           "data": [
-            { "label": "qwen · файл", "value": 88, "sub": "лучший recall-арм", "color": "#10b981" },
-            { "label": "deepseek · file+graph", "value": 92, "sub": "лучший для deepseek", "color": "#10b981" },
-            { "label": "glm · граф", "value": 84, "sub": "лучший для glm, FA trap 1", "color": "#6366f1" },
-            { "label": "qwen · граф", "value": 72, "sub": "платит recall", "color": "#f59e0b" }
+            {
+              "label": "qwen · файл",
+              "value": 88,
+              "sub": "лучший recall-арм",
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek · file+graph",
+              "value": 92,
+              "sub": "лучший для deepseek",
+              "color": "#10b981"
+            },
+            {
+              "label": "glm · граф",
+              "value": 84,
+              "sub": "лучший для glm, FA trap 1",
+              "color": "#6366f1"
+            },
+            {
+              "label": "qwen · граф",
+              "value": 72,
+              "sub": "платит recall",
+              "color": "#f59e0b"
+            }
           ]
         }
       ],
       "conclusion": "Pinned-rerun подтвердил устойчивость всех выводов серии к маршрутизации; недетерминизм glm — свойство модели (даже на одном бэкенде); StreamLake (топ-1 unpinned у glm) pinned не отдаёт JSON — объём не равен качеству, и пининг также защищает от «популярного, но битого» апстрима.",
-      "links": ["exp-18", "exp-19", "exp-21"]
+      "links": [
+        "exp-18",
+        "exp-19",
+        "exp-21"
+      ]
+    },
+    {
+      "id": "exp-23",
+      "date": "2026-08-19",
+      "project": "mscodebase-intelligence",
+      "title": "LSP live-проба: call hierarchy + semantic tokens подтверждены на pyright; type hierarchy / moniker НЕ объявлены",
+      "hypothesis": "Из продвинутых LSP-фич (call/type hierarchy, semantic tokens, moniker, gate индексации) реальный pyright-форк (basedpyright) реализует подмножество; наличие фичи в спеке 3.17 не гарантирует её реализацию каждым сервером.",
+      "command": "pip install basedpyright (venv, без npm); venv/Scripts/python.exe experiments/lsp/lsp_live_pyright.py; venv/Scripts/python.exe experiments/lsp/lsp_client_demo.py; wire-probe experiments/lsp/lsp_wire_probe.py на запиненном lsprotocol==2025.0.0",
+      "result": "basedpyright 1.39.10 объявляет callHierarchyProvider + semanticTokensProvider(full); typeHierarchyProvider=None, monikerProvider=None; gate pyright/beginIndexing..endIndexing за 8s не наблюдался. Живой call hierarchy: report->[ShapeManager, total_area, build] + входящий main() с точными range (вкл. print->builtins.pyi); semantic tokens 62 дельта-токена с result_id. Тонкий LspClient (src/core/lsp_client.py) + демо выдают готовые к графу рёбра CALLS и декодированные спаны.",
+      "verdict": "partial",
+      "finding": "«Есть в спеке» != «сервер реализует». На pyright-семействе граф реально получает call hierarchy (компиляторные кросс-файловые рёбра CALLS) и semantic tokens (точные спаны/виды); type hierarchy (3.17) и moniker (3.16) pyright НЕ объявляет -> dormant до сервера, который их поддержит. Текущий tree-sitter-путь остаётся источником правды; LSP-слой capability-gated (ADR-0006).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "LSP feature availability on pyright fork (2026-08-19)",
+          "data": [
+            {
+              "label": "call_hierarchy",
+              "value": 1
+            },
+            {
+              "label": "semantic_tokens",
+              "value": 1
+            },
+            {
+              "label": "type_hierarchy",
+              "value": 0
+            },
+            {
+              "label": "moniker",
+              "value": 0
+            },
+            {
+              "label": "indexing_gate",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "conclusion": "Для Python-графа LSP даёт реальную ценность через call hierarchy и semantic tokens; type hierarchy / moniker ждут другого сервера. Проверено вживую, не предположением.",
+      "links": []
     }
   ],
   "negativeResults": [
@@ -615,6 +1140,12 @@
       "whyFailed": "Cache-hit hybrid_search_async пропускает dense-тир — векторный тир молча исчезает на повторных запросах, и первый прогон был полностью искажён (vector_bm25 == bm25_only 30/30).",
       "date": "2026-08-11",
       "ref": "exp-5"
+    },
+    {
+      "attempt": "Предположить, что LSP type hierarchy (3.17) и moniker (3.16) доступны для Python-графа, раз они есть в спеке",
+      "whyFailed": "basedpyright (pyright-форк) не объявляет typeHierarchyProvider и monikerProvider и не шлёт pyright/beginIndexing/endIndexing. «Есть в спеке» != «сервер реализует» — нужно проверять живой сервер, а не предполагать из спека.",
+      "date": "2026-08-19",
+      "ref": "exp-23"
     }
   ]
 }
