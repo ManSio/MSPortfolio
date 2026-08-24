@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-24T17:46:48.222Z",
+  "fetchedAt": "2026-08-24T18:58:30.114Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-24T17:16:06Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "ManSio.github.io",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-24T16:44:58Z",
+      "pushedAt": "2026-08-24T18:04:01Z",
       "language": "HTML"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-24T17:46:55Z",
+      "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
@@ -198,11 +198,11 @@
   ],
   "commits": [
     {
-      "repo": "MSPortfolio",
-      "sha": "89e284819f",
-      "date": "2026-08-24T17:15:26Z",
-      "message": "feat: add get_issue_detail MCP tool (drill into a single known issue by ID)",
-      "author": "ManSio"
+      "repo": "ManSio.github.io",
+      "sha": "177e898da7",
+      "date": "2026-08-24T18:04:01Z",
+      "message": "Revise sitemap.xml with updated URLs and metadata",
+      "author": "Mikhail"
     },
     {
       "repo": "ManSio.github.io",
@@ -219,10 +219,10 @@
       "author": "ManSio"
     },
     {
-      "repo": "ManSio.github.io",
-      "sha": "1607725bc2",
-      "date": "2026-08-14T13:53:32Z",
-      "message": "chore: add Google Search Console verification meta tag",
+      "repo": "MSPortfolio",
+      "sha": "89e284819f",
+      "date": "2026-08-24T17:15:26Z",
+      "message": "feat: add get_issue_detail MCP tool (drill into a single known issue by ID)",
       "author": "ManSio"
     },
     {
