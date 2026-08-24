@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-24T16:10:17.817Z",
+  "fetchedAt": "2026-08-24T16:38:59.178Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-24T16:09:57Z",
+      "pushedAt": "2026-08-24T16:38:39Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "84d74e4331",
+      "date": "2026-08-24T16:37:46Z",
+      "message": "feat: add same-origin MCP discovery beacons",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "5964b0234d",
       "date": "2026-08-24T16:09:51Z",
       "message": "Merge branch 'main' of https://github.com/ManSio/MSPortfolio",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "0f81b12785",
-      "date": "2026-08-24T16:04:49Z",
-      "message": "data: reformat lab experiments.json and experiments.ru.json",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "98da93b93f",
-      "date": "2026-08-24T16:04:48Z",
-      "message": "feat(worker): add MCP discovery + read-only /api passthrough",
       "author": "ManSio"
     },
     {
