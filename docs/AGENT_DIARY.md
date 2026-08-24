@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-08-24] — Universal Gateway: .well-known/mcp.json + тонкий /api/* поверх SSOT (без форка данных)
+**Status:** ✅ Fixed (код + тесты 108/108, typecheck, lint-0-errors; деплой после коммита)
+**Root Cause:** — (решение владельца «continue» по review предложения Universal MCP Gateway: ~80% уже было, добавить два ценных пункта без форка single source of truth)
+**Fix:** (1) `/.well-known/mcp.json` в worker/index.ts — официальная discovery-конвенция MCP (name/description/endpoints[transport:streamable-http]); сверка схемы со спекой отложена (URL спеки 404). (2) Тонкий `/api/{resource}` — read-only pass-through тех же `src/data/*.json`, что кормят сайт и MCP-тулы (projects/principles/timeline/antipatterns), 405 для non-GET, 404 с available-списком. НЕ хардкод данных (защита single source of truth, KI-011). (3) OpenAPI + llms.txt описаны. 4 новых теста в worker.test.ts (26 воркер, 108 всего).
+**Guard:** /api/* пере-чит один и тот же JSON-файл, что и mcp-tools.ts → расхождение невозможно (SSOT), внесено и на path-routing не влияет (/mcp нетронут).
+**Pattern:** NEW
+
 ## [2026-08-15 22:50] — Рекомендация 2: внешние arms проверки (verify_article, verify_package, README в verify_repo) — циркулярность убита
 **Status:** ✅ Fixed (код + тесты 101/101, typecheck, lint; деплой после коммита)
 **Root Cause:** — (владелец: «давай» на внешние источники: dev.to, npm, README)

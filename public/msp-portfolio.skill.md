@@ -54,6 +54,8 @@ endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 
 ## Other machine-readable surfaces
 
+- MCP discovery: `https://msp-portfolio.mansio-dev.workers.dev/.well-known/mcp.json`
+- REST data (read-only, same source as the tools): `https://msp-portfolio.mansio-dev.workers.dev/api/{projects|principles|timeline|antipatterns}`
 - Plain-text CV: `curl https://msp-portfolio.mansio-dev.workers.dev/resume.txt`
 - Server self-description: `https://msp-portfolio.mansio-dev.workers.dev/llms.txt`
 - Full site content for agents: `https://mansio.github.io/MSPortfolio/llms-full.txt`

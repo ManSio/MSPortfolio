@@ -15,6 +15,12 @@
 | punkpeye/awesome-mcp-servers | PR в README | ⏳ ручной шаг (entry ниже) |
 | mcp.so / PulseMCP / MCPMarket | веб-формы / issue | ⏳ опционально (~5 мин каждый) |
 
+**Автообнаружение сервера (`/.well-known/mcp.json`):** воркер отдаёт официальный
+MCP discovery-документ (`name`, `description`, `endpoints[]` с `transport: streamable-http`),
+указывающий на `/mcp`. Клиент/агент, поддерживающий discovery, находит эндпоинт без
+конфиг-файла. Реализовано в `worker/index.ts` (возвращается на `GET /.well-known/mcp.json`);
+точную схему сверить с актуальной версией спеки при следующем обновлении (KI-018).
+
 ## Публикация в официальный реестр
 
 ```sh

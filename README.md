@@ -60,6 +60,11 @@ pnpm cf:deploy   # first run: logs in to your Cloudflare account
 claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp
 ```
 
+The worker also exposes MCP discovery (`/.well-known/mcp.json`) and a thin
+read-only REST pass-through (`/api/{projects|principles|timeline|antipatterns}`)
+serving the same `src/data/*.json` files that feed the site and the MCP server
+(single source of truth — the API cannot drift from the tools).
+
 ## AI chat on the site (OpenRouter, free models)
 
 The Agent demo can run as a **grounded LLM agent**: the model picks MCP tools,

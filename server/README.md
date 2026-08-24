@@ -22,6 +22,12 @@ the browser agent demo uses (`src/lib/mcp-tools.ts`) — one source of truth.
 
 Protocol: **Streamable HTTP** (2025-11-25 / 2026-07-28), single endpoint `POST/GET /mcp`.
 
+> Note: this Fastify entrypoint exposes only `/mcp` (+ `/mcp/health`). The Cloudflare
+> Workers entrypoint ([`worker/index.ts`](../worker/index.ts)) additionally serves the
+> MCP discovery file (`/.well-known/mcp.json`), a read-only REST pass-through
+> (`/api/{projects|principles|timeline|antipatterns}`), and the doc endpoints
+> (`/openapi.json`, `/llms.txt`, `/resume.txt`).
+
 ## Run locally
 
 ```sh

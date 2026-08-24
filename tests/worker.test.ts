@@ -272,6 +272,40 @@ describe('worker /mcp integration', () => {
     expect(doc['x-mcp-tools']).toHaveLength(16);
   });
 
+  it('/.well-known/mcp.json exposes the MCP discovery document', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/.well-known/mcp.json`), makeEnv() as never);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    const doc = (await res.json()) as { name: string; endpoints: Array<{ url: string; transport: string }> };
+    expect(doc.name).toBe('MSPortfolio');
+    expect(doc.endpoints[0].transport).toBe('streamable-http');
+    expect(doc.endpoints[0].url).toBe(`${BASE}/mcp`);
+  });
+
+  it('/api/* serves the single-source-of-truth data files (no fork)', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/api/projects`), makeEnv() as never);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    const body = (await res.json()) as { projects: Array<{ name: string }> };
+    expect(body.projects.length).toBeGreaterThan(0);
+    expect(body.projects[0].name).toBeTruthy();
+  });
+
+  it('/api/* 404s with a helpful list for unknown resources', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/api/nope`), makeEnv() as never);
+    expect(res.status).toBe(404);
+    const body = (await res.json()) as { error: string; available: string[] };
+    expect(body.error).toBe('unknown resource');
+    expect(body.available).toContain('projects');
+  });
+
+  it('/.well-known/mcp.json and /api/* reject non-GET methods', async () => {
+    const wk = await worker.fetch(new Request(`${BASE}/.well-known/mcp.json`, { method: 'POST' }), makeEnv() as never);
+    expect(wk.status).toBe(405);
+    const api = await worker.fetch(new Request(`${BASE}/api/projects`, { method: 'PUT' }), makeEnv() as never);
+    expect(api.status).toBe(405);
+  });
+
   it('concurrency: 8 parallel tools/call return the correct result per filter', async () => {
     const filters = ['all', 'mcp', 'python', 'typescript', 'mcp', 'python', 'typescript', 'all'];
     const results = await Promise.all(

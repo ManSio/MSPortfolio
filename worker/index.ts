@@ -21,11 +21,46 @@ import * as z from 'zod/v4';
 import { getTool, TOOLS } from '../src/lib/mcp-tools.ts';
 import { setLlmArm } from '../src/lib/llm-arm-registry.ts';
 import { verifyClaimLlmArm } from '../src/lib/llm-verify.ts';
+// Same single-source-of-truth files that feed the site and the MCP server —
+// the /api/* pass-through below serves these verbatim (no separate data copy).
+import projectsData from '../src/data/projects.json' with { type: 'json' };
+import principlesData from '../src/data/principles.json' with { type: 'json' };
+import timelineData from '../src/data/timeline.json' with { type: 'json' };
+import antipatternsData from '../src/data/antipatterns.json' with { type: 'json' };
 
 const NAME = 'msp-portfolio';
 const VERSION = '1.0.0';
 /** Canonical public origin — used by self-documentation endpoints (/resume.txt, /llms.txt). */
 const PUBLIC_BASE = 'https://msp-portfolio.mansio-dev.workers.dev';
+
+/**
+ * MCP server discovery (official `/.well-known/mcp.json` convention): lets
+ * MCP-supporting agents/clients find the endpoint without a config file.
+ * Minimal compliant shape — name/description/endpoints (no protocolVersion
+ * hardcode; align the spec version upstream if needed).
+ */
+const WELL_KNOWN_MCP = {
+  name: 'MSPortfolio',
+  description:
+    'MCP-native engineering portfolio: projects with decision logs, engineering principles, ' +
+    'stack-fit analysis, architecture failure simulation and the lab (experiments, diary, known issues).',
+  endpoints: [
+    {
+      url: `${PUBLIC_BASE}/mcp`,
+      transport: 'streamable-http',
+      description: 'MCP Streamable HTTP endpoint (JSON-RPC 2.0) for Claude Code, Cursor, Zed, etc.',
+    },
+  ],
+};
+
+/** Read-only REST surface: canonical portfolio datasets (/api/<resource>). */
+const API_RESOURCES: Record<string, unknown> = {
+  projects: projectsData,
+  principles: principlesData,
+  timeline: timelineData,
+  antipatterns: antipatternsData,
+};
+const API_RESOURCE_NAMES = Object.keys(API_RESOURCES);
 
 const handler = createMcpHandler(() => {
   const server = new McpServer({ name: NAME, version: VERSION });
@@ -204,6 +239,23 @@ function buildOpenApi(): Record<string, unknown> {
       },
       '/llms.txt': {
         get: { summary: 'Server self-description for AI search', responses: { '200': { description: 'text/plain' } } },
+      },
+      '/.well-known/mcp.json': {
+        get: { summary: 'MCP server discovery document (official convention)', responses: { '200': { description: 'application/json' } } },
+      },
+      '/api/{resource}': {
+        get: {
+          summary: 'Read-only pass-through of the portfolio data (single source of truth)',
+          parameters: [
+            {
+              name: 'resource',
+              in: 'path',
+              required: true,
+              schema: { type: 'string', enum: ['projects', 'principles', 'timeline', 'antipatterns'] },
+            },
+          ],
+          responses: { '200': { description: 'JSON data file' }, '404': { description: 'unknown resource' } },
+        },
       },
       '/chat': {
         post: {
@@ -454,6 +506,14 @@ export default {
       return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total }), cors);
     }
 
+    // MCP server discovery — official `/.well-known/mcp.json` convention.
+    if (url.pathname === '/.well-known/mcp.json') {
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        return finalize(new Response('Method not allowed', { status: 405 }), cors);
+      }
+      return finalize(Response.json(WELL_KNOWN_MCP), cors);
+    }
+
     if (url.pathname === '/openapi.json') {
       if (request.method !== 'GET' && request.method !== 'HEAD') {
         return finalize(new Response('Method not allowed', { status: 405 }), cors);
@@ -475,6 +535,8 @@ export default {
 
 ## Install
 - Endpoint (Streamable HTTP): ${PUBLIC_BASE}/mcp
+- MCP discovery: ${PUBLIC_BASE}/.well-known/mcp.json
+- REST data (read-only, single source of truth): ${PUBLIC_BASE}/api/{projects|principles|timeline|antipatterns}
 - Add to Claude Code: claude mcp add --transport http msp-portfolio ${PUBLIC_BASE}/mcp
 - Plain-text CV: ${PUBLIC_BASE}/resume.txt
 - OpenAPI: ${PUBLIC_BASE}/openapi.json
@@ -504,6 +566,24 @@ Source: https://github.com/ManSio/MSPortfolio
         const msg = e instanceof Error ? e.message : String(e);
         return finalize(new Response(`resume unavailable: ${msg}`, { status: 500 }), cors);
       }
+    }
+
+    // Thin read-only REST pass-through of the same data files that feed the
+    // site and the MCP server — no separate copy, so it cannot drift (README
+    // single source of truth / KI-011). Not rate-limited: read-only discovery.
+    const resource = url.pathname.match(/^\/api\/([a-z0-9_-]+)\/?$/)?.[1];
+    if (resource) {
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        return finalize(new Response('Method not allowed', { status: 405 }), cors);
+      }
+      const data = API_RESOURCES[resource];
+      if (data === undefined) {
+        return finalize(
+          Response.json({ error: 'unknown resource', available: API_RESOURCE_NAMES }, { status: 404 }),
+          cors,
+        );
+      }
+      return finalize(Response.json(data), cors);
     }
 
     if (url.pathname === '/chat') {

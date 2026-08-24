@@ -15,6 +15,8 @@
 - Plain-text CV (curl): https://msp-portfolio.mansio-dev.workers.dev/resume.txt
 - Server self-description: https://msp-portfolio.mansio-dev.workers.dev/llms.txt
 - OpenAPI: https://msp-portfolio.mansio-dev.workers.dev/openapi.json
+- MCP discovery: https://msp-portfolio.mansio-dev.workers.dev/.well-known/mcp.json
+- REST data (read-only, same source as the tools): https://msp-portfolio.mansio-dev.workers.dev/api/{projects|principles|timeline|antipatterns}
 - Anonymous quota: 100 calls/IP/month (X-RateLimit-* headers)
 - Agent skill: https://github.com/ManSio/MSPortfolio/blob/main/public/msp-portfolio.skill.md
 - Add to Claude Code: `claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp`
