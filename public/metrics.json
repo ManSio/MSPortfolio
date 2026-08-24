@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-24T16:55:03.406Z",
+  "fetchedAt": "2026-08-24T17:15:59.442Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-24T17:15:39Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "ManSio.github.io",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-08-24T16:44:58Z",
       "language": "HTML"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-24T16:39:07Z",
-      "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
@@ -198,6 +198,13 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "89e284819f",
+      "date": "2026-08-24T17:15:26Z",
+      "message": "feat: add get_issue_detail MCP tool (drill into a single known issue by ID)",
+      "author": "ManSio"
+    },
+    {
       "repo": "ManSio.github.io",
       "sha": "0b7999fb01",
       "date": "2026-08-24T16:44:29Z",
@@ -216,13 +223,6 @@
       "sha": "1607725bc2",
       "date": "2026-08-14T13:53:32Z",
       "message": "chore: add Google Search Console verification meta tag",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "84d74e4331",
-      "date": "2026-08-24T16:37:46Z",
-      "message": "feat: add same-origin MCP discovery beacons",
       "author": "ManSio"
     },
     {
