@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-08-19T17:39:42.328Z",
+  "fetchedAt": "2026-08-24T15:55:20.058Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 7,
-    "followers": 58,
-    "following": 65
+    "followers": 59,
+    "following": 66
   },
   "repos": [
     {
@@ -13,15 +13,15 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-19T16:46:13Z",
+      "pushedAt": "2026-08-24T14:59:32Z",
       "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-19T17:30:07Z",
+      "openIssues": 1,
+      "pushedAt": "2026-08-20T17:23:25Z",
       "language": "Python"
     },
     {
@@ -63,8 +63,8 @@
         "testing",
         "mcp"
       ],
-      "reactions": 7,
-      "comments": 0,
+      "reactions": 10,
+      "comments": 9,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
       "readablePublishDate": "Aug 16"
@@ -99,8 +99,8 @@
         "agents",
         "benchmark"
       ],
-      "reactions": 8,
-      "comments": 2,
+      "reactions": 12,
+      "comments": 4,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
       "readablePublishDate": "Aug 14"
@@ -117,7 +117,7 @@
         "cloudflare",
         "portfolio"
       ],
-      "reactions": 13,
+      "reactions": 16,
       "comments": 0,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
