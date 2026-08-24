@@ -52,6 +52,7 @@ tools:
   - name: get_experiments
   - name: get_diary
   - name: get_known_issues
+  - name: get_issue_detail
   - name: analyze_stack
   - name: simulate_architecture
   - name: verify_claim

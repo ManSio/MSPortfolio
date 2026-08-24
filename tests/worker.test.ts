@@ -33,12 +33,12 @@ function postMcp(env: Env, body: unknown, headers: Record<string, string> = {}) 
 }
 
 describe('worker /mcp integration', () => {
-  it('tools/list exposes 16 tools with readOnlyHint annotations', async () => {
+  it('tools/list exposes 17 tools with readOnlyHint annotations', async () => {
     const res = await postMcp(makeEnv(), { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(res.status).toBe(200);
     const payload = ssePayload(await res.text());
     const tools = payload.result.tools as Array<{ name: string; annotations?: { readOnlyHint?: boolean; openWorldHint?: boolean } }>;
-    expect(tools).toHaveLength(16);
+    expect(tools).toHaveLength(17);
     for (const t of tools) {
       expect(t.annotations?.readOnlyHint, `readOnlyHint missing on ${t.name}`).toBe(true);
     }
@@ -261,7 +261,7 @@ describe('worker /mcp integration', () => {
     expect(res.headers.get('x-ratelimit-remaining')).toBe('0');
   });
 
-  it('/openapi.json (D5): valid OpenAPI doc describing /mcp and listing 16 tools', async () => {
+  it('/openapi.json (D5): valid OpenAPI doc describing /mcp and listing 17 tools', async () => {
     const res = await worker.fetch(new Request(`${BASE}/openapi.json`), makeEnv() as never);
     expect(res.status).toBe(200);
     expect(res.headers.get('content-type')).toContain('application/json');
@@ -269,7 +269,7 @@ describe('worker /mcp integration', () => {
     expect(doc.openapi).toBe('3.0.3');
     expect(doc.paths['/mcp']).toBeTruthy();
     expect(doc.paths['/resume.txt']).toBeTruthy();
-    expect(doc['x-mcp-tools']).toHaveLength(16);
+    expect(doc['x-mcp-tools']).toHaveLength(17);
   });
 
   it('/.well-known/mcp.json exposes the MCP discovery document', async () => {

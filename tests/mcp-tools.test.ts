@@ -23,6 +23,7 @@ describe('MCP tools', () => {
         'get_experiments',
         'get_diary',
         'get_known_issues',
+        'get_issue_detail',
         'analyze_stack',
         'simulate_architecture',
       ]),
@@ -186,6 +187,15 @@ describe('MCP tools', () => {
       expect(i.id).toMatch(/^KI-\d+$/);
       expect(['stable', 'watching']).toContain(i.temperature);
     }
+  });
+
+  it('get_issue_detail returns a single issue by id and not-found otherwise', async () => {
+    const found = (await call('get_issue_detail', { id: 'KI-109' })) as { found: boolean; issue?: { id: string } };
+    expect(found.found).toBe(true);
+    expect(found.issue?.id).toBe('KI-109');
+    const missing = (await call('get_issue_detail', { id: 'KE-999' })) as { found: boolean; availableIds: string[] };
+    expect(missing.found).toBe(false);
+    expect(missing.availableIds.length).toBeGreaterThan(0);
   });
 
   it('lab tools are closed-world read-only', () => {

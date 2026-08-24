@@ -14,7 +14,7 @@ claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.w
 Any MCP client can instead configure a remote server pointing at the Streamable HTTP
 endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 
-## Tools (16)
+## Tools (17)
 
 | Tool | Use it to answer |
 |------|------------------|
@@ -28,6 +28,7 @@ endpoint `https://msp-portfolio.mansio-dev.workers.dev/mcp` (no auth required).
 | `get_experiments` | What did he measure? Hypotheses, commands, raw results, verdicts. |
 | `get_diary` | What broke, what was the root cause, how was it fixed? |
 | `get_known_issues` | What is still open? Status and temperature. |
+| `get_issue_detail(id)` | Drill into one issue by ID (status, temperature, owner, linked source). |
 | `analyze_stack(required_skills)` | Does his stack fit a given job? Per-skill evidence + coverage. |
 | `simulate_architecture(project_id, scenario)` | How does an architecture degrade under load / failure? |
 | `verify_claim(claim)` | Is a statement about him supported by the data? Returns the evidence records. |

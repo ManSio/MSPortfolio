@@ -632,6 +632,27 @@ export const TOOLS: MCPTool[] = [
     },
   },
   {
+    name: 'get_issue_detail',
+    description: "Get the full detail of a single known issue by its ID (e.g. 'KI-109'). Drills into one open problem: status, temperature, owner, linked source and the raw problem statement. Returns a clear not-found with the available IDs if the ID does not match. Read-only, closed world.",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: "The issue ID, e.g. 'KI-109' (case-insensitive)." },
+      },
+      required: ['id'],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute({ id }) {
+      const wanted = String(id ?? '').trim().toUpperCase();
+      const list = (knownIssuesData as { issues: KnownIssue[] }).issues;
+      const issue = list.find((i) => i.id.toUpperCase() === wanted);
+      if (!issue) {
+        return { found: false, id: String(id ?? ''), availableIds: list.map((i) => i.id) };
+      }
+      return { found: true, issue };
+    },
+  },
+  {
     name: 'verify_claim',
     description: "Ground a claim about the owner against the portfolio's data (profile, projects, principles, timeline, antipatterns, experiments, diary, known issues). Deterministic: returns the evidence records that support the claim (with source paths) and a supported verdict. Use it before asserting a fact about the owner, or to check what an answer was based on.",
     inputSchema: {
