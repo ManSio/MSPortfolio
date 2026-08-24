@@ -401,6 +401,59 @@ export const TOOLS: MCPTool[] = [
     },
   },
   {
+    name: 'search_projects',
+    description: "Free-text search across portfolio projects — name, tagline, description, stack and decision-log rationale. Returns matched projects with a score and the fields that matched. Use when a fixed stack-tag filter is too narrow (e.g. 'RAG', 'latency', 'Zed'). Read-only, closed world.",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: "Search terms, e.g. 'RAG' or 'latency Zed'." },
+      },
+      required: ['query'],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    async execute({ query }) {
+      const q = String(query ?? '').trim().toLowerCase();
+      if (!q) return { query: q, count: 0, projects: [], note: 'Empty query — provide at least one term.' };
+      const terms = q.split(/\s+/).filter(Boolean);
+      const scored = projects
+        .map((p) => {
+          const decisionText = (p.decisionLog || [])
+            .map((d: unknown) => Object.values(d as Record<string, unknown>).filter((v) => typeof v === 'string').join(' '))
+            .join(' ');
+          const haystack: Array<[string, string]> = [
+            ['id', p.id],
+            ['name', p.name],
+            ['tagline', p.tagline],
+            ['description', p.description],
+            ['stack', (p.stack || []).join(' ')],
+            ['decisionLog', decisionText],
+          ];
+          const matchedFields = new Set<string>();
+          let hits = 0;
+          for (const term of terms) for (const [field, text] of haystack) {
+            if (text.toLowerCase().includes(term)) { hits += 1; matchedFields.add(field); }
+          }
+          return { project: p, score: hits, matchedFields: [...matchedFields] };
+        })
+        .filter((s) => s.score > 0)
+        .sort((a, b) => b.score - a.score);
+      return {
+        query: q,
+        count: scored.length,
+        projects: scored.map((s) => ({
+          id: s.project.id,
+          name: s.project.name,
+          tagline: s.project.tagline,
+          language: s.project.language,
+          stack: s.project.stack,
+          url: s.project.url,
+          score: s.score,
+          matchedFields: s.matchedFields,
+        })),
+      };
+    },
+  },
+  {
     name: 'get_engineering_principles',
     description: 'Get engineering principles with real examples and A/B-style counterfactuals.',
     inputSchema: { type: 'object', properties: {} },

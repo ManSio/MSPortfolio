@@ -24,6 +24,7 @@ describe('MCP tools', () => {
         'get_diary',
         'get_known_issues',
         'get_issue_detail',
+        'search_projects',
         'analyze_stack',
         'simulate_architecture',
       ]),
@@ -196,6 +197,12 @@ describe('MCP tools', () => {
     const missing = (await call('get_issue_detail', { id: 'KE-999' })) as { found: boolean; availableIds: string[] };
     expect(missing.found).toBe(false);
     expect(missing.availableIds.length).toBeGreaterThan(0);
+  });
+
+  it('search_projects returns projects matching a free-text query', async () => {
+    const res = (await call('search_projects', { query: 'RAG' })) as { count: number; projects: Array<{ id: string }> };
+    expect(res.count).toBeGreaterThan(0);
+    expect(res.projects.some((p) => p.id === 'mscodebase-intelligence')).toBe(true);
   });
 
   it('lab tools are closed-world read-only', () => {
