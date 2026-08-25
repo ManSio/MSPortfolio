@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-25T03:12:15.246Z",
+  "fetchedAt": "2026-08-25T03:59:12.800Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-25T01:52:15Z",
+      "pushedAt": "2026-08-25T03:12:21Z",
       "language": "TypeScript"
     },
     {
@@ -28,7 +28,7 @@
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
-      "openIssues": 1,
+      "openIssues": 2,
       "pushedAt": "2026-08-25T03:11:41Z",
       "language": "Python"
     },
