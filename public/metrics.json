@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-25T15:59:16.791Z",
+  "fetchedAt": "2026-08-25T16:54:40.184Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 1,
+      "pushedAt": "2026-08-25T16:50:53Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-25T15:04:53Z",
+      "pushedAt": "2026-08-25T15:59:25Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-25T07:23:20Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -199,24 +199,24 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "16468d8fb9",
-      "date": "2026-08-25T07:23:20Z",
-      "message": "Merge pull request #8 from ManSio/feat/lsp-thin-client",
+      "sha": "0687afda81",
+      "date": "2026-08-25T16:35:52Z",
+      "message": "Merge pull request #10 from ManSio/feat/lsp-thin-client",
       "author": "Mikhail"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "e29e856e19",
-      "date": "2026-08-25T03:06:54Z",
-      "message": "feat(coord): git-based locks for parallel agents (ADR-0007)",
+      "sha": "fc48f749e8",
+      "date": "2026-08-25T16:23:55Z",
+      "message": "feat(mcp): expose predict_change in default-visible allowlist",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "e1f3ca4367",
-      "date": "2026-08-25T02:56:38Z",
-      "message": "feat(mcp): predict_change tool — change outcome preview (static/full)",
-      "author": "MSCodeBase Agent"
+      "sha": "115e6403e2",
+      "date": "2026-08-25T16:17:14Z",
+      "message": "Merge pull request #9 from ManSio/feat/lsp-thin-client",
+      "author": "Mikhail"
     },
     {
       "repo": "ManSio.github.io",
