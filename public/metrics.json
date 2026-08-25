@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-25T17:45:15.667Z",
+  "fetchedAt": "2026-08-25T18:56:22.770Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -12,8 +12,8 @@
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-08-25T17:43:20Z",
+      "openIssues": 0,
+      "pushedAt": "2026-08-25T18:28:26Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-25T16:54:46Z",
+      "pushedAt": "2026-08-25T17:45:23Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "1cfa992eee",
-      "date": "2026-08-25T16:58:42Z",
-      "message": "Merge pull request #11 from ManSio/feat/lsp-thin-client",
+      "sha": "5453b12e78",
+      "date": "2026-08-25T17:50:19Z",
+      "message": "Merge pull request #12 from ManSio/feat/lsp-thin-client",
       "author": "Mikhail"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "e199ef0b39",
-      "date": "2026-08-25T16:47:38Z",
-      "message": "fix(verify): real-boundary fixes — CRLF patch, tree-sitter Tree/bytes, stderr",
+      "sha": "b03073c5e5",
+      "date": "2026-08-25T17:40:23Z",
+      "message": "fix(search): fast-fail during reindex instead of hanging requests",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "0687afda81",
-      "date": "2026-08-25T16:35:52Z",
-      "message": "Merge pull request #10 from ManSio/feat/lsp-thin-client",
+      "sha": "1cfa992eee",
+      "date": "2026-08-25T16:58:42Z",
+      "message": "Merge pull request #11 from ManSio/feat/lsp-thin-client",
       "author": "Mikhail"
     },
     {
