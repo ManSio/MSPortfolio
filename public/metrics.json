@@ -1,19 +1,27 @@
 {
-  "fetchedAt": "2026-08-25T07:08:06.491Z",
+  "fetchedAt": "2026-08-25T07:57:49.507Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 7,
-    "followers": 59,
+    "followers": 60,
     "following": 66
   },
   "repos": [
+    {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-25T07:23:20Z",
+      "language": "Python"
+    },
     {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-25T05:47:18Z",
+      "pushedAt": "2026-08-25T07:08:13Z",
       "language": "TypeScript"
     },
     {
@@ -23,14 +31,6 @@
       "openIssues": 0,
       "pushedAt": "2026-08-24T18:04:01Z",
       "language": "HTML"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 2,
-      "pushedAt": "2026-08-25T03:11:41Z",
-      "language": "Python"
     },
     {
       "name": "ManSio",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "16468d8fb9",
+      "date": "2026-08-25T07:23:20Z",
+      "message": "Merge pull request #8 from ManSio/feat/lsp-thin-client",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "e29e856e19",
+      "date": "2026-08-25T03:06:54Z",
+      "message": "feat(coord): git-based locks for parallel agents (ADR-0007)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "e1f3ca4367",
+      "date": "2026-08-25T02:56:38Z",
+      "message": "feat(mcp): predict_change tool — change outcome preview (static/full)",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "ManSio.github.io",
       "sha": "177e898da7",
       "date": "2026-08-24T18:04:01Z",
@@ -217,27 +238,6 @@
       "date": "2026-08-14T14:19:59Z",
       "message": "feat: root sitemap (redirect page + portfolio)",
       "author": "ManSio"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "528736d8d3",
-      "date": "2026-08-18T16:54:14Z",
-      "message": "docs: sync AGENT_DIARY and KNOWN_ISSUES (sandbox escape incident)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "5a90ffab6f",
-      "date": "2026-08-18T16:46:59Z",
-      "message": "fix(sandbox): block __dict__ introspection escape and neutralize builtins open/eval/exec",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "d4e7cfe32c",
-      "date": "2026-08-18T16:32:13Z",
-      "message": "fix(deps): pin runtime deps to exact versions",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "awesome-mcp-servers",
