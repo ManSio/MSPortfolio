@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-25T16:54:40.184Z",
+  "fetchedAt": "2026-08-25T17:45:15.667Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-08-25T16:50:53Z",
+      "pushedAt": "2026-08-25T17:43:20Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-25T15:59:25Z",
+      "pushedAt": "2026-08-25T16:54:46Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "0687afda81",
-      "date": "2026-08-25T16:35:52Z",
-      "message": "Merge pull request #10 from ManSio/feat/lsp-thin-client",
+      "sha": "1cfa992eee",
+      "date": "2026-08-25T16:58:42Z",
+      "message": "Merge pull request #11 from ManSio/feat/lsp-thin-client",
       "author": "Mikhail"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "fc48f749e8",
-      "date": "2026-08-25T16:23:55Z",
-      "message": "feat(mcp): expose predict_change in default-visible allowlist",
+      "sha": "e199ef0b39",
+      "date": "2026-08-25T16:47:38Z",
+      "message": "fix(verify): real-boundary fixes — CRLF patch, tree-sitter Tree/bytes, stderr",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "115e6403e2",
-      "date": "2026-08-25T16:17:14Z",
-      "message": "Merge pull request #9 from ManSio/feat/lsp-thin-client",
+      "sha": "0687afda81",
+      "date": "2026-08-25T16:35:52Z",
+      "message": "Merge pull request #10 from ManSio/feat/lsp-thin-client",
       "author": "Mikhail"
     },
     {
