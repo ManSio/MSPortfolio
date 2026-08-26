@@ -1270,14 +1270,14 @@
       "id": "exp-31",
       "date": "2026-08-26",
       "project": "mscodebase-intelligence",
-      "title": "E4.2: детерминированный concept-резолвер (без LLM) — verify_change T9/T29 HIT на реальном graph.db, факты 4/4 и 3/4 (Дорожка 2)",
+      "title": "E4.2: детерминированный concept-резолвер (без LLM) — verify_change 0→1.0, recall 0.433→0.50 (Дорожка 2)",
       "hypothesis": "Два остатка E4.1 — verify_change=0 (T9 wrong-anchor 'engine', T29 no-anchor) и «граф отдаёт файлы, не текст» (facts=0) — закрываются НЕ LLM-классификатором, а механическим concept-phrase-реестром (fail-open, klass-gated) ПЕРЕД лексическим extract_symbol (резолв, не классификация — RESEARCH.md rec #3). Регресс на других классах структурно исключён: рецепты klass-gated на verify_change, остальные классы fallback на старый extract_symbol.",
-      "command": "Подтверждение слоя без эмбеддера: python experiments/mech_orch/probe_e42_verify.py (реальный graph.db, read-only) + python -m pytest tests/test_mech_resolver.py tests/test_symbol_index_persistence.py -q.",
-      "result": "probe: T9 verify_change sym=notify_change files=[.../src/mcp/server_tools.py] -> HIT gt=src/mcp/server_tools.py facts=4/4 | T29 verify_change sym=_extract_symbol_name files=[..., .../src/core/search/utils.py] -> HIT gt=src/core/search/utils.py facts=3/4 | ALL HIT. pytest: 14 passed в 2.48s (resolver 10 + persistence 4).",
-      "verdict": "partial",
-      "finding": "Оба verify_change-промаха резолвятся в правильный файл на реальном graph.db (10748 узлов); граф-строки теперь несут факты (graph_fact_text), а не 0; регресс исключён по построению (klass-gating). «Бессловесный» промпт — задача резолва якоря, а не классификации: лексический extract_symbol не переживает ни «следствие вместо имени» (T9), ни «концепт вместо имени» (T29).",
+      "command": "Подтверждение слоя без эмбеддера: python experiments/mech_orch/probe_e42_verify.py (реальный graph.db, read-only) + python -m pytest tests/test_mech_resolver.py tests/test_symbol_index_persistence.py -q; полный live: EXT venv python experiments/mech_orch/E4_1_graph_arm.py",
+      "result": "probe: T9 verify_change sym=notify_change files=[.../src/mcp/server_tools.py] -> HIT gt=src/mcp/server_tools.py facts=4/4 | T29 verify_change sym=_extract_symbol_name files=[..., .../src/core/search/utils.py] -> HIT gt=src/core/search/utils.py facts=3/4 | ALL HIT. Полный live same-run (30 задач, реальный эмбеддер): cascade 0.267 -> cascade+graph 0.50, med 196.8ms, p95 4514ms; verify_change graph=1.00 (T9 arm=graph:notify_change, T29 arm=graph:_extract_symbol_name) vs cascade 0.00; 9/9 классов >= каскада (без регресса). pytest: 14 passed в 2.48s (resolver 10 + persistence 4).",
+      "verdict": "confirmed",
+      "finding": "Оба verify_change-промаха резолвятся в правильный файл на реальном graph.db (10748 узлов); граф-строки теперь несут факты (graph_fact_text), а не 0; регресс исключён по построению (klass-gating) и подтверждён прогоном (9/9 классов >= каскада). «Бессловесный» промпт — задача резолва якоря, а не классификации: лексический extract_symbol не переживает ни «следствие вместо имени» (T9), ни «концепт вместо имени» (T29). Полный live same-run выполнен: recall 0.433→0.50 при med 196.8ms (цель ≥0.40/<600ms).",
       "chart": null,
-      "conclusion": "Механический concept-реестр с klass-gating детерминирован и не регрессит; наполнение рецептов — из 3300-call корпуса (RESEARCH.md rec #3). Полный E4.1 same-run (verify_change 0->2/2, recall ~0.433->~0.50) требует живого эмбеддера — прогон владельцем.",
+      "conclusion": "Механический concept-реестр с klass-gating детерминирован и не регрессит; наполнение рецептов — из 3300-call корпуса (RESEARCH.md rec #3). Live same-run подтвердил: verify_change 0→1.0, recall 0.433→0.50 при med 196.8ms.",
       "links": [
         "exp-30"
       ]
@@ -1325,6 +1325,12 @@
       "whyFailed": "basedpyright (pyright-форк) не объявляет typeHierarchyProvider и monikerProvider и не шлёт pyright/beginIndexing/endIndexing. «Есть в спеке» != «сервер реализует» — нужно проверять живой сервер, а не предполагать из спека.",
       "date": "2026-08-19",
       "ref": "exp-23"
+    },
+    {
+      "attempt": "Пер-классный детерминированный keyword-роутер (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) как слой оркестрации вместо единой поисковой руки",
+      "whyFailed": "klass_acc 0.40 — keyword-правила шумные (bug-задачи содержат «callers», гиты — «почему»); union-рука fast+quality не подняла 4 граф-класса (0.00). Потолок search-only на этом датасете ~0.23 при ЛЮБОЙ маршрутизации — поиск не может найти того, чего нет в индексе текстово.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
     },
     {
       "attempt": "Пер-классный детерминированный keyword-роутер (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) как слой оркестрации вместо единой поисковой руки",
