@@ -1,28 +1,28 @@
 {
-  "fetchedAt": "2026-08-29T02:10:45.579Z",
+  "fetchedAt": "2026-08-29T09:02:10.302Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 7,
-    "followers": 59,
+    "followers": 58,
     "following": 75
   },
   "repos": [
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-28T18:41:05Z",
-      "language": "TypeScript"
-    },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-28T18:04:46Z",
+      "pushedAt": "2026-08-29T06:00:49Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-29T02:10:52Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,24 +199,24 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "f2574ccffa",
-      "date": "2026-08-28T16:21:44Z",
-      "message": "docs: close reindex-Finalizing KI (#18) and record loop-lesson (#19)",
-      "author": "Mikhail"
+      "sha": "082712a606",
+      "date": "2026-08-29T05:57:45Z",
+      "message": "chore(arch): remove duplicate pagerank script + document large modules as acknowledged tech debt",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "1578a1bbed",
-      "date": "2026-08-28T14:58:24Z",
-      "message": "fix(indexing): release write lock during reindex Finalizing phase (#18)",
-      "author": "Mikhail"
+      "sha": "b5bf699484",
+      "date": "2026-08-29T05:43:01Z",
+      "message": "fix(ci): ensure requirements-lock.txt is ascii and set PYTHONUTF8 in pip-audit",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "957cd0f45c",
-      "date": "2026-08-28T14:35:26Z",
-      "message": "Merge pull request #17 from ManSio/feat/pypi-packaging",
-      "author": "Mikhail"
+      "sha": "83bf8aed0a",
+      "date": "2026-08-29T05:14:15Z",
+      "message": "chore(indexing): sync unstaged changes + env-access docs",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio.github.io",
