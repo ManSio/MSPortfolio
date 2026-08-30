@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-08-30T06:38:46.893Z",
+  "fetchedAt": "2026-08-30T12:52:55.681Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 7,
+    "publicRepos": 8,
     "followers": 61,
-    "following": 80
+    "following": 82
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-30T00:19:16Z",
+      "pushedAt": "2026-08-30T06:38:52Z",
       "language": "TypeScript"
     },
     {
@@ -197,6 +197,27 @@
     }
   ],
   "commits": [
+    {
+      "repo": "awakening-project",
+      "sha": "823c8a4755",
+      "date": "2026-08-30T09:18:15Z",
+      "message": "feat: add Layer 0 spec for entry-boundary and population manifest",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "awakening-project",
+      "sha": "7093f25a87",
+      "date": "2026-07-17T12:29:59Z",
+      "message": "Delete personal awakening plan from README",
+      "author": "huikong"
+    },
+    {
+      "repo": "awakening-project",
+      "sha": "4f5f507800",
+      "date": "2026-06-14T04:19:20Z",
+      "message": "Update README.md for project name and formatting",
+      "author": "huikong"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "082712a606",
