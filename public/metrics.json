@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-08-31T13:47:40.708Z",
+  "fetchedAt": "2026-08-31T20:03:49.599Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 8,
+    "publicRepos": 9,
     "followers": 62,
-    "following": 82
+    "following": 83
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-31T05:33:07Z",
+      "pushedAt": "2026-08-31T13:47:47Z",
       "language": "TypeScript"
     },
     {
@@ -197,6 +197,27 @@
     }
   ],
   "commits": [
+    {
+      "repo": "opencode-mobile",
+      "sha": "646f9cbf77",
+      "date": "2026-08-19T06:17:33Z",
+      "message": "docs(retro): record the AGE-497 stale-SENTRY_ORG-secret lesson",
+      "author": "engineer"
+    },
+    {
+      "repo": "opencode-mobile",
+      "sha": "709aa97bad",
+      "date": "2026-08-19T06:16:52Z",
+      "message": "chore(ci): remove the AGE-497 throwaway Sentry egress probe workflow",
+      "author": "engineer"
+    },
+    {
+      "repo": "opencode-mobile",
+      "sha": "f1f61d0516",
+      "date": "2026-08-19T06:14:42Z",
+      "message": "debug(ci): test whether secrets.SENTRY_ORG (set 2026-07-22, same day as the stale product-intelligence token) is itself stale",
+      "author": "engineer"
+    },
     {
       "repo": "awakening-project",
       "sha": "823c8a4755",
