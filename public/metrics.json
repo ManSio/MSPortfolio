@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-31T05:33:00.293Z",
+  "fetchedAt": "2026-08-31T13:47:40.708Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-30T23:29:18Z",
+      "pushedAt": "2026-08-31T05:33:07Z",
       "language": "TypeScript"
     },
     {
@@ -51,6 +51,24 @@
   ],
   "npm": [],
   "devto": [
+    {
+      "id": 4535380,
+      "title": "We Didn't Invent New AI Architecture. We Rediscovered 20-Year-Old Computer Science.",
+      "description": "The AI industry isn't inventing a new paradigm. It is frantically rediscovering classical computer science from 20 years ago.",
+      "readingTimeMinutes": 3,
+      "url": "https://dev.to/mansio/we-didnt-invent-new-ai-architecture-we-rediscovered-20-year-old-computer-science-1f6m",
+      "tags": [
+        "ai",
+        "agents",
+        "architecture",
+        "discuss"
+      ],
+      "reactions": 6,
+      "comments": 1,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fkommpokr69ya292cxhoy.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fkommpokr69ya292cxhoy.png",
+      "readablePublishDate": "Aug 31"
+    },
     {
       "id": 4409809,
       "title": "The Dataset Was Lying: 4 of 6 \"False\" Facts Were True",
@@ -176,24 +194,6 @@
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png",
       "readablePublishDate": "Aug 8"
-    },
-    {
-      "id": 4200469,
-      "title": "PageRank vs RAG on a Real Codebase: Corrected Numbers, and What I Almost Got Wrong Twice",
-      "description": "Second correction to this experiment. The Hit@Gold numbers are now independently verified and reproducible. But my own 'gold standard is 100% valid' claim wasn't — here's the gap between validating a file and validating the file that was actually used.",
-      "readingTimeMinutes": 7,
-      "url": "https://dev.to/mansio/i-measured-pagerank-token-savings-on-a-real-codebase-the-result-will-surprise-you-5bnj",
-      "tags": [
-        "machinelearning",
-        "python",
-        "ai",
-        "devtools"
-      ],
-      "reactions": 2,
-      "comments": 2,
-      "coverImage": null,
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F7zqwuyw5onysh9hvpy7p.png",
-      "readablePublishDate": "Jul 22"
     }
   ],
   "commits": [
