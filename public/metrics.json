@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-08-31T20:03:49.599Z",
+  "fetchedAt": "2026-08-31T23:50:21.009Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 9,
+    "publicRepos": 10,
     "followers": 62,
-    "following": 83
+    "following": 84
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-08-31T13:47:47Z",
+      "pushedAt": "2026-08-31T20:03:55Z",
       "language": "TypeScript"
     },
     {
@@ -197,6 +197,27 @@
     }
   ],
   "commits": [
+    {
+      "repo": "ARCLUX",
+      "sha": "2985008bce",
+      "date": "2026-08-31T20:20:05Z",
+      "message": "Merge pull request #619 from GSF-001/feat/mmo-directory-wire",
+      "author": "Mikatoshi"
+    },
+    {
+      "repo": "ARCLUX",
+      "sha": "733ab2c929",
+      "date": "2026-08-31T20:14:51Z",
+      "message": "feat(directory): wire — gate federation check + bridge directory endpoint + net directory lookup (not yatim)",
+      "author": "GSF-001"
+    },
+    {
+      "repo": "ARCLUX",
+      "sha": "b468782362",
+      "date": "2026-08-31T19:52:52Z",
+      "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
+      "author": "Mikatoshi"
+    },
     {
       "repo": "opencode-mobile",
       "sha": "646f9cbf77",
