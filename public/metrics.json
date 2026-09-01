@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-09-01T14:52:48.510Z",
+  "fetchedAt": "2026-09-01T18:29:46.594Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 10,
+    "publicRepos": 11,
     "followers": 62,
     "following": 84
   },
@@ -13,14 +13,14 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-01T10:05:36Z",
+      "pushedAt": "2026-09-01T14:52:55Z",
       "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
-      "openIssues": 1,
+      "openIssues": 3,
       "pushedAt": "2026-08-29T09:30:34Z",
       "language": "Python"
     },
@@ -197,6 +197,20 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MCP-Lite",
+      "sha": "6f0a90d949",
+      "date": "2026-05-27T12:36:27Z",
+      "message": "Add Detailed Benchmark Report detailing mathematical and performance verification of AOM pruning",
+      "author": "UnitBuilds"
+    },
+    {
+      "repo": "MCP-Lite",
+      "sha": "14e82ee9a7",
+      "date": "2026-05-26T22:28:30Z",
+      "message": "Initial release of Agentic Browser MCP-Lite under GNU AGPL-v3",
+      "author": "UnitBuilds"
+    },
     {
       "repo": "ARCLUX",
       "sha": "2985008bce",
