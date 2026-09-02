@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-02T18:41:51.749Z",
+  "fetchedAt": "2026-09-02T21:49:06.211Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-02T21:11:13Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-02T14:28:58Z",
+      "pushedAt": "2026-09-02T18:41:59Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 3,
-      "pushedAt": "2026-08-29T09:30:34Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -55,7 +55,7 @@
       "id": 4535380,
       "title": "We Didn't Invent New AI Architecture. We Rediscovered 20-Year-Old Computer Science.",
       "description": "The AI industry isn't inventing a new paradigm. It is frantically rediscovering classical computer science from 20 years ago.",
-      "readingTimeMinutes": 3,
+      "readingTimeMinutes": 4,
       "url": "https://dev.to/mansio/we-didnt-invent-new-ai-architecture-we-rediscovered-20-year-old-computer-science-1f6m",
       "tags": [
         "ai",
@@ -163,7 +163,7 @@
       "id": 4353746,
       "title": "What I learned building a long-lived AI agent (the boring version)",
       "description": "A practical log of building a long-lived Telegram AI agent — caching, providers, routing, memory, latency. No benchmarks. Just what actually happened.",
-      "readingTimeMinutes": 5,
+      "readingTimeMinutes": 6,
       "url": "https://dev.to/mansio/what-i-learned-building-a-long-lived-ai-agent-the-boring-version-32p8",
       "tags": [
         "ai",
@@ -197,6 +197,27 @@
     }
   ],
   "commits": [
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "ed96ef2a14",
+      "date": "2026-09-02T20:27:18Z",
+      "message": "docs(diary): record PR #20 merge, green CI, issues #21/#22 auto-closed",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "4726ff7981",
+      "date": "2026-09-02T20:10:12Z",
+      "message": "Merge pull request #20 from ManSio/feat/two-pass-symbol-resolver",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "9659f59197",
+      "date": "2026-09-02T19:58:55Z",
+      "message": "test(guard): replace lambda with def to satisfy ruff E731 (CI lint)",
+      "author": "MSCodeBase Agent"
+    },
     {
       "repo": "MCP-Lite",
       "sha": "6f0a90d949",
@@ -273,27 +294,6 @@
       "date": "2026-06-14T04:19:20Z",
       "message": "Update README.md for project name and formatting",
       "author": "huikong"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "082712a606",
-      "date": "2026-08-29T05:57:45Z",
-      "message": "chore(arch): remove duplicate pagerank script + document large modules as acknowledged tech debt",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "b5bf699484",
-      "date": "2026-08-29T05:43:01Z",
-      "message": "fix(ci): ensure requirements-lock.txt is ascii and set PYTHONUTF8 in pip-audit",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "83bf8aed0a",
-      "date": "2026-08-29T05:14:15Z",
-      "message": "chore(indexing): sync unstaged changes + env-access docs",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio.github.io",
