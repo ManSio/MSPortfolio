@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-02T09:36:54.168Z",
+  "fetchedAt": "2026-09-02T14:28:51.742Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-02T04:33:41Z",
+      "pushedAt": "2026-09-02T09:37:00Z",
       "language": "TypeScript"
     },
     {
@@ -63,7 +63,7 @@
         "architecture",
         "discuss"
       ],
-      "reactions": 6,
+      "reactions": 16,
       "comments": 1,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fkommpokr69ya292cxhoy.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fkommpokr69ya292cxhoy.png",
