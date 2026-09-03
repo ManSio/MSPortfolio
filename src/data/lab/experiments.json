@@ -1,1262 +1,1372 @@
 {
   "experiments": [
     {
-      "id": "exp-lab-2026-01",
-      "date": "2026-08-05",
+      "id": "exp-1",
+      "date": "2026-08-14",
       "project": "mscodebase-intelligence",
-      "title": "Neuro-Symbolic spike: NL → LLM → Cypher → parser+schema → PropertyGraph",
-      "hypothesis": "связка (LLM-генерация Cypher + двухслойная валидация parser+schema + исполнение) отсекает невалидные генерации ДО исполнения: 10 вопросов → 8 исполнимых + 2 отсечённых (галлюцинированная метка SERVICE, функция cycle()).",
-      "command": "`python experiments/neuro_symbolic_spike.py` (MockLLM, без сети; `--lm-studio` — реальный phi-4, не мерился — LM Studio не запущен).",
-      "result": "Что вызывает main?     -> EXEC ok (2 rows)\nКакие функции используют config? -> EXEC ok (1 rows)\nСколько функций в графе? -> EXEC ok (5 rows)\nЕсть ли цикл в графе?  -> SCHEMA-REJECT: empty RETURN (parser ignored expression)\nКакие сервисы есть?    -> SCHEMA-REJECT: unknown label :SERVICE\n=== METRICS === total=10 parse_ok=8 rejected_by_parser=0 rejected_by_schema=2 exec_ok=8 exec_error=0 latency avg=0.1 ms\nVERDICT: HYPOTHESIS SUPPORTED (3-layer validation)",
-      "verdict": "partial",
-      "finding": "parser-валидация ≠ исполняемость — нужен schema-слой (метки/связи/functions против схемы графа); это общий паттерн text-to-cypher (schema-aware prompting). Баги executor'а — кандидаты в KNOWN_ISSUES (вне скоупа спайка). Связь с отрицательными: не из таблицы §3.8.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "total",
-            "value": 10
-          },
-          {
-            "label": "parse ok",
-            "value": 8
-          },
-          {
-            "label": "rejected by parser",
-            "value": 0
-          },
-          {
-            "label": "rejected by schema",
-            "value": 2
-          },
-          {
-            "label": "exec ok",
-            "value": 8
-          },
-          {
-            "label": "exec error",
-            "value": 0
-          }
-        ]
-      }
+      "title": "Memory Contamination Live-Arm: live LLM false-acceptance across 14 models",
+      "hypothesis": "Real LLM verdicts on the same 50 memory facts (25 true / 25 false, v4_rep dataset) differ from the deterministic proxy agent (exp-2); false-acceptance spans ~0 to ~0.3 across models and arms (memory_first vs code_first).",
+      "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm both --models qwen3.7-flash,qwen3.6-flash,qwen3.5-flash,deepseek-v4-flash,glm-4.7-flash,nemotron-3.5-lightning,nemotron-3-nano-30b,claude-sonnet-5,glm-5.2,deepseek-v4-pro --prompt-version v2 --no-reasoning --tag v2_en",
+      "result": "~3300 calls, ~$0.14 in the base sweep. FA code_first: qwen3.6/3.7 0.00 (confirmed over 4 runs, 0/400), claude 0.00, deepseek-pro 0.00, glm-5.2 0.02, nemotron-lightning 0.04, glm-4.7 0.24, nemotron-nano 0.38. qwen3.8-max incompatible with the 100-token budget (mandatory reasoning). V4 arm (file_content_first, 2026-08-15): with a real file fragment qwen3.6/3.7 recall(real) 0.08/0.20 -> 0.88/0.88 (22/25 each) at FA 0.04/0.02, absent/silent 0/16 and 0/3. CORRECTED (RED TEAM on ground truth, 2026-08-15): R43/R45/R46/R47 are TRUE facts mislabeled by the generator (checked value != real_value, not the subject's absence) - real trap-FA (R42 only) = 0 across all models; corrected dataset 29 true / 21 false (fp e5f7373d). Server-side audit: 4087 calls across >=8 upstreams. Total ~7900 calls, ~$0.94.",
+      "verdict": "confirmed",
+      "finding": "The fail-closed look was anchor bias, not model paranoia: with token-string evidence qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm) recall jumps to 0.88 at FA 0.02-0.04. CORRECTED: the earlier 'every remaining false-accept is present-trap (R45/R46)' claim was a mislabeled-data issue - those facts are true, so real trap-FA = 0. The corrected labels expose a different, previously hidden gap: trap miss_true (fail-closed models qwen 4/5, deepseek 4/5 reject true usage-claims - truth loss invisible in old metrics). CoT does not pay off; qwen3.8-max (CoT) stays the middle option for the token-string regime.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False-accept rate, code_first arm (V2-EN, %)",
+          "data": [
+            {
+              "label": "qwen3.7-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.6-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "claude-sonnet-5",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek-v4-pro",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek-v4-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.5-flash",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "glm-5.2",
+              "value": 2,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "nemotron-3.5-lightning",
+              "value": 4,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "glm-4.7-flash",
+              "value": 24,
+              "color": "#ef4444"
+            },
+            {
+              "label": "nemotron-3-nano-30b",
+              "value": 38,
+              "color": "#ef4444"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "code_first recall on TRUE facts (25) - token-string evidence, %",
+          "data": [
+            {
+              "label": "deepseek-v4-flash",
+              "value": 4,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.6-flash",
+              "value": 8,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.7-flash",
+              "value": 20,
+              "sub": "FA 0.00",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.8-max (CoT)",
+              "value": 36,
+              "sub": "FA 0.04",
+              "color": "#10b981"
+            },
+            {
+              "label": "claude-sonnet-5",
+              "value": 44,
+              "sub": "FA 0.00",
+              "color": "#10b981"
+            },
+            {
+              "label": "nemotron-3.5-lightning",
+              "value": 52,
+              "sub": "FA 0.04",
+              "color": "#10b981"
+            },
+            {
+              "label": "nemotron-3-nano-30b",
+              "value": 80,
+              "sub": "FA 0.38",
+              "color": "#ef4444"
+            },
+            {
+              "label": "glm-4.7-flash",
+              "value": 88,
+              "sub": "FA 0.24",
+              "color": "#ef4444"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "The same model, different evidence - recall on TRUE facts, %",
+          "data": [
+            {
+              "label": "qwen3.6 · token string",
+              "value": 8,
+              "sub": "code_first arm",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.6 · file fragment",
+              "value": 88,
+              "sub": "V4 arm · trap-FA 0.00 (corrected)",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen3.7 · token string",
+              "value": 20,
+              "sub": "code_first arm",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen3.7 · file fragment",
+              "value": 88,
+              "sub": "V4 arm · trap-FA 0.00 (corrected)",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). CORRECTED: the earlier claim 'the only remaining hole is present-trap (R45/R46)' was a mislabeled-data issue - real trap-FA = 0. The corrected labels expose the actual next gap: trap miss_true, fail-closed models silently lose true usage-claims - verify the claim's subject AND measure truth loss, not just false-acceptance.",
+      "links": [
+        "exp-2",
+        "exp-3"
+      ]
     },
     {
       "id": "exp-2",
-      "date": "2026-08-21",
+      "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": "B-1 Manifest parity vs osv-scanner: гейт нашёл и закрыл 3 дыры",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`python scripts/manifest_parity.py --osv <osv-scanner.exe v2.5.1>` (канон-имена,",
-      "result": "(raw result not fenced in source)",
+      "title": "Memory Contamination proxy-control: retraction -88%, verify-on-read adoption to 0.0",
+      "hypothesis": "A deterministic proxy agent ('check the claim against patterns in the code') measures memory contamination without LLM noise; retraction (ADR-0002) and lazy validation (ADR-0003) reduce adoption of false memory.",
+      "command": "python experiments/1V_memory_contamination/memory_contamination_verify.py experiments/1V_memory_contamination/memory_contamination_facts_v4_rep.json",
+      "result": "1-V (N=24): code_contradictability 0.714, correction_capability 1.0; 1-R: persistent contamination -88%, memory_first adoption 1.0->0.12; verify-on-read: code_first adoption ->0.0 (was 0.12), steady-state 0.6ms; 1-V-REP (N=50, v4_rep): adoption 0.0 reproduced, 0 false REFUTED of TRUE facts with typed anchors.",
       "verdict": "confirmed",
-      "finding": "osv не сканирует ОДИНОЧНЫЕ манифесты без lockfile-пары"
+      "finding": "The proxy always decides (unknown=0) and false_accept=0 by construction - the headline numbers are a property of the heuristic, not of LLM behavior; the live arm (exp-1) measures the real gap.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Adoption of false memory by policy (proxy agent)",
+          "data": [
+            {
+              "label": "memory_first (pre)",
+              "value": 1.0,
+              "sub": "no code shown",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after retraction (1-R)",
+              "value": 0.12,
+              "sub": "ADR-0002",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "code_first verify-on-read",
+              "value": 0,
+              "sub": "ADR-0003, 0.6ms steady-state",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Verify-on-read plus retraction eliminate false adoption in the proxy, but present-trap blindness (claim about an existing file with the wrong subject) is structural and survives.",
+      "links": [
+        "exp-1",
+        "exp-3"
+      ]
     },
     {
       "id": "exp-3",
-      "date": "2026-08-19",
+      "date": "2026-08-14",
       "project": "mscodebase-intelligence",
-      "title": "E-09: upload-bomb защита GitUrlSource (Фаза 2 / ТЗ §4 DoS)",
-      "hypothesis": "post-clone лимиты GitUrlSource (`_post_clone_checks`) отклоняют оба DoS-вектора upload-bomb — размер и число файлов — машинным kind (→ INCONCLUSIVE), а не крашатся; OK-путь в лимитах чист; редирект-подмена origin блокируется. **Команда:** `python experiments/universal-engine/e09_upload_bombs.py` (локальные деревья без сети, пониженные лимиты).",
-      "command": "`python experiments/universal-engine/e09_upload_bombs.py` (локальные деревья без сети, пониженные лимиты).",
-      "result": "too_large:    PASS (kind=too_large)\ntoo_many:     PASS (kind=too_many_files)\nok-path:      PASS (не бросает)\nredirect:     PASS (domain_not_allowed)\nE-09: 4 cases — 4 PASSED, 0 FAILED → SMOKE E-09: PASSED",
+      "title": "Manifest anchoring (pkg: anchors, ADR-0005): closed-world manifest kills 7 false REFUTED",
+      "hypothesis": "A manifest (pyproject.toml + requirements) as a closed world - absence there is proof - catches SILENT-trap prose that file/import/env anchors miss; fastmcp dist-name != import-path caused 7 false REFUTED.",
+      "command": "python experiments/1M_manifest_anchoring/exp_1M_manifest_anchoring.md && pytest tests/test_verify_on_read.py -q",
+      "result": "4th anchor type pkg: added to verify_on_read.py; the 7 false REFUTED [G07,G25,G11,G24,G23,G18,G21] drop to 0 on the v4_rep dataset; +7 tests.",
       "verdict": "confirmed",
-      "finding": "post-clone лимиты = вторая линия обороны (после SSRF-пред-проверок в `_parse_url`/`_resolve_and_check_ips`); дешёвые локальные деревья достаточно для проверки механики (500MB-клоны не нужны). Связь: ТЗ §4 «ограничение размера/объёма при клонировании»."
+      "finding": "A closed-world manifest is a stronger evidence source than bare tokens; the fix was verified by 1-V-REP (0 false REFUTED of TRUE facts).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False REFUTED of TRUE facts on v4_rep (N=50)",
+          "data": [
+            {
+              "label": "file/import/env anchors",
+              "value": 7,
+              "sub": "fastmcp dist name vs import path",
+              "color": "#ef4444"
+            },
+            {
+              "label": "with pkg: anchors (ADR-0005)",
+              "value": 0,
+              "sub": "closed-world manifest",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Evidence must come from a closed world: the manifest decides, tokens only hint.",
+      "links": [
+        "exp-2"
+      ]
     },
     {
       "id": "exp-4",
-      "date": "2026-08-19",
+      "date": "2026-08-08",
       "project": "mscodebase-intelligence",
-      "title": "E-05: ActionReceipt `reproducible_by` на реальных действиях (ТЗ §11.5 этап 3 / §12.3)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`python experiments/universal-engine/e05_action_receipt.py` (реальные действия в чистом temp: file_write с реальными SHA-256, git_commit в чистом репо, git_push status, index_sync). Для каждого: build_receipt → store.record → store.get → выполнить reproducible_by → сравнить вердикт.",
-      "result": "action       verdict      repro_verdict  result\nfile_write   VERIFIED     VERIFIED       PASS\ngit_commit   VERIFIED     VERIFIED       PASS\ngit_push     VERIFIED     VERIFIED       PASS\nindex_sync   INCONCLUSIVE INCONCLUSIVE   PASS\nStore round-trip (E05-git1): PASS\nE-05: 4 cases — 4 PASSED, 0 FAILED  →  SMOKE E-05: PASSED",
-      "verdict": "partial",
-      "finding": "verify и reproduce в разных cwd «выглядят правильно», но вердикты расходятся — unit-тест (cwd процесса) это не различает, нужен реальный E-05 с изолированным окружением. Связь: present-trap / «очевидно полезное ≠ работает» KI-2026-08-11."
+      "title": "Context aggregator vs multi-tool: 1 call instead of 4-5, -78% calls at recall parity",
+      "hypothesis": "One get_edit_context-style aggregator beats 4-5 separate MCP calls for agent context gathering.",
+      "command": "python experiments/context_engine/bench_v2.py",
+      "result": "D v3 (N=30): recall B vs C2 indistinguishable (delta +0.025, CI +/-0.054, ties 27/30) - the v2 gap was noise; tokens B lower by ~980; B-scheme (intent filter): recall 0.900 >= A 0.875 at 1 RT and 275 tokens. D v1 (N=4): -78% tool_calls, -89% latency, -19% tokens at success parity.",
+      "verdict": "confirmed",
+      "finding": "The B-scheme (intent filter) is the optimum: same recall as multi-tool at 1 request and 275 tokens; the earlier recall gap was noise, not signal.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Context gathering cost, aggregator vs multi-tool (reduction %)",
+          "data": [
+            {
+              "label": "tool calls",
+              "value": 78,
+              "sub": "4-5 calls -> 1",
+              "color": "#10b981"
+            },
+            {
+              "label": "latency",
+              "value": 89,
+              "sub": "-89%",
+              "color": "#10b981"
+            },
+            {
+              "label": "tokens",
+              "value": 19,
+              "sub": "-19%",
+              "color": "#10b981"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Recall by scheme (D v3, N=30)",
+          "data": [
+            {
+              "label": "A multi-tool",
+              "value": 0.875,
+              "color": "#6366f1"
+            },
+            {
+              "label": "B aggregator (intent filter)",
+              "value": 0.9,
+              "sub": "1 RT, 275 tokens",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "One aggregator with an intent filter is the optimum: same recall, 1 request, 275 tokens - the multi-tool path is 4-5x the cost for the same answer.",
+      "links": [
+        "exp-5"
+      ]
     },
     {
       "id": "exp-5",
-      "date": "2026-08-19",
+      "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": ": LIVE vendor test — basedpyright (real pyright fork) LSP features",
-      "hypothesis": "Нереальный сервер даст «правду»: какие LSP-фичи графа реально доступны на Python. Ожидали: call hierarchy + semantic tokens работают; type hierarchy 3.17, moniker и gate индексации — «возможно». **Команда:** `pip install basedpyright` (venv, без npm) → `venv/Scripts/python.exe experiments/lsp/lsp_live_pyright.py` (real `basedpyright-langserver --stdio`, fixture в experiments/lsp/fixture).",
-      "command": "`pip install basedpyright` (venv, без npm) → `venv/Scripts/python.exe experiments/lsp/lsp_live_pyright.py` (real `basedpyright-langserver --stdio`, fixture в experiments/lsp/fixture).",
-      "result": "INIT: serverInfo = {name: basedpyright, version: 1.39.10}\ncallHierarchyProvider: True   typeHierarchyProvider: None\nsemanticTokensProvider: {... full:True ...}   monikerProvider: None\ncall hierarchy: prepare report -> outgoing [ShapeManager,total_area,build] + incoming [main]  (ranges точные)\nsemantic tokens: 62 токена, delta-encoded, result_id=1787169556049\nindexing gate: pyright/beginIndexing/endIndexing НЕ наблюдались (только window/logMessage за 8s)",
-      "verdict": "partial",
-      "finding": "(1) «В спецификации есть feature» ≠ «сервер реализует feature». Проверять НА ЖИВОМ сервере (это и был смысл эксперимента). (2) Для Python-индекса графа реальны: call hierarchy (cross-file рёбра CALLS с точными ranges) и semantic tokens. (3) Реализация тонкого клиента поверх запиненного lsprotocol — `src/core/lsp_client.py` (capability-agnostic), демо `experiments/lsp/lsp_client_demo.py`: CALLS edges `report->ShapeManager/total_area/build` (в т.ч. `print->builtins.pyi`), демо-декодер semantic tokens. (4) Побочный артефакт: `basedpyright` установлен в venv (не в requirements) — dev-tool эксперимента, при желании `pip uninstall basedpyright`."
+      "title": "Multi-RAG ablation: FTS5-only beats the full pipeline by recall; H1 refuted",
+      "hypothesis": "H1: multi-RAG (vector+BM25+FTS5+graph) beats any single component by recall. H2: incremental component contributions are positive. H3: graph helps relationship tasks. H5: BM25 and FTS5 are redundant.",
+      "command": "python experiments/context_engine/multi_rag_ablation.py",
+      "result": "H1 refuted: fts5_only 0.825 >= full 0.775; multi-RAG wins precision (quality 0.719 vs fts5 0.523); increments: BM25 over vector +0.430, FTS5 over V+BM25 +0.178, vector over BM25 -0.098 (hurts), graph 0.000; H3 confirmed: graph_only recall max on find_caller_callee 0.625 / find_impact 0.583, min git_history 0.000 at 12ms/121 tokens; H5 refuted: FTS5 +0.178 recall over V+BM25, opposite profiles.",
+      "verdict": "refuted",
+      "finding": "Recall comes from keyword tiers (FTS5/BM25), precision is bought by the reranker, and the vector tier is the weakest on symbol tasks. Production bug found: hybrid_search_async cache-hit silently skips the dense tier - cache isolation per arm is mandatory in ablations (first run fully distorted).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall by pipeline (30 tasks) - H1 refuted",
+          "data": [
+            {
+              "label": "fts5_only",
+              "value": 0.825,
+              "sub": "single component",
+              "color": "#10b981"
+            },
+            {
+              "label": "full (no rerank)",
+              "value": 0.775,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "full + quality",
+              "value": 0.756,
+              "sub": "precision 0.719",
+              "color": "#6366f1"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Incremental recall delta over the previous tier",
+          "data": [
+            {
+              "label": "BM25 over vector",
+              "value": 0.43,
+              "sub": "+0.430 significant",
+              "color": "#10b981"
+            },
+            {
+              "label": "FTS5 over V+BM25",
+              "value": 0.178,
+              "sub": "+0.178 significant",
+              "color": "#10b981"
+            },
+            {
+              "label": "graph enrichment",
+              "value": 0,
+              "sub": "metadata, not text",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "vector over BM25",
+              "value": 0.098,
+              "sub": "-0.098 (hurts)",
+              "color": "#ef4444"
+            }
+          ]
+        }
+      ],
+      "conclusion": "More tiers is not better by recall: FTS5-only is the recall max, the reranker buys precision, and graph value lives in metadata that text-based evidence metrics cannot see.",
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-6",
-      "date": "2026-08-19",
+      "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": ": LSP wire probe — advanced features for the code knowledge graph",
-      "hypothesis": "Заявленные LSP «скрытые» возможности для графа кода реальны и воспроизводятся на проводе: (1) 2-фазный call hierarchy с непрозрачным `data`-кэшем (prepare → incoming/outgoing); (2) type hierarchy 3.17 (prepare → supertypes/subtypes); (3) semantic tokens `[dLine,dStart,len,typeIdx,mods]` одной пачкой; (4) `$/progress` как gate индексации; (5) вендор-методы (rust-analyzer/expandMacro) → -32601 MethodNotFound (graceful degradation). Проверка на запиненных `lsprotocol==2025.0.0` (+cattrs) — реальный Content-Length-framed JSON-RPC round-trip, без сети/внешнего сервера.",
-      "command": "`venv/Scripts/python.exe experiments/lsp/lsp_wire_probe.py`  (исток — `experiments/lsp/`). Схемы типов — `from lsprotocol import types` + `__annotations__`.",
-      "result": "initialize.capabilities: {callHierarchyProvider:true, typeHierarchyProvider:true, semanticTokensProvider:{legend…, full:true}}\nprepareCallHierarchy → data:{opaque:ctx-v1,id:42}  (data: typing.Any|None в схеме)\nincomingCalls/{item:…с тем же data} → assert id==42 прошёл (server отвечает ИЗ кэша data, без reparse)\ntypeHierarchy subtypes → [Circle(Shape), Square(Shape)]\nsemanticTokens/full → data:[0,0,5,1,0, 0,6,4,0,0, 0,3,1,1,2, 2,0], resultId:tok-1\nmock/emitProgress → <-- notification: $/progress {token:idx-123, value:{kind:begin,title:indexing}}\nrust-analyzer/expandMacro → {code:-32601, message:Method not found: rust-analyzer/expandMacro}\nWIRE PROBE: PASSED (exit 0)",
+      "title": "Shadow-canary fail-open: 5/5 attacks passed before the fix, 0 after",
+      "hypothesis": "Collapse-to-constant vectors, an empty canary and a failed baseline are treated as trust by the shadow embedder canary (fail-open).",
+      "command": "python experiments/canary_shadow/exp_canary_attack.py",
+      "result": "EXP-1: 5/5 attacks passed pre-fix. Fix (2026-08-12, P2): fail-closed on empty canary and baseline failure, absolute anchor _ABS_MIN_QUALITY 0.5, collapse detector (variance < 1e-3), eligible_seen in the log; tests/test_shadow_canary.py 13/13 with realistic per-pair vectors.",
       "verdict": "confirmed",
-      "finding": "(1) Реальный инцидент в самом эксперименте — self-echo deadlock из-за неверной топологии пайпов (клиент читал собственный request): пойман таймаутом `timeout 15`, не гаданием; фикс — 2 одно-направленных пайпа fwd/back. (2) Граф-полезные LSP-фичи РЕАЛЬНО доступны через запиненный lsprotocol: `moniker` (3.16) — стабильный cross-language id символа (unique: document/project/group/scheme/global) → сильный кандидат для рёбер индекса; `data`-кэш; semanticTokens как быстрый символьный масс-экстрактор. (3) Ограничение: vendor-ветка (expandMacro/checkCompleted/navtree) не проверялась на живом сервере — сети на установку pyright/rust-analyzer нет (sandbox)."
+      "finding": "Relative metrics are attackable: absence of signal (empty canary) must fail closed, and a quality floor must be absolute, not relative.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Canary attacks that passed (EXP-1, 2026-08-11)",
+          "data": [
+            {
+              "label": "before fix",
+              "value": 5,
+              "sub": "5/5 passed",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after fail-closed fix",
+              "value": 0,
+              "sub": "13/13 regression tests",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Fail-closed on absence of signal, an absolute quality anchor (0.5) and a collapse detector are the guard; relative comparisons alone are attackable.",
+      "links": []
     },
     {
       "id": "exp-7",
-      "date": "2026-08-17",
+      "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": ": кластер циклических импортов MCP — E1 инвентаризация + E2 import-time + E3 прототип (гибрид A+B → 0 циклов)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-17)",
-      "result": "ДО:   Модулей 20 | SCC: 1 (19 модулей) | рёбер в циклах 77 | load-рёбер 17 (модульных) | import-test: все OK\nПОСЛЕ: Модулей 21 | SCC: 0 | рёбер в циклах 0 | import-test: все OK (вкл. context)\nimport-time (медиана 7, свежий процесс): indexing_tools 421→452ms; meta 421→457ms; server 93→102ms; project_resolution 91→99ms\nархитектурный linter: TOOL_REGISTRY 4→0 (CORE_MCP 0); pytest 1294 passed / 10 skipped / 91 deselected; ruff clean",
+      "title": "Concurrency vs semantic correctness: '0 errors' != correct data under race",
+      "hypothesis": "Replacing a thread-safety primitive (lock -> pool -> queue) creates a new race surface; the absence of exceptions does not prove result correctness.",
+      "command": "python experiments/concurrency/experiment_concurrency_vs_semantic.py && python experiments/concurrency/experiment_concurrency_vs_semantic_attacks.py",
+      "result": "EXP-6: VC/Merkle accepted 2 hallucinated lies, VOR 0 (illustration, not proof - falsifiability critique). EXP-7 adversarial probe: A1b hybrid (equal input rights) FP=0; A2 VOR lie about a real import FP=1; A3 no anchor UNCHECKABLE; A4a VC cosmetic change FN=1; A4b VC write conflict REJECTED (unique coverage); A5 poisoned truth list FP=1; A6 scenario mutation flips the verdict.",
       "verdict": "confirmed",
-      "finding": "ГИПОТЕЗА ПОДТВЕРЖДЕНА. Гибрид разрывает ВЕСЬ кластер (19-модульный SCC → 0; все 77 рёбер цикла убраны). import-time: +7% в пределах run-to-run шума (min/max ±15%), достоверного роста нет — доминирующая стоимость не server (93ms), а тяжёлая core-цепочка через tools/base.py (di_container→indexer→embedder), которую ни A ни B не трогают. Архитектурный linter и полный pytest зелёные."
+      "finding": "VC and VOR are complementary layers: consistency (VC) catches lost writes, semantics (VOR) catches lies. A verdict that flips when one scenario variable changes (A6) is an illustration, not a law.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Hallucinated lies accepted by validator arm",
+          "data": [
+            {
+              "label": "VC/Merkle (no semantic inputs)",
+              "value": 2,
+              "color": "#ef4444"
+            },
+            {
+              "label": "Verify-On-Read (anchor)",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "hybrid, equal rights",
+              "value": 0,
+              "sub": "A1b",
+              "color": "#10b981"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Blind spots found by the adversarial probe (FP / FN)",
+          "data": [
+            {
+              "label": "A1a VC baseline",
+              "value": 2,
+              "sub": "FP - no semantics",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A2 VOR real-import lie",
+              "value": 1,
+              "sub": "FP",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A4a VC cosmetic change",
+              "value": 1,
+              "sub": "FN - page hash too coarse",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "A5 VOR poisoned truth list",
+              "value": 1,
+              "sub": "FP",
+              "color": "#ef4444"
+            },
+            {
+              "label": "A6 scenario mutation",
+              "value": 1,
+              "sub": "FN - verdict flips",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "A4b VC lost write",
+              "value": 1,
+              "sub": "caught - unique coverage",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "What matters is an external grounding layer plus a consistency layer plus anchor-extraction quality - not choosing 'VC or VOR'; and every concurrency test must verify that the returned result belongs to the right input.",
+      "links": [
+        "exp-2",
+        "exp-1"
+      ]
     },
     {
       "id": "exp-8",
-      "date": "2026-08-15",
+      "date": "2026-08-14",
       "project": "mscodebase-intelligence",
-      "title": "1-L Day 3: per-category метрики (ответ на ревью) + V3/Part 5 CoT vs Zero-Shot",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-15)",
-      "result": "qwen3.6 code_first: real acc=2 rej=7 unk=16 | recall=0.08 | FA absent 0/16 trap 0/6 silent 0/3\nqwen3.7 code_first: real acc=5 rej=9 unk=11 | recall=0.20 | FA 0/0/0\nclaude  code_first: real acc=11 rej=0 unk=14 | recall=0.44 | FA 0/0/0\nglm-4.7 code_first: real acc=22 rej=1 unk=2  | recall=0.88 | FA 7/16 3/6 2/3\nnemotron-lightning code_first: recall=0.52 | FA 0/1/1",
+      "title": "Mutation testing for the reranker grader: mutation score 8% -> 100%",
+      "hypothesis": "validate_scores has holes that plain testing misses: NaN/Infinity pass isinstance, then clamp, then earn the maximum score.",
+      "command": "python experiments/evalmut/probe_evalmut_transfer.py",
+      "result": "12 mutations from the evalmut catalog adapted to validate_scores; mutation score 8% -> 100% (11/11 polarity holes) after the fix (P-006: type validation without value validation). Fix: math.isfinite, decline on duplicates, regex path through validate_scores; +13 tests in tests/test_reranker.py.",
       "verdict": "confirmed",
-      "finding": "(1) «0.00 FA» без recall — не метрика качества guardrail: выбор qwen3.6/3.7 = политика",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "acc",
-            "value": 2
-          },
-          {
-            "label": "rej",
-            "value": 7
-          },
-          {
-            "label": "unk",
-            "value": 16
-          }
-        ]
-      }
+      "finding": "Validate values, not just types - NaN/Infinity otherwise silently earn the maximum score.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Mutation score on validate_scores (12 mutations)",
+          "data": [
+            {
+              "label": "before fix",
+              "value": 8,
+              "sub": "8%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after P-006 fix",
+              "value": 100,
+              "sub": "11/11 polarity holes closed",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Mutation testing is the guard for graders: ordinary tests prove the happy path, mutations prove the holes.",
+      "links": []
     },
     {
       "id": "exp-9",
-      "date": "2026-08-15",
+      "date": "2026-07-22",
       "project": "mscodebase-intelligence",
-      "title": "1-L Day 3b: CoT run2 (стабильность) + qwen3.8-max (follow-up по команде владельца)",
-      "hypothesis": "(1) CoT-выводы Day 3 однопроходные — 2-й прогон должен подтвердить/опровергнуть разброс; (2) qwen3.8-max (единственная модель с mandatory reasoning) в CoT-режиме закроет пробел §13 п.5 и, возможно, даст лучший баланс recall/FA.",
-      "command": "`python scripts/run_1L_live_arm.py --provider openrouter --arm both --models \"qwen/qwen3.6-flash,qwen/qwen3.7-flash,z-ai/glm-4.7-flash,deepseek/deepseek-v4-flash\" --prompt-version v2 --reasoning --max-tokens 1500 --delay 0.2 --force --tag v3_cot_run2` (400 выз., ~$0.20) + `--models \"qwen/qwen3.8-max\" --tag v3_cot_max` (100 выз., ~$0.10; err=0 на всех).",
-      "result": "qwen3.6 mem 0.48->0.40 (FA 0->0) | code 0.20->0.12 (FA 0->0)\nqwen3.7 mem 0.44->0.40 (FA 0->0) | code 0.16->0.16 (FA 0->0)\ndeepseek mem 0.20->0.20 (FA 2->2) | code 0.08->0.12 (FA 0->0)\nglm     mem 0.12->0.08 (EMPTY 18->7 err) | code 0.72->0.68 (EMPTY 8->9 err)\nqwen3.8-max: mem recall 0.28 FA 0 | code recall 0.36 FA 2 (trap 1 + silent 1), err=0, ~$0.10",
-      "verdict": "confirmed",
-      "finding": "для VOR-выбора модель+режим — это континуум «цена × recall × FA»: qwen3.6 (0/0.08–0.20/$0.0006) → qwen3.8-max (0.04/0.36/$0.10) → glm-4.7 (0.24/0.88/$0.001, но лжёт); выбор = политика, не «лучшая модель». Фикс скрипта: фильтр --tag по config.tag (был prefix-матч, захватывал run2)."
+      "title": "Root-cause prediction audit: top-1 accuracy 0.13 on 31 incidents",
+      "hypothesis": "The root-cause engine's predictions on the incident dataset can be evaluated against a gold standard; the audit quantifies current quality as a baseline to beat.",
+      "command": "python experiments/root_cause_eval/evaluate_root_cause.py",
+      "result": "31 incidents; top1_accuracy 0.129, avg_similarity 0.175, avg_term_overlap 0.158; gold standard + gold validation dataset built; research status (yellow).",
+      "verdict": "partial",
+      "finding": "Root-cause prediction is far from solved: the audit dataset and gold standard are the baseline, and the engine's current top-1 accuracy is 13%.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Root-cause engine quality on the audit dataset (31 incidents), %",
+          "data": [
+            {
+              "label": "top-1 accuracy",
+              "value": 13,
+              "sub": "%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "avg similarity",
+              "value": 17,
+              "sub": "%",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "avg term overlap",
+              "value": 16,
+              "sub": "%",
+              "color": "#f59e0b"
+            }
+          ]
+        }
+      ],
+      "conclusion": "The incident dataset plus the gold standard is the asset; the 13% top-1 accuracy is the honest starting point for improvement.",
+      "links": []
     },
     {
       "id": "exp-10",
-      "date": "2026-08-14",
+      "date": "2026-08-08",
       "project": "mscodebase-intelligence",
-      "title": ": перенос evalmut-подхода (mutation testing for eval graders) на validate_scores — mutation score 8%",
-      "hypothesis": "evalmut-техники (инвариант «дыра = вывод доказанно неверен AND градер пропустил», decline-дисциплина против объявленного контракта, corroboration двумя непересекающимися входами) применимы к детерминированному градеру MSCodeBase и находят реальные дыры без false positives.",
-      "command": "`venv/Scripts/python.exe experiments/evalmut/probe_evalmut_transfer.py` — 12 мутаций по каталогу evalmut (adapt к контракту validate_scores: index int, score float в [0,1]).",
-      "result": "mutation score: 1/12 caught (8%)   |   BLIND SPOTS: 11\n  NaN score            -> [{'index': 0, 'score': 1.0}]  ← min(1.0, NaN)=1.0: МАКСИМАЛЬНЫЙ скор\n  Infinity score       -> 1.0;  -Infinity -> 0.0\n  float index 2.7      -> int() -> 2 (тихая порча индекса)\n  index=-1 / index=99  -> проходят (скор теряется молча)\n  regex-path (попытка 4) -> score=99.0 БЕЗ clamp (неконсистентность путей 1-3 vs 4)\n  «пример формата» в объяснении LLM -> принят как реальный скор (regex-путь)\n  дубликат индекса    -> тихая перезапись (coverage gap)\n  NaN/Infinity через json.loads -> парсится (Python принимает по умолчанию)\nправильно скоупленная проверка: score=2.5 -> clamp 1.0 = OK (эквивалент, НЕ дыра)\ncorroboration: 2 структурно-непересекающихся мусора -> [] (градер не vacuous)\ntests/test_reranker.py: 25 passed — дыры не покрыты",
+      "title": "PID-lock self-healing: orphan lock wait 30s -> 120ms",
+      "hypothesis": "Classifying the DB PID-lock holder (DEAD/HEALTHY/ORPHAN/AMBIGUOUS) instead of failing closed on a stale lock eliminates the zombie boot loop.",
+      "command": "python experiments/lock_zombie/benchmark_selfhealing.py",
+      "result": "orphan 30s -> 120ms, healthy 30s -> 1.5s soft, free/stale unchanged; fix in src/core/database_lock.py (holder classification, TOCTOU guard, retry-unlink); +17 tests in tests/test_database_lock_selfhealing.py; 1022 passed, ruff clean.",
       "verdict": "confirmed",
-      "finding": "(1) isinstance-проверка типов НЕ ловит NaN/Inf — нужен math.isfinite() (прецедент уже есть: error_handler.py:707 _sanitize); (2) все пути парсинга должны иметь ОДИН контракт (regex-путь без clamp = дыра); (3) «пример формата в объяснении» — общий класс дыр regex-извлечения из текста LLM.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "index",
-            "value": 99
-          },
-          {
-            "label": "score",
-            "value": 9
-          }
-        ]
-      }
+      "finding": "Never block boot on a lock whose holder may be a zombie: classify the holder and self-heal instead of failing closed for 30 seconds.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Boot wait on the DB PID-lock (seconds)",
+          "data": [
+            {
+              "label": "orphan lock (before)",
+              "value": 30,
+              "sub": "boot timeout -> zombie loop",
+              "color": "#ef4444"
+            },
+            {
+              "label": "orphan lock (after)",
+              "value": 0.12,
+              "sub": "self-healing",
+              "color": "#10b981"
+            },
+            {
+              "label": "healthy holder (after)",
+              "value": 1.5,
+              "sub": "soft wait",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Holder classification plus TOCTOU guards turns a 30-second zombie deadlock into a 120ms self-heal.",
+      "links": []
     },
     {
       "id": "exp-11",
-      "date": "2026-08-14",
+      "date": "2026-08-08",
       "project": "mscodebase-intelligence",
-      "title": "1-L Day 1 (live-arm): вердикты живой модели (opencode + deepseek-v4-flash-free) по 50 фактам 1-V",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`python scripts/run_1L_live_arm.py --driver opencode --arm both --limit 50 --model opencode/deepseek-v4-flash-free --delay 2 --resume` (OpenCode Zen, free-тир; ключ из .env; 100 вызовов, дриблинг по окнам лимита free-тира).",
-      "result": "memory_first: adoption=0.200 false_accept=0.100 true_accept=0.100 unknown=0.800 accuracy(decided)=0.500\n  FALSE-ACCEPT ids: [R28, R30, R31, R33, R42]\ncode_first:   adoption=0.200 false_accept=0.100 true_accept=0.100 unknown=0.800 accuracy(decided)=0.500\n  FALSE-ACCEPT ids: [R26, R31, R45, R47, R50]",
-      "verdict": "confirmed",
-      "finding": "критика ревью подтверждена данными — headline-числа 1-V были свойством эвристики, не поведения LLM; 1-L live-arm теперь даёт реальную базу (Part 4 статья). Связь: docs/blog/verify-on-read.md, experiments/1L_live_arm/design_longitudinal.md."
+      "title": "Late enrichment: imports metadata covers 0.0% of search chunks",
+      "hypothesis": "Enriching search results with metadata (imports, calls) at query time (late) instead of at index time improves relevance.",
+      "command": "python experiments/late_enrichment/bench.py",
+      "result": "Measurement on real project chunks (~186 tokens/chunk): imports=0.0 on search chunks - the finding behind KNOWN_ISSUES; late enrichment stays behind the MSCODEBASE_LATE_ENRICHMENT flag.",
+      "verdict": "partial",
+      "finding": "Index-time enrichment produced nothing for search chunks: imports coverage is 0.0, so the late path is kept behind a flag until the hypothesis is re-probed.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Imports coverage on search chunks",
+          "data": [
+            {
+              "label": "imports coverage",
+              "value": 0,
+              "sub": "~186 tokens/chunk",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "chunks with any metadata",
+              "value": 0,
+              "sub": "finding -> KNOWN_ISSUES",
+              "color": "#ef4444"
+            }
+          ]
+        }
+      ],
+      "conclusion": "The enrichment hypothesis is open: metadata extraction produced 0.0 on search chunks, so the flag stays off until a better probe.",
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-12",
-      "date": "2026-08-14",
+      "date": "2026-08-08",
       "project": "mscodebase-intelligence",
-      "title": "1-L Day 2 (live-arm): мультимодельный свип OpenRouter — 6 дешёвых моделей × 50 фактов × 2 руки",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`python scripts/run_1L_live_arm.py --provider openrouter --arm both --models \"qwen/qwen3.7-flash,qwen/qwen3.5-flash-02-23,z-ai/glm-4.7-flash,nvidia/nemotron-3.5-lightning,deepseek/deepseek-v4-flash,qwen/qwen3.6-flash\" --no-reasoning --resume` (temp=0, seed=42, max_tokens=100, prompt v1, facts sha256=820bbbf60a0fc930; 600 вызовов).",
-      "result": "модель                        arm            adoption  false_acc  true_acc  unknown  acc(decided)   cost$\nqwen/qwen3.7-flash            memory_first   0.22      0.02       0.20      0.66     0.88 (15/17)   0.00023\nqwen/qwen3.7-flash            code_first     0.10      0.00       0.10      0.40     0.87 (26/30)   0.00025\nqwen/qwen3.6-flash            memory_first   0.22      0.00       0.22      0.60     0.85 (17/20)   0.00162\nqwen/qwen3.6-flash            code_first     0.10      0.00       0.10      0.24     0.74 (28/38)   0.00178\nqwen/qwen3.5-flash-02-23      memory_first   0.14      0.02       0.12      0.82     0.89 (8/9)    0.00044\nqwen/qwen3.5-flash-02-23      code_first     0.12      0.02       0.10      0.84     0.88 (7/8)    0.00048\ndeepseek/deepseek-v4-flash    memory_first   0.14      0.02       0.12      0.82     0.78 (7/9)    0.00077\ndeepseek/deepseek-v4-flash    code_first     0.20      0.02       0.18      0.72     0.79 (11/14)  0.00087\nz-ai/glm-4.7-flash            memory_first   0.10      0.04       0.06      0.88     0.67 (4/6)    0.00045\nz-ai/glm-4.7-flash            code_first     0.68      0.30       0.38      0.26     0.59 (22/37)  0.00048\nnvidia/nemotron-3.5-lightning memory_first   0.44      0.08       0.36      0.32     0.79 (27/34)  0.00063\nnvidia/nemotron-3.5-lightning code_first     0.54      0.18       0.36      0.18     0.66 (27/41)  0.00070",
-      "verdict": "confirmed",
-      "finding": "выбор модели для verify-on-read — не «любая дешёвая»: glm-4.7-flash даёт FA=0.30, qwen3.6/3.7-flash — 0.00. Метрика модели обязана измеряться на этом датасете до использования в рантайме. Связь: EXPERIMENTS_LOG#Day-1-1L, scripts/run_1L_live_arm.py."
+      "title": "Benchmark 2.0 scaffold: 12 repository-reasoning tasks at levels L3-L5",
+      "hypothesis": "RepoReason (integration width, not file count) and Active-SWE motivate measuring reasoning quality (L3 explain, L4 impact, L5 hidden bug) instead of query -> 5 results -> latency.",
+      "command": "python experiments/benchmark2/runner.py && python experiments/benchmark2/runner.py --keywords",
+      "result": "tasks.jsonl: 12 tasks (architecture / impact / history / hidden bugs / consistency) with evidence, probes and check criteria; keywords.jsonl: 8 short keyword queries - CoREB: short queries crush nDCG@10 for all models; scaffold v1 status (yellow).",
+      "verdict": "partial",
+      "finding": "A reasoning-quality benchmark needs L3-L5 tasks with evidence and checks; short keyword queries are a separate failure mode (CoREB) that must be measured independently.",
+      "chart": [
+        {
+          "type": "donut",
+          "title": "Benchmark 2.0 catalog",
+          "data": [
+            {
+              "label": "reasoning tasks (L3-L5)",
+              "value": 12,
+              "color": "#6366f1"
+            },
+            {
+              "label": "keyword probes",
+              "value": 8,
+              "color": "#06b6d4"
+            }
+          ]
+        }
+      ],
+      "conclusion": "The scaffold is the deliverable: 12 evidence-backed reasoning tasks plus 8 keyword probes give the next harness a differentiated yardstick.",
+      "links": [
+        "exp-4"
+      ]
     },
     {
       "id": "exp-13",
       "date": "2026-08-13",
       "project": "mscodebase-intelligence",
-      "title": ": «сервер недоступен во время индексации» — root cause = sync update_all в main loop",
-      "hypothesis": "таймауты всех MCP-запросов на ~13 мин при полной переиндексации вызваны НЕ индексацией самой по себе (она в run_in_executor, loop свободен), а синхронным AutoDocUpdater.update_all() (generate_docs+README+KNOWN_ISSUES, rglob по docs/) в main event loop ПОСЛЕ индексации (layer.py _run_reindex_job).",
-      "command": "`intel_trigger_reindex(mode=\"full\")` + серия запросов (job_status/hotspots/passport) во время и после; `wmic`/tasklist для состояния процесса; чтение кода (layer.py L672-808, auto_doc_updater.py L114-163).",
-      "result": "intel_trigger_reindex → job 0d27f125, ETA 18с\nвсе запросы ~13 мин: Context server request timeout (включая intel_get_job_status)\nget_logs: Timeout after 771664ms (attempt 1/1)\njob completed: 7383/7383, 552с (ETA 18с vs 552с, ×30)\nпосле: процесс 19728 мёртв (канал closed) — Zed убил MCP\nкод: update_all() вызывается СИНХРОННО в async-задаче (main loop)",
+      "title": "Server unavailable during reindex: sync update_all blocks the event loop (P0 root cause)",
+      "hypothesis": "The ~13-min MCP request timeouts during a full reindex are NOT caused by indexing itself (it runs in run_in_executor, loop stays free) but by the synchronous AutoDocUpdater.update_all() (generate_docs + README + KNOWN_ISSUES, rglob over docs/) called in the main event loop after indexing.",
+      "command": "intel_trigger_reindex(mode=full) + request series (job_status/hotspots/passport) during and after; wmic/tasklist for process state; code read (layer.py L672-808, auto_doc_updater.py L114-163)",
+      "result": "job 0d27f125 ETA 18s but all requests timed out for ~13 min (Context server request timeout, incl. intel_get_job_status); get_logs: Timeout after 771664ms; job completed 7383/7383 in 552s (ETA 18s vs 552s, x30); after that process 19728 dead - Zed killed MCP; code: update_all() called SYNCHRONOUSLY in an async task on the main loop.",
       "verdict": "confirmed",
-      "finding": "любые синхронные вызовы тяжёлых методов (rglob/generation) в async-функциях = блокировка ВСЕХ запросов; паттерн-эталон — asyncio.to_thread + wait_for (BS-11). Guard-тест: test_reindex_responsive.py (тики loop не замирают во время update_all; max_gap < 0.3с)."
+      "finding": "552s indexing + ~220s update_all = 771s unavailability, in line with the log. Indexing-in-executor (H1) refuted; fast-fail search while is_reindexing exists; the blocker was the sync update_all (same class as BS-11: run_full_diagnostic had already been moved to asyncio.to_thread).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Reindex ETA vs actual unavailability, s",
+          "data": [
+            {
+              "label": "promised ETA",
+              "value": 18,
+              "sub": "job 0d27f125",
+              "color": "#10b981"
+            },
+            {
+              "label": "indexing",
+              "value": 552,
+              "sub": "7383/7383 files",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "+ sync update_all",
+              "value": 771,
+              "sub": "total unavailability",
+              "color": "#ef4444"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Any synchronous call of a heavy method (rglob/generation) inside an async function blocks ALL requests; the canonical pattern is asyncio.to_thread + wait_for (BS-11). Guard: test_reindex_responsive.py - loop ticks must not freeze during update_all (max_gap < 0.3s).",
+      "links": []
     },
     {
       "id": "exp-14",
-      "date": "2026-08-12",
+      "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": "-1 → тест: canary fail-closed внедрён, 13/13 регрессий (атаки EXP-1 больше не проходят)",
-      "hypothesis": "фикс по уроку EXP-1 (абсолютный якорь + fail-closed + collapse-детектор) переводит атаки (b)(c)(d)(e) из PASSED в BLOCKED, не сломав accepts_good/rejects_bad.",
-      "command": "`python -m pytest tests/test_shadow_canary.py -q` — реалистичные per-pair векторы вместо коллапс-фейков (старый `_make_fake_embedding` возвращал ОДИНАКОВЫЙ вектор на любой вход — сам был collapse-состоянием!).",
-      "result": "collected 13 items\ntests\\test_shadow_canary.py .............  [100%]\n13 passed in 0.18s",
-      "verdict": "confirmed",
-      "finding": "коллапс-фейк в тестах маскировал collapse-детектор: детектор обязан мерить НАПРАВЛЕНИЯ (нормированные векторы), не сырые значения."
+      "title": "Vacuous-test scan: 1133/1143 tests are provable (hypothesis refuted in the good way)",
+      "hypothesis": "A share of tests cannot syntactically fail (no assert/raises/warns/fail/raise) - 'vacuous' like the 33-unproven miniature; expectation 5-15%.",
+      "command": "python experiments/misc_probes/exp_vacuous_scan.py - AST scan of tests/test_*.py (1143 test functions); proven = has assert / pytest.raises/warns/xfail/fail / raise / mock assert_* (after update)",
+      "result": "1143 tests total: proven 1133 | vacuous 3 | skip 7 | vacuous share 0.3%. Vacuous: test_assignments.py:396, test_ast_cache_invalidation.py:60, test_sandbox.py:46. First scan found 5, two (test_move_chunks.py:351, test_indexer_fts5_sync.py:55) used mock assertions (assert_called_once/assert_not_called - Call, not ast.Assert) - scanner updated, honest recount 3.",
+      "verdict": "refuted",
+      "finding": "The suite is almost fully provable - 1133/1143 (99.7%) contain a failing construct; the 3 'vacuous' are smoke tests that can still fail via exception propagation from helpers (discrimination weaker, not zero). MSCodeBase is NOT in the fintech state (7/40 proven) - which is precisely why its negative controls are valuable: they are few (0-3) but maximally informative.",
+      "chart": [
+        {
+          "type": "donut",
+          "title": "Test provability scan (1143 tests)",
+          "data": [
+            {
+              "label": "proven",
+              "value": 1133,
+              "color": "#10b981"
+            },
+            {
+              "label": "vacuous",
+              "value": 3,
+              "color": "#ef4444"
+            },
+            {
+              "label": "skipped",
+              "value": 7,
+              "color": "#6366f1"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Vacuous-scan traps for any scanner: mock assert_* methods (Call nodes, not ast.Assert) and exception propagation. A suite this provable makes the few negative controls the most valuable outputs.",
+      "links": []
     },
     {
       "id": "exp-15",
-      "date": "2026-08-12",
+      "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": "-4 → тест: eligible_seen внедрён в health, «0 eligible» ≠ «0 собрано» (12/12)",
-      "hypothesis": "population manifest (eligible_seen из indexer.get_status ДО запросов) различает пустую популяцию (healthy idle) и сломанный коллектор; warning несёт число eligible.",
-      "command": "`python -m pytest tests/test_search_quality_monitoring.py -q`.",
-      "result": "collected 12 items\ntests\\test_search_quality_monitoring.py ............  [100%]\n12 passed in 0.07s",
+      "title": "ln.strip() bug class replayed: broken assert-extractor gives 3/8 false passes",
+      "hypothesis": "An assert-extractor that filters by ln.strip() but emits the raw ln yields false verified for a wrong answer when the nested assert's indent lands AFTER return in the function body; expectation >=2/8 false passes.",
+      "command": "python experiments/misc_probes/exp_ln_strip_repro.py - 8 call forms (col 0 / 4-space / 8-space / 12-space, before/after return), wrong answer add_two(1,2)=4, module = answer + raw assert lines, exit 0 = verified",
+      "result": "Broken extractor: 3/8 false passes (forms 2,3,8 - assert on 4-space after return); correct extractor: 0/8. Example module (form 2): def add_two(a,b): return a+b+1; assert add_two(1,2)==3 # dead code AFTER return - valid Python, exit 0.",
       "verdict": "confirmed",
-      "finding": "источник eligible_seen — реальный счётчик indexer (не производное от searcher), иначе та же популяционная слепота (Red Team §1.16 п.3)."
+      "finding": "Bug class replayed: valid Python that never executes, exit 0, 'verified:true' for a wrong answer. The form count differs (3/8 vs fintech's 5/8) but the essence is identical - signature/exit-code verify the PROCESS, not the SEMANTICS ('ask for the output, not the exit code').",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False passes on 8 call forms",
+          "data": [
+            {
+              "label": "broken extractor",
+              "value": 3,
+              "sub": "emit raw ln",
+              "color": "#ef4444"
+            },
+            {
+              "label": "correct extractor",
+              "value": 0,
+              "sub": "emit ln.strip()",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Any code that extracts/recompiles fragments (assert extraction, doc examples, code-gen) must normalize indentation BEFORE emission; the negative control for an extractor is a fixture with assert-after-return that must fail.",
+      "links": []
     },
     {
       "id": "exp-16",
       "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": "-1: Shadow Canary attack — дискриминативная способность `_shadow_compare` (5/5 атак прошли)",
-      "hypothesis": "canary измеряет ОТНОСИТЕЛЬНУЮ деградацию (new vs old), а не абсолютное качество → (b) collapse-to-constant, (c) пустой canary, (d) сбой базлайна, (e) взаимно-вырожденная пара дают ложное PASSED=True. Контроль (a) нулевые векторы обязан дать BLOCKED.",
-      "command": "`python experiments/canary_shadow/exp_canary_attack.py` — дословная реплика remote_embedder.py:231-304 (без импорта провайдера), N=20 пар, DIM=384.",
-      "result": "(a) Нулевые векторы (контроль): BLOCKED=True ✅ контроль отработал\n(b) АТАКА constant-vector (все тексты → [1.0]*384): PASSED=True ❌ АТАКА ПРОШЛА\n(b2) АТАКА noisy-constant (±1%): PASSED=True ❌ АТАКА ПРОШЛА\n(c) Пустой canary-набор: PASSED=True ❌ АТАКА ПРОШЛА (fail-open)\n(d) Сбой базлайна (old raises): PASSED=True ❌ АТАКА ПРОШЛА (fail-open)\n(e) old И new обе constant: PASSED=True ❌ АТАКА ПРОШЛА\nИТОГ: атаки (b)(b2)(c)(d)(e) — 5 из 5 прошли. Контроль (a) — работает.",
+      "title": "Population blind spot: '0 eligible' is indistinguishable from '0 collected'",
+      "hypothesis": "An empty population (empty index - healthy idle) and a broken collector (garbage) emit the SAME signal: search_quality_passed=0 + warning 'no real results'; eligible_seen before selection is not measured.",
+      "command": "python experiments/misc_probes/exp_population_blindspot.py - real src/core/intelligence/health.py (importlib direct-load, stdlib-only), FakeSearcher: [] vs garbage vs real vs raising",
+      "result": "(a) EMPTY population ([]): passed=0, warning 'no real results (0 raw - all empty/garbage chunks)'; (b) GARBAGE: passed=0, warning 'no real results (2 raw - all empty/garbage chunks)'; (b2) searcher ERROR: passed=0, warning 'searcher finished with error: embedder down'; (c) CONTROL (real): passed=3, no warning.",
       "verdict": "confirmed",
-      "finding": "относительная метрика без абсолютного якоря и fail-open ветки — два способа сделать guard неспособным упасть. Фикс: (1) абсолютный порог (new_mean ≥ X), (2) baseline-fail и empty-canary → блокировать переключение/UNKNOWN, не доверять, (3) детектор collapse (дисперсия векторов ≈ 0 → reject), (4) eligible_seen (число пар при загрузке)."
+      "finding": "(a) and (b) share the same failure signal (passed=0, same warning class) - and (a)'s message claims 'empty/garbage chunks' when raw results were 0, a false explanation. '0 rows with 0 eligible' (healthy idle) is indistinguishable from '0 rows with N eligible' (broken collector). Searcher error (b2) is a separate class that does differ.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Quality metric under four populations",
+          "data": [
+            {
+              "label": "empty index",
+              "value": 0,
+              "sub": "warning: no real results",
+              "color": "#ef4444"
+            },
+            {
+              "label": "garbage chunks",
+              "value": 0,
+              "sub": "SAME warning",
+              "color": "#ef4444"
+            },
+            {
+              "label": "searcher error",
+              "value": 0,
+              "sub": "different warning",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "control (real)",
+              "value": 3,
+              "sub": "no warning",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "A metric must carry both numbers: population_size (after) and eligible_seen (before selection); the gap between them is the auditable quantity. In health: report raw count + index size in the warning, and mark '0 eligible' as INFO (healthy idle), not failure.",
+      "links": []
     },
     {
       "id": "exp-17",
       "date": "2026-08-11",
       "project": "mscodebase-intelligence",
-      "title": "-2: Скан тестов на вакуумность — таблица Max Quimby для MSCodeBase (1133/1143 proven)",
-      "hypothesis": "часть тестов синтаксически не может упасть (нет assert/raises/warns/fail/raise) — «33 unproven» в миниатюре. Ожидание: 5-15% вакуумных.",
-      "command": "`python experiments/misc_probes/exp_vacuous_scan.py` — AST-скан tests/test_*.py (1143 test-функции/метода); proven = есть assert / pytest.raises/warns/xfail/fail / raise / mock-assert_* (после правки).",
-      "result": "Всего тестов: 1143\n  proven: 1133 | вакуумных: 3 | skip: 7 | доля вакуумных: 0.3%\nВакуумные: test_assignments.py:396, test_ast_cache_invalidation.py:60, test_sandbox.py:46",
-      "verdict": "confirmed",
-      "finding": "MSCodeBase НЕ в состоянии fintech (7/40 proven) — но именно поэтому отрицательные контроли выгодны: их мало (0-3), а ценность максимальна. 2 ловушки для сканеров вакуумности: mock-assert_* и exception-пропагация."
+      "title": "verify_clean_state.sh falsifiability: the drift-gate is structurally unable to fail",
+      "hypothesis": "(A) the drift-gate (lines 55-71) can fail on pin-vs-lock drift; (B) a vacuous suite (0 asserts) passes -> 'CLEAN STATE VERIFICATION: PASSED' - reproducibility without falsifiability.",
+      "command": "bash experiments/misc_probes/exp_verify_gate.sh (drift loop verbatim from the script, temp pyproject/lock; pytest on temp suite) + re-run of the gate code on the project's real files",
+      "result": "Part A: injected drift (lancedb 0.12.0 pin vs 0.13.0 lock) -> 'drift NOT detected -> exit 0 FAIL'; real files: lancedb PINNED='' LOCKED='0.34.0', mcp PINNED='' LOCKED='1.28.1', tree-sitter PINNED='' LOCKED='0.26.0'. Part B: vacuous suite -> 3 passed in 0.21s, exit 0 -> gate would print PASSED. Correct parse (grep -oE pkg==[0-9.]+): lancedb PINNED=0.34.0 = lock OK; simulated drift (lancedb==0.99.0) -> DRIFT DETECTED.",
+      "verdict": "partial",
+      "finding": "(B) confirmed: the gate prints PASSED for a suite with zero asserts - semantic blindness. (A) refuted in reverse: the drift-gate is STRUCTURALLY unable to fire - its grep -iE '^pkg==' requires the pin at line start, but pins live in a TOML array ('    \"lancedb==0.34.0\",') so PINNED is always empty and the DRIFT=1 branch is unreachable for all 3 packages. A live instance of the 'guard cannot fail' class. Bonus (curiosity): scripts/stale_detector.py is a placeholder 'No drifts detected', always exit 0, wired into the pre-commit hook - a second guard of the same class.",
+      "conclusion": "grep-anchored parsing of TOML arrays (^) is a dead pattern; fix = grep -oE 'pkg==[0-9.]+' or python tomllib; a negative control (fixture with known drift, must exit 1) is mandatory for any gate. Sweep for sibling guards that cannot fail (stale_detector was one).",
+      "links": []
     },
     {
       "id": "exp-18",
-      "date": "2026-08-11",
+      "date": "2026-08-15",
       "project": "mscodebase-intelligence",
-      "title": "-3: Воспроизведение бага `ln.strip()` (Tom Jones) — 3/8 ложных проходов у сломанного экстрактора",
-      "hypothesis": "assert-экстрактор, фильтрующий по `ln.strip()` но эмитирующий сырую `ln`, даёт ложные verified для неверного ответа, когда отступ вложенного assert-а попадает ПОСЛЕ `return` в теле функции. Ожидание: ≥2/8 ложных проходов (у fintech — 5/8 на их наборе форм).",
-      "command": "`python experiments/misc_probes/exp_ln_strip_repro.py` — 8 форм вызова (col 0 / 4-space / 8-space / 12-space, до/после return), неверный ответ `add_two(1,2)=4`, сборка module = answer + raw assert-строки (как у fintech-gateway), exit 0 = verified.",
-      "result": "Сломанный экстрактор: 3/8 ложных проходов  (формы 2,3,8 — assert на 4-space после return)\nПравильный экстрактор: 0/8 ложных проходов\nПример модуля (форма 2):\ndef add_two(a, b):\n    return a + b + 1\n    assert add_two(1, 2) == 3   # мёртвый код ПОСЛЕ return — valid Python, exit 0",
-      "verdict": "confirmed",
-      "finding": "любой код, извлекающий/перекомпилирующий фрагменты (assert-экстракция, док-примеры, code-gen) обязан нормализовать отступы ПЕРЕД эмиссией; negative control для экстрактора = фикстура с assert-после-return, обязанная упасть."
+      "title": "Evidence Ladder E1-E3: evidence form (anchor -> file fragment -> graph) vs verification quality",
+      "hypothesis": "Rung 1 (anchor string) is weak; rung 2 (file fragment) jumps recall; rung 3 (graph) either matches file (structure does not pay off) or beats it on present-trap (structural layer closes the failure mode). One matrix run: 3 models x 3 arms x 50 facts v4_rep.",
+      "command": "python scripts/run_1L_live_arm.py --provider openrouter --arm code_first/file_content_first/graph_first --models qwen3.7-flash,deepseek-v4-flash,glm-4.7-flash --prompt-version v2 --no-reasoning --tag 2e_e1/e2/e3; summarize_1L_categories.py --markdown (calls=450, errors=0, ~$0.007)",
+      "result": "Rung1->2 confirmed by all 3: qwen recall 0.24->0.92, deepseek 0.04->0.84, glm 0.60->0.68. Rung2->3 non-uniform: qwen graph recall 0.92->0.76 but FA total 0.02->0.000; deepseek graph recall 0.84->0.44 (unknown 0.66 - distrust instead of checking); glm graph recall 0.68->0.84 but FA rises. Reproducibility control: qwen file_content 0.92 vs V4 0.88 (2026-08-15) - inter-run stability confirmed. CORRECTED (RED TEAM on ground truth, 2026-08-15): trap-category numbers of this run are on the mislabeled dataset - real trap-FA = 0 on corrected labels (29T/21F); the file-fragment recall result stands.",
+      "verdict": "partial",
+      "finding": "Evidence form is a per-model knob, not a global answer: the file fragment is the strongest recall driver for all models; the graph closes the trap failure mode only for evidence-honest models (and on corrected labels the trap gap itself was a label issue). Fail-open models (glm family) are not cured by ANY evidence form - that is a model property, not an evidence property. CORRECTED (E5, 2026-08-16): on the extended subject-validated trap category (20 false / 10 true) the graph really closes present-trap for deepseek (75%->40%) - the 'graph does not help' reading was an N=1 statistical issue; for glm the graph still does not help (14/20).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall(real) by evidence rung, %",
+          "data": [
+            {
+              "label": "qwen · anchor",
+              "value": 24,
+              "sub": "code_first",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen · file",
+              "value": 92,
+              "sub": "rung 2",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen · graph",
+              "value": 76,
+              "sub": "rung 3",
+              "color": "#6366f1"
+            },
+            {
+              "label": "deepseek · file",
+              "value": 84,
+              "sub": "rung 2",
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek · graph",
+              "value": 44,
+              "sub": "unknown 0.66",
+              "color": "#ef4444"
+            }
+          ]
+        }
+      ],
+      "conclusion": "For VOR: recall engine = file fragment (~25 lines); graph = a separate subject-check signal against traps, but only for evidence-honest models; exclude fail-open models (glm family) from the VOR pipeline.",
+      "links": [
+        "exp-1",
+        "exp-2",
+        "exp-19"
+      ]
     },
     {
       "id": "exp-19",
-      "date": "2026-08-11",
+      "date": "2026-08-15",
       "project": "mscodebase-intelligence",
-      "title": "-4: Population blind spot — `_check_search_quality` не различает «0 eligible» и «0 собрано» (gap Тома день 2)",
-      "hypothesis": "пустая популяция (пустой индекс — «здоровый idle») и сломанный коллектор (мусор) дают ОДИНАКОВЫЙ сигнал: `search_quality_passed=0` + warning «нет реальных результатов». `eligible_seen` до селекции не измеряется (health.py:744-756).",
-      "command": "`python experiments/misc_probes/exp_population_blindspot.py` — реальный `src/core/intelligence/health.py` (importlib direct-load, stdlib-only), FakeSearcher: [] vs мусор vs реальные vs raising.",
-      "result": "(a) ПУСТАЯ популяция ([]): metrics passed=0\n    warning: ...нет реальных результатов (0 сырых — все пустые/мусорные чанки)\n(b) МУСОР: passed=0\n    warning: ...нет реальных результатов (2 сырых — все пустые/мусорные чанки)\n(b2) ОШИБКА searcher: passed=0, warning: ...завершился с ошибкой: embedder down\n(c) КОНТРОЛЬ (реальные): passed=3, без warning",
-      "verdict": "confirmed",
-      "finding": "метрика обязана нести оба числа: `population_size` (после) и `eligible_seen` (до селекции); gap между ними — аудируемая величина (Tom: «You sampled 12 of 400 invites an argument. You sampled 12 ends one.»). В health: добавить в warning count сырых + размер индекса, а «0 eligible» маркировать как INFO (healthy idle), не как failure."
+      "title": "Evidence Ladder E3b+E4: file+graph hybrid is NOT additive; git-provenance distinguishes existed-then vs exists-now",
+      "hypothesis": "(E3b) a file+graph hybrid is additive (file recall + graph trap-zero); (E4) git-provenance (commit+date+branch in evidence) lets models tell 'existed until C' from 'exists at HEAD'.",
+      "command": "python scripts/run_1L_live_arm.py --arm file_graph_first (tag 2e_e4) and temporal_first with temporal facts/contexts (tag 2e_e5) - qwen3.7-flash, deepseek-v4-flash, glm-4.7-flash; calls=294, errors=0 (temporal dataset: 48 facts = 12 removed / 28 real / 8 absent, ground truth from git)",
+      "result": "HYBRID (v4_rep N=50): qwen acc 0.900 (vs file 0.940 - hybrid is worse than file alone), deepseek FA 0.08 > graph 0.04; glm FA 0.10. TEMPORAL (N=48): deepseek and glm 48/48 (FA=0.00) - 'existed until C' vs 'exists' recognized perfectly on existence-claims; qwen3.7 accepted 5/12 removed (T04/T09-T12, ~42%, Wilson CI 0.19-0.69) - token-level familiarity/noise. CORRECTED: (E3b) 'graph closes trap (1/6->0/6)' was a mislabeled-data issue - R45 is true; the non-additivity result stands. (E4b, 2026-08-16): 'deepseek/glm are temporal-robust, qwen is not' was a prompt-hint issue - WITHOUT the 'NOT FOUND AT HEAD' hint NO model is robust; temporal present-trap is universal, and a past-tense formulation solves it. (E5, 2026-08-16): 'graph does not help against trap' was a N=1 statistical issue - on the extended subject-validated trap category (20 false / 10 true) graph really closes present-trap for deepseek (75%->40%).",
+      "verdict": "refuted",
+      "finding": "Hybridity is NOT additive: with a file fragment present, token presence dominates and the graph adds nothing (acc 0.900 < file 0.940) - VOR design must pick ONE evidence format: fragment for recall OR graph for trap-precision. Git-provenance is a cheap, powerful temporal signal for 2/3 models on existence-claims but does not cure qwen-family; the 'robust 2/3' framing was itself a hint issue (E4b) - temporal present-trap is universal and formulation solves it. CORRECTED (E5): the trap-precision claim below was measured on a single false fact (R42) - statistically meaningless; on the extended category graph closes trap for deepseek (75->40%) and does not for glm (14/20).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Hybrid vs single-format accuracy, %",
+          "data": [
+            {
+              "label": "file alone (qwen)",
+              "value": 94,
+              "sub": "E2 file_content",
+              "color": "#10b981"
+            },
+            {
+              "label": "file+graph hybrid",
+              "value": 90,
+              "sub": "not additive",
+              "color": "#ef4444"
+            },
+            {
+              "label": "graph alone (qwen)",
+              "value": 91,
+              "sub": "trap-precision",
+              "color": "#6366f1"
+            }
+          ]
+        }
+      ],
+      "conclusion": "VOR evidence format is chosen by the target metric: fragment for recall, graph for trap-precision - the hybrid is the worst of both (acc 0.90). Git-provenance in evidence is a cheap temporal signal, but the universal temporal present-trap is solved by claim formulation, not by evidence. CORRECTED (E5): 'graph for trap-precision' is real for deepseek (75->40% on the extended category), not for glm; the N=1 trap measurement that suggested otherwise was a statistical issue.",
+      "links": [
+        "exp-1",
+        "exp-18"
+      ]
     },
     {
       "id": "exp-20",
-      "date": "2026-08-11",
+      "date": "2026-08-03",
       "project": "mscodebase-intelligence",
-      "title": "-5: `verify_clean_state.sh` — falsifiability-проверка гейта + P1: drift-гейт структурно мёртв",
-      "hypothesis": "(A) drift-гейт (строки 55-71) умеет падать на рассинхроне pin vs lock; (B) вакуумная сюита (0 asserts) проходит → «CLEAN STATE VERIFICATION: PASSED» — reproducibility без falsifiability (ANP2).",
-      "command": "`bash experiments/misc_probes/exp_verify_gate.sh` (drift-цикл дословно из скрипта, temp pyproject/lock; pytest на temp-сюите) + повторный прогон гейт-кода на РЕАЛЬНЫХ файлах проекта.",
-      "result": "Часть A: drift (lancedb 0.12.0 pin vs 0.13.0 lock) → «drift НЕ обнаружен → exit 0 ❌»\nРеальные файлы: lancedb PINNED='' LOCKED='0.34.0' | mcp PINNED='' LOCKED='1.28.1' | tree-sitter PINNED='' LOCKED='0.26.0'\nЧасть B: вакуумная сюита → 3 passed in 0.21s, exit 0 → гейт напечатал бы PASSED\nКорректный парсинг (grep -oE \"pkg==[0-9.]+\"): lancedb PINNED='0.34.0' = lock ✅;\n  симулированный дрейф (lancedb==0.99.0 в pyproject) → DRIFT DETECTED",
+      "title": "ONNX embedder down: off-by-one project paths (not the model or ports)",
+      "hypothesis": "Fixing PROJECT_ROOT (parent x3 -> parents[3]) in onnx_client/onnx_server restores the ONNX mode: the server finds the script and the model, /embed returns 384-dim.",
+      "command": "cd <ext> && PYTHONPATH=<ext> venv/Scripts/python.exe D:/Project/MSCodeBase/.local/onnx_client_check.py; curl -X POST http://127.0.0.1:9876/embed -d '{\"text\":\"test\"}'",
+      "result": "[1] ensure_server_running: True; [2] embed status=200; [3] dim=384 first3=[0.037, -0.058, -0.041]; ONNX CLIENT PATH: PASSED. Before the fix: FileNotFoundError 'Model directory not found for: multilingual-e5-small-int8'; server logs: 'failed to load E5-base ONNX' x5/day.",
       "verdict": "confirmed",
-      "finding": "grep-парсинг TOML-массивов по якорю `^` — мёртвый паттерн; fix = `grep -oE \"${pkg}==[0-9.]+\"` или python tomllib; обязателен negative control (фикстура с заведомым дрейфом, обязан дать exit 1). Бонус-находка (Любопытство §3.4): scripts/stale_detector.py — placeholder «No drifts detected», всегда exit 0, подключён к pre-commit хуку (git_hooks_installer.py:88) — второй guard того же класса."
+      "finding": "Root cause is paths, not model/ports: (1) onnx_client looked for '...src/src/core/embedder/onnx_server.py' (duplicated src), (2) onnx_server looked for the model in '.../src/.codebase_models/...' (not the root). The off-by-one was copied between files (onnx_client <- onnx_server).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Embed endpoint before/after path fix",
+          "data": [
+            {
+              "label": "before",
+              "value": 0,
+              "sub": "FileNotFoundError",
+              "color": "#ef4444"
+            },
+            {
+              "label": "after",
+              "value": 384,
+              "sub": "dim, status 200",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Off-by-one paths in src/core/embedder/ are copied between files - when touching paths there, use parents[3] or verify path.exists() on all search_paths; remote_embedder already uses get_extension_dir correctly.",
+      "links": []
     },
     {
       "id": "exp-21",
-      "date": "2026-08-11",
+      "date": "2026-08-16",
       "project": "mscodebase-intelligence",
-      "title": "1-V REPLICATION: Memory Contamination VERIFY-ON-READ — факты v4, N=50 (ВОСПРОИЗВЕДЕНО)",
-      "hypothesis": "verify-on-read доводит adoption честного до 0.0 на SILENT-фактах — свойство системы, а не артефакт набора v3 (Правило одного бенча §1: одиночный замер ≠ доказательство).",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/memory_contamination_generator_rep.py` (seed=7, TRUE_POOL_REP: file:6+env:2+import:9+CamelCase:8, absent: qdrant/weaviate/.../vault 16, trap: pathlib/threading/dataclasses/json/logging/re 6, silent: terraform/jaeger/loki 3) → `memory_contamination_facts_v4_rep.json` → `venv/Scripts/python.exe experiments/context_engine/memory_contamination_verify.py memory_contamination_facts_v4_rep.json`. Тот же агент/логика (контрольная группа), другой набор данных.",
-      "result": "verify: checked=50 cache_hits=0 inconclusive=9 budget_exceeded=False\nlatency: fingerprint 73.8ms, first pass 115.3ms, steady-state 0.6ms (cache_hits=31, checked=0)\nverdicts: VERIFIED=22 REFUTED=19 ACTIVE(INCONCLUSIVE)=9\nfalse REFUTED: total=19 | среди TRUE (артефакт маппинга): 0\nвидимые ложные после verify (memory_first adopters): [R42,R43,R44,R45,R46,R47]\nadoption A_code_first: v3 0.12 | 1-R 0.12 | 1-V 0.0 | 1-V-REP 0.0\nadoption A_memory_first: v3 1.0  | 1-R 0.12 | 1-V 0.16 | 1-V-REP 0.24\nvisible false of 25: 1-V 4 | 1-V-REP 6",
+      "title": "Evidence Ladder E5: extended trap category (N=20, subject-validated labels) - present-trap is mass, graph really helps deepseek (75%->40%)",
+      "hypothesis": "'FA trap = 0' on the v4_rep category rested on a single false fact (R42) - statistically meaningless. With a trap category extended to 20 false / 10 true and labels validated per subject (grep subject = 0), present-trap is measurable and the graph arm's true effect can be estimated.",
+      "command": "trap_facts_generator.py (20 false-trap: value in >=2 project files, NOT in the subject file - grep subject=0; 10 true-trap) + file_content_first/graph_first x 3 models (pinned: qwen->Alibaba, deepseek/glm->DeepInfra; first run with Alibaba for all = 404 glm, redone). fp 138f306dbe14b66e -> cb6f822b9eb66afd",
+      "result": "FA on 20 real false-trap / recall on 10 true-trap: file_content qwen 2/20, 2/10; deepseek 15/20, 6/10; glm 13/20, 7/10. graph_first qwen 2/20, 3/10; deepseek 8/20, 5/10; glm 14/20, 9/10.",
       "verdict": "confirmed",
-      "finding": "репликация подтвердила: (a) главный вывод 1-V — свойство VerifyOnRead, не данных; (b) типизация якорей — единственный источник ложных отзывов TRUE (0 при корректной, 7 при наивной — воспроизводимо, закрыто write-time capture); (c) «0.0 adoption» требует отзыва SILENT — проверено дважды. Ограничение прежнее: детерминированный прокси-агент, не живой LLM.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "checked",
-            "value": 50
-          },
-          {
-            "label": "cache hits",
-            "value": 0
-          },
-          {
-            "label": "inconclusive",
-            "value": 9
-          },
-          {
-            "label": "VERIFIED",
-            "value": 22
-          },
-          {
-            "label": "REFUTED",
-            "value": 19
-          },
-          {
-            "label": "total",
-            "value": 19
-          }
-        ]
-      }
+      "finding": "Present-trap is NOT a mislabel issue: on honest subject-validated labels file_content FA is 2-15/20 (10-75%) - the earlier 'residual trap hole' was distorted by N=1. Graph evidence REALLY closes present-trap for deepseek (75%->40% FA); for glm it does not (14/20); qwen already has low FA (2/20) but pays recall (2-3/10 - fail-closed).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "False-accept on 20 real present-traps, file vs graph",
+          "data": [
+            {
+              "label": "deepseek · file",
+              "value": 15,
+              "sub": "75% FA",
+              "color": "#ef4444"
+            },
+            {
+              "label": "deepseek · graph",
+              "value": 8,
+              "sub": "40% FA - graph closes",
+              "color": "#10b981"
+            },
+            {
+              "label": "glm · file",
+              "value": 13,
+              "sub": "65%",
+              "color": "#ef4444"
+            },
+            {
+              "label": "glm · graph",
+              "value": 14,
+              "sub": "graph does not help",
+              "color": "#f59e0b"
+            },
+            {
+              "label": "qwen · file",
+              "value": 2,
+              "sub": "fail-closed",
+              "color": "#10b981"
+            },
+            {
+              "label": "qwen · graph",
+              "value": 2,
+              "sub": "recall 2-3/10",
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "'FA trap = 0' on a category with N=1 is a meaningless number; extending the category with subject validation (P-00X) is the only honest way to measure present-trap. Graph evidence is a real trap-closer for deepseek, not for glm - per-model evidence format is confirmed even more strongly.",
+      "links": [
+        "exp-18",
+        "exp-19"
+      ]
     },
     {
-      "id": "ADR-0003",
-      "date": "2026-08-11",
+      "id": "exp-22",
+      "date": "2026-08-16",
       "project": "mscodebase-intelligence",
-      "title": "1-V: Memory Contamination VERIFY-ON-READ — аналог v3 с Lazy Validation Layer",
-      "hypothesis": "Verify-On-Read (проверка ACTIVE-узлов при извлечении, до промпта) доводит заражение до нуля: SILENT-факты с отсутствующими якорями -> REFUTED (SILENT_ABSENCE_ON_READ). Ожидание (DoD ADR-0003): adoption честного 0.0; 0 ложных REFUTED среди TRUE при корректно типизированных якорях.",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/memory_contamination_verify.py` — те же 50 фактов v3; якоря из support_patterns по синтаксису (file: -> file, ALL-CAPS -> env с нормализацией к точному ключу, lowercase -> import); РЕАЛЬНЫЙ VerifyOnRead на реальной кодовой базе (отпечаток src+.env), изолированный store и кэш; агенты решают на пост-verify памяти.",
-      "result": "verify: checked=50 cache_hits=0 inconclusive=12 budget_exceeded=False\nlatency: fingerprint 82.3ms, first pass 128.9ms, steady-state 0.6ms (cache_hits=22, checked=0)\nverdicts: VERIFIED=10 REFUTED=28 ACTIVE(INCONCLUSIVE)=12\nfalse REFUTED: total=21 | среди TRUE (артефакт маппинга): 7 [G07,G25,G11,G24,G23,G18,G21]\nвидимые ложные после verify (memory_first adopters): [G42,G43,G44,G45]\nadoption A_code_first: v3 0.12 | 1-R 0.12 | 1-V 0.0\nadoption A_memory_first: v3 1.0  | 1-R 0.12 | 1-V 0.16",
+      "title": "Pinned-rerun on the corrected dataset (fp e6ce7b90): canonical series numbers, routing band removed",
+      "hypothesis": "Unpinned OpenRouter routing (>=8 upstreams, KI-105) adds per-run variance; pinning providers (qwen->Alibaba, deepseek/glm->DeepInfra per the pinned-probe) removes the routing band and gives canonical numbers for the series.",
+      "command": "15 runs (5 arms x 3 models), --pin-provider: qwen->Alibaba, deepseek/glm->DeepInfra (per pinned-probe; StreamLake/Cloudflare-deepseek broken pinned). corrected dataset e6ce7b902d0a20a9 (R44 truth=None). Tags 2e_pin_*. +resume for qwen error-facts. Cost ~$0.02",
+      "result": "file_content qwen 0.88/0/3, deepseek 0.80/1/2, glm 0.68/2/1; graph_first qwen 0.72/0/4, deepseek 0.48/0/2, glm 0.84/1/0; file_graph qwen 0.84/0/3, deepseek 0.92/1/2, glm 0.80/2/1 (rec / FA-trap / miss_true). temporal NOW removed-FA: qwen 12/12, deepseek 9/12, glm 12/12; temporal PAST: all 40/40. FA absent/silent: 0 in all pinned cells.",
       "verdict": "confirmed",
-      "finding": "verify-on-read удаляет absence-заражение (SILENT+отсутствующие) полностью, но presence-проверка принципиально слепа к present-trap (токен есть, субъект другой) — их ловит только честный агент. Типизация якорей — ответственность write-пути: голые токены паттернов НЕЛЬЗЯ превращать в import-якоря без валидации типа (метод/конфиг/подмодуль/бинарник ≠ импорт). Следующий шаг: anchor-capture при записи узла (типизированные якоря в data.anchors).",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "checked",
-            "value": 50
-          },
-          {
-            "label": "cache hits",
-            "value": 0
-          },
-          {
-            "label": "inconclusive",
-            "value": 12
-          },
-          {
-            "label": "VERIFIED",
-            "value": 10
-          },
-          {
-            "label": "REFUTED",
-            "value": 28
-          },
-          {
-            "label": "total",
-            "value": 21
-          }
-        ]
-      }
+      "finding": "Routing band removed but per-model conclusions unchanged: file_content is the best recall arm for qwen (0.88), graph for glm (0.84, FA trap 1), hybrid for deepseek (0.92); temporal present-trap is universal (NOW 12/12, 9/12, 12/12), past solved by formulation (40/40). glm stays non-deterministic even pinned (unpin 6FA -> pin-force1 2FA -> pin-force2 1FA) - pinning removed routing, not model variance (+/-0.02-0.04 FA). FA absent/silent = 0 in all pinned evidence arms - the corrected 1-L picture (trap miss_true 4/5 for fail-closed) is routing-independent.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Recall(real) per arm, pinned run, %",
+          "data": [
+            {
+              "label": "qwen · file",
+              "value": 88,
+              "sub": "best recall arm",
+              "color": "#10b981"
+            },
+            {
+              "label": "deepseek · file+graph",
+              "value": 92,
+              "sub": "best for deepseek",
+              "color": "#10b981"
+            },
+            {
+              "label": "glm · graph",
+              "value": 84,
+              "sub": "best for glm, FA trap 1",
+              "color": "#6366f1"
+            },
+            {
+              "label": "qwen · graph",
+              "value": 72,
+              "sub": "pays recall",
+              "color": "#f59e0b"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Pinned-rerun confirmed every series conclusion is robust to routing; glm non-determinism is a model property (even on a single backend); StreamLake (top-1 unpinned for glm) pinned returns no JSON - volume does not equal quality, and pinning also protects against 'popular but broken' upstreams.",
+      "links": [
+        "exp-18",
+        "exp-19",
+        "exp-21"
+      ]
     },
     {
-      "id": "ADR-0002",
-      "date": "2026-08-11",
+      "id": "exp-23",
+      "date": "2026-08-19",
       "project": "mscodebase-intelligence",
-      "title": "1-R: Memory Contamination RETRACTION — аналог v3 с ретракцией",
-      "hypothesis": "системный отзыв (intel_retract_memory_node, ADR-0002) превращает `would_refute` честного агента (corr_cap=1.0) в реальное действие: отозванные факты исчезают из контекста следующих сессий → даже memory_first в сессии 2 не примет уже отозванный факт. Ожидание (ADR Temporal): adoption честного падает с 0.12 к 0.",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/memory_contamination_retraction.py` — те же 50 фактов v3 (контрольная группа), тот же CodeEvidence/decide; сессия 1 = честный агент + реальный `intel_retract_memory_node` (прод-путь layer, изолированный store, seed БЕЗ status = легаси/ACTIVE); сессия 2 = свежее чтение обоими агентами пост-ретракционной памяти (load_memory фильтрует REFUTED).",
-      "result": "valid facts: 50 (25T + 25F, silent-false 3)  |  invalid: 0  |  parity: OK\n              adopt(F)  corr_cap persist.F    tokens\nS1 honest+retract   0.12       1.0         3     653.2\nS2 code_first       0.12         -               360.8\nS2 memory_first     0.12         -\nretraction: 22/22 would_refute реализовано системно (correction_capability_systemic=1.0)\npersistent false in memory: 25 -> 3 (-88%)\ntokens_memory: 653.2 -> 360.8 (-45%)\nall refuted have reason: True",
-      "verdict": "confirmed",
-      "finding": "ретракция удаляет ОПРОВЕРЖИМУЮ часть заражения (88%), но не SILENT — они требуют верификации против кода, а не отзыва. «Adoption → 0» — неверный таргет для ретракции; правильные метрики: persistent contamination, adoption не-честных агентов, токены контекста. ADR-0002 Temporal уточнён (см. ADR)."
+      "title": "LSP live probe: call hierarchy + semantic tokens confirmed on pyright; type hierarchy / moniker NOT advertised",
+      "hypothesis": "Of the advanced LSP features (call hierarchy, type hierarchy, semantic tokens, moniker, indexing gate), a real pyright-fork server (basedpyright) actually implements a subset; a feature being present in the 3.17 spec does not guarantee every server implements it.",
+      "command": "pip install basedpyright (venv, no npm); venv/Scripts/python.exe experiments/lsp/lsp_live_pyright.py; venv/Scripts/python.exe experiments/lsp/lsp_client_demo.py; wire-probe experiments/lsp/lsp_wire_probe.py on pinned lsprotocol==2025.0.0",
+      "result": "basedpyright 1.39.10 advertises callHierarchyProvider + semanticTokensProvider(full); typeHierarchyProvider=None, monikerProvider=None; pyright/beginIndexing..endIndexing gate not observed in 8s. Live call hierarchy: report->[ShapeManager, total_area, build] + incoming main() with exact ranges (incl. print->builtins.pyi); semantic tokens 62 delta-encoded with result_id. Thin LspClient (src/core/lsp_client.py) + demo emit graph-ready CALLS edges and decoded spans.",
+      "verdict": "partial",
+      "finding": "Spec-present != server-implemented. On the pyright family the graph really gets call hierarchy (compiler-accurate cross-file CALLS edges) and semantic tokens (exact spans/kinds); type hierarchy (3.17) and moniker (3.16) are NOT advertised by pyright -> dormant until a server supports them. Existing tree-sitter path kept as source of truth; LSP layer is capability-gated (ADR-0006).",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "LSP feature availability on pyright fork (2026-08-19)",
+          "data": [
+            {
+              "label": "call_hierarchy",
+              "value": 1
+            },
+            {
+              "label": "semantic_tokens",
+              "value": 1
+            },
+            {
+              "label": "type_hierarchy",
+              "value": 0
+            },
+            {
+              "label": "moniker",
+              "value": 0
+            },
+            {
+              "label": "indexing_gate",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "conclusion": "For a Python code graph, LSP adds real value via call hierarchy and semantic tokens; type hierarchy / moniker must wait for another server. Verified live, not assumed.",
+      "links": []
     },
     {
       "id": "exp-24",
-      "date": "2026-08-11",
+      "date": "2026-08-25",
       "project": "mscodebase-intelligence",
-      "title": ": Memory Contamination — INDEPENDENT AUDIT (second opinion, 48/48 CONFIRMED)",
-      "hypothesis": "truth-метки фактов v1+v2 достоверны: TRUE-паттерны — рабочая логика (не docstring/мёртвый код), FALSE/SILENT — чистые grep-0 с рабочими контраргументами.",
-      "command": "spawn_agent (независимый аудитор, не видел наш диалог): 48 фактов из experiments/1V_memory_contamination/memory_contamination_facts.json + _v2.json против src/**/*.py; чек-лист «активный код vs docstring/статические списки»; без MCP-семантического поиска.",
-      "result": "CONFIRMED 48/48 | DEAD 0 | MISSING 0 | BROKEN 0\nT01-T20, F01-F20, S01-S14 — все с file:line evidence (активные импорты/вызовы/конфиги)",
-      "verdict": "confirmed",
-      "finding": "(1) «свежие глаза» (независимый аудитор без контекста) — финальный уровень верификации truth-данных, закрывает риск «автор верит своему набору»; (2) паттерны-якоря в docstring валидны, если claim независимо подтверждается рабочим кодом (счёт/чтение кода) — фиксировать оговорки, не переделывать факты пост-фактум."
+      "title": "M1: real tool telemetry — 5/62 MCP tools ever used; the working-set boundary is single-digit",
+      "hypothesis": "Of ~62 registered MCP tools most are dead weight in real sessions; the boundary of the effective working set is a single- or double-digit number.",
+      "command": "python experiments/mech_orch/tool_metrics_analysis.py (historical tool_metrics.json) + grep error_handler lines of 2MB mscodebase-intelligence.log + debug_runtime_passport/intel_get_runtime_status",
+      "result": "Registered 32 core + 14 intel + 12 inline + 4 dev = 62; server masks 16/32 by default. tool_metrics.json (entire recorded span): 8 calls across 5 tools — lsp_get_diagnostics 2c/0e, lsp_document_symbols 2c/0e, lsp_get_type_info 2c/2e (15s timeout), lsp_find_definition 1c/0e, lsp_find_references 1c/1e; LSP toolkit 37.5% error rate; search_code has 10 historical timeouts 15-31s.",
+      "verdict": "partial",
+      "finding": "Only 5 of 62 tools ever recorded a metric; dead-tool metrics are NOT measurable with current telemetry — a per-call counter in the error_handler path is required. The LSP toolkit (8 calls, 3 errors) is the top latency risk.",
+      "chart": null,
+      "conclusion": "How many tools are actually used cannot be measured retroactively — telemetry must log every call (or at least per-tool counters), otherwise the set boundary is intuition, not a metric.",
+      "links": [
+        "exp-25",
+        "exp-26"
+      ]
     },
     {
       "id": "exp-25",
-      "date": "2026-08-11",
+      "date": "2026-08-25",
       "project": "mscodebase-intelligence",
-      "title": ": Memory Contamination — MUTATION GENERATOR (facts v3, N=50) — РЕАЛЬНОЕ РАСПРЕДЕЛЕНИЕ",
-      "hypothesis": "(1) метрики — точные функции смеси категорий (алгебра, а не статистика): при контролируемой смеси значения предсказуемы по формулам; (2) «голос кода» на сгенерированных фактах: real-паттерны подтверждают 25/25, мутации-отсутствия опровергаются, present-trap «ловушки» (ложный токен ЕСТЬ в коде) тоже опровергаются контраргументом.",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/memory_contamination_generator.py` (seed=42, смесь 25T+16absent+6trap+3silent=50) → `memory_contamination_facts_v3_generated.json` → `venv/Scripts/python.exe experiments/context_engine/memory_contamination.py memory_contamination_facts_v3_generated.json`.",
-      "result": "arm             correct  adopt(F)  contra  corr_cap  conf_eff  unk     tokens\nB               0.94     0.0       0.88    0.0       3         0.06    1539\nA_code_first    0.94     0.12      0.88    1.0       3         0.0     66477\nA_memory_first  0.50     1.0       0.88    0.0       3         0.0     66477\n(v1/v2 для сравнения: B 0.833/0.0, A_cf 0.833/0.286/1.0, A_mf 0.417/1.0, contra 0.714, conf_eff 4)",
+      "title": "M2: sub-agent in a fresh project — natural 0/5 MCP calls vs MCP-first 9 (4 wasted on unindexed files)",
+      "hypothesis": "A fresh agent without MCP instructions won't touch MCP tools (goes to grep/read); with instructions it uses them, but on unindexed files semantics is useless.",
+      "command": "Fixture experiments/mech_orch/lab/ (calc.py/rpn.py/tests, 1 planted bug: reverse-pop in RPN); two sub-agents in parallel: A 'MCP-first, diagnostics only', B 'natural, fix'; baseline 1 failed/4 passed.",
+      "result": "Agent A (MCP-first): MCP_CALLS=9 IDE_CALLS=5 — passport OK (sub-agents see the same MCP), search_code x2 on lab -> 0 relevant (lab NOT indexed), get_symbol_info('evaluate...') -> not found, read_live_file x3 -> OK, bug found rpn.py:11 (reverse pop). Agent B (natural): MCP_CALLS=0 IDE_CALLS=5 -> 5 passed in 0.04s; baseline after fix 5 passed 0.03s, 1 file changed.",
       "verdict": "confirmed",
-      "finding": "(1) генератор мутаций — масштабируемый путь к реалистичным наборам вместо ручной курации (риск семантических ловушек не масштабируется с N); (2) present-trap устойчивость — эмпирически подтверждено, что verify-on-read с контраргументом по реальному паттерну не ломается о правдоподобную ложь; (3) ambiguous=6 в v3 — не дефект, а by-design ловушки (верификатор параметризован: v1/v2=0, v3=6, invalid=0 всегда)."
+      "finding": "Natural agent: 0/5 MCP; MCP-first: 9 calls, ~4 idle (2 search + get_symbol_info + find_path on unindexed lab), only read_live_file (disk) productive. New files are invisible until reindex -> semantic layer on fresh code = zero. Correctness control: A found the root with exact file:line, B fixed all 4 branches not just '-', tests green.",
+      "chart": null,
+      "conclusion": "MCP value lives on INDEXED code; for fresh/foreign dirs meta-tools need a disk-read + ripgrep fallback instead of silent empty answers. The prompt (MCP instruction) is the strongest predictor of tool usage — stronger than tool design.",
+      "links": [
+        "exp-24",
+        "exp-26"
+      ]
     },
     {
       "id": "exp-26",
-      "date": "2026-08-11",
+      "date": "2026-08-25",
       "project": "mscodebase-intelligence",
-      "title": ": Memory Contamination — REPLICATION (facts v2, N=24) — ВОСПРОИЗВЕДЕНО",
-      "hypothesis": "метрики v1 — свойство системы (структура задачи), а не артефакт конкретного набора фактов.",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/memory_contamination.py memory_contamination_facts_v2.json` — НОВЫЙ набор фактов (10T + 10F + 4SILENT: grafana/gitlab/kubernetes/memcached), другой паттерн-дизайн, та же логика агента (Правило контрольной группы §1: не меняем агента между прогонами).",
-      "result": "arm             v1 correct  v2 correct  v1 adopt  v2 adopt  corr_cap v2  contra v2  conf_eff v2  unk v2\nB               0.833       0.833       0.0       0.0       0.0         0.714      4            0.167\nA_code_first    0.833       0.833       0.286     0.286     1.0         0.714      4            0.0\nA_memory_first  0.417       0.417       1.0       1.0       0.0         0.714      4            0.0",
-      "verdict": "confirmed",
-      "finding": "репликация на независимых данных — обязательна для «одиночных замеров» (§1 «Правило одного бенча»): два набора → одинаковый вердикт → вывод подтверждён. Ограничение прежнее: детерминированный прокси-агент, не живой LLM."
+      "title": "M3: latency matrix — search fast 75ms HIT vs quality 3666ms MISS; get_symbol_info misses a real symbol",
+      "hypothesis": "quality semantics gives better context at a comparable cost; get_symbol_info works as an exact tool by symbol name.",
+      "command": "Live session, same 9003-chunk index: search_code(fast='def get_stale_warning search_tools') -> search_code(quality='how stale warning triggers during reindex blocking') -> get_symbol_info('_get_stale_warning search_tools.py') -> grep -c on disk.",
+      "result": "search_code(fast) 75ms exact hit search_tools.py:1 (_get_stale_warning); search_code(quality) 3666ms MISS (results_tasks_v3.json + CHANGELOG.md); get_symbol_info('_get_stale_warning search_tools.py') -> 'not found' (real symbol, 2nd miss per session); grep -c 28ms control.",
+      "verdict": "refuted",
+      "finding": "quality was 49x slower than fast (3666 vs 75ms) and semantically worse; get_symbol_info misses exact names carrying a trailing hint. On short queries fast search + grep + read_live_file beat quality search + symbol info on time AND accuracy.",
+      "chart": null,
+      "conclusion": "Tool smartness does not correlate with usefulness: the cheap exact signal (fast/ripgrep) beats expensive semantics (BGE-M3/BM25 rerank); a QoS threshold for quality (<1.5s) and a fast->grep fallback chain belong inside meta-tools.",
+      "links": [
+        "exp-24",
+        "exp-27"
+      ]
     },
     {
       "id": "exp-27",
-      "date": "2026-08-11",
+      "date": "2026-08-26",
       "project": "mscodebase-intelligence",
-      "title": ": Memory Contamination (IntelligenceStore) N=24, v1 (Experiment 1 из second_brain_research)",
-      "hypothesis": "code_contradictability ≥0.7; correction_capability (code_first) = 1.0; adoption (memory_first) = 1.0; memory_confidence_effect > 0 на SILENT-фактах.",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/memory_contamination.py` — 24 факта (10T + 10F с контраргументом + 4 SILENT-F внешние системы, grep-0 в src); изолированный `IntelligenceStore(tempdir)` (assert store_dir != реальный); агент = детерминированный прокси (живого LLM в проекте нет): evidence-поиск по src/**/*.py + .env; руки B (без памяти) / A code_first / A memory_first; выбор ground truth (MEMORY|CODE|NONE) фиксируется per-fact. Факты: memory_contamination_facts.json. Результат: memory_contamination_results.json.",
-      "result": "arm             correct  adopt(F)  contra  corr_cap  conf_eff  unk     tokens\nB               0.833    0.0       0.714   0.0       4         0.167   784\nA_code_first    0.833    0.286     0.714   1.0       4         0.0     17830\nA_memory_first  0.417    1.0       0.714   0.0       4         0.0     17830",
+      "title": "E2: category pilot on the live index — fast 5/6 HIT (83%) vs quality 2/3 + leak to docs/JSON; index self-pollution discovered",
+      "hypothesis": "(H2.1) the leak between categories (docs/JSON instead of code) is the main quality defect; (H2.2) fast wins on identifiers, quality on prose.",
+      "command": "6 real queries with ground truth from the session x fast (5) + quality (3), limit=3 (details experiments/mech_orch/E2_category_pilot.md); GT verified earlier by grep/read; after window reload + MCP restart + reindex (9089 chunks).",
+      "result": "Q1 fast 75ms HIT(top1) vs quality 3666ms MISS->JSON/CHANGELOG; Q2 fast 3779ms HIT cold / 161ms warm; Q3 fast 161ms HIT(domain); Q4 fast 190ms MISS (top1 = own E2 doc: self-pollution) vs quality 6638ms HIT(domain) indexer.py; Q5 fast 172ms HIT vs quality 284ms HIT; Q6 fast 166ms HIT vs quality 2638ms HIT(top1=incident_dataset). fast 5/6=83%; quality 2/3 + 1 domain-hit; warm latency fast 75-190ms, quality 284-6638ms (median ~2.6s).",
       "verdict": "partial",
-      "finding": "(1) калибровка честная: без живого LLM измеряем «защитную способность системы», не психологию агента — adoption code_first = только SILENT-факты (нижняя граница заражения), memory_first = 100% (верхняя). (2) Память add-only + нет verify-on-read → заражение кумулятивно: найденная ложь не отзывается, stale-ADR из intel_auto_collect_adrs остаются навсегда. (3) Ловушка паттернов: «openai» найдено в multi_provider.py:294 как «OpenAI-compatible API» (LM Studio) — не провайдер; для внешних систем нужны специфичные имена (text-embedding-3). (4) Изоляция памяти per-project (hash пути) работает: store_dir tempdir ≠ реальный."
+      "finding": "fast is 83% and an order of magnitude cheaper; quality saved the only fast-MISS (Q4) at ~35x cost. The leak is confirmed (Q1 quality -> JSON/CHANGELOG; Q4/Q6 quality top-1 incident datasets) but is NOT junk — semantically relevant docs; a category-priority filter is needed, not a prohibition. NEW: the index self-pollutes with its own experiment docs (experiments/mech_orch/* captures code queries). Binary fast/quality routing is suboptimal — cascade fast-hit->stop / MISS->quality+filter+budget.",
+      "chart": null,
+      "conclusion": "Query-form->mode is underdetermined without a category filter; adding experiment docs to the index changes ranking (the index is sensitive to its own composition — experiments need ranking control).",
+      "links": [
+        "exp-26",
+        "exp-28"
+      ]
     },
     {
       "id": "exp-28",
-      "date": "2026-08-08",
+      "date": "2026-08-26",
       "project": "mscodebase-intelligence",
-      "title": ": верификация deep-research-report.md (внешний аудит) против кода",
-      "hypothesis": "3 P1-находки отчёта (Windows mutex, неатомарная запись LanceDB, TaskQueue.submit_sync) существуют в текущем коде; CVE-рекомендации актуальны; roadmap P0/P1 реализован.",
-      "command": "get_symbol_info/read_live_file по llama_runner.py:184/248, db_writer.py:122-134/310-327, task_queue.py:127-183; OSV API (api.osv.dev) для CVE-2026-1839/4372; PyPI для актуальных версий; `python -m pytest tests/ -q -m \"not slow and not benchmark\" --cov=src --cov-fail-under=38` (реальный прогон).",
-      "result": "| Гипотеза                                  | Вердикт |\n|-------------------------------------------|---------|\n| Mutex initialOwner=TRUE + 1 ReleaseMutex  | ✅ CONFIRMED llama_runner.py:184/248 (graph.py:74, onnx_client.py:76 — уже False) |\n| delete+add неатомарны                     | ✅ CONFIRMED (метод write_records, НЕ replace_chunks) |\n| submit_sync race + «вечная» задача        | ✅ CONFIRMED (except RuntimeError: pass без cleanup; тест из отчёта НЕ существует) |\n| CVE-2026-1839/4372                        | ✅ CVE реальны; отчёт недооценил 4372 (фикс 5.3.0, не 5.0.0); lock уже 5.14.1 → закрыты |\n| Coverage ~38% / 956 passed                | ❌ УСТАРЕЛО: 1022 passed / 4 skipped / 94 deselected, 46.89%, 84.94s |\n| Roadmap P0 (bench/enrichment/planner)     | ⚠️ Частично: bench ✅ (experiments/benchmark2), late enrichment ✅ (engine.py:1142), Adaptive Planner ❌ не найден |",
-      "verdict": "partial",
-      "finding": "внешние аудиты писать по актуальному дереву (grep по именам), не по памяти об API; «fixed version» CVE брать из OSV по каждой CVE отдельно, не обобщать."
-    },
-    {
-      "id": "exp-29",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": применение фиксов аудита (4/4) — 1026 passed",
-      "hypothesis": "rollback по LanceDB-версиям + lock/cleanup в TaskQueue + mutex False + пин >=5.3.0 не ломают существующие тесты и закрывают 3 P1 + CVE-пин.",
-      "command": "правки 4 файлов (llama_runner.py, task_queue.py, db_writer.py, pyproject.toml) + 4 новых теста; `python -m ruff check src/ tests/`; `python -m pytest tests/ -q -m \"not slow and not benchmark\"`.",
-      "result": "All checks passed!\n1026 passed, 4 skipped, 94 deselected in 74.49s (было 1022)\n17/17 targeted (test_task_queue, test_llama_mutex, test_lancedb_recreate) passed\ngrep CreateMutexW(None, True) = 0; except RuntimeError:pass с потерей состояния = 0",
+      "title": "E3: category router on tasks_v3.json (30 tasks) — cascade 0.233 > fast 0.167 > quality 0.133; 4 graph classes 0.00 across all arms",
+      "hypothesis": "(1) the fast->quality cascade pays off; (2) different klass need different arms (a class router beats a single arm).",
+      "command": "EXT venv python experiments/mech_orch/E3_category_router_eval.py (limit=8, topk=5; real DB 9089 rows; embedder force llama_cpp — auto-detect in standalone falls into ONNX-fallback, environment artifact). Arms: fast / quality / cascade.",
+      "result": "fast recall@5 0.167 facts_cov 0.517 lat_med 148ms; quality 0.133 facts_cov 0.861 lat_med 2145ms; cascade 0.233 facts_cov 0.753 lat_med 564ms. BY KLASS (fast/quality/cascade): find_bug_cause 0.20/0.00/0.20 | find_caller_callee 0.00/0.50/0.50 | find_impact 0/0/0 | find_test 0/0/0 | git_history 0.50/0.25/0.50 | modify_function 0/0/0 | prepare_change 0.25/0.00/0.25 | understand_architecture 0.25/0.50/0.50 | verify_change 0/0/0.",
       "verdict": "confirmed",
-      "finding": "LanceDB versioning (table.version/restore) — нативный механизм атомарности delete+add, лучше выдуманного temp+os.replace из отчёта; проверка API (§5.19) заняла 1 команду и подтвердила restore/version на 0.33."
-    },
-    {
-      "id": "exp-30",
-      "date": "2026-08-06",
-      "project": "mscodebase-intelligence",
-      "title": ": batch-размер embedder'а (A/B T3) — прод-настройка batch=32 подтверждена",
-      "hypothesis": "batch=64 даст максимум ch/s (амортизация фиксированных накладных расходов); batch=32 не проиграет существенно (<10%).",
-      "command": "`python experiments/bench_embed_batch.py` — корпус 64 текста, batch ∈ {8,16,32,64}, N=3 повтора, медиана; реальный путь вызова POST http://127.0.0.1:8080/v1/embeddings (llama.cpp, порт проверен netstat'ом).",
-      "result": "batch= 8: ch/s=153.98, p50_req= 51.8ms, errors=0\nbatch=16: ch/s=154.03, p50_req=103.5ms, errors=0\nbatch=32: ch/s=156.15, p50_req=204.7ms, errors=0   ← BEST ch/s\nbatch=64: ch/s=156.08, p50_req=409.8ms, errors=0\nОтношение к batch=32: 64→1.000x, 16→0.986x, 8→0.986x",
-      "verdict": "refuted",
-      "finding": "при линейной латентности выбор batch = компромисс throughput vs p50 ответа: batch=16 даёт 103ms (−50% p50) ценой −1.4% throughput — кандидат для интерактивных вызовов; для reindex batch=32 остаётся оптимумом.",
+      "finding": "Cascade is the winner; the winner depends on klass (git_history/bug/prepare -> fast with quality 0.00 at bug; caller_callee/architecture -> quality); find_test/find_impact/modify/verify_change = 0.00 across ALL arms — search does not replace graph/AST/impact stages.",
       "chart": {
         "type": "bar",
-        "title": "measured metrics (from raw output)",
+        "title": "recall@5 by search arm",
         "data": [
           {
-            "label": "batch",
-            "value": 8
-          },
-          {
-            "label": "s",
-            "value": 15
-          },
-          {
-            "label": "p50 req",
-            "value": 5
-          },
-          {
-            "label": "errors",
-            "value": 0
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-31",
-      "date": "2026-08-06",
-      "project": "mscodebase-intelligence",
-      "title": ": A/B protocol-compression — ARM A (полная версия): 4 задачи, баллы 54/64",
-      "hypothesis": "компакт (−57.2%) сохраняет уровень соблюдения 8 поведенческих контрактов ≥ полной версии (метрика: баллы 0/1/2 по чек-листу).",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-06)",
-      "result": "| Контракт (0/1/2)          | T1 | T2 | T3 | T4 | Evidence |\n|---------------------------|----|----|----|----|----------|\n| 1. Phase Zero             | 1  | 2  | 2  | 1  | сессионный [🔭 PHASE ZERO] полный (5 полей до вызовов); per-task: T2/T3 полный, T1/T4 — точечная разведка без формального блока |\n| 2. Триггеры 1–7           | 1.5| 1.5| 1.5| 1.5| Т1✓ Т5✓ Т6✓ Т7 N/A; Т2 фикс-уровень ✗; Т3 обобщение частично; Т4 in-moment ✗ (bash-квотинг PowerShell, meta-check постфактум) |\n| 3. §8 отчёт (поля 1–12)   | 2  | 2  | 2  | 2  | финальный блок сессии |\n| 4. Verified/Recalled      | 2  | 2  | 2  | 2  | пометки в Phase Zero; ✅ с file:line |\n| 5. Ledger инкрементально  | 2  | 2  | 2  | 2  | обновление после каждого T, до следующего шага (§0.1.2) |\n| 6. Red Team ≥3 атак       | 1.5| 1.5| 1.5| 1.5| план: 5 атак с защитами ✓; после edit >5 строк — ✗ |\n| 7. OPEN_QUESTION          | 2  | 2  | 2  | 2  | 2 вопроса владельца в task state + финальный отчёт |\n| 8. Concurrency note       | 1  | 1  | 1  | 1  | swap-файлы и общий embedder (T3) без формальной заметки |\n| СУММА (из 16)             | 13 | 14 | 14 | 13 | 54/64 (84.4%) |",
-      "verdict": "partial",
-      "finding": "ARM A зафиксирован (54/64). Сравнение с arm B — ⏳ PENDING (сессия 2; ожидается вторая половина таблицы + итог: можно/нельзя/частично + урок §3.8)."
-    },
-    {
-      "id": "exp-32",
-      "date": "2026-08-06",
-      "project": "mscodebase-intelligence",
-      "title": ": A/B protocol-compression — ARM B (компакт): 4 задачи, баллы 49.5/64",
-      "hypothesis": "компакт (−57.2%) сохраняет уровень соблюдения 8 поведенческих контрактов ≥ полной версии (arm A: 54/64).",
-      "command": "сессия 2 под компактом (AGENTS.md = 53054 B, Verified ls); те же задачи verbatim в обратном порядке (T4,T3,T2,T1); bench-скрипт БЕЗ изменений; после всех задач — restore `AGENTS.full.bak → AGENTS.md` (129705 B) + rm .bak.",
-      "result": "| Контракт (0/1/2)          | T4 | T3 | T2 | T1 | Evidence |\n|---------------------------|----|----|----|----|----------|\n| 1. Phase Zero             | 1.5| 1.5| 1  | 1.5| сессионный PZ полный (5 полей); per-task: T4/T3/T1 — компактные блоки (3/5 полей), T2 — БЕЗ блока (чистая диагностика, только чтение) |\n| 2. Триггеры 1–7           | 1.5| 1.5| 1.5| 1.5| Т1✓ Т3✓ (два обобщения: T4 — доп. устаревания TOC/диаграмма, T1 — второй sync-двойник _apply_multi_reranker) Т5 частично Т6✓ Т7 N/A; Т2: RED TEAM до edit, META-CHECK неформальный |\n| 3. §8 отчёт (поля 1–12)   | 2  | 2  | 2  | 2  | финальный блок сессии |\n| 4. Verified/Recalled      | 2  | 2  | 2  | 2  | пометки; ✅ с file:line |\n| 5. Ledger инкрементально  | 1  | 1  | 1  | 1  | обновление пачкой в конце, НЕ после каждого T (арм A: 2) |\n| 6. Red Team ≥3 атак       | 1.5| 1.5| 1.5| 1.5| T4: 4 атаки, T1: 5 атак (план ДО edit); после edit формального блока нет |\n| 7. OPEN_QUESTION          | 2  | 2  | 2  | 2  | 2 вопроса + 3 находки владельцу |\n| 8. Concurrency note       | 1  | 1  | 1  | 1  | T3 общий embedder :8080 + swap-файлы без формальной заметки |\n| СУММА (из 16)             | 12.5| 12.5| 12 | 12.5| 49.5/64 (77.3%) |",
-      "verdict": "confirmed",
-      "finding": "ARM B = 49.5/64 (77.3%) < ARM A = 54/64 (84.4%) → **гипотеза НЕ подтверждена** (компакт ниже на 4.5 балла / 7%). Разница: per-task Phase Zero (5.5 vs 6 — T2 без блока) и инкрементальный Ledger (4 vs 8). Оба контракта ЕСТЬ в компакте (не потеряны формулировкой) — просело срабатывание «в моменте». Совпали с обеих рук: Red Team после edit (1.5), Concurrency note (1), Verified/Recalled (2), §8 (2), OPEN_QUESTION (2). Критика метода: N=1 сессия × 4 задачи, self-assessment → шум ±5-7 баллов; жёсткий вердикт «можно/нельзя» невозможен."
-    },
-    {
-      "id": "exp-33",
-      "date": "2026-08-06",
-      "project": "mscodebase-intelligence",
-      "title": ": protocol-compression — сжатие глобального AGENTS.md (черновик + мех-слой)",
-      "hypothesis": "объём −55..−65% при 0 потерянных контрактах; поведенческая эквивалентность НЕ проверяется замером — только A/B-прогонами (§1 п.2а: один замер ≠ доказательство).",
-      "command": "`python -c \"import tiktoken; print(len(tiktoken.get_encoding('cl100k_base').encode(open(f, encoding='utf-8').read())))\"` для AGENTS.md и AGENTS.compact.md.",
-      "result": "AGENTS.md (текущий):        129705 B | 81702 chars | 35228 tok | 1642 lines\nAGENTS.compact.md (дословно): 52838 B | 33384 chars | 14892 tok |  481 lines → −57.7%\nAGENTS.compact.md (+мех-слой):53054 B |   —       | 15064 tok |  487 lines → −57.2%",
-      "verdict": "partial",
-      "finding": "сжатие поведенческого файла без карты соответствия номеров — тот же риск, что «короткий edit-якорь ест соседний контент» (§9 п.10), только в масштабе документа: черновик «реконструировал» §5.16, не проверив, что номер занят историческим контрактом. Мех-слой (grep по ссылкам на каждый §) обязателен ДО A/B."
-    },
-    {
-      "id": "exp-34",
-      "date": "2026-08-06",
-      "project": "mscodebase-intelligence",
-      "title": "6: tree-sitter-language-pack парсеры на Windows (issue #174 блокирует?)",
-      "hypothesis": "language-pack 1.14.3 НЕ может скачивать парсеры на Windows (issue #174: `No pre-built parsers available for platform 'windows-x86_64'`) → интеграция +56 языков невозможна до следующего релиза.",
-      "command": "`python -m venv %TEMP%/tslp_test && pip install tree-sitter-language-pack` → `get_parser('lua')` + 11 других языков + `get_tags_query`; затем интеграция в проект: `MSCODEBASE_LANGUAGE_PACK=true python -c \"from src.core import language_pack; print(language_pack.try_enable())\"`.",
-      "result": "language-pack: 1.14.3\nLUA PARSER: OK Language   ← get_parser РАБОТАЕТ на Windows (per-language download)\n12/12 тестовых языков: parser OK (lua, elixir, haskell, zig, nim, clojure, v, odin, groovy, julia, perl, crystal)\ncache_dir: %LOCALAPPDATA%/tree-sitter-language-pack/v1.14.3/libs\nmanifest_languages: 371 | languages WITH tags: 71\nинтеграция: try_enable → enabled: True | langs: 54 | tags: 54 | failed: []\n.lua SCM-символы: greet, helper (function_declaration) — чисто\n.sol: Bank, deposit, get | .r: greet, compute_mean | .pyx: cy_add, Point.__init__ — чисто\n.nix: 0 символов (query есть, captures пусты — честный пусто)\n.exs (elixir): МУСОР — 'defmodule', 'ef ', 'ello(' (макро-грамматика: def/defmodule — call-узлы) → elixir исключён из карты",
-      "verdict": "refuted",
-      "finding": "issue про «нет windows-бандла» ≠ «не работают per-language загрузки» — эмпирическая проверка обязательна; макро-грамматики (elixir) требуют фильтра валидности имён (добавлен: `_VALID_IDENTIFIER_RE`) или исключения."
-    },
-    {
-      "id": "exp-35",
-      "date": "2026-08-05",
-      "project": "mscodebase-intelligence",
-      "title": "1: tree-sitter-language-pack — «371 язык за 1 день» (проверка ключевого заявления audit.md)",
-      "hypothesis": "пакет даёт 300+ языков symbol extraction «из коробки» одним pip install; get_parser работает с tree-sitter 0.26; tags.scm присутствуют для большинства языков.",
-      "command": "`python -m venv %TEMP%/tslp_venv && pip install tree-sitter-language-pack` → скрипты: подсчёт `manifest_languages()`, `get_tags_query()` по всем 371, парс Python-файла.",
-      "result": "manifest_languages: 371\nlanguage_count()/available_languages(): 1 (только downloaded)\nwith non-empty tags.scm: 71 (19%) — 300 языков имеют ПУСТЫЕ tags (bash, clojure, cmake, cobol, ada, actionscript…)\nпервый парс python: 37.6 s (on-demand скачивание грамматики, кэш 22MB); повторный парс: 0.03 ms\ntags.scm для core-языков: python/js/ts/go/rust/java/c/cpp/csharp YES; bash NO\nwin_amd64 abi3 wheel 2.0MB; требует Python >=3.10; abi3 совместим с 3.14\nAPI: QueryCursor(query).captures(node) → dict {capture_name: [nodes]} (tree-sitter 0.26)",
-      "verdict": "refuted",
-      "finding": "«N языков в манифесте» ≠ «N языков с symbol extraction» — манифест содержит грамматики, tags-запросы — подмножество (19%). Перед интеграцией считать именно язык+tags, а не язык+парсер. Первый парс каждого языка требует сети (37.6s) — для offline/CI нужен prefetch или запечённые грамматики."
-    },
-    {
-      "id": "exp-36",
-      "date": "2026-08-05",
-      "project": "mscodebase-intelligence",
-      "title": "2: извлечение символов — текущий CodeParser vs tags.scm (паритет?)",
-      "hypothesis": "tags.scm-подход даёт извлечение определений функций/классов не хуже текущего CodeParser (который также строит calls/imports/dataflow).",
-      "command": "`venv python -X utf8 experiments/exp2_symbols.py` (src/core/graph.py, 66 defs/classes по regex-граунд-труту)",
-      "result": "Ground truth (regex def/class, включая методы): 66\n[A] CodeParser init+parse_file: 65 ms | chunks: 69 | symbols: 60 (qualified: Class.method)\n[B] tags.scm parse+query: 16 ms | defs: 66\n[B] recall vs truth: 100% (missing: [], extra: []) — после коррекции граунд-трута",
-      "verdict": "confirmed",
-      "finding": "tags.scm — готовый drop-in для извлечения определений (дешевле собственного walk), но НЕ полноценная замена CodeParser; оптимально — гибрид (scm для определений + текущий walk для calls/imports/dataflow)."
-    },
-    {
-      "id": "exp-37",
-      "date": "2026-08-05",
-      "project": "mscodebase-intelligence",
-      "title": "3: реальная латентность Cypher/impact (проверка «4297ms из лога» в audit.md)",
-      "hypothesis": "текущая латентность графовых запросов ~4297ms (цифра аудита) — реальность или артефакт?",
-      "command": "`CypherExecutor(PropertyGraph(graph.db)).execute(q)` ×3 на живом индексе (6856 nodes / 19969 edges, 8.2MB) + живой MCP-вызов graph_query(action=cypher).",
-      "result": "MATCH (n) RETURN count(n):           min=0.3ms avg=4.2ms\nMATCH (n:Function) RETURN count(n):  min=0.4ms avg=0.5ms\nMATCH (a:Function)-[:CALLS]->(b) count(*): min=3.7ms avg=4.2ms\nMATCH … WHERE b.name = '…':          min=4.2ms avg=4.4ms\nORDER BY count(*) DESC LIMIT 5:      min=8.2ms avg=10.1ms\nЖивой MCP graph_query (cypher):      elapsed_ms = 7.2ms / 12.6ms (rows=0 / rows=1794)",
-      "verdict": "refuted",
-      "finding": "цифры производительности в audit.md не верифицированы — замер перед сравнением обязателен (§5.15). Графовая латентность уже в классе конкурентов (<10ms).",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "avg",
-            "value": 1
-          },
-          {
-            "label": "rows",
-            "value": 0
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-38",
-      "date": "2026-08-05",
-      "project": "mscodebase-intelligence",
-      "title": "4: DECORATES/OVERRIDES — извлекаемость текущими tree-sitter-парсерами",
-      "hypothesis": "рёбра DECORATES и OVERRIDES (недостающие 2 типа из таксономии DeusData) извлекаемы текущей инфраструктурой без SCIP/LSP.",
-      "command": "парс синтетического Python-файла (декораторы + наследование + @override) текущим CodeParser + walk AST на decorated_definition/decorator.",
-      "result": "symbols CodeParser: Base.method, Child.method, Child.abstract_method, Child.prop, Child.helper, standalone — БЕЗ свойств-декораторов\nAST содержит: decorated_definition (@override/@abc.abstractmethod/@property/@staticmethod), decorator-узлы, class Child(Base) — база видна",
-      "verdict": "confirmed",
-      "finding": "2 недостающих типа рёбер из таксономии аудита закрываются малым патчем существующего parser.py — это быстрый win, не требует SCIP."
-    },
-    {
-      "id": "exp-39",
-      "date": "2026-08-05",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: доступность зависимостей для кандидатов аудита (SCIP, Leiden, cypher-sqlite)",
-      "hypothesis": "scip-python и cypher-sqlite существуют на PyPI и ставятся pip (заявление audit.md «Быстрый вариант: cypher-sqlite (Python)» и «интегрировать scip-python»).",
-      "command": "PyPI JSON API для scip-python, cypher-sqlite, leidenalg, igraph, tree-sitter-language-pack.",
-      "result": "scip-python:      HTTP 404 Not Found (НЕ существует на PyPI)\ncypher-sqlite:    HTTP 404 Not Found (НЕ существует на PyPI)\nleidenalg 0.12.0: есть, win_amd64 abi3 (совместим с 3.14) ✓\nigraph 1.0.0:     есть, win_amd64 abi3 ✓\ntree-sitter-language-pack 1.14.3: есть, abi3 ✓",
-      "verdict": "refuted",
-      "finding": "audit.md ссылается на пакеты, которых нет на PyPI (scip-python, cypher-sqlite) — «проверить существование пакета до планирования» (§1.14 Verified vs Recalled)."
-    },
-    {
-      "id": "exp-40",
-      "date": "2026-08-04",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: _distance при cosine-метрике меньше=ближе, LanceDB сортирует ASC",
-      "hypothesis": "для lancedb 0.34.0 + IVF_FLAT cosine `_distance = 1 − cos_sim ∈ [0,2]` (сам вектор = 0.0), строки приходят по возрастанию. Комментарий `engine.py:166` «чем больше, тем ближе» неверен, и `sort(reverse=True)` в fast mode инвертирует топ.",
-      "command": "`<ext>/venv/Scripts/python.exe experiments/exp_distance_semantics.py` (temp-таблица, IVF_FLAT metric=cosine, query=[1,0,0,0], тот же путь create_index, что в index_project_runner.py:540)",
-      "result": "lancedb version: 0.34.0\n=== search([1,0,0,0]) c cosine-индексом ===\n  id=q_self   _distance=0.000000\n  id=near     _distance=0.006116\n  id=orth     _distance=1.000000\n  id=far      _distance=1.000000\n=== search c default (l2) ===\n  id=q_self   _distance=0.000000\n  id=near     _distance=0.020000\n  id=orth     _distance=2.000000",
-      "verdict": "confirmed",
-      "finding": "семантика `_distance` — свойство БД, не кода: её нельзя выводить из комментария соседнего кода. Связь с отрицательными: не из таблицы §3.8; метод — реальный lancedb-запрос (не мок). Раньше (EXPERIMENTS_LOG#2026-07-31) аудит полагался на чтение кода → та же ловушка P-002."
-    },
-    {
-      "id": "exp-41",
-      "date": "2026-08-03",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: ONNX embedder не поднимается из-за off-by-one путей (не из-за модели/портов)",
-      "hypothesis": "исправление PROJECT_ROOT (parent×3 → parents[3]) в onnx_client/onnx_server вернёт ONNX-режим: сервер найдёт скрипт и модель, /embed вернёт 384-dim.",
-      "command": "```",
-      "result": "cd <ext> && PYTHONPATH=<ext> venv/Scripts/python.exe D:/Project/MSCodeBase/.local/onnx_client_check.py\ncurl -X POST http://127.0.0.1:9876/embed -d '{\"text\":\"тест\"}'",
-      "verdict": "confirmed",
-      "finding": "off-by-one пути в `src/core/embedder/` копируются между файлами (onnx_client ← onnx_server) — при работе с путями в src/core/embedder обязателен `parents[3]` или проверка `path.exists()` на всех search_paths (remote_embedder использует get_extension_dir — верно)."
-    },
-    {
-      "id": "exp-42",
-      "date": "2026-07-31",
-      "project": "mscodebase-intelligence",
-      "title": "P0-3: verify_clean_state.sh --no-clone (CI self-clone убран)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-07-31)",
-      "result": "SYNTAX_OK (bash -n scripts/verify_clean_state.sh)\nYAML_OK — ci.yml jobs.clean-state.steps[-1].run = bash scripts/verify_clean_state.sh --no-clone \"${{ github.repository }}\"\nЛокальный прогон --no-clone (Windows): «No-clone mode: verifying current directory» — clone пропущен, ветка выбрана верно; далее падение на venv/bin/* — pre-existing Linux-only assumption скрипта (POSIX-layout venv), не связано с правкой.\nПолный pytest tests/: 610 passed, 0 failed (35.25s)",
-      "verdict": "confirmed",
-      "finding": ""
-    },
-    {
-      "id": "exp-43",
-      "date": "2026-07-27",
-      "project": "mscodebase-intelligence",
-      "title": "P0 Fixes: alias injection, layer injection, CI paths, sandbox docstring",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-07-27)",
-      "result": "(raw result not fenced in source)",
-      "verdict": "confirmed",
-      "finding": ""
-    },
-    {
-      "id": "exp-44",
-      "date": "2026-07-22",
-      "project": "mscodebase-intelligence",
-      "title": "Audit: P0-1 DebounceBatch deadlock",
-      "hypothesis": "`await self._flush()` вызывается ВНУТРИ `with self._lock` → deadlock при 100 файлах",
-      "command": "AST-анализ + ручное чтение rate_limiter.py L154-232",
-      "result": "=== DebounceBatch.add() at line 154 ===\n  L154:     async def add(self, file_path: str) -> bool:\n  L156:         with self._lock:                    # L156 — lock acquired\n  ...\n  L163:         if batch_full:                       # OUTSIDE lock\n  L164:             await self._flush()              # OUTSIDE lock ✓",
-      "verdict": "confirmed",
-      "finding": "подтверждена — `_flush()` вызывается вне lock, deadlock не воспроизводится."
-    },
-    {
-      "id": "exp-45",
-      "date": "2026-08-03",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: Python 3.14 ломает asyncio.get_event_loop() в синхронных потоках проекта",
-      "hypothesis": "официальный changelog подтвердит «get_event_loop() без текущего цикла → RuntimeError»; в проекте найдутся использования в синхронном коде без защиты → латентные поломки инструментов в non-loop потоках.",
-      "command": "fetch https://docs.python.org/3.14/whatsnew/3.14.html (секции Removed/Deprecated/asyncio) + grep `get_event_loop|set_event_loop_policy|iscoroutinefunction` в src/ + чтение контекстов.",
-      "result": "В Python 3.14: asyncio.get_event_loop() raises RuntimeError if no current event loop,\nno longer implicitly creates one. asyncio policy system deprecated (удаление в 3.16).\niscoroutinefunction deprecated → inspect.iscoroutinefunction. from __future__ import\nannotations deprecated (после EOL 3.13, 2029). Инкрементальный GC 3.14.0-3.14.4\nОТКАТАН в 3.14.5 (memory pressure). Новое: python -m asyncio ps/pstree PID,\npdb -p PID, pathlib.copy/move, map(strict=), uuid6/7/8.\ngrep: 15 использований get_event_loop — 14 защищены (async-контекст или except RuntimeError),\n1 латентный: error_handler.py:605 sync_wrapper (RuntimeError ловится общим except Exception\n→ инструмент вернёт ошибку вместо запуска в non-loop потоке).",
-      "verdict": "partial",
-      "finding": "«get_event_loop() в sync-обёртке» — классический паттерн-ловушка: работал все годы, ломается тихо на 3.14. Guard: новые sync-обёртки используют get_running_loop() с try/except, никогда get_event_loop(). Отдельный урок: verify_diary.py — проверяльщик без собственных тестов; его ложные ❌ шумели в логах при каждом старте MCP (3 бага, exp-16 связан с KNOWN_ISSUES#2026-08-03 23:40). Применимость: audit asyncio-паттернов при бампе рантайма; python -m asyncio pstree <PID> — новый инструмент диагностики зависших async-задач MCP."
-    },
-    {
-      "id": "exp-46",
-      "date": "2026-08-03",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: рефлексивное обучение (Reflexion/Self-Refine) применимо к операционной DIS-системе агента через дневники",
-      "hypothesis": "академические подходы к самообучению LLM-агентов (вербальная рефлексия, memory augmentation) ложатся на существующие артефакты проекта (AGENT_DIARY, EXPERIMENTS_LOG, KNOWN_ISSUES) без переобучения весов.",
-      "command": "fetch arXiv:2303.11366 (Reflexion), arXiv:2303.17651 (Self-Refine), arXiv:2309.02427 (CoALA).",
-      "result": "Reflexion (Shinn et al., 2023, arXiv:2303.11366): вербальная рефлексия в episodic\nmemory → 91% pass@1 на HumanEval; дообучение весов не требуется.\nSelf-Refine (Madaan et al., 2023, arXiv:2303.17651): итеративный цикл feedback→refine\nдаёт ~20% абсолютного улучшения (GPT-4, 7 задач).\nCoALA (Sumers et al., 2023, arXiv:2309.02427): modular memory = episodic (история\nинцидентов) + semantic (правила/паттерны) + procedural (навыки) + working (контекст)\n— прямое соответствие AGENT_DIARY/KNOWN_ISSUES/протоколу.",
-      "verdict": "confirmed",
-      "finding": "дневники проекта — это уже CoALA-память; протоколу не хватало только циклов рефлексии (обобщение после фикса, мета-анализ раз в месяц), а не новых артефактов."
-    },
-    {
-      "id": "H-PATH",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": `PropertyGraph.shortest_path` — корректность + латентность",
-      "hypothesis": "BFS (graph.py:937) работает на живом графе, медиана <50ms; gap = только отсутствие MCP `graph_query(action=\"path\")`.",
-      "command": "`venv/Scripts/python.exe experiments/exp_graph_path.py` (скрипт в experiments/, read-only через API PropertyGraph).",
-      "result": "graph: 7247 nodes, 21404 edges\n[tool->PropertyGraph (CALLS)] shortest_path('_execute_cypher' -> 'PropertyGraph'): 2 hops\n   ...GraphQueryTool._execute_cypher  -[->\n   ...graph.py.PropertyGraph  -[CALLS]->\nlatency_ms: [0.3, 0.14, 0.12, 0.11, 0.09, 0.09, 0.09]  median_ms: 0.11",
-      "verdict": "confirmed",
-      "finding": "`shortest_path` траverses ТОЛЬКО outgoing-рёбра (`graph.py:974` `WHERE source_id = ?`) — классы/методы без исходящих рёбер недостижимы. MCP-обёртке `action=\"path\"` нужен опциональный `direction=\"both\"` (BFS уже параметризуем). Также: qname-формат `D:.D:/Project/...` — клиенту нужен подсказчик имён (как `find_nodes(name_pattern=...)`)."
-    },
-    {
-      "id": "H-JUPYTER",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": Jupyter `.ipynb` = JSON, интеграция без новых зависимостей",
-      "hypothesis": ".ipynb разбирается stdlib json (nbformat опционален), code cells подаются в существующий tree-sitter пайплайн CodeParser. Интеграция = extensions.py + ветка в parse_file.",
-      "command": "`venv/Scripts/python.exe experiments/exp_jupyter.py`",
-      "result": "json.loads 200x: median_ms = 0.0055\ncells=5 code_cells=3\n  cell 0: 69 chars / 5 lines ...\nCodeParser.parsers keys: ['.go', '.js', '.py', '.rs', '.ts', '.tsx']\n  cell 0 -> parse_file: 1 chunks, 0 syms, 15.08ms\n  cell 1 -> parse_file: 1 chunks, 1 syms, 13.35ms\n  cell 2 -> parse_file: 1 chunks, 0 syms, 13.48ms\nTOTAL chunks из 3 code cells: 3",
-      "verdict": "confirmed",
-      "finding": "накладные расходы на ноутбук ~N×13ms (N = code cells) — приемлемо. Замечание: standalone `CodeParser()` загрузил только 6 грамматик (полный набор идёт через другой путь инициализации — язык-пак/окружение) — для .ipynb достаточно python-грамматики + metadata.language_info.name.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "cells",
-            "value": 5
-          },
-          {
-            "label": "code cells",
-            "value": 3
-          }
-        ]
-      }
-    },
-    {
-      "id": "H-DUP",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": детекция дупликации AST-нормализованными отпечатками",
-      "hypothesis": "для 54 языков AST-нормализация (tree-sitter уже есть) + minhash ближних дублей реализуемо stdlib+numpy, без suffix-array движка. fallow: suffix-array покрывает только JS/TS+CSS. pylint-django — НЕ dup-detector.",
-      "command": "`venv/Scripts/python.exe experiments/exp_dup.py` (скрипт в experiments/, ~60 строк: tree-sitter листовые токены с плейсхолдерами <id>/<lit>, sha1-группировка точных, minhash-64 8-грамм для ближних).",
-      "result": "files=137 functions/classes>=24tokens=401 scan_ms=414.8\nEXACT дубликаты: 8 групп\n  artifact_paths.py: get_index_dir/get_intelligence_dir/get_metrics_dir/get_commit_memory_dir/get_branches_dir/get_telemetry_dir/get_summaries_cache_dir (7 шт)\n  extensions.py: is_supported ~ is_parseable\n  resource_monitor.get_global_resource_monitor ~ llama_runner.get_global_runner\n  language_pack.lang_for_ext ~ get_parser\n  lsp_project_bridge._bridge_path ~ _stale_path\n  cypher_ast._UnaryOp ~ _LabelTest\n  graph_tools._confirmed ~ _contradicted\n  lsp_tools.LspFindReferencesTool ~ LspFindDefinitionTool\nNEAR-дубли (minhash>0.85): 1 пара, 0.969 — lsp_tools.LspFindReferencesTool ~ LspFindDefinitionTool; pair_scan_ms=660.8",
-      "verdict": "refuted",
-      "finding": "порог ≥24 токена и k=8-граммы дают 0 false-positive на этом репо. Для MCP-тула `find_duplicates(threshold)` — готовая схема: index-time (опционально) или on-demand скан ~415ms. Кандидаты: 7×get_*_dir стоит реально отрефакторить в 1 функцию.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "files",
-            "value": 137
-          },
-          {
-            "label": "tokens",
-            "value": 401
-          },
-          {
-            "label": "scan ms",
-            "value": 41
-          },
-          {
-            "label": "pair scan ms",
-            "value": 66
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-50",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": "Верификация кода (без замеров): H-EDGE / H-LSP / H-TASK",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-08)",
-      "result": "(raw result not fenced in source)",
-      "verdict": "confirmed",
-      "finding": ""
-    },
-    {
-      "id": "exp-51",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": WS3 Late Enrichment — стоимость стадии на реальных чанках",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`python experiments/late_enrichment/bench.py --phase chunks --limit 10` — 8 запросов × 10 реальных чанков проекта, фаза chunks (live недоступна: MCP держит PID-lock).",
-      "result": "avg_enrichment_ms: 0.701\navg_tokens_added: 1860.0   (≈186 ток/чанк на топ-10)\navg_coverage: module=1.0, parent_symbol=0.3, chunk_headline=1.0, imports=0.0",
-      "verdict": "partial",
-      "finding": "chunk-local enrichment (module/headline/symbol) безопасен и дёшев; imports — отдельная стадия с графом. Токен-стоимость ~186/чанк обязана быть в метрике контекста (Context Engine 2.0)."
-    },
-    {
-      "id": "exp-52",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": Benchmark 2.0 runner — live-фаза vs PID-lock",
-      "hypothesis": "runner может поднять in-process Searcher при живом MCP (индекс доступен).",
-      "command": "`python experiments/benchmark2/runner.py` (MCP запущен, PID 7496).",
-      "result": "RuntimeError: PID lock still held by alive pid=7496 after 30.0s — другой процесс пишет в эту БД\n[bench2] записано 12 задач -> out/evidence.jsonl\n[bench2] manual-проб (нужен ручной прогон): 16",
-      "verdict": "refuted",
-      "finding": "live-эвалы против MCP требуют остановленного сервера или отдельного MSCODEBASE_DATA_DIR; документировано в experiments/benchmark2/README.md."
-    },
-    {
-      "id": "exp-53",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": Multi-window PID-lock 30s wait vs Zed timeout (KNOWN_ISSUES 🟡, WS8 follow-up)",
-      "hypothesis": "(1) Zed убивает MCP-процесс по таймауту запроса → вечный зомби-цикл; (2) зомби-holder'а (осиротевший живой процесс) можно отличить от здорового MCP по цепочке родителей; (3) create_time-сверка ловит PID-reuse.",
-      "command": "см. ниже per-эксперимент; скрипты — `experiments/lock_zombie/` (orphan_holder.py / spawn_orphan.py / zombie_probe.py / check_signals.py).",
-      "result": "LOCK: ...index_bot_snow_5e94fc96.db\\.write_lock  pid=8148 started=1786135695 age=13,1h\n  holder: DEAD (stale -> steal works)\nLOCK: ...index_mscodebase_bfe9644b.db\\.write_lock  pid=13376 started=1786168629 age=3,95h\n  holder: name=python.exe parent_pid=17860 (venvlauncher chain) -> Zed.exe alive -> healthy",
-      "verdict": "confirmed",
-      "finding": "30s-ожидание + fail-closed — защита «один писатель», но без детекции сирот она превращает осиротевший процесс в вечный цикл падений (инцидент WS8 08:52-08:57 — это ручной taskkill решал). Индустрия: PostgreSQL postmaster.pid хранит start timestamp именно для stale-детекции; Zed даёт 60s/запрос, поэтому 30s wait формально «в бюджет влезает», но UX = 30s-блокировка + ошибка. Находка: psutil импортируется в layer.py/lsp_project_bridge.py, но НЕ объявлен в pyproject и НЕ установлен в venv — тихая деградация runtime.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "pid",
-            "value": 8148
-          },
-          {
-            "label": "started",
-            "value": 1786135695
-          },
-          {
-            "label": "age",
-            "value": 13
-          },
-          {
-            "label": "parent pid",
-            "value": 17860
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-54",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": WS9 benchmark before/after (self-healing PID-lock, вариант C)",
-      "hypothesis": "после внедрения классификации holder'а (DEAD/HEALTHY/ORPHAN/AMBIGUOUS) время acquire для orphan-кейса падает с ~30s (ожидание+RuntimeError) до сотен мс (terminate+steal), healthy-кейс — мягкая ошибка через ~8s (дефолт) вместо 30s RuntimeError; free/stale не деградируют.",
-      "command": "`python experiments/lock_zombie/benchmark_selfhealing.py` (venv расширения, Windows).",
-      "result": "[free (no contention)] 7 ms | acquire ok\n[stale-holder (dead pid)] 31 ms | steal ok\n[healthy-holder (wait=1.5s)] 1512 ms | LockBusyError: PID lock still held by alive pid=... after 1.5s — база занята другим окном MCP; retry позже (holder не тронут)\n[orphan-holder (terminate+steal)] 120 ms | acquired pid=...",
-      "verdict": "confirmed",
-      "finding": "(1) TerminateProcess синхронный, но файловый дескриптор lock'а умирающего процесса даёт PermissionError на unlink → нужен _unlink_with_retry (иначе краш в кейсе «только что убитый holder»); (2) venvlauncher: lock пишет РЕАЛЬНЫЙ python (os.getpid() внутри скрипта), terminate по pid из lock убивает именно держателя, обёртка умирает следом — прод-механизм работоспособен."
-    },
-    {
-      "id": "exp-55",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": ": Multi-Tool (MSCodeBase, 4-5 вызовов) vs Context Engine (CodeGraph-стиль, 1 вызов)",
-      "hypothesis": "единый контекстный агрегатор (get_edit_context-стиль) побеждает последовательные MCP-вызовы по tool_calls (N→1), latency (1 RT vs N), tokens (при intent-фильтре), при паритете task success; wrong-context решается intent-фильтрацией. Контрольная группа: ОДНА кодовая база (MSCodeBase), 4 задачи на реальных символах, отличаются только стратегии оркестрации. CodeGraph (Rust) не устанавливался — иначе сравнение смешало бы «качество индекса» с «архитектурой инструментов».",
-      "command": "`python experiments/context_engine/compose_eval.py` (данные: strategy_a_data.json — реальные ответы MCP 2026-08-08, тайминги из intel_execution_timeline; B-v2 = compose source+symbols(+memory+git по intent), symbols во всех intent).",
-      "result": "task        strat   calls tokens   latency_ms facts                 success  wrong%\nT1-explain  A       5     423      2481       ...                  86%      15%\nT1-explain  B       1     266      501        ...                  71%       0%\nT2-modify   A       5     460      6755       ...                 100%      15%\nT2-modify   B       1     389      502        ...                 100%      16%\nT3-debug    A       4     435      2118       ...                 100%       9%\nT3-debug    B       1     350      501        ...                 100%       0%\nT4-test     A       4     300      6358       ...                  67%      23%\nT4-test     B       1     300      501        ...                  67%      36%   <- B-v1 (test без symbols): 33%/59%\nAVG calls    A=4.500  B=1.000   Δ=-78%\nAVG latency  A=4428   B=501     Δ=-89%\nAVG tokens   A=404.5  B=326.4   Δ=-19%\nAVG success  A=88.1%  B=84.5%   Δ=-3.6pp (разрыв = артефакт рубрики T1: \"enrich\" только в git-сообщении)\nAVG wrong    A=15.5%  B=13.0%   Δ=-2.5pp (B лучше: dedup убрал шум упавших вызовов)",
-      "verdict": "confirmed",
-      "finding": "(1) архитектура «1 контекстный инструмент с серверной композицией» валидна и для MSCodeBase: −78% вызовов, −89% latency, −19% токенов при паритете полноты; (2) критично: compose ОБЯЗАН включать source+symbols во все intent; (3) файл-скоуп памяти (а не глобальный ADR-список) — условие полезности memory-секции в edit-контексте; (4) impact_analysis «not found» на приватных функциях = тихий провал multi-tool стратегии.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "A",
-            "value": 4428
-          },
-          {
-            "label": "B",
-            "value": 501
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-56",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": "D (v2): Context Composition vs Tool Composition — Where Does the Latency Actually Come From?",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`MSCODEBASE_ALLOW_SELF_INDEX=1 venv/Scripts/python.exe experiments/context_engine/bench_v2.py`",
-      "result": "round_trips  tokens  agent_ms  server_ms  recall  prec  wrong  dup\nA (multi-tool)    3.400    241.3   1582.6    1582.6     0.783  0.667 0.090  0.135\nB (compose model) 1.000    276.5    400.0*       0.0     0.833  0.663 0.098  0.164\nC1 (get_context)  1.000    637.1    449.2       49.2     0.267  0.600 0.133  0.000\nC2 (get_edit_context)     1.000   1230.6    865.3      465.3     0.817  0.705 0.108  0.184\n* B agent_ms — модель 1 RT (400ms, реальный медианный).",
-      "verdict": "confirmed",
-      "finding": "(1) «1 контекстный инструмент» побеждает по round-trips/latency и паритету-превышению полноты ТОЛЬКО при составе: source+symbols+fallback+git+memory и токен-бюджете; (2) существующий get_context (C1) — урезанный агрегатор: recall 0.267 против 0.817 у полного — его расширение (не новый tool с нуля) — путь к варианту А; (3) wrong-context guard в агрегаторе (отсев определений из experiments/) дешевле и надёжнее фикса самого get_symbol_info; (4) PID-lock + snapshot-копия БД — рабочий паттерн изоляции экспериментов от живого MCP (никаких taskkill)."
-    },
-    {
-      "id": "exp-57",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": "D v3: 30 задач — устойчивость B vs C2 (токены решают, recall паритет)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`MSCODEBASE_ALLOW_SELF_INDEX=1 venv/Scripts/python.exe experiments/context_engine/bench_v2.py tasks_v3.json` (30 задач: 15 из v2 + 15 новых; 4 новых символа с реальными MCP-вызовами: trigger_async_reindex, get_active_reindex_job_id, RuntimeCoordinator, _reject_self_index_target; paired-статистика добавлена в bench_v2.py).",
-      "result": "round_trips  tokens  agent_ms  server_ms  recall  prec  wrong  dup\nA (multi-tool)    3.367    246.0   1558.7    1558.7     0.875  0.748 0.045  0.197\nB (compose-model) 1.000    274.9    400.0*       0.0     0.900  0.748 0.049  0.209\nC1 (get_context)  1.000    581.8    428.7       28.7     0.288  0.700 0.067  0.000\nC2 (get_edit_context)     1.000   1254.6    805.3      405.3     0.875  0.784 0.054  0.315\n* B agent_ms — модель 1 RT (400ms).\n\n=== PAIRED B vs C2 (N=30) ===\nrecall     mean_delta(B-C2)=+0.025  sd=0.152  CI95=±0.054  B>recall: 2/30  C2>recall: 1/30\nprecision  mean_delta(B-C2)=-0.036  sd=0.132  CI95=±0.047  B>precision: 5/30  C2>precision: 17/30\ntokens     mean_delta(B-C2)=-979.8  sd=695.9  CI95=±249.0  B>tokens: 0/30  C2>tokens: 30/30",
-      "verdict": "confirmed",
-      "finding": "(1) на выборке 15 задач разница 0.833 vs 0.817 — шум: подтверждено CI на 30 (0.025 ± 0.054); решения об архитектуре контекста принимать на ≥30 задач с paired-анализом; (2) решает не «сколько секций собрать», а «какие секции включить по intent» — B (source+symbols по intent, без impact для git-задач и т.п.) даёт максимум полноты при минимуме токенов; (3) dup_rate C2=0.315 — fallback search_code дублирует symbol-инфо: в прод-агрегаторе нужен dedup. Дефекты D1-D3 зафиксированы в KNOWN_ISSUES (🟡), фикс после повторного прогона.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "N",
-            "value": 30
-          },
-          {
-            "label": "sd",
-            "value": 69
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-58",
-      "date": "2026-08-08",
-      "project": "mscodebase-intelligence",
-      "title": "Контрольный прогон v3 после фикса D1-D3 (wrong_rate 0, C1 recall +32%)",
-      "hypothesis": "фикс корня D1-D3 (неранжированный nodes[0] → _find_nodes_flexible union + _pick_best_node + union-старты + _is_one_off_script) убирает отравление контекста тенями experiments//scripts/ и placeholder'ами и поднимает качество живых рук C1/C2; A/B (записанные до-фиксовые данные) — контроль «до».",
-      "command": "`MSCODEBASE_ALLOW_SELF_INDEX=1 venv/Scripts/python.exe experiments/context_engine/bench_v2.py tasks_v3.json` (после фикса; C1/C2 — живой in-process код с фиксом).",
-      "result": "recall          precision       wrong_rate       tokens\nC1 (get_context) 0.288 → 0.380   0.700 → 0.800   0.067 → 0.000   582 → 975\nC2 (get_edit_context) 0.875→0.883 0.784 → 0.819  0.054 → 0.000   1255 → 1427\nA/B — без изменений (записанные pre-fix данные)\nPaired B vs C2: recall Δ=+0.017 (CI95 ±0.052, неразличимы), precision C2 19/30,\ntokens B −1152 (CI95 ±315, 30/30) — вывод B-оптимальности НЕ изменился.",
-      "verdict": "confirmed",
-      "finding": "(1) корень D1-D3 ОДИН — неранжированный выбор узла при наличии одноимённых (тень/placeholder/реальный); (2) CALLS-рёбра при индексации привязываются к первому exact-матчу — реальные callers могут лежать на тени: исключать тень из стартов НЕЛЬЗЯ (теряются callers), фильтровать нужно на уровне записей по файлу вызывающего; (3) wrong-evidence guard «отсев experiments/» на композиции (вариант из v2) оказался НЕ нужен — правильный фикс в адаптере дешевле и чище."
-    },
-    {
-      "id": "exp-59",
-      "date": "2026-08-11",
-      "project": "mscodebase-intelligence",
-      "title": ": Multi-RAG Component Ablation (Experiment 1, N=30, v2)",
-      "hypothesis": "full/quality recall > fts5_only; BM25, FTS5, Graph дают положительные парные Δ; graph_only recall максимален на klass ∈ {find_caller_callee, find_impact}; FTS5 ≈ BM25 (избыточность).",
-      "command": "`venv/Scripts/python.exe experiments/context_engine/multi_rag_ablation.py tasks_v3.json` — 30 задач × 12 рук; изоляция компонентов monkey-patch'ем методов Searcher (`_bm25_search_async`/`_vector_search_async`/`_fts5_search_async`/`_expand_graph_context`/`_apply_multi_reranker_async`); `expand=False`; кэш эмбеддингов очищается per-arm (см. «Урок 1»). Дизайн: experiments/context_engine/multi_rag_design.md. Лог: experiments/context_engine/multi_rag_full_run_2026-08-11.log.",
-      "result": "recall      vector=0.167 bm25=0.694 fts5=0.825 graph=0.357 vbm25=0.597 vfts5=0.783\n            bm25fts5=0.817 vbm25fts5=0.775 full_norerank=0.775 quality=0.756\nprecision   vector=0.083 bm25=0.791 fts5=0.523 graph=0.441 quality=0.719\ntokens      vector=1360 bm25=1774 fts5=2327 graph=122 quality=1862\nlatency_ms  vector=122 bm25=298 fts5=110 graph=12 quality=1704\n\nPAIRED (Δ, CI95, wins/30):\nBM25 over Vector:   recall +0.430 ±0.164 (21/30) | prec +0.531 (26/30) → SIGNIFICANT\nVector over BM25:   recall −0.098 ±0.086 (1/30)  | prec −0.177 (1/30)  → вредит\nFTS5 over V+BM25:   recall +0.178 ±0.097 (13/30) | tokens +375 (29/30) → значим recall\nGraph over V+BM25:  recall +0.000 (enrichment = metadata, не текст) → ~0\nRerank over full:   recall −0.019 (3/30) | prec +0.147 ±0.061 (22/30) | tokens −301 → значим precision\nBM25 vs FTS5:       recall Δ −0.131 (FTS5 12/30) | prec +0.268 (BM25 24/30) | tokens −553 (BM25 26/30)\n\ngraph_only recall by klass: find_caller_callee 0.625, find_impact 0.583, modify_function 0.500,\nunderstand_architecture 0.500, verify_change 0.500, find_bug_cause 0.300, prepare_change 0.237,\nfind_test 0.125, git_history 0.000",
-      "verdict": "refuted",
-      "finding": "(1) production-баг `hybrid_search_async` (engine.py L521-541): на кэш-хите эмбеддинга dense-поиск пропускается — vector-тир молча исчезает при повторных запросах; первый прогон абляции полностью искажён (vector_bm25 == bm25_only 30/30, vector_only пуст на повторных символах 15/30). Изоляция кэша per-arm обязательна для абляций. (2) vector-тир (llama.cpp multilingual-e5-small) — слабейший на символьных задачах (0.167 recall); recall несут keyword-тиры, precision покупается реранкером. (3) graph-ценность живёт в метаданных (callers/callees), не в тексте чанков — evidence-метрики по паттернам текста её не измеряют; нужен отдельный протокол оценки graph-вклада (или чтение metadata в секции).",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "vector",
-            "value": 1360
-          },
-          {
-            "label": "bm25",
-            "value": 1774
-          },
-          {
-            "label": "fts5",
-            "value": 2327
-          },
-          {
-            "label": "graph",
-            "value": 122
+            "label": "fast",
+            "value": 0.167
           },
           {
             "label": "quality",
-            "value": 1862
+            "value": 0.133
+          },
+          {
+            "label": "cascade",
+            "value": 0.233
           }
         ]
-      }
+      },
+      "conclusion": "Search-only gives recall@5 <= 0.23 on real code tasks; klass is a real predictor of the winning arm; a single sweeper is capped on test/impact classes without a graph stage. The 'code passport' must include call graph + impact + test-mapping, not search-only.",
+      "links": [
+        "exp-27",
+        "exp-29"
+      ]
     },
     {
-      "id": "exp-60",
-      "date": "2026-08-11",
+      "id": "exp-29",
+      "date": "2026-08-26",
       "project": "mscodebase-intelligence",
-      "title": "-6: VC/Merkle vs Verify-On-Read — симуляция логической границы (dev.to, unitbuilds)",
-      "hypothesis": "вывод скрипта — «VC принял 2 лжи, VOR — 0».",
-      "command": "`python experiments/concurrency/experiment_concurrency_vs_semantic.py`",
-      "result": "Arm VC (Live VC + Merkle): Accepted 2 hallucinated lies as truth.\nArm Verify-On-Read: Accepted 0 hallucinated lies as truth.",
+      "title": "E4: deterministic per-class keyword router (PoC) — 0.200 < cascade 0.233, klass_acc 0.40 (NEGATIVE)",
+      "hypothesis": "A per-class router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) gives recall >= cascade (0.233) at median < 600ms.",
+      "command": "EXT venv python experiments/mech_orch/E4_router_poc.py — classifier: 9 keyword rules (order matters), arms per E3; same metrics.",
+      "result": "router: recall=0.200 facts_cov=0.533 lat_med=298ms p95=10745ms klass_acc=0.40; baselines (E3): fast 0.167 / quality 0.133 / cascade 0.233; BY KLASS: find_bug_cause 0.20 | git_history 0.50 | caller_callee 0.50 | arch 0.25 | prepare 0.25 | modify/test/impact/verify 0.00 ALL (even union fast+quality).",
       "verdict": "refuted",
-      "finding": "сильный вывод здесь НЕ требует симуляции: «консистентность (VC/Merkle) ≠ семантика; нужен внешний слой grounding (AST/runtime/мир)». Симуляция — хорошая иллюстрация, плохое доказательство. Публиковать с честными оговорками (см. §1.6: гипотеза без фальсифицируемости = иллюстрация, не эксперимент)."
-    },
-    {
-      "id": "exp-61",
-      "date": "2026-08-11",
-      "project": "mscodebase-intelligence",
-      "title": "-7: Adversarial probe базового VC/VOR-эксперимента (6 атак, Red Team §1.16)",
-      "hypothesis": "базовый вывод «VC=2 лжи, VOR=0» — не закон, а артефакт входных прав и настройки сценария; VOR на anchor-гранулярности имеет собственные FP; VC имеет уникальное покрытие (конфликты, staleness), которого у VOR нет; VC и VOR — комплементарные слои.",
-      "command": "`python experiments/concurrency/experiment_concurrency_vs_semantic_attacks.py`",
-      "result": "A1a baseline VC:             FP=2 FN=0  (VC без семантических входных данных)\nA1b hybrid VC+semantics:     FP=0 FN=0  (равные права: семантика доступна обеим рукам)\nA2 VOR, ложь про реальный импорт: FP=1  (duckdb «for analytics», реально CSV-парсер)\nA3 VOR без кодового якоря:  UNCHECKABLE — любая политика даёт FP или FN\nA4a VC, косметическое изменение: FN=1  (page-level хэш слишком груб)\nA4b VC под конфликтом записи: REJECTED (ловит lost write); VOR к нему слеп\nA5 VOR на отравленном truth-листе: FP=1 (stripe из README-примера, не код)\nA6 мутация сценария (writers=1): FP=0 FN=1 — «VC принимает ложь» переворачивается",
-      "verdict": "confirmed",
-      "finding": "перед публикацией «пруфа» — атаковать собственный эксперимент мутациями сценария: вывод, который рушится при изменении ОДНОЙ переменной (A6), — иллюстрация, не закон. VOR на гранулярности «якорь ∈ импорты» — нижняя граница возможностей; реальная семантика требует usage-уровня.",
+      "finding": "klass_acc=0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union arm does not save the 4 graph classes — search cannot find what is not textually in the index (callers/callees/impact must come from the graph). The search-only ceiling on this dataset is ~0.23 at ANY routing.",
       "chart": {
         "type": "bar",
-        "title": "measured metrics (from raw output)",
+        "title": "recall: keyword router vs cascade",
         "data": [
           {
-            "label": "FP",
-            "value": 2
+            "label": "router",
+            "value": 0.2
           },
           {
-            "label": "FN",
-            "value": 0
-          },
-          {
-            "label": "writers",
-            "value": 1
+            "label": "cascade",
+            "value": 0.233
           }
         ]
-      }
+      },
+      "conclusion": "Keyword routing by prompt does not pay off; improvement is query features (symbol tokens, intent verbs, priorities), BUT the ceiling without a graph stage remains. The 'code passport' = search(fast+cascade) + a SEPARATE graph stage (symbol index in memory), otherwise 4/9 classes = 0.00 always.",
+      "links": [
+        "exp-28",
+        "exp-30"
+      ]
     },
     {
-      "id": "exp-62",
-      "date": "2026-08-15",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: recall(real)=0.08 у qwen3.6 в code_first — это anchor bias (нет evidence), а не «паранойя модели»; с реальным фрагментом файла recall прыгнет ≥0.5 при FA≈0",
-      "hypothesis": "паттерн-строка `[\"typesense\"]` не доказывает ничего — модель честно отвечает false/unknown. Если подать первые строки реального файла (V4-дизайн из §11.1 п.2) — у модели появится evidence, recall(real) вырастет. Проверка на 2 моделях-рекордсменах fail-closed (qwen3.6/3.7).",
-      "command": "```",
-      "result": "python scripts/run_1L_live_arm.py --provider openrouter --arm file_content_first \\\n  --models \"qwen/qwen3.6-flash,qwen/qwen3.7-flash\" --no-reasoning --prompt-version v2 --tag file_content\npython scripts/summarize_1L_categories.py --tag file_content --markdown",
-      "verdict": "partial",
-      "finding": "задача «поймай ложь и не тронь правду» решаема ДЕШЁВОЙ flash-моделью, если дать ей реальный код: VOR-слой обязан показывать фрагмент файла вокруг якоря (окно ±12 строк), а не токен-строку. Остаточная дыра — present-trap: нужна проверка СУБЪЕКТА (claim «X использует Y» — Y есть в коде, но X — нет). Цена: +~200 промпт-токенов/факт (~$0.0001–0.0004) пренебрежима vs цена ложного отзыва живой памяти."
-    },
-    {
-      "id": "exp-63",
-      "date": "2026-08-15",
-      "project": "mscodebase-intelligence",
-      "title": "2-E Evidence Ladder E1+E2+E3: форма evidence (anchor → file_content → graph) против качества верификации memory claims",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "```",
-      "result": "python scripts/run_1L_live_arm.py --provider openrouter --arm code_first \\\n  --models \"qwen/qwen3.7-flash,deepseek/deepseek-v4-flash,z-ai/glm-4.7-flash\" \\\n  --prompt-version v2 --no-reasoning --tag 2e_e1          # rung 1 (anchor-строки)\npython scripts/run_1L_live_arm.py --provider openrouter --arm file_content_first \\\n  --models \"...\" --no-reasoning --prompt-version v2 --tag 2e_e2   # rung 2 (25 строк)\npython scripts/run_1L_live_arm.py --provider openrouter --arm graph_first \\\n  --ev-contexts experiments/2E_evidence_ladder/graph_contexts_594dae2a.json \\\n  --models \"...\" --no-reasoning --prompt-version v2 --tag 2e_e3   # rung 3 (структура)\npython scripts/summarize_1L_categories.py --tag 2e_e{1,2,3} --markdown",
-      "verdict": "partial",
-      "finding": "для VOR: (а) recall-движок = фрагмент файла (25 строк); (б) graph-проверка субъекта = отдельный сигнал против trap, но только для evidence-честных моделей; (в) fail-open модели (glm-семейство) исключить из VOR-конвейера. Следующий шаг: гибридный arm file+graph (аддитивность?) и per-fact анализ расхождений qwen graph (R08/R17/R21/R24)."
-    },
-    {
-      "id": "exp-64",
-      "date": "2026-08-15",
-      "project": "mscodebase-intelligence",
-      "title": "2-E Evidence Ladder E3b+E4: гибрид file+graph (аддитивность?) и temporal_first (git-провенанс: «было тогда» vs «сейчас»)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "```",
-      "result": "python scripts/run_1L_live_arm.py --provider openrouter --arm file_graph_first \\\n  --ev-contexts experiments/2E_evidence_ladder/graph_contexts_594dae2a.json \\\n  --models \"qwen/qwen3.7-flash,deepseek/deepseek-v4-flash,z-ai/glm-4.7-flash\" \\\n  --prompt-version v2 --no-reasoning --tag 2e_e4\npython scripts/run_1L_live_arm.py --provider openrouter --arm temporal_first \\\n  --facts experiments/2E_evidence_ladder/temporal_facts_e3c1fdd4.json \\\n  --ev-contexts experiments/2E_evidence_ladder/temporal_contexts_e8571628.json \\\n  --models \"...\" --no-reasoning --prompt-version v2 --tag 2e_e5",
-      "verdict": "confirmed",
-      "finding": "(1) для VOR — формат evidence выбирается по целевой метрике: fragment для recall, graph для trap-precision; гибрид = худшее из двух (acc 0.90). (2) git-провенанс в evidence — дешёвый и мощный сигнал для temporal-дистинкции (2/3 моделей 100%), но НЕ лечит qwen-семейство (5/12 trap). (3) модель-агент (deepseek-v4-flash) на temporal-датасете — идеальна (48/48); выбор LLM для VOR зависит от типа claims."
-    },
-    {
-      "id": "exp-65",
-      "date": "2026-08-15",
-      "project": "mscodebase-intelligence",
-      "title": "RED TEAM (атака на ground truth): 4/6 present-trap-фактов v4_rep по факту ИСТИННЫ — скорректированная матрица инвертирует выводы E3",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`grep -c \"logging\" src/mcp/server.py; grep -c \"threading\" src/core/indexing/watchdog.py; grep -c \"re\\.\" src/core/graph.py; grep -c \"pathlib\" src/providers/reranker/llama_install.py; grep -c \"dataclasses\" src/mcp/server.py; grep -c \"Path(\" src/core/multi_project_searcher.py`",
-      "result": "| arm             | qwen3.7 rec/FA | deepseek rec/FA | glm rec/FA |\n| code_first      | 6/29, 0/20    | 1/29, 0/20     | 18/29, 5/20 |\n| file_content    | 24/29, 0/20   | 23/29, 1/20    | 20/29, 1/20 |\n| graph_first     | 19/29, 0/20   | 13/29, 0/20    | 25/29, 1/20 |\n| file_graph      | 22/29, 0/20   | 24/29, 1/20    | 24/29, 1/20 |",
-      "verdict": "refuted",
-      "finding": "FA-метрики на синтетических категориях обязаны проходить grep-валидацию по СУБЪЕКТУ, а не по проекту. P-паттерн: «метрика на mislabeled категории выглядит как результат модели»."
-    },
-    {
-      "id": "exp-66",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "Датасет v4_rep: corrected-копия (e6ce7b902d0a20a9). Прошлые прогоны 1-L использовали датасет с известной ошибкой в 4 trap-фактах — выводы сохраняются с оговоркой",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-16)",
-      "result": "original: memory_contamination_facts_v4_rep.json  fp=820bbbf60a0fc930  truth: 25 true / 25 false\ncorrected: memory_contamination_facts_v4_rep_corrected.json  fp=e6ce7b902d0a20a9  truth: 29 true / 20 false / 1 None (R44 ambiguous)\nизменены: R43/R45/R46/R47 truth false->true (value импортирован+использован у субъекта);\nR44 — truth=None (AMBIGUOUS, исключён из пулов); остальные 45 фактов БЕЗ изменений.",
-      "verdict": "confirmed",
-      "finding": "fingerprint-привязка результатов к версии фактов — обязательна (работает); corrected-копия вместо правки оригинала — сохраняет историю; summarize_1L_categories.py берёт truth из progress-файлов — для corrected-метрик по старым прогонам нужен inline-пересчёт."
-    },
-    {
-      "id": "exp-67",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "Аудит прогонов 2-E: серверный CSV OpenRouter (ключ test567) — 744 вызова чисто, полоса роутинга подтверждена",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "фильтр `openrouter_activity_2026-08-16.csv` (872 строки) → `app_name == \"MSCodeBase 1-L live arm\"` → `openrouter_activity_2026-08-16_exp.csv` (744 строки).",
-      "result": "exp: 744 строки, все в 2026-08-15 21:xx UTC, ключ test567, finish_reason=stop ×744 (0 length/error)\nмодели: ровно 248 × {qwen/qwen3.7-flash, deepseek/deepseek-v4-flash, z-ai/glm-4.7-flash} (= 50×4 + 48)\nпровайдеры: Alibaba 248 (весь qwen — ОДИН бэкенд), StreamLake 245, DeepInfra 128, Cloudflare 96,\n            Venice 21, Baidu 3, Novita 3 (glm/deepseek — 6 бэкендов)\nстоимость: $0.012605 | prompt 237636 токенов, completion 6655 | generation_time 133ms–10.25s\nудалено: 128 (MSPortfolio agent demo 108 + app_name='' 20 (probe/отладка) + ключ MSPort 11)",
-      "verdict": "confirmed",
-      "finding": "серверный CSV — независимый аудит (как в 1-L): провайдерная карта объясняет per-model стабильность лучше, чем temp=0/seed."
-    },
-    {
-      "id": "exp-68",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "E4b: слепой контроль temporal (без git-строк) — git-провенанс НЕ нужен и ВРЕДИТ qwen (48/48 у всех слепых)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "```",
-      "result": "python experiments/2E_evidence_ladder/graph_context_builder.py experiments/2E_evidence_ladder/temporal_facts_e3c1fdd4.json experiments/2E_evidence_ladder --blind\npython scripts/run_1L_live_arm.py --provider openrouter --arm temporal_blind_first \\\n  --facts experiments/2E_evidence_ladder/temporal_facts_e3c1fdd4.json \\\n  --ev-contexts experiments/2E_evidence_ladder/temporal_blind_contexts_e8571628.json \\\n  --models \"qwen/qwen3.7-flash,deepseek/deepseek-v4-flash,z-ai/glm-4.7-flash\" \\\n  --prompt-version v2 --no-reasoning --tag 2e_e5b",
-      "verdict": "refuted",
-      "finding": "добавляя провенанс в evidence, проверяй слепой контроль — дополнительный текст может создавать суггестию, которой без него нет. Для реального temporal-теста нужны claims БЕЗ подсказки «NOT FOUND» (usage-claims с темпоральной осью — предложено как E4c)."
-    },
-    {
-      "id": "exp-69",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "E4c: duo-дизайн (HEAD+история без подсказки) — temporal present-trap УНИВЕРСАЛЕН; past-вопрос решается формулировкой",
-      "hypothesis": "E4b-вывод «deepseek/glm устойчивы к git-суггестии, qwen нет» мог быть артефактом подсказки «NOT FOUND AT HEAD». Честный дизайн: один evidence (HEAD-состояние + «SYMBOLS in F at history» из git show), два вопроса — «X определён в F» (now, truth: removed=false) и «X был определён в F» (past, truth: removed=true).",
-      "command": "```",
-      "result": "python experiments/2E_evidence_ladder/graph_context_builder.py experiments/2E_evidence_ladder/temporal_facts_e3c1fdd4.json experiments/2E_evidence_ladder --duo\n# now: temporal_facts_e3c1fdd4.json, tag 2e_e6n; past: temporal_facts_e4c_past.json (fp d1d2c2ed440ec370), tag 2e_e6p\npython scripts/run_1L_live_arm.py --provider openrouter --arm temporal_duo_first --facts <now|past> --ev-contexts experiments/2E_evidence_ladder/temporal_duo_contexts_e8571628.json --models \"...\" --prompt-version v2 --no-reasoning --tag 2e_e6{n,p}",
-      "verdict": "confirmed",
-      "finding": "(1) история в evidence без явного маркера текущего состояния = токен-присутствие X = ложный true у любой модели; (2) для VOR проверки «существует сейчас» — evidence ТОЛЬКО HEAD, либо вопрос формулировать явно во времени (past/now). Temporal-вопрос серии ЗАКРЫТ."
-    },
-    {
-      "id": "exp-70",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "summarize: inline-пересчёт (verdict из старых progress + truth из corrected) — corrected per-category метрики 1-L (3300+ вызовов)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "`python scripts/summarize_1L_categories.py --facts experiments/1V_memory_contamination/memory_contamination_facts_v4_rep_corrected.json --markdown > experiments/2E_evidence_ladder/corrected_1L_metrics.md` (95 строк-моделей, все теги 1-L + 2-E)",
-      "result": "v2_en code_first (canonical sweep):\n| модель | recall(real) | FA absent | FA trap | FA silent | trap miss_true |\n| qwen3.6 | 0.08 | 0 | 0 | 0 | 4 |\n| qwen3.7 | 0.20 | 0 | 0 | 0 | 4 |\n| deepseek | 0.04 | 0 | 0 | 0 | 4 |\n| glm-4.7 | 0.88 | 7 | 0 | 2 | 1 |\n| nemotron-3.5 | 0.52 | 0 | 0 | 1 | 3 |\nfile_content (V4):\n| qwen3.6 | 0.88 | 0 | 0 | 0 | 2 |\n| qwen3.7 | 0.88 | 0 | 0 | 0 | 3 |",
-      "verdict": "confirmed",
-      "finding": "метрики «FA по категории» без truth-валидации категории по субъекту = измерительный артефакт. Инструмент: --facts corrected в summarize (truth-based режим, старые прогоны пересчитываются без повторных вызовов)."
-    },
-    {
-      "id": "exp-71",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "Валидация corrected-пересчёта (ручная сверка перед публикацией): miss_true подтверждён, разъезда нет",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "сверка original vs corrected по всем 50 id (kind/subject/value/claim/support_patterns) + конкретные R43/R45/R46 в двух прогонах qwen3.7.",
-      "result": "orig ids=50, corr ids=50, sets equal, дубликатов нет\nПобочные поля, отличающиеся от original (кроме truth/label_note): НЕТ — 0 расхождений\nИзменённые truth: ровно ['R43','R45','R46','R47']\nv2_en/code_first qwen3.7: R43/R45/R46 verdict=false, truth(corr)=True → miss_true=True (подтверждено)\nfile_content qwen3.7: R43 verdict=false (miss_true), R45 verdict=true (ПРАВИЛЬНЫЙ true, не FA), R46 verdict=false (miss_true)",
-      "verdict": "confirmed",
-      "finding": "перед публикацией corrected-метрик — сверка id/полей original↔corrected и 2-3 конкретных факта по progress (проверка пользователя, принята)."
-    },
-    {
-      "id": "exp-72",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "Pinned-probe: выбор канонического бэкенда (комментарий Tom Jones, provider.order)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "3 факта (R01 true / R42 false / R45 true-corrected) × 3 повтора × кандидаты: glm-4.7 → StreamLake/Cloudflare/DeepInfra, deepseek-v4 → DeepInfra/Cloudflare (топ по CSV-аудиту).",
-      "result": "glm-4.7  pin=StreamLake  R01:?/?/? R42:?/?/? R45:?/?/?  ← нечитаемые ответы (исключён)\nglm-4.7  pin=Cloudflare  R01:true×3 ✓ R42:unknown×3 R45:true×3 ✓ (стабильно)\nglm-4.7  pin=DeepInfra   R01:true×3 ✓ R42:unknown×3 R45:true×3 ✓ (стабильно)\ndeepseek pin=DeepInfra   R01:true×3 ✓ R42:unknown×3 R45:unknown×3 (стабильно)\ndeepseek pin=Cloudflare  R01:?/?/? R42:?/?/? R45:?/?/?  ← нечитаемые (исключён)",
-      "verdict": "confirmed",
-      "finding": "объём в CSV ≠ качество бэкенда: StreamLake был самым нагруженным у glm, но pinned не отдаёт JSON — пининг также защищает от «популярного, но битого» апстрима."
-    },
-    {
-      "id": "exp-73",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "Pinned-rerun на corrected-датасете (fp e6ce7b902d0a20a9): канонические числа серии, routing-полоса убрана",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "15 прогонов (5 армов × 3 модели), --pin-provider: qwen→Alibaba, deepseek/glm→DeepInfra (по pinned-probe; StreamLake/Cloudflare-deepseek — битые pinned). corrected-датасет e6ce7b902d0a20a9 (R44 truth=None). Теги 2e_pin_*. +resume для error-фактов qwen. Стоимость ~$0.02.",
-      "result": "| arm | qwen rec/FA-tr/miss | deepseek rec/FA-tr/miss | glm rec/FA-tr/miss |\n| file_content | 0.88/0/3 | 0.80/1/2 | 0.68/2/1 |\n| graph_first | 0.72/0/4 | 0.48/0/2 | 0.84/1/0 |\n| file_graph | 0.84/0/3 | 0.92/1/2 | 0.80/2/1 |\ntemporal NOW removed-FA: qwen 12/12, deepseek 9/12, glm 12/12 (как unpinned)\ntemporal PAST: все 40/40 (как unpinned)\nFA absent/silent: 0 во всех pinned-ячейках",
-      "verdict": "confirmed",
-      "finding": "pinned-rerun подтвердил устойчивость всех выводов серии к маршрутизации; glm-недетерминизм — свойство модели (даже single-backend); StreamLake (топ-1 unpinned у glm) pinned не отдаёт JSON — объём ≠ качество."
-    },
-    {
-      "id": "exp-74",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "RED TEAM раунд 3 (аудит «проведён ли эксперимент правильно»): shuffle влияет (4/50), StreamLake = 404 no endpoint (не «битые ответы»), FA trap = N=1",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-16)",
-      "result": "python scripts/run_1L_live_arm.py ... --arm code_first --facts corrected --models qwen3.7 --pin-provider Alibaba --shuffle-seed 123 --tag 2e_shuf\n# StreamLake probe: httpx POST glm-4.7-flash, provider.order=[StreamLake]",
-      "verdict": "confirmed",
-      "finding": "«порядок не угроза» и «провайдер битый» — оба были непроверенными утверждениями; shuffle-контроль и сырой 404 — стоили копейки. Проверять, а не декларировать (P-паттерн: «непроверенное допущение в отчёте»)."
-    },
-    {
-      "id": "exp-75",
-      "date": "2026-08-16",
-      "project": "mscodebase-intelligence",
-      "title": "E5: расширенная trap-категория (P-00X, лейблы по субъекту) — present-trap МАССОВ, graph реально помогает deepseek (75→40%)",
-      "hypothesis": "(no hypothesis recorded)",
-      "command": "trap_facts_generator.py (20 false-trap: value в проекте ≥2 файлов, НЕ в файле субъекта — grep субъекта=0; 10 true-trap) + прогон file_content_first/graph_first × 3 модели (pinned, correct pin: qwen→Alibaba, deepseek/glm→DeepInfra; первый прогон с Alibaba для всех — 404 glm, переделано). fp 138f306dbe14b66e → cb6f822b9eb66afd.",
-      "result": "| arm             | qwen FA/rec | deepseek FA/rec | glm FA/rec |\n| file_content    | 2/20, 2/10  | 15/20, 6/10     | 13/20, 7/10 |\n| graph_first     | 2/20, 3/10  | 8/20, 5/10      | 14/20, 9/10 |",
-      "verdict": "confirmed",
-      "finding": "«FA trap = 0» на категории с N=1 — бессмысленное число; расширение категории с валидацией по субъекту (P-00X) — единственный способ честно измерить present-trap. Ответ на вопрос ревьюера (chatgpt): «does the corrected generator reject value-anywhere-in-subject?» — ДА, trap_facts_generator.py проверяет grep субъекта = 0 (демонстрация фикса)."
-    },
-    {
-      "id": "exp-76",
-      "date": "2026-08-25",
-      "project": "mscodebase-intelligence",
-      "title": "Гипотеза: fix заморозки MCP при full reindex (get_status на loop-потоке)",
-      "hypothesis": "при full reindex ~7.5-12 мин ВСЕ MCP-вызовы отвечают мгновенно, а не таймаутят; search fast-fail; после завершения индекс цел.",
-      "command": "`intel_trigger_reindex(mode=\"full\")` → job 78a88a51; пробы: `intel_get_runtime_status`, `debug_runtime_passport`, `search_code(fast)`, `intel_get_job_status` (8 опросов); полный `python -m pytest tests/ -q`.",
-      "result": "REINDEX: 9003/9003 completed за 519s (полный цикл 19:29:34→21:11:13),\n         embedding avg 17-59 ch/s, фазы recreate→parse→embed.\nПРОБЫ ВО ВРЕМЯ REINDEX (22% → 76%):\n  intel_get_runtime_status : мгновенно ×2 (фаза recreate — 0 chunks честно)\n  debug_runtime_passport   : мгновенно ×2 (NO timeouts, uptime 257s живой)\n  search_code(fast)        : мгновенный fast-fail («Index is not ready»)\n  intel_get_job_status     : 8 опросов, все <1s, прогресс 22→24→34→44→52→62→76→100\nПОСЛЕ: intel_get_runtime_status → 🟢 9003 chunks | 540 files | 10714 symbols\npytest полный: 1518 passed, 5 skipped, 91 deselected, 0 failed (было 1512)",
-      "verdict": "confirmed",
-      "finding": "исправление блокировки ≠ исправление сигналов; после фикса liveness обязательно проверить семантику сообщений агенту — иначе агент «чинит» здоровое состояние."
-    },
-    {
-      "id": "exp-77",
-      "date": "2026-08-25",
-      "project": "mscodebase-intelligence",
-      "title": "M1: реальная телеметрия инструментов → граница «65 инструментов» (research-only сессия)",
-      "hypothesis": "из ~62 зарегистрированных MCP-инструментов большинство мертвый груз в реальных сессиях; граница рабочего набора — одно-двузначное число.",
-      "command": "`python experiments/mech_orch/tool_metrics_analysis.py` (историч. tool_metrics.json) + grep error_handler-строк 2MB лога mscodebase-intelligence.log + `debug_runtime_passport`/`intel_get_runtime_status`.",
-      "result": "Registered: 32 core + 14 intel + 12 inline + 4 dev = 62 total;  MCP Tools: 16/32 видимы (MSCODEBASE_MCP_TOOLS=default)\ntool_metrics.json (вся история): lsp_get_diagnostics 2c/0e, lsp_document_symbols 2c/0e, lsp_get_type_info 2c/2e (15s timeout), lsp_find_definition 1c/0e, lsp_find_references 1c/1e\n= 8 calls total, 5 tools, 3 errors (37.5%) — LSP-набор нестабилен на этой машине\nsearch_code: 10 timeout-записей 15-31s с retry (историч.); codebase hub: 1 timeout 30s",
-      "verdict": "confirmed",
-      "finding": "«сколько инструментов реально используется» нельзя измерить постфактум — телеметрия обязана писать каждый вызов (или хотя бы per-tool счётчик), иначе граница набора — интуиция, а не метрика.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "dev",
-            "value": 62
-          },
-          {
-            "label": "e",
-            "value": 8
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-78",
-      "date": "2026-08-25",
-      "project": "mscodebase-intelligence",
-      "title": "M2: субагент в свежем проекте: natural vs MCP-first (реальный инструментный след)",
-      "hypothesis": "свежий агент без инструкции про MCP не тронет MCP-инструменты (уйдёт в grep/read); с инструкцией — использует, но на неиндексированных файлах семантика бесполезна.",
-      "command": "фикстура `experiments/mech_orch/lab/` (calc.py/rpn.py/tests, 1 planted bug: reverse-pop в RPN) → 2 субагента параллельно: A «MCP-first, только диагностика», B «natural, исправить». Baseline: 1 failed/4 passed.",
-      "result": "Agent A (MCP-first): MCP_CALLS=9 IDE_CALLS=5 | passport OK (RUN_ID a73f160e278a — субагенты видят тот же MCP!)\n  search_code×2 (fast, про lab) -> 0 релевантных (lab НЕ в индексе); get_symbol_info('evaluate...') -> not found\n  read_live_file×3 (rpn/calc/test) -> ОК, баг найден rpn.py:11 (reverse pop, некоммутативн. - и /); правки 0\nAgent B (natural):   MCP_CALLS=0 IDE_CALLS=5 | list_directory+read×3+edit_file+terminal | 5 passed в 0.04s\nBaseline after B fix: 5 passed in 0.03s;  git diff --stat: 1 file changed",
-      "verdict": "confirmed",
-      "finding": "(1) ценность MCP-слоя — на ИНДЕКСИРОВАННОМ коде; для свежих/чужих директорий нужен fallback «read из диска + ripgrep» в мета-инструментах, а не молчаливый пустой ответ; (2) prompt (инструкция про MCP) — сильнейший предиктор использования инструментов, сильнее самого дизайна; граница «набора инструментов» определяется и discoverability тоже.",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "MCP CALLS",
-            "value": 9
-          },
-          {
-            "label": "IDE CALLS",
-            "value": 5
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-79",
-      "date": "2026-08-25",
-      "project": "mscodebase-intelligence",
-      "title": "M3: матрица реальной латентности MCP vs grep (search fast/quality, get_symbol_info)",
-      "hypothesis": "«quality-семантика» даёт лучший контекст за сопоставимое время; get_symbol_info работает как «точный» инструмент по имени символа.",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-25)",
-      "result": "search_code(fast)   75ms  -> точное попадание src/mcp/tools/search_tools.py:1 (_get_stale_warning) ✓\nsearch_code(quality) 3666ms -> ПРОМАХ: results_tasks_v3.json + CHANGELOG.md (семантика ушла в мусор) ✗\nget_symbol_info('_get_stale_warning search_tools.py') -> 'not found' ✗ (реальный символ! 2-й miss за сессию)\ngrep -c 'def evaluate' rpn.py  28ms ✓ (контроль)",
-      "verdict": "confirmed",
-      "finding": "степень «умности» инструмента не коррелирует с пользой: дешёвый точный сигнал (fast/ripgrep) бьёт дорогую семантику (BGE-M3/BM25 rerank) на коротких запросах; QoS-порог для quality-режима (<1.5s) и fallback-цепочка fast→grep обязаны быть в мета-инструментах."
-    },
-    {
-      "id": "exp-80",
+      "id": "exp-30",
       "date": "2026-08-26",
       "project": "mscodebase-intelligence",
-      "title": "E3: категорийный роутер на tasks_v3.json (30 задач, реальный индекс, 3 руки)",
-      "hypothesis": "(1) каскад fast→quality окупается; (2) разные klass требуют разных рук (роутер по классам > единой руки).",
-      "command": "`EXT venv python experiments/mech_orch/E3_category_router_eval.py` (limit=8, topk=5; реальная БД 9089 rows; embedder force llama_cpp — авто-детект в standalone ломается в ONNX-fallback, артефакт среды). Руки: fast / quality / cascade.",
-      "result": "ARM      recall@5  facts_cov  lat_med   lat_p95\nfast       0.167      0.517     148ms     167ms\nquality    0.133      0.861    2145ms    6803ms\ncascade    0.233      0.753     564ms    6909ms\nBY KLASS (fast/quality/cascade):\n find_bug_cause 0.20/0.00/0.20 | find_caller_callee 0.00/0.50/0.50 | find_impact 0/0/0\n find_test 0/0/0 | git_history 0.50/0.25/0.50 | modify_function 0/0/0\n prepare_change 0.25/0.00/0.25 | understand_architecture 0.25/0.50/0.50 | verify_change 0/0/0",
+      "title": "E4.1: the graph stage breaks the search-only ceiling — recall 0.433 (cascade 0.267), med 177ms (Track 1)",
+      "hypothesis": "A graph stage (SymbolIndexAdapter over graph.db, cold-start) lifts the 4 failing classes (find_test/find_impact/modify/verify) above the search-only ceiling; target recall>=0.40 med<600ms.",
+      "command": "EXT venv python experiments/mech_orch/E4_1_graph_arm.py (same-run: cascade AND cascade+graph in one process; real graph.db 10748 nodes / 33538 edges).",
+      "result": "same-run: cascade alone 0.267 | +graph arm 0.433 | med=177ms p95=4220ms. BY KLASS (graph vs cascade): find_impact 1.00 vs 0.00 | find_test 0.50 vs 0.00 | modify_function 0.25 vs 0.00 | verify_change 0.00 vs 0.00 | other classes equal. Example graph-arm hits (10-15ms, facts instead of 4-7s quality): T2 modify intel_code_topology -> layer.py | T3 impact _expand_graph_context -> engine.py | T5 test trigger_reindex | T18 impact notify_change -> server_tools.py | T27 impact intel_code_topology.",
       "verdict": "confirmed",
-      "finding": "поиск-только даёт recall@5 ≤ 0.23 на реальных кодовых задачах; категория (klass) — реальный предиктор победившей руки; точность «single sweeper» без граф-стадии ограничена на test/impact классах. Артефакт: results_E3_router.json, скрипт E3_category_router_eval.py (read-only, переиспользуем)."
-    },
-    {
-      "id": "exp-81",
-      "date": "2026-08-26",
-      "project": "mscodebase-intelligence",
-      "title": "E4 (PoC, ОТРИЦАТЕЛЬНЫЙ): детерминированный keyword-роутер по классам",
-      "hypothesis": "пер-классный роутер (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) даст recall ≥ каскада (0.233) при медиане < 600ms.",
-      "command": "`EXT venv python experiments/mech_orch/E4_router_poc.py` — классификатор: 9 keyword-правил (порядок важен), руки по E3; те же метрики.",
-      "result": "router: recall=0.200 facts_cov=0.533 lat_med=298ms p95=10745ms klass_acc=0.40\nbaselines (E3): fast 0.167 / quality 0.133 / cascade 0.233\nBY KLASS: find_bug_cause 0.20 | git_history 0.50 | caller_callee 0.50 | arch 0.25 | prepare 0.25\n          modify/test/impact/verify: 0.00 ВСЕ (даже union fast+quality)",
-      "verdict": "confirmed",
-      "finding": "",
+      "finding": "The graph stage added +0.166 recall on three of the four failing classes at ~15ms latency and lost nowhere (fallback to cascade by construction). Lessons: (1) has_symbol is an exact node-name — search_symbols(LIKE) + strict suffix is required; (2) graph navigation must go through SymbolIndexAdapter(graph.db), not a disk-only SymbolIndex (empty JSON); (3) an empty symbol_index.json did not block the graph — it blocked choosing the wrong instance.",
       "chart": {
         "type": "bar",
-        "title": "measured metrics (from raw output)",
+        "title": "recall: cascade vs cascade+graph",
         "data": [
           {
-            "label": "lat med",
-            "value": 298
+            "label": "cascade",
+            "value": 0.267
           },
           {
-            "label": "p95",
-            "value": 10745
+            "label": "cascade+graph",
+            "value": 0.433
           }
         ]
-      }
+      },
+      "conclusion": "The graph stage breaks the search-only ceiling. Honest remainder: verify_change stays 0 (T9 'engine' resolves to the wrong node; T29 prompt has no identifiers); facts-coverage for graph rows was not counted (graph returns file paths, not snippets); same-run methodology is mandatory (run-to-run fast/quality variance is high).",
+      "links": [
+        "exp-28",
+        "exp-29",
+        "exp-31"
+      ]
     },
     {
-      "id": "exp-82",
+      "id": "exp-31",
       "date": "2026-08-26",
       "project": "mscodebase-intelligence",
-      "title": "E4.1 (ПОЛОЖИТЕЛЬНЫЙ): граф-стадия пробивает потолок (Дорожка 1)",
-      "hypothesis": "граф-стадия (SymbolIndexAdapter над graph.db, cold-start) поднимает 4 провальных класса (find_test/find_impact/modify/verify) выше search-only потолка; цель recall≥0.40 med<600ms.",
-      "command": "`EXT venv python experiments/mech_orch/E4_1_graph_arm.py` (same-run: каскад И каскад+граф в одном процессе; реальный graph.db 10748 узлов/33538 рёбер).",
-      "result": "same-run:  cascade alone 0.267 | +graph arm 0.433 | med=177ms p95=4220ms\nBY KLASS (graph vs cascade): find_impact 1.00 vs 0.00 | find_test 0.50 vs 0.00\n  modify_function 0.25 vs 0.00 | verify_change 0.00 vs 0.00 | остальные — equal\nПримеры попаданий граф-руки (10-15ms, факты вместо 4-7s quality):\n  T2 modify: graph:intel_code_topology -> layer.py H (cascade -)\n  T3 impact: graph:_expand_graph_context -> engine.py H | T5 test: trigger_reindex H\n  T18 impact: notify_change -> server_tools.py H | T27 impact: intel_code_topology H",
+      "title": "E4.2: deterministic concept resolver (no LLM) — verify_change T9/T29 HIT on real graph.db, facts 4/4 & 3/4 (Track 2)",
+      "hypothesis": "The two E4.1 remainders — verify_change=0 (T9 wrong-anchor 'engine', T29 no-anchor) and 'graph returns files, not text' (facts=0) — are closed NOT by an LLM classifier but by a mechanical concept-phrase registry (fail-open, klass-gated) BEFORE the lexical extract_symbol (resolution, not classification — RESEARCH.md rec #3). Regression on other classes is structurally excluded: recipes are klass-gated to verify_change, other classes fall back to the old extract_symbol.",
+      "command": "Layer proof without embedder: python experiments/mech_orch/probe_e42_verify.py (real graph.db, read-only) + python -m pytest tests/test_mech_resolver.py tests/test_symbol_index_persistence.py -q.",
+      "result": "probe: T9 verify_change sym=notify_change files=[.../src/mcp/server_tools.py] -> HIT gt=src/mcp/server_tools.py facts=4/4 | T29 verify_change sym=_extract_symbol_name files=[..., .../src/core/search/utils.py] -> HIT gt=src/core/search/utils.py facts=3/4 | ALL HIT. Full live same-run (30 tasks, real embedder): cascade 0.267 -> cascade+graph 0.50, med 196.8ms, p95 4514ms; verify_change graph=1.00 (T9 arm=graph:notify_change, T29 arm=graph:_extract_symbol_name) vs cascade 0.00; 9/9 classes >= cascade (no regression). pytest: 14 passed in 2.48s (resolver 10 + persistence 4).",
       "verdict": "confirmed",
-      "finding": "",
-      "chart": {
-        "type": "bar",
-        "title": "measured metrics (from raw output)",
-        "data": [
-          {
-            "label": "med",
-            "value": 177
-          },
-          {
-            "label": "p95",
-            "value": 4220
-          }
-        ]
-      }
-    },
-    {
-      "id": "exp-83",
-      "date": "2026-08-26",
-      "project": "mscodebase-intelligence",
-      "title": "E4.2 (Дорожка 2, ПОЛОЖИТЕЛЬНЫЙ на граф-слое): детерминированный concept-резолвер символа + факты для граф-строк",
-      "hypothesis": "два остатка E4.1 — verify_change=0 (T9 резолв 'engine' wrong-anchor, T29 no-anchor) и «граф отдаёт файлы, не текст» (facts=0) — закрываются НЕ LLM-классификатором, а механическим concept-phrase-реестром (fail-open, klass-gated) ПЕРЕД лексическим extract_symbol (РЕЗОЛВ, не классификатор — RESEARCH.md rec #3). Регресс на других классах структурно исключён: рецепты klass-gated на verify_change, остальные классы fallback на старый extract_symbol.",
-      "command": "node scripts/sync-mscodebase.ts (source: EXPERIMENTS_LOG.md:2026-08-26)",
-      "result": "[probe] T9  verify_change sym=notify_change        files=[.../src/mcp/server_tools.py]      -> HIT gt=src/mcp/server_tools.py facts=4/4\n[probe] T29 verify_change sym=_extract_symbol_name files=[..., .../src/core/search/utils.py] -> HIT gt=src/core/search/utils.py facts=3/4\n[probe] === E4.2 graph-layer probe: verify_change ALL HIT ===\n[pytest] 14 passed in 2.48s  (test_mech_resolver 10 + test_symbol_index_persistence 4)",
-      "verdict": "confirmed",
-      "finding": "«бессловесный» промпт — это не задача классификации, а задача резолва якоря: лексический extract_symbol не переживает ни «следствие вместо имени» (T9), ни «концепт вместо имени» (T29). Механический concept-реестр с klass-gating — детерминированный и не регрессит; корпусное наполнение рецептов — из 3300-call корпуса (RESEARCH.md rec 3)."
+      "finding": "Both verify_change misses resolve to the correct file on the real graph.db (10748 nodes); graph rows now carry facts (graph_fact_text), not 0; regression is excluded by construction (klass-gating). A 'wordless' prompt is an anchor-resolution problem, not classification — lexical extract_symbol survives neither consequence-instead-of-name (T9) nor concept-instead-of-name (T29).",
+      "chart": null,
+      "conclusion": "A mechanical concept registry with klass-gating is deterministic and non-regressing; recipe seeding from the 3300-call corpus (RESEARCH.md rec #3). Live same-run confirmed: verify_change 0->1.0, overall recall 0.433->0.50 at med 196.8ms (target >=0.40/<600ms).",
+      "links": [
+        "exp-30"
+      ]
     }
   ],
-  "negativeResults": []
+  "negativeResults": [
+    {
+      "attempt": "scip-python as a pip dependency (SCIP backend for Python)",
+      "whyFailed": "The package does not exist on PyPI (404) - only Sourcegraph CLI repositories with node/native builds.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "cypher-sqlite as a ready-made Cypher library",
+      "whyFailed": "The package does not exist on PyPI (404); a custom CypherExecutor was already implemented.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "371-language symbol extraction via tree-sitter-language-pack",
+      "whyFailed": "The manifest lists 371 grammars but only 71 (19%) ship tags.scm - the rest parse AST without symbols.",
+      "date": "2026-08-05",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "pylint-django as a code duplication detector",
+      "whyFailed": "It is a Django-framework plugin (ForeignKey/Model types), not a dup-detector - per the official PyPI description.",
+      "date": "2026-08-08",
+      "ref": "audit.md"
+    },
+    {
+      "attempt": "CoT prompting for cheap verify-on-read",
+      "whyFailed": "x30-65 cost and x20-70 tokens for a marginal recall gain (qwen3.6 code_first 0.08 -> 0.20); glm-4.7 loses 16-26% of responses to upstream EMPTY_CONTENT.",
+      "date": "2026-08-15",
+      "ref": "exp-1"
+    },
+    {
+      "attempt": "First multi-RAG ablation run without per-arm cache isolation",
+      "whyFailed": "The hybrid_search_async embedding cache-hit skips the dense tier - the vector tier silently disappears on repeated queries and the first run was fully distorted (vector_bm25 == bm25_only 30/30).",
+      "date": "2026-08-11",
+      "ref": "exp-5"
+    },
+    {
+      "attempt": "Assume LSP type hierarchy (3.17) and moniker (3.16) are usable for the Python code graph because they exist in the spec",
+      "whyFailed": "basedpyright (pyright fork) does not advertise typeHierarchyProvider or monikerProvider, and does not emit pyright/beginIndexing/endIndexing. Spec-present != server-implemented - must probe the real server instead of assuming from the spec.",
+      "date": "2026-08-19",
+      "ref": "exp-23"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    },
+    {
+      "attempt": "Per-class deterministic keyword router (fast/bug+git+prepare, quality/caller+arch, union/test+impact+modify+verify) as the orchestration layer replacing a single search arm",
+      "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
+      "date": "2026-08-26",
+      "ref": "exp-29"
+    }
+  ]
 }
