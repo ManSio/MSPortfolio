@@ -87,6 +87,32 @@ describe('worker /mcp integration', () => {
     expect(body.today).toBe(0);
   });
 
+  it('/mcp/live returns today/total and recent invocations from KV', async () => {
+    const date = new Date().toISOString().slice(0, 10);
+    const ts = new Date().toISOString();
+    const kv = new Map<string, string>([
+      [`calls:${date}`, '3'],
+      ['calls:total', '11'],
+      ['recent:calls', JSON.stringify([{ ts, tool: 'get_profile' }, { ts, tool: 'verify_claim' }])],
+    ]);
+    const env = makeEnv({ MCP_STATS: { get: async (k) => kv.get(k) ?? null, put: async () => {} } });
+    const res = await worker.fetch(new Request(`${BASE}/mcp/live`), env as never);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { enabled: boolean; today: number; total: number; recent: { ts: string; tool: string }[] };
+    expect(body.enabled).toBe(true);
+    expect(body.today).toBe(3);
+    expect(body.total).toBe(11);
+    expect(body.recent).toHaveLength(2);
+    expect(body.recent[0].tool).toBe('get_profile');
+  });
+
+  it('/mcp/live reports disabled without the KV binding', async () => {
+    const res = await worker.fetch(new Request(`${BASE}/mcp/live`), makeEnv() as never);
+    const body = (await res.json()) as { enabled: boolean; recent: unknown[] };
+    expect(body.enabled).toBe(false);
+    expect(body.recent).toEqual([]);
+  });
+
   it('increments the agent counter on tools/call (best-effort, fire-and-forget)', async () => {
     const kv = new Map<string, string>();
     const env = makeEnv({

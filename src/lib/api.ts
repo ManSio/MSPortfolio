@@ -5,7 +5,7 @@
 // fallback keep the dashboard alive even when the API rate-limits the visitor.
 
 import { readCache, writeCache } from './cache';
-import { STATS_ENDPOINT } from './config';
+import { LIVE_ENDPOINT, STATS_ENDPOINT } from './config';
 import type { DevToArticle, GithubRepoMetric, MetricsSnapshot } from './types';
 
 const TTL = 60 * 60 * 1000; // 1 hour
@@ -144,6 +144,33 @@ export async function getMcpStats(): Promise<McpStats | null> {
     });
     if (!res.ok) return null;
     return (await res.json()) as McpStats;
+  } catch {
+    return null;
+  }
+}
+
+// ── Live recent MCP invocations (worker /mcp/live) ──
+
+export interface McpLiveCall {
+  ts: string;
+  tool: string;
+}
+
+export interface McpLive {
+  ok?: boolean;
+  enabled?: boolean;
+  today?: number;
+  total?: number;
+  recent?: McpLiveCall[];
+}
+
+export async function getMcpLive(): Promise<McpLive | null> {
+  try {
+    const res = await fetch(LIVE_ENDPOINT, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as McpLive;
   } catch {
     return null;
   }

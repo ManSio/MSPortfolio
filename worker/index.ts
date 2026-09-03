@@ -162,8 +162,15 @@ async function enforceRateLimit(env: Env, pathname: string, request: Request): P
   return null;
 }
 
+/** KV key holding the rolling list of recent real tool invocations (JSON array). */
+const RECENT_CALLS_KEY = 'recent:calls';
+/** How many recent calls to retain + serve at /mcp/live. */
+const RECENT_CALLS_LIMIT = 50;
+/** TTL for the recent-calls list so it self-expires if traffic goes quiet. */
+const RECENT_CALLS_TTL_SECONDS = 60 * 60 * 24 * 7;
+
 /** Best-effort, non-atomic daily/total counter (KV is eventually consistent). */
-async function bumpAgentCounter(stats: KVNamespaceLike): Promise<void> {
+async function bumpAgentCounter(stats: KVNamespaceLike, tool: string): Promise<void> {
   try {
     const date = new Date().toISOString().slice(0, 10);
     const todayKey = `calls:${date}`;
@@ -172,6 +179,27 @@ async function bumpAgentCounter(stats: KVNamespaceLike): Promise<void> {
       stats.put(todayKey, String((Number(todayRaw) || 0) + 1)),
       stats.put('calls:total', String((Number(totalRaw) || 0) + 1)),
     ]);
+    // Rolling list of the most recent real invocations (server-side wall clock).
+    // KV is eventually consistent and not atomic (get→modify→put can race under
+    // high concurrency), so a lost entry here is acceptable — same contract as
+    // the counters above. This is a demo-grade live log, not an audit trail.
+    try {
+      const raw = await stats.get(RECENT_CALLS_KEY);
+      let recent: { ts: string; tool: string }[] = [];
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw) as { ts: string; tool: string }[];
+          if (Array.isArray(parsed)) recent = parsed;
+        } catch {
+          recent = [];
+        }
+      }
+      recent.unshift({ ts: new Date().toISOString(), tool });
+      if (recent.length > RECENT_CALLS_LIMIT) recent = recent.slice(0, RECENT_CALLS_LIMIT);
+      await stats.put(RECENT_CALLS_KEY, JSON.stringify(recent), { expirationTtl: RECENT_CALLS_TTL_SECONDS });
+    } catch {
+      // best-effort — a failed recent-log write must never fail the request
+    }
   } catch {
     // best-effort — a failed counter write must never fail the request
   }
@@ -506,6 +534,39 @@ export default {
       return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total }), cors);
     }
 
+    // Live view of the most recent real MCP tool invocations (see RECENT_CALLS_KEY).
+    // Served from KV — no extra token/APIs needed; populated as real MCP clients
+    // call /mcp. Empty until actual traffic arrives.
+    if (url.pathname === '/mcp/live') {
+      const stats = env.MCP_STATS;
+      const recent: { ts: string; tool: string }[] = [];
+      let today = 0;
+      let total = 0;
+      if (stats) {
+        try {
+          const date = new Date().toISOString().slice(0, 10);
+          const [t, tot, raw] = await Promise.all([
+            stats.get(`calls:${date}`),
+            stats.get('calls:total'),
+            stats.get(RECENT_CALLS_KEY),
+          ]);
+          today = Number(t) || 0;
+          total = Number(tot) || 0;
+          if (raw) {
+            try {
+              const parsed = JSON.parse(raw) as { ts: string; tool: string }[];
+              if (Array.isArray(parsed)) recent.push(...parsed);
+            } catch {
+              // corrupt/empty log — serve empty list
+            }
+          }
+        } catch {
+          // counters/log unavailable — report zeros/empty
+        }
+      }
+      return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total, recent }), cors);
+    }
+
     // MCP server discovery — official `/.well-known/mcp.json` convention.
     if (url.pathname === '/.well-known/mcp.json') {
       if (request.method !== 'GET' && request.method !== 'HEAD') {
@@ -643,7 +704,7 @@ Source: https://github.com/ManSio/MSPortfolio
             }
             if (analytics) analytics.writeDataPoint({ blobs: tool ? [method, tool] : [method], indexes: ['/mcp'] });
             // Count real tool invocations (not discovery) for the agent counter.
-            if (stats && method === 'tools/call') return bumpAgentCounter(stats);
+            if (stats && method === 'tools/call') return bumpAgentCounter(stats, tool ?? 'unknown');
           })
           .catch(() => {});
         if (ctx?.waitUntil) ctx.waitUntil(task);

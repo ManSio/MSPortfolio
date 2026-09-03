@@ -10,3 +10,7 @@ export const CHAT_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/chat'
 
 // Live agent-traffic counter (daily + total tool invocations).
 export const STATS_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/mcp/stats';
+
+// Live view of the most recent real MCP tool invocations (ts + tool name),
+// served from the same worker's KV — see worker /mcp/live.
+export const LIVE_ENDPOINT = 'https://msp-portfolio.mansio-dev.workers.dev/mcp/live';
