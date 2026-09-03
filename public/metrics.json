@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-03T14:34:06.941Z",
+  "fetchedAt": "2026-09-03T18:17:53.323Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,15 +13,15 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-03T09:48:40Z",
+      "pushedAt": "2026-09-03T18:17:28Z",
       "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-03T03:20:12Z",
+      "openIssues": 1,
+      "pushedAt": "2026-09-03T16:12:04Z",
       "language": "Python"
     },
     {
@@ -198,6 +198,34 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "d5e5d7b0be",
+      "date": "2026-09-03T18:16:37Z",
+      "message": "Revert \"feat(lab): on-demand lab JSON generator from real MSCodeBase sources\"",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "ee39bca962",
+      "date": "2026-09-03T18:00:03Z",
+      "message": "feat(seo): add llms.txt alternate link in head",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "7d93ee37ee",
+      "date": "2026-09-03T17:54:32Z",
+      "message": "feat(mcp): live recent invocations endpoint + stats card timestamps",
+      "author": "ManSio"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "098daa5c8d",
+      "date": "2026-09-03T15:43:30Z",
+      "message": "docs: reconcile AGENTS §2 tool counts with server_tools registration; close KI ad89b2d4, write-actions live-reverified",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "b063c91743",
       "date": "2026-09-02T21:59:59Z",
@@ -209,13 +237,6 @@
       "sha": "848fdf3395",
       "date": "2026-09-02T21:53:02Z",
       "message": "docs(experiments): carry exp-lab-2026-01 neuro-symbolic spike artifact into main",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "ed96ef2a14",
-      "date": "2026-09-02T20:27:18Z",
-      "message": "docs(diary): record PR #20 merge, green CI, issues #21/#22 auto-closed",
       "author": "MSCodeBase Agent"
     },
     {
@@ -385,20 +406,6 @@
       "date": "2026-06-15T17:11:50Z",
       "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
       "author": "Mikhail"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "97e6014d06",
-      "date": "2026-06-15T16:04:26Z",
-      "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "a4ebcda881",
-      "date": "2026-06-15T06:23:15Z",
-      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
-      "author": "dependabot[bot]"
     }
   ]
 }
