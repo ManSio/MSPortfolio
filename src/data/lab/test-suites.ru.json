@@ -1,76 +1,1098 @@
 {
   "suites": [
     {
-      "file": "tests/intents.test.ts",
-      "name": "Сопоставление намерений (RU/EN)",
+      "file": "tests/benchmark_agentic_search.py",
+      "name": "benchmark agentic search",
       "tests": 7,
-      "covers": "Роутинг намерений агента: проекты, фильтры стека, принципы, статьи, таймлайн, fallback",
-      "updatedAt": "2026-08-14"
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/mcp-tools.test.ts",
-     "name": "MCP-инструменты + модели архитектуры",
-     "tests": 18,
-     "covers": "Поверхность инструментов, get_profile nextSteps (D8), фильтры, честность analyze_stack, симуляция (5 точек, валидация, llm_saturation, события), снимок коммитов, антипаттерны, lab-инструменты, аннотации, все архитектуры × все сценарии",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_action_receipt.py",
+      "name": "action receipt",
+      "tests": 16,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-      "file": "tests/worker.test.ts",
-      "name": "Интеграция Worker /mcp",
+      "file": "tests/test_agentic_search.py",
+      "name": "agentic search",
+      "tests": 25,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_architecture_invariants.py",
+      "name": "architecture invariants",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_architecture_lifecycle.py",
+      "name": "architecture lifecycle",
+      "tests": 17,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_artifact_gc.py",
+      "name": "artifact gc",
+      "tests": 12,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_artifact_paths.py",
+      "name": "artifact paths",
+      "tests": 15,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_assignments.py",
+      "name": "assignments",
+      "tests": 34,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_ast_cache_invalidation.py",
+      "name": "ast cache invalidation",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_auto_doc_updater.py",
+      "name": "auto doc updater",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_automation.py",
+      "name": "automation",
+      "tests": 0,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_branch_aware_index.py",
+      "name": "branch aware index",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_bug_correlation.py",
+      "name": "bug correlation",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_change_preview.py",
+      "name": "change preview",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_check_tool_names.py",
+      "name": "check tool names",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_chunk_cache.py",
+      "name": "chunk cache",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_cli.py",
+      "name": "cli",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_codebase_hub.py",
+      "name": "codebase hub",
+      "tests": 18,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_commit_memory.py",
+      "name": "commit memory",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_commit_memory_significance.py",
+      "name": "commit memory significance",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_community_detection.py",
+      "name": "community detection",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_connection.py",
+      "name": "connection",
+      "tests": 1,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_consistency.py",
+      "name": "consistency",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_context_tool.py",
+      "name": "context tool",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_contradiction_ledger.py",
+      "name": "contradiction ledger",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_cross_project_deps.py",
+      "name": "cross project deps",
+      "tests": 26,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_cross_repo_search.py",
+      "name": "cross repo search",
+      "tests": 21,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_cypher_engine.py",
+      "name": "cypher engine",
+      "tests": 70,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_database_lock.py",
+      "name": "database lock",
+      "tests": 11,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_database_lock_selfhealing.py",
+      "name": "database lock selfhealing",
+      "tests": 20,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_decorators_overrides.py",
+      "name": "decorators overrides",
+      "tests": 14,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_deep_search.py",
+      "name": "deep search",
+      "tests": 15,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_di_container.py",
+      "name": "di container",
+      "tests": 14,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_doc_generator.py",
+      "name": "doc generator",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_duplication.py",
+      "name": "duplication",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_edge_transparency.py",
+      "name": "edge transparency",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_edges_stored.py",
+      "name": "edges stored",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_env_extractor.py",
+      "name": "env extractor",
       "tests": 22,
-      "covers": "tools/list (13 инструментов + аннотации), health без rate limit, /mcp/stats (KV), счётчик tools/call, 429 MCP/CHAT, security-заголовки, CORS allow/deny, 404, adversarial (битый JSON, неизвестный инструмент/метод), 8-путевая конкурентность с корректностью фильтра, /resume.txt + /llms.txt + 405, анонимная квота (D4: заголовки + 429), /openapi.json (D5)",
-     "updatedAt": "2026-08-15"
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/lab.test.ts",
-     "name": "Целостность lab-данных + SSR-рендер + снимок бенчмарков",
-     "tests": 10,
-     "covers": "Полнота/вердикты экспериментов + теги проектов, ссылки отрицательных результатов, полнота/статусы дневника + теги проектов, id/температуры KI + теги проектов, сумма test-suite = total, id/вердикты/сводка evidence-ledger, SSR LabPage (7 секций + фильтр), EN-only проекции (вкл. evidence-claims), sanity benchmarks.json (DoD-гейты: llm recall ≥80%, 0 ложных принятий, p95 < 3s)",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_error_handler.py",
+      "name": "error handler",
+      "tests": 31,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/evidence-eval.test.ts",
-     "name": "Evidence Score v1 (D3 детерминированная рука) + v2 stage-0 парафраз-сет",
-     "tests": 13,
-     "covers": "verify_claim: регистрация 13-го инструмента + обязательный claim-вход, поддержанное истинное заявление (profile evidence), заявление с проектной трассировкой, отрицательные контроли (Google/Meta отклонены), заметки о слишком коротком/пустом заявлении; computeEvidence: счётчики toolCalls/grounded/failed, флаг ungrounded, null результат = failed; evidence-ledger: вердикт каждого канонического заявления совпадает с verify_claim; v2 stage 0: 8 истинных парафраз отклоняются v1 (baseline recall-разрыва, KI-017), 3 парафразированных отрицательных контроля остаются отклонёнными, задокументировано ложное принятие по подстроке (search+engine)",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_execution_contract.py",
+      "name": "execution contract",
+      "tests": 11,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/llm-verify.test.ts",
-     "name": "Логика решений v2 LLM arm (мокнутый провайдер)",
-     "tests": 9,
-     "covers": "verifyClaimLlmArm fail-closed guards (план v2 §5): supported с валидной процитированной записью, refused passthrough, мусорный ответ, supported без источника, supported с источником вне кандидатов, HTTP-ошибка, abort/таймаут, слишком короткое заявление без сетевого вызова, парафраз с нулевым пересечением достигает LLM через padded core context (фикс p-01)",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_execution_contract_v2.py",
+      "name": "execution contract v2",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/llm-arm-integration.test.ts",
-     "name": "Интеграция verify_claim + LLM arm (этап 2)",
-     "tests": 5,
-     "covers": "arm отсутствует -> детерминированный v1 (arm:deterministic), arm спасает промах с процитированным источником (arm:llm), отказ arm сохраняет отказ, ошибка arm fail-closed, детерминированное попадание никогда не обращается к arm",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_file_exists.py",
+      "name": "file exists",
+      "tests": 11,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/verify-repo.test.ts",
-     "name": "verify_repo — живая GitHub-верификация (мок)",
-     "tests": 9,
-     "covers": "Голое имя по умолчанию = ManSio + перекрёстная проверка портфолио (languageMatches), полное owner/name, честное несовпадение языка с курируемой записью, 404 = не существует, 403/429 rate limit сообщается честно, сетевой сбой, нормализация github.com URL, пустой вход без сетевого вызова, readme:true возвращает реальный текст README",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_fts5_integration.py",
+      "name": "fts5 integration",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/verify-article.test.ts",
-     "name": "verify_article — живая Dev.to верификация (мок)",
-     "tests": 4,
-     "covers": "Совпадение фрагмента заголовка с данными платформы, честное not-found, сбой API честной ошибкой, короткий запрос отклонён без сетевого вызова",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_git_url_source.py",
+      "name": "git url source",
+      "tests": 14,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     },
     {
-     "file": "tests/verify-package.test.ts",
-     "name": "verify_package — живая npm-верификация (мок)",
-     "tests": 4,
-     "covers": "Существующий пакет + проверка мейнтейнера (case-insensitive), честный 404 not-found, сбой реестра честной ошибкой, пустой вход без сетевого вызова",
-     "updatedAt": "2026-08-15"
+      "file": "tests/test_gitignore_parser.py",
+      "name": "gitignore parser",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_adapter_node_selection.py",
+      "name": "graph adapter node selection",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_center.py",
+      "name": "graph center",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_context_builder.py",
+      "name": "graph context builder",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_path.py",
+      "name": "graph path",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_query_project_binding.py",
+      "name": "graph query project binding",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_rag.py",
+      "name": "graph rag",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_resolver.py",
+      "name": "graph resolver",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_graph_stage_e4.py",
+      "name": "graph stage e4",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_health_fs_sync.py",
+      "name": "health fs sync",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_health_log_levels.py",
+      "name": "health log levels",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_health_report.py",
+      "name": "health report",
+      "tests": 22,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_hybrid_cache.py",
+      "name": "hybrid cache",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_idle_reload.py",
+      "name": "idle reload",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_impact_confidence.py",
+      "name": "impact confidence",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_index_git_url_tool.py",
+      "name": "index git url tool",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_index_guard.py",
+      "name": "index guard",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_index_progress.py",
+      "name": "index progress",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_index_runner_deadlock.py",
+      "name": "index runner deadlock",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_index_timeline.py",
+      "name": "index timeline",
+      "tests": 18,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_indexer_fts5_sync.py",
+      "name": "indexer fts5 sync",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_indexer_project_path.py",
+      "name": "indexer project path",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_install_embedder_sync.py",
+      "name": "install embedder sync",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_integration.py",
+      "name": "integration",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_job_history.py",
+      "name": "job history",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_jupyter.py",
+      "name": "jupyter",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lancedb_race.py",
+      "name": "lancedb race",
+      "tests": 1,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lancedb_recreate.py",
+      "name": "lancedb recreate",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_language_imports.py",
+      "name": "language imports",
+      "tests": 12,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_language_pack.py",
+      "name": "language pack",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_late_enrichment.py",
+      "name": "late enrichment",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_live_buffer.py",
+      "name": "live buffer",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_live_sync_server.py",
+      "name": "live sync server",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_llama_mutex.py",
+      "name": "llama mutex",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_local_fs_source.py",
+      "name": "local fs source",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lock_guard.py",
+      "name": "lock guard",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lsp_client_facade.py",
+      "name": "lsp client facade",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lsp_tools.py",
+      "name": "lsp tools",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lsp_uri_conversion.py",
+      "name": "lsp uri conversion",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_lsp_vfs_indexing.py",
+      "name": "lsp vfs indexing",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_manifest_parsers.py",
+      "name": "manifest parsers",
+      "tests": 42,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_mcp_schema_flat.py",
+      "name": "mcp schema flat",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_mech_resolver.py",
+      "name": "mech resolver",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_memory_retraction.py",
+      "name": "memory retraction",
+      "tests": 28,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_modification_guard.py",
+      "name": "modification guard",
+      "tests": 24,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_move_chunks.py",
+      "name": "move chunks",
+      "tests": 28,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_negative_controls_runner.py",
+      "name": "negative controls runner",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_next_step_hints.py",
+      "name": "next step hints",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_notify_change_fire_and_forget.py",
+      "name": "notify change fire and forget",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_notify_change_nonblocking.py",
+      "name": "notify change nonblocking",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_onnx_providers.py",
+      "name": "onnx providers",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_ov_concurrent_embed.py",
+      "name": "ov concurrent embed",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_parser.py",
+      "name": "parser",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_plugins.py",
+      "name": "plugins",
+      "tests": 15,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_plugins_registry.py",
+      "name": "plugins registry",
+      "tests": 14,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_plugins_subprocess.py",
+      "name": "plugins subprocess",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_predict_tool.py",
+      "name": "predict tool",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_project_header.py",
+      "name": "project header",
+      "tests": 12,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_project_resolution_multiwindow.py",
+      "name": "project resolution multiwindow",
+      "tests": 13,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_propagation_engine.py",
+      "name": "propagation engine",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_rate_limiter.py",
+      "name": "rate limiter",
+      "tests": 20,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_read_live_file.py",
+      "name": "read live file",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_real_path.py",
+      "name": "real path",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_reindex_finalizing_deadlock.py",
+      "name": "reindex finalizing deadlock",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_reindex_responsive.py",
+      "name": "reindex responsive",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_relation_extractor.py",
+      "name": "relation extractor",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_remote_embedder_truncation.py",
+      "name": "remote embedder truncation",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_remote_main.py",
+      "name": "remote main",
+      "tests": 13,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_repo_rank.py",
+      "name": "repo rank",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_reranker.py",
+      "name": "reranker",
+      "tests": 39,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_resource_monitor.py",
+      "name": "resource monitor",
+      "tests": 14,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_revision_gate.py",
+      "name": "revision gate",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_run_1L_live_arm.py",
+      "name": "run 1L live arm",
+      "tests": 45,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_sandbox.py",
+      "name": "sandbox",
+      "tests": 42,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_scm_definitions.py",
+      "name": "scm definitions",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_search_bs_audit.py",
+      "name": "search bs audit",
+      "tests": 41,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_search_code_fts5_marker.py",
+      "name": "search code fts5 marker",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_search_quality_monitoring.py",
+      "name": "search quality monitoring",
+      "tests": 12,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_searcher.py",
+      "name": "searcher",
+      "tests": 15,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_searcher_hardening.py",
+      "name": "searcher hardening",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_security_metadata.py",
+      "name": "security metadata",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_shadow_canary.py",
+      "name": "shadow canary",
+      "tests": 13,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_smoke_revision.py",
+      "name": "smoke revision",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_stale_tool_scan.py",
+      "name": "stale tool scan",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_startup_diagnostics.py",
+      "name": "startup diagnostics",
+      "tests": 19,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_subprocess_windows.py",
+      "name": "subprocess windows",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_summarize_1L_categories.py",
+      "name": "summarize 1L categories",
+      "tests": 10,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_suppression_markers.py",
+      "name": "suppression markers",
+      "tests": 1,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_sym_index_partial.py",
+      "name": "sym index partial",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_symbol_freshness.py",
+      "name": "symbol freshness",
+      "tests": 7,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_symbol_index_call_graph.py",
+      "name": "symbol index call graph",
+      "tests": 31,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_symbol_index_invariant.py",
+      "name": "symbol index invariant",
+      "tests": 13,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_symbol_index_persistence.py",
+      "name": "symbol index persistence",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_symbol_index_persistence_e4.py",
+      "name": "symbol index persistence e4",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_symbol_index_search.py",
+      "name": "symbol index search",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_task_queue.py",
+      "name": "task queue",
+      "tests": 8,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_temporal_facts_generator.py",
+      "name": "temporal facts generator",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_test_impact.py",
+      "name": "test impact",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_tool_project_root.py",
+      "name": "tool project root",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_tool_registration_security.py",
+      "name": "tool registration security",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_trap_facts_generator.py",
+      "name": "trap facts generator",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_trust_boundary.py",
+      "name": "trust boundary",
+      "tests": 6,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_ui_formatter_dim.py",
+      "name": "ui formatter dim",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_ui_formatter_memory.py",
+      "name": "ui formatter memory",
+      "tests": 14,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_upload_source.py",
+      "name": "upload source",
+      "tests": 9,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_verify_on_read.py",
+      "name": "verify on read",
+      "tests": 47,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_version_manager.py",
+      "name": "version manager",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_versions.py",
+      "name": "versions",
+      "tests": 2,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_watchdog.py",
+      "name": "watchdog",
+      "tests": 4,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_write_tools.py",
+      "name": "write tools",
+      "tests": 49,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_zed_config_patch.py",
+      "name": "zed config patch",
+      "tests": 3,
+      "covers": "",
+      "updatedAt": "2026-09-03"
+    },
+    {
+      "file": "tests/test_zed_config_remove.py",
+      "name": "zed config remove",
+      "tests": 5,
+      "covers": "",
+      "updatedAt": "2026-09-03"
     }
-   ],
-   "total": 101,
-  "updatedAt": "2026-08-15"
+  ],
+  "total": 1684,
+  "updatedAt": "2026-09-03"
 }

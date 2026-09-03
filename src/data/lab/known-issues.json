@@ -3,97 +3,97 @@
     {
       "id": "KI-101",
       "project": "mscodebase-intelligence",
-      "problem": "hybrid_search_async: an embedding cache-hit silently skips the dense tier - repeat queries lose vector recall (found by the multi-RAG ablation; the first run was fully distorted).",
+      "problem": "✅ CLOSED (resolved 7 passed) — Two-pass Graph Symbol Resolution (Extract -> Resolve): Resolves placeholder __extern__ nodes into real symbols or DEPENDENCY nodes (stdlib/external). Added GraphSymbolResolver, integrated to indexer, graph_rag, and graph_adapter.",
       "status": "Fix in code",
       "temperature": "watching",
-      "deadline": "after re-run",
+      "deadline": null,
       "owner": "owner",
-      "link": "src/core/search/engine.py"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-102",
       "project": "mscodebase-intelligence",
-      "problem": "Present-trap blindness is structural: claims about an existing file/import with the wrong subject or value are not caught by anchor verification (memory_first adoption 0.24 in the proxy control).",
-      "status": "Open (by design)",
+      "problem": "🟡 ACKNOWLEDGED (осознанный тех — Архитектурный техдолг: крупные модули (>800 строк)",
+      "status": "Open",
       "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "src/core/intelligence/verify_on_read.py"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-103",
       "project": "mscodebase-intelligence",
-      "problem": "VOR fail-closed was anchor bias, not model paranoia: with token strings qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm, 2026-08-15) recall jumps to 0.88. CORRECTED (RED TEAM on ground truth, 2026-08-15): the apparent residual hole 'every remaining false-accept is present-trap (R45/R46)' was a mislabeled-data issue - R43/R45/R46/R47 are TRUE facts (the generator checked value != real_value, not the subject's absence), so real trap-FA = 0 across all models. The corrected labels (29 true / 21 false, fp e5f7373d) expose the actual remaining gap instead: trap miss_true - fail-closed models (qwen 4/5, deepseek 4/5) reject true usage-claims, a truth loss invisible in the old metrics. V4-claim 'FA 0.02-0.04 residual trap hole' is retracted: the hole was in the labels, not in the models.",
-      "status": "Open (research)",
+      "problem": "🟡 deferred (не блокер) | Deadl — Env-access extractor: deferred языки (elixir, hask",
+      "status": "Open",
       "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "experiments/1L_live_arm/report.md"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-104",
       "project": "mscodebase-intelligence",
-      "problem": "glm-4.7-flash in reasoning mode returns 16-26% EMPTY_CONTENT (finish=stop, empty body) - an upstream defect; its CoT numbers are qualitative only.",
-      "status": "Open (upstream)",
+      "problem": "✅ CLOSED (live-верифицирован и — PyPI-упаковка: `tools`/`locales`/`adapters` вне wh",
+      "status": "Fix in code",
       "temperature": "watching",
       "deadline": null,
-      "owner": "upstream",
-      "link": "experiments/1L_live_arm/report.md"
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-105",
       "project": "mscodebase-intelligence",
-      "problem": "OpenRouter routes one prompt across >=8 upstreams (Alibaba/DeepInfra/DigitalOcean/Cloudflare/Novita/Baidu/StreamLake/Bedrock): per-run verdict variance (FA +/-0.05-0.10) is expected; determinism under temp=0 is an illusion.",
-      "status": "Open (by design)",
-      "temperature": "stable",
+      "problem": "✅ CLOSED (fix #18, 1578a1bb; g — `1ff77294` Full reindex зависает в фазе «Finalizing» (Propert",
+      "status": "Fix in code",
+      "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "experiments/1L_live_arm/openrouter_activity_2026-08-15.csv"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-106",
       "project": "mscodebase-intelligence",
-      "problem": "Late enrichment: imports=0.0 on search chunks (~186 tokens/chunk); the MSCODEBASE_LATE_ENRICHMENT flag stays off until the hypothesis is re-probed.",
-      "status": "Open (research)",
+      "problem": "✅ CLOSED (live-reverified #1-4: git routing 41 commits, apply=false short-circuits, dotted import, callers-cou — Codebase hub write-actions: 4 бага (git routing, d",
+      "status": "Fix in code",
       "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "experiments/late_enrichment/README.md"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-107",
       "project": "mscodebase-intelligence",
-      "problem": "The vector tier (multilingual-e5-small) is the weakest on symbol tasks (recall 0.083-0.167); recall is carried by keyword tiers, precision by the reranker.",
-      "status": "Open (by design)",
-      "temperature": "stable",
+      "problem": "🟡 env-gap | Deadline: — | Влад — LSP-тулы: basedpyright не установлен (OPEN / ENV)",
+      "status": "Open",
+      "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "experiments/context_engine/README.md"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-108",
       "project": "mscodebase-intelligence",
-      "problem": "Graph enrichment adds metadata (callers/callees), not text: evidence metrics by text patterns do not see it; a separate graph-contribution protocol is needed.",
-      "status": "Open (research)",
+      "problem": "✅ Fixed (AGENTS.md §2 61→64, inline 12→13 + dual_arm_health — `ad89b2d4` AGENTS.md §2 противоречит реальной регистрации тул",
+      "status": "Fix in code",
       "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "experiments/context_engine/README.md"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-109",
       "project": "mscodebase-intelligence",
-      "problem": "P1: propagation_engine.py is invisible to code search and the symbol graph - the root cause is not yet established.",
-      "status": "Open (P1)",
+      "problem": "🟡 запланировано (индексатор) | — Data Gap: папка tests/ не индексируется Tree-sitte",
+      "status": "Open",
       "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "src/core/intelligence/propagation_engine.py"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-110",
       "project": "mscodebase-intelligence",
-      "problem": "Path storage is scattered and there is no GC: 2481 junk folders accumulated; a cleanup task is open.",
+      "problem": "🟡 запланировано (индексатор) | — `95237f68` Graph node enrichment: узлы без file_path (OPEN /",
       "status": "Open",
       "temperature": "watching",
       "deadline": null,
@@ -103,22 +103,1442 @@
     {
       "id": "KI-111",
       "project": "mscodebase-intelligence",
-      "problem": "severity_overrides has a Windows quirk (stale_detector) - behavior differs between platforms.",
+      "problem": "🟢 стабильно | Deadline: — | Вл — DatabaseLock ORPHAN-kill → A+ fail-closed (PID 200",
       "status": "Open",
-      "temperature": "stable",
+      "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "scripts/stale_detector"
+      "link": "KNOWN_ISSUES.md"
     },
     {
       "id": "KI-112",
       "project": "mscodebase-intelligence",
-      "problem": "Two Zed windows can start duplicate servers: the lock is taken before Popen, not before port readiness (mitigated 2026-08-13).",
-      "status": "Open (mitigated)",
-      "temperature": "stable",
+      "problem": "🟢 стабильно | Deadline: — | Вл — `b03073c5` Полный заморозок MCP при full reindex (root cause:",
+      "status": "Open",
+      "temperature": "watching",
       "deadline": null,
       "owner": "owner",
-      "link": "src/core/database_lock.py"
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-113",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 стабильно | Deadline: — | Вл — Вариант А: честный reindex-статус для агента (FIXE",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-114",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 стабильно | Deadline: — | Вл — Live-косметика: reindex ToolError обёртки + Projec",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-115",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 стабильно (lazy-импорты рабо — Цикл core: error_handler ⇄ task_queue через lazy-и",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-116",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, НЕ зако — E-09: upload-bomb gate GitUrlSource 4/4 (Фаза 2 за",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-117",
+      "project": "mscodebase-intelligence",
+      "problem": "E-05 ✅; LSP-регрессия 🔴 OPEN ( — E-05: ActionReceipt reproducible_by 4/4 (workdir-ф",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-118",
+      "project": "mscodebase-intelligence",
+      "problem": "✅ закоммичено 381e41bd (не зап — `381e41bd` ТЗ §11 Action Receipt: get_action_receipt + store",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-119",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `11c71262` B-1: фаза 1 полная (8 экосистем) + фаза 2 stdlib l",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-120",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (unit),  — `efe07e38` Фаза 4-хвост: wiring плагинов в MCP-сервер (DONE,",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-121",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, НЕ зако — `f1b5019b` Deep-spec docs: Signature/Description колонки в MO",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-122",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `11c71262` Backlog B-1: манифест-парсеры — фундамент (python/",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-123",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `1f07952a` Фаза 5: адаптеры клиентов + CLI wrapper (план §4)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-124",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `2f30f585` Фаза 4: MCP-proxy wiring + trust-гейт UX + deps (п",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-125",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `898e88f0` Фаза 4: subprocess-изоляция плагинов (план §5.4) (",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-126",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `ae2b01bb` Фаза 4 v1: trust-гейт плагинов (план §5) (DONE)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-127",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (toy liv — `76646a0e` E-07: эквивалентность транспортов stdio↔HTTP (DoD",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-128",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (частичн — `462ea66f` Фаза 3 шаг 5: Docker-деплой remote (Вариант A) (DO",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-129",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `9e8b8491` Фаза 3 шаг 4: rate-limit + circuit breaker на remo",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-130",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — Фаза 3: Streamable HTTP транспорт начат (remote_ma",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-131",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — DNS-rebinding-детект (Фаза 2.5) (DONE)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-132",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — UploadSource (Фаза 2, R-3 archive) (DONE)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-133",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (live 9/ — E-08 live SSRF-suite (9/9) + координационная огово",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-134",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `e4bc051f` MCP-тул index_git_url (Фаза 2 MCP-обвязка) (DONE)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-135",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `76b2991b` E-03 clone→index live + clone-in-place fix (Window",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-136",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `3bb3b6ae` Фаза 2 Universal Engine: GitUrlSource core (SSRF-з",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-137",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено, закомми — `e661861f` Фаза 1 Universal Engine: WorkspaceSource + LocalFs",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-138",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (pytest  — `7232a6e2` Фаза 0 Universal Engine: Windows/Zed-специфика вын",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-139",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (42 pass — Sandbox escape: `_builtins.__dict__['open']/['eval",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-140",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 внесено + проверено (tomllib — `d4e7cfe3` Runtime-зависимости запинены к точным версиям (unp",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-141",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 реализовано+проверено (pytes — ARCLUX audit: кластер циклических импортов MCP-сло",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-142",
+      "project": "mscodebase-intelligence",
+      "problem": "OPEN — RED TEAM 2-E: 4/6 present-trap-фактов v4_rep по фа",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-143",
+      "project": "mscodebase-intelligence",
+      "problem": "🟡 документировано; ре-лейблинг — RED TEAM 2-E: 4/6 present-trap-фактов v4_rep по фа",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-144",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 guard принят | Владелец: mis — Guard: перечитывать зону правки после edit_file в",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-145",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 реализовано (не закоммичено  — VOR MATCHED/DELIVERED: per-node счётчики голодания",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-146",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 код готов (POSIX-подтвержден — CI-фейлы test_zed_config_patch на POSIX: PYTHONPAT",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-147",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 реализовано | Владелец: mish — DocGenerator: dist/build в docs-выдаче (generate_d",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-148",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 реализовано | Владелец: mish — gitignore_parser: dir-паттерны не исключали вложен",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-149",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 актуально (авто-чек зелёный; — Аудит документации: verify-инструмент падал, числа",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-150",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 актуально (guards зелёные, а — Аудит документации, проход 2: описания устарели (e",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-151",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 стабильно (после перезагрузк — Мигающие консоли (~1с) при простоях: resource_moni",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-152",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 стабильно | Владелец: misha. — Телеметрия MCP заражена общим tool_metrics.json (F",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-153",
+      "project": "mscodebase-intelligence",
+      "problem": "🟢 стабильно (применяется после — Чёрные окна CMD при работе MCP на Windows (FIXED)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-154",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — 11 дыр в градере реранкера validate_scores (FIXED)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-155",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Испытание инструментов: stale_detector MCP-тул — 1",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-156",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Испытание инструментов: stale_detector MCP-тул — 1",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-157",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — Guard Inventory: scripts/negative_controls_runner.",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-158",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — ADR-0005: pkg:-анкоры (closed-world манифест) — di",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-159",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Footgun: experiments/1V_memory_contamination/memor",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-160",
+      "project": "mscodebase-intelligence",
+      "problem": "? — `694059bc` P1: propagation_engine.py невидим для поиска и гра",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-161",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — P2: сервер недоступен во время/после индексации —",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-162",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — `f14435db` P2: extract_anchors — мусорные якоря → ложные отзы",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-163",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — Разброс путей хранения + 2481 мусорная папка + нет",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-164",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — Reranker offline весь день: PID-reuse/завершённый",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-165",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — Дубли серверов при 2 окнах Zed: lock до Popen, а н",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-166",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — job-статус показывал СТАРЫЕ чанки при full reindex",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-167",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Memory v2 (SUPERSEDED-фильтр + метрика false-retra",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-168",
+      "project": "mscodebase-intelligence",
+      "problem": "? — ЧУЖОЙ staged-пакет блокирует полный зелёный — РЕШЕ",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-169",
+      "project": "mscodebase-intelligence",
+      "problem": "? — doc-vs-code: доки перечисляли НЕСУЩЕСТВУЮЩИЕ MCP-т",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-170",
+      "project": "mscodebase-intelligence",
+      "problem": "? — pre-commit хук stale_detector = placeholder — FIXE",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-171",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Shadow Canary: fail-open ветки + относительная мет",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-172",
+      "project": "mscodebase-intelligence",
+      "problem": "? — _check_search_quality: «0 eligible» неотличим от «",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-173",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Project Memory add-only: нет отзыва (retraction) —",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-174",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — get_context (B-scheme): интенты git_history/verify",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-175",
+      "project": "mscodebase-intelligence",
+      "problem": "? — hybrid_search_async: кэш-хит эмбеддинга пропускает",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-176",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Символьные инструменты (get_symbol_info/impact_ana",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-177",
+      "project": "mscodebase-intelligence",
+      "problem": "? — CONTRADICTION: README число тестов (853/956/1032 v",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-178",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — deep-research-report.md P1: неатомарная запись Lan",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-179",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — deep-research-report.md P1: TaskQueue.submit_sync",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-180",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — pyproject transformers>=4.36 разрешает CVE-уязвимы",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-181",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `c4f540bc` CI тайминг-флейк: test_dead_pid_stolen_immediately",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-182",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Pre-commit gate-zero флейк: tests/test_connection.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-183",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `b8117c2f` PYSEC-2026-3552 в lock: cryptography 49.0.0→50.0.0",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-184",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Pre-commit hook flake: 120s кап vs gate-zero pytes",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-185",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — CodeQL-алерты 22/24: tempfile.mktemp в тестах ауди",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-186",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Multi-window PID-lock 30s wait vs Zed handshake ti",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-187",
+      "project": "mscodebase-intelligence",
+      "problem": "? — MCPSec (capability attestation / message auth) — о",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-188",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Импорты НЕ индексируются в metadata чанков (🟡 набл",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-189",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Windows newline-трансляция ломала SHA-256 верифика",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-190",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — verify_clean_state.sh не запускается на Windows Gi",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-191",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Остаточный PytestUnraisableExceptionWarning: unclo",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-192",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `5a771789` CI красный 18 прогонов #226-#243: ruff 35 ошибок +",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-193",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — CI: version-compat фейлы 3.10-3.12 — tomllib / rea",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-194",
+      "project": "mscodebase-intelligence",
+      "problem": "? — ResourceWarning: unclosed database/file в -X dev п",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-195",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Рантайм 58 tools vs доки 57: ExecuteScriptTool вкл",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-196",
+      "project": "mscodebase-intelligence",
+      "problem": "? — RuntimeWarning: coroutine 'sleep' never awaited пр",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-197",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Аудит Bot_snow остаток BS-1..BS-14: search_code-вы",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-198",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — А+Б из audit.md: edge transparency, path queries,",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-199",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Synthetic monitoring качества поиска «лжёт»: мусор",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-200",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — stale_detector/_grep_fallback сканируют расширение",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-201",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `229c7156` Multi-window MCP: все окна резолвят один проект →",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-202",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — LSP E: lsp_get_code_actions (quick fixes), счётчик",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-203",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — LSP D: тип-инфо и диагностика как MCP-тулы + pre-f",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-204",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — LSP B+C: bridge деприцирован, 3 LSP-тула (basedpyr",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-205",
+      "project": "mscodebase-intelligence",
+      "problem": "? — A/B protocol-compression: ARM A 54/64 vs ARM B 49.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-206",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — Workstreams A+B+C по audit.md: SCM wiring (17 quer",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-207",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `f14435db` Live-верификация 5 быстрых побед audit.md: 4/5 ✅,",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-208",
+      "project": "mscodebase-intelligence",
+      "problem": "DONE — Реальный отбор audit.md: 16 предложений сверено, 5",
+      "status": "Fix in code",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-209",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — progress_state удалён (dead code), project_context",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-210",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — get_last_progress → core (техдолг ARCH-03 закрыт)",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-211",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — experiments/audit.md: 16 пунктов проверено, 12 исп",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-212",
+      "project": "mscodebase-intelligence",
+      "problem": "? — D1: schema-слой спайка → CypherExecutor (P-004 зак",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-213",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — C1-C4 Cypher-стек: 4 бага (спайк exp-lab-2026-01). Spike-артефакт (experiments/neuro_symbolic_spike.py + EXPERIMENTS_LOG entry) carried into main 848fdf33, branch experiment/lab-2026 deleted.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-214",
+      "project": "mscodebase-intelligence",
+      "problem": "? — A2: sandbox execute_script — модель угроз (ADR-000",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-215",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — A1 (внешний аудит): ThreadPoolExecutor max_workers",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-216",
+      "project": "mscodebase-intelligence",
+      "problem": "? — A3 (внешний аудит): 626 except Exception — тихих г",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-217",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `a7a7a9e7` CI зелёный после 3 платформенных провалов (FIXED,",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-218",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Tech debt: subprocess text=True без encoding (FIXE",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-219",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `b121ab19` CI lint red: ruff I001, 10 импорт-блоков в 8 файла",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-220",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — CI: кэш pip + coverage отчёт (baseline 41%) (FIXED",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-221",
+      "project": "mscodebase-intelligence",
+      "problem": "PARTIAL — Триаж bare-except: 4 рискованных silent-блока полу",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-222",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Баг-клоуза сессия: layer.py порт LM из config + ре",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-223",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `8e2b72e0` pickle.load заменён на restricted unpickler (FIXED",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-224",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Полный аудит (3-й проход): метрики точны, P0-claim",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-225",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Глубокий аудит (2-й проход): 24 sleep не в async,",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-226",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Внешнее ревью: 165 находок — SQL ложные, pickle P1",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-227",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `0735c08e` CI clean-state: venv/bin/python: No module named p",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-228",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — test_job_history: 3 теста падали при переиспользов",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-229",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `984fb036` scripts/monitor.py: UnboundLocalError avg_log при",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-230",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Спринт A: Item 3 (lazy asyncio.Lock) + Item 4 (pro",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-231",
+      "project": "mscodebase-intelligence",
+      "problem": "OPEN — ## 2026-08-04 21:00 — Zed crash-loop: 7 рестартов",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-232",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — ## 2026-08-03 23:25 — Ложные orphans: разделители",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-233",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — ## 2026-08-03 23:15 — P1 REOPEN: hub codebase writ",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-234",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — ## 2026-08-03 23:20 — ONNX embedder off-by-one пут",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-235",
+      "project": "mscodebase-intelligence",
+      "problem": "? — CONTRADICTION batch_size: прод = 32 (RESOLVED §4.9",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-236",
+      "project": "mscodebase-intelligence",
+      "problem": "🟡 стабильно — dead-config и ко — AGENT_DIARY: [2026-07-27] вне хронологии (🟡 космет",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-237",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — search_code quality/deep/auto зависали на 30с (FIX",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-238",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `75428c27` Ложное «Обнаружен второй экземпляр MCP» на собстве",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-239",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Stale ghost table после fresh-path reset: switch_d",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-240",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — search_code рендерил «📄 — (line , —)»: db-level ma",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-241",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Stale ghost table после fresh-path reset: switch_d",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-242",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — search_code рендерил «📄 — (line , —)»: db-level ma",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-243",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Задача 5/5: Граф в каждом режиме поиска (CALLS в м",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-244",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Задача 4/5: Артефакты MCP вынесены из проекта в си",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-245",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Задача 3/5: Startup Diagnostics + P0 INC-6471 (Get",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-246",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — DatabaseGateway: PID-lock вынесен в database_lock.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-247",
+      "project": "mscodebase-intelligence",
+      "problem": "? — Расхождение документации: «18 сервисов» (README) v",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-248",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Чистка мёртвого кода: 5 DI-ключей + 2 файла-адапте",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-249",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — INC-6E12: FileGuard в write_tools — fail-open → fa",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-250",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Full-reindex падает: lance 'Not found' — код-фикс",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-251",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `e2817035` Contradiction Ledger: флапающий check_commit_exist",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-252",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — Pre-commit hook: verify_diary cp1251-краш + Syntax",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-253",
+      "project": "mscodebase-intelligence",
+      "problem": "FIXED — `48e695b8` HTTP 400 llama.cpp embedder → v2 native /tokenize",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
+    },
+    {
+      "id": "KI-254",
+      "project": "mscodebase-intelligence",
+      "problem": "✅ Исправлено — добавлен import — `ac6e5ba0` Индексация остановилась на 1632/4666 — процесс уме",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "KNOWN_ISSUES.md"
     }
   ]
 }
