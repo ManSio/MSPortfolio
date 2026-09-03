@@ -1,28 +1,28 @@
 {
-  "fetchedAt": "2026-09-03T00:15:04.999Z",
+  "fetchedAt": "2026-09-03T04:36:05.379Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
-    "followers": 62,
+    "followers": 63,
     "following": 84
   },
   "repos": [
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-02T21:49:13Z",
-      "language": "TypeScript"
-    },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-02T21:11:13Z",
+      "pushedAt": "2026-09-03T03:20:12Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-03T00:15:11Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "ed96ef2a14",
-      "date": "2026-09-02T20:27:18Z",
-      "message": "docs(diary): record PR #20 merge, green CI, issues #21/#22 auto-closed",
+      "sha": "b063c91743",
+      "date": "2026-09-02T21:59:59Z",
+      "message": "docs(diary): record exp-lab-2026-01 artifact carried into main",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "4726ff7981",
-      "date": "2026-09-02T20:10:12Z",
-      "message": "Merge pull request #20 from ManSio/feat/two-pass-symbol-resolver",
-      "author": "Mikhail"
+      "sha": "848fdf3395",
+      "date": "2026-09-02T21:53:02Z",
+      "message": "docs(experiments): carry exp-lab-2026-01 neuro-symbolic spike artifact into main",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "9659f59197",
-      "date": "2026-09-02T19:58:55Z",
-      "message": "test(guard): replace lambda with def to satisfy ruff E731 (CI lint)",
+      "sha": "ed96ef2a14",
+      "date": "2026-09-02T20:27:18Z",
+      "message": "docs(diary): record PR #20 merge, green CI, issues #21/#22 auto-closed",
       "author": "MSCodeBase Agent"
     },
     {
