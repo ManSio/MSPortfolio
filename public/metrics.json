@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-09-03T18:37:56.032Z",
+  "fetchedAt": "2026-09-03T21:42:22.140Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
     "followers": 64,
-    "following": 84
+    "following": 86
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-03T18:34:30Z",
+      "pushedAt": "2026-09-03T19:31:45Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-03T18:18:00Z",
+      "pushedAt": "2026-09-03T18:38:02Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "f210ed7c20",
+      "date": "2026-09-03T19:27:55Z",
+      "message": "fix(intelligence): extract embed-progress parser to neutral module",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "a6c479de53",
+      "date": "2026-09-03T18:46:00Z",
+      "message": "fix(tests): drop unused imports in ETA-honesty tests (ruff F401)",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "46e6e65be6",
       "date": "2026-09-03T18:28:19Z",
       "message": "docs(known-issues): sync diary mirrors (blast-radius, two-pass symbols, drift-gate, head-freshness) + 2026-09-03 ETA/finalizing fix",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "26a4273262",
-      "date": "2026-09-03T18:10:49Z",
-      "message": "docs(diary): log honest-ETA + Finalizing-progress fix (2026-09-03)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "32f1166290",
-      "date": "2026-09-03T17:55:18Z",
-      "message": "fix(reindex): honest ETA from log speed + progress in Finalizing",
       "author": "MSCodeBase Agent"
     },
     {
@@ -223,13 +223,6 @@
       "sha": "d5e5d7b0be",
       "date": "2026-09-03T18:16:37Z",
       "message": "Revert \"feat(lab): on-demand lab JSON generator from real MSCodeBase sources\"",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "ee39bca962",
-      "date": "2026-09-03T18:00:03Z",
-      "message": "feat(seo): add llms.txt alternate link in head",
       "author": "ManSio"
     },
     {
@@ -406,6 +399,13 @@
       "date": "2026-06-15T16:04:26Z",
       "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
       "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "a4ebcda881",
+      "date": "2026-06-15T06:23:15Z",
+      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
+      "author": "dependabot[bot]"
     }
   ]
 }
