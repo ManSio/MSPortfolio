@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-09-04T00:05:36.757Z",
+  "fetchedAt": "2026-09-04T02:58:05.091Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
-    "followers": 64,
+    "followers": 63,
     "following": 86
   },
   "repos": [
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-03T21:42:29Z",
+      "pushedAt": "2026-09-04T02:57:33Z",
       "language": "TypeScript"
     },
     {
@@ -197,6 +197,13 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "634587711c",
+      "date": "2026-09-04T02:57:23Z",
+      "message": "perf(mcp): edge-cache KV-backed live endpoints via Cache API",
+      "author": "ManSio"
+    },
     {
       "repo": "ARCLUX",
       "sha": "2985008bce",
