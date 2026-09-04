@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-03T21:42:22.140Z",
+  "fetchedAt": "2026-09-04T00:05:36.757Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-03T21:42:29Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
       "pushedAt": "2026-09-03T19:31:45Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-03T18:38:02Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "ARCLUX",
+      "sha": "2985008bce",
+      "date": "2026-08-31T20:20:05Z",
+      "message": "Merge pull request #619 from GSF-001/feat/mmo-directory-wire",
+      "author": "Mikatoshi"
+    },
+    {
+      "repo": "ARCLUX",
+      "sha": "733ab2c929",
+      "date": "2026-08-31T20:14:51Z",
+      "message": "feat(directory): wire — gate federation check + bridge directory endpoint + net directory lookup (not yatim)",
+      "author": "GSF-001"
+    },
+    {
+      "repo": "ARCLUX",
+      "sha": "b468782362",
+      "date": "2026-08-31T19:52:52Z",
+      "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
+      "author": "Mikatoshi"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "f210ed7c20",
       "date": "2026-09-03T19:27:55Z",
@@ -219,13 +240,6 @@
       "author": "MSCodeBase Agent"
     },
     {
-      "repo": "MSPortfolio",
-      "sha": "d5e5d7b0be",
-      "date": "2026-09-03T18:16:37Z",
-      "message": "Revert \"feat(lab): on-demand lab JSON generator from real MSCodeBase sources\"",
-      "author": "ManSio"
-    },
-    {
       "repo": "MCP-Lite",
       "sha": "6f0a90d949",
       "date": "2026-05-27T12:36:27Z",
@@ -238,27 +252,6 @@
       "date": "2026-05-26T22:28:30Z",
       "message": "Initial release of Agentic Browser MCP-Lite under GNU AGPL-v3",
       "author": "UnitBuilds"
-    },
-    {
-      "repo": "ARCLUX",
-      "sha": "2985008bce",
-      "date": "2026-08-31T20:20:05Z",
-      "message": "Merge pull request #619 from GSF-001/feat/mmo-directory-wire",
-      "author": "Mikatoshi"
-    },
-    {
-      "repo": "ARCLUX",
-      "sha": "733ab2c929",
-      "date": "2026-08-31T20:14:51Z",
-      "message": "feat(directory): wire — gate federation check + bridge directory endpoint + net directory lookup (not yatim)",
-      "author": "GSF-001"
-    },
-    {
-      "repo": "ARCLUX",
-      "sha": "b468782362",
-      "date": "2026-08-31T19:52:52Z",
-      "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
-      "author": "Mikatoshi"
     },
     {
       "repo": "opencode-mobile",
