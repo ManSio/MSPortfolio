@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-09-04T04:31:44.810Z",
+  "fetchedAt": "2026-09-04T09:38:30.393Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
     "followers": 63,
-    "following": 86
+    "following": 87
   },
   "repos": [
     {
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-04T04:24:10Z",
+      "pushedAt": "2026-09-04T08:26:21Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-04T02:58:11Z",
+      "pushedAt": "2026-09-04T04:31:51Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "e24a4059c5",
-      "date": "2026-09-04T04:08:12Z",
-      "message": "fix(deps): sync requirements-lock grammar set with pyproject and harden drift gate",
+      "sha": "986c9be73e",
+      "date": "2026-09-04T08:26:09Z",
+      "message": "ci(pre-commit): add ruff lint gate closing CI-red recurrence",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "f210ed7c20",
-      "date": "2026-09-03T19:27:55Z",
-      "message": "fix(intelligence): extract embed-progress parser to neutral module",
+      "sha": "52952aadee",
+      "date": "2026-09-04T07:09:16Z",
+      "message": "refactor(graph_resolver): stdlib via sys.stdlib_module_names",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "a6c479de53",
-      "date": "2026-09-03T18:46:00Z",
-      "message": "fix(tests): drop unused imports in ETA-honesty tests (ruff F401)",
+      "sha": "c58e889356",
+      "date": "2026-09-04T06:46:52Z",
+      "message": "fix(tests): satisfy ruff F401/W292 in verify_diary guard test",
       "author": "MSCodeBase Agent"
     },
     {
