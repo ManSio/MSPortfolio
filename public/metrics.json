@@ -1,13 +1,21 @@
 {
-  "fetchedAt": "2026-09-04T09:38:30.393Z",
+  "fetchedAt": "2026-09-04T14:21:12.878Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
-    "followers": 63,
+    "followers": 64,
     "following": 87
   },
   "repos": [
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-04T09:38:36Z",
+      "language": "TypeScript"
+    },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
@@ -15,14 +23,6 @@
       "openIssues": 1,
       "pushedAt": "2026-09-04T08:26:21Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-04T04:31:51Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -217,13 +217,6 @@
       "date": "2026-09-04T06:46:52Z",
       "message": "fix(tests): satisfy ruff F401/W292 in verify_diary guard test",
       "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "634587711c",
-      "date": "2026-09-04T02:57:23Z",
-      "message": "perf(mcp): edge-cache KV-backed live endpoints via Cache API",
-      "author": "ManSio"
     },
     {
       "repo": "ARCLUX",
