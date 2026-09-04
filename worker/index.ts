@@ -34,6 +34,59 @@ const VERSION = '1.0.0';
 const PUBLIC_BASE = 'https://msp-portfolio.mansio-dev.workers.dev';
 
 /**
+ * Edge-cache TTL for the KV-backed live endpoints (/mcp/stats, /mcp/live).
+ * The free Workers KV tier has a small daily budget; caching the GETs means
+ * browsers and CI reads hit KV once per TTL per edge instead of every request.
+ * Recent invocations remain fresh because bumpAgentCounter writes KV directly
+ * (uncached writes); only the read path is cached.
+ */
+const LIVE_CACHE_TTL_SECONDS = 60;
+
+/** Cache API target type used by serveCachedJson (works in Workers, no-op in Node tests). */
+type CacheLike = { match(r: Request): Promise<Response | undefined>; put(r: Request, resp: Response): Promise<unknown> };
+
+declare const caches: { default: CacheLike };
+const hasCaches = typeof caches !== 'undefined';
+
+/**
+ * Serve a JSON payload through the Cloudflare edge cache. Falls back to a
+ * plain response when the Cache API is unavailable (local tests / workerd
+ * without it). Returns the fresh response so callers can attach CORS headers.
+ */
+async function serveCachedJson(
+  url: URL,
+  corsHeaders: Record<string, string>,
+  build: () => Promise<unknown>,
+): Promise<Response> {
+  if (!hasCaches) {
+    return new Response(JSON.stringify(await build()), {
+      status: 200,
+      headers: { 'content-type': 'application/json', ...corsHeaders },
+    });
+  }
+  const cacheKey = new Request(url.toString() + `:v3:${LIVE_CACHE_TTL_SECONDS}`, { method: 'GET' });
+  try {
+    const cached = await caches.default.match(cacheKey);
+    if (cached) return cached;
+    const fresh = new Response(JSON.stringify(await build()), {
+      status: 200,
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': `public, s-maxage=${LIVE_CACHE_TTL_SECONDS}`,
+        ...corsHeaders,
+      },
+    });
+    await caches.default.put(cacheKey, fresh.clone());
+    return fresh;
+  } catch {
+    return new Response(JSON.stringify(await build()), {
+      status: 200,
+      headers: { 'content-type': 'application/json', ...corsHeaders },
+    });
+  }
+}
+
+/**
  * MCP server discovery (official `/.well-known/mcp.json` convention): lets
  * MCP-supporting agents/clients find the endpoint without a config file.
  * Minimal compliant shape — name/description/endpoints (no protocolVersion
@@ -518,53 +571,57 @@ export default {
     }
 
     if (url.pathname === '/mcp/stats') {
-      const stats = env.MCP_STATS;
-      let today = 0;
-      let total = 0;
-      if (stats) {
-        try {
-          const date = new Date().toISOString().slice(0, 10);
-          const [t, tot] = await Promise.all([stats.get(`calls:${date}`), stats.get('calls:total')]);
-          today = Number(t) || 0;
-          total = Number(tot) || 0;
-        } catch {
-          // counters unavailable — report zeros
+      return serveCachedJson(url, cors, async () => {
+        const stats = env.MCP_STATS;
+        let today = 0;
+        let total = 0;
+        if (stats) {
+          try {
+            const date = new Date().toISOString().slice(0, 10);
+            const [t, tot] = await Promise.all([stats.get(`calls:${date}`), stats.get('calls:total')]);
+            today = Number(t) || 0;
+            total = Number(tot) || 0;
+          } catch {
+            // counters unavailable — report zeros
+          }
         }
-      }
-      return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total }), cors);
+        return { ok: true, enabled: Boolean(stats), today, total };
+      });
     }
 
     // Live view of the most recent real MCP tool invocations (see RECENT_CALLS_KEY).
     // Served from KV — no extra token/APIs needed; populated as real MCP clients
     // call /mcp. Empty until actual traffic arrives.
     if (url.pathname === '/mcp/live') {
-      const stats = env.MCP_STATS;
-      const recent: { ts: string; tool: string }[] = [];
-      let today = 0;
-      let total = 0;
-      if (stats) {
-        try {
-          const date = new Date().toISOString().slice(0, 10);
-          const [t, tot, raw] = await Promise.all([
-            stats.get(`calls:${date}`),
-            stats.get('calls:total'),
-            stats.get(RECENT_CALLS_KEY),
-          ]);
-          today = Number(t) || 0;
-          total = Number(tot) || 0;
-          if (raw) {
-            try {
-              const parsed = JSON.parse(raw) as { ts: string; tool: string }[];
-              if (Array.isArray(parsed)) recent.push(...parsed);
-            } catch {
-              // corrupt/empty log — serve empty list
+      return serveCachedJson(url, cors, async () => {
+        const stats = env.MCP_STATS;
+        const recent: { ts: string; tool: string }[] = [];
+        let today = 0;
+        let total = 0;
+        if (stats) {
+          try {
+            const date = new Date().toISOString().slice(0, 10);
+            const [t, tot, raw] = await Promise.all([
+              stats.get(`calls:${date}`),
+              stats.get('calls:total'),
+              stats.get(RECENT_CALLS_KEY),
+            ]);
+            today = Number(t) || 0;
+            total = Number(tot) || 0;
+            if (raw) {
+              try {
+                const parsed = JSON.parse(raw) as { ts: string; tool: string }[];
+                if (Array.isArray(parsed)) recent.push(...parsed);
+              } catch {
+                // corrupt/empty log — serve empty list
+              }
             }
+          } catch {
+            // counters/log unavailable — report zeros/empty
           }
-        } catch {
-          // counters/log unavailable — report zeros/empty
         }
-      }
-      return finalize(Response.json({ ok: true, enabled: Boolean(stats), today, total, recent }), cors);
+        return { ok: true, enabled: Boolean(stats), today, total, recent };
+      });
     }
 
     // MCP server discovery — official `/.well-known/mcp.json` convention.
