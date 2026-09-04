@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-04T02:58:05.091Z",
+  "fetchedAt": "2026-09-04T04:31:44.810Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-04T02:57:33Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-03T19:31:45Z",
+      "pushedAt": "2026-09-04T04:24:10Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-04T02:58:11Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "e24a4059c5",
+      "date": "2026-09-04T04:08:12Z",
+      "message": "fix(deps): sync requirements-lock grammar set with pyproject and harden drift gate",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "f210ed7c20",
+      "date": "2026-09-03T19:27:55Z",
+      "message": "fix(intelligence): extract embed-progress parser to neutral module",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "a6c479de53",
+      "date": "2026-09-03T18:46:00Z",
+      "message": "fix(tests): drop unused imports in ETA-honesty tests (ruff F401)",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "MSPortfolio",
       "sha": "634587711c",
       "date": "2026-09-04T02:57:23Z",
@@ -224,27 +245,6 @@
       "date": "2026-08-31T19:52:52Z",
       "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
       "author": "Mikatoshi"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "f210ed7c20",
-      "date": "2026-09-03T19:27:55Z",
-      "message": "fix(intelligence): extract embed-progress parser to neutral module",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "a6c479de53",
-      "date": "2026-09-03T18:46:00Z",
-      "message": "fix(tests): drop unused imports in ETA-honesty tests (ruff F401)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "46e6e65be6",
-      "date": "2026-09-03T18:28:19Z",
-      "message": "docs(known-issues): sync diary mirrors (blast-radius, two-pass symbols, drift-gate, head-freshness) + 2026-09-03 ETA/finalizing fix",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "MCP-Lite",
