@@ -1,28 +1,28 @@
 {
-  "fetchedAt": "2026-09-05T09:04:17.373Z",
+  "fetchedAt": "2026-09-05T12:42:32.016Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
     "followers": 64,
-    "following": 88
+    "following": 89
   },
   "repos": [
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-05T04:26:46Z",
-      "language": "TypeScript"
-    },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-04T08:26:21Z",
+      "pushedAt": "2026-09-05T12:22:19Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-05T09:04:24Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "c3e5e4d175",
+      "date": "2026-09-05T08:09:50Z",
+      "message": "﻿fix(subprocess): kill git process tree on TimeoutExpired; offload async sync-blocks",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "986c9be73e",
+      "date": "2026-09-04T08:26:09Z",
+      "message": "ci(pre-commit): add ruff lint gate closing CI-red recurrence",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "52952aadee",
+      "date": "2026-09-04T07:09:16Z",
+      "message": "refactor(graph_resolver): stdlib via sys.stdlib_module_names",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "MCP-Lite",
       "sha": "6f0a90d949",
       "date": "2026-05-27T12:36:27Z",
@@ -273,27 +294,6 @@
       "date": "2026-08-31T19:52:52Z",
       "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
       "author": "Mikatoshi"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "986c9be73e",
-      "date": "2026-09-04T08:26:09Z",
-      "message": "ci(pre-commit): add ruff lint gate closing CI-red recurrence",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "52952aadee",
-      "date": "2026-09-04T07:09:16Z",
-      "message": "refactor(graph_resolver): stdlib via sys.stdlib_module_names",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "c58e889356",
-      "date": "2026-09-04T06:46:52Z",
-      "message": "fix(tests): satisfy ruff F401/W292 in verify_diary guard test",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "ManSio.github.io",
