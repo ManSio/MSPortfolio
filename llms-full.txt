@@ -1,0 +1,98 @@
+# Mikhail (ManSio) — MCP-Native Engineering Portfolio (full content)
+
+> AI/Backend engineer building MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence (LanceDB/BM25 hybrid search) in Zed.
+
+## Profile
+
+- Name: Mikhail
+- Role: AI / Backend Engineer
+- Location: Remote-friendly
+- Summary: Builds MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence (LanceDB/BM25 hybrid search) in Zed.
+
+## Projects
+
+### MSCodeBase Intelligence
+
+- Language: Python | Stack: Python, MCP, LanceDB, BM25, RAG, Zed
+- Tagline: Intelligent codebase search & indexing for Zed
+- Description: Async MCP server featuring LanceDB/BM25 hybrid search, multi-bucket RAG, and autonomous self-healing workflows. High-performance, memory-safe, production-ready codebase intelligence.
+- Highlights:
+  - Hybrid search (vector + BM25) with fused ranking
+  - Multi-bucket RAG over code entities
+  - Autonomous self-healing: watchdog + reindex recovery
+  - Memory-safe indexing pipeline (no leaks under load)
+- Decision log:
+  - LanceDB over plain SQLite FTS for embeddings (considered: SQLite FTS5, Elasticsearch, pgvector). Tradeoff: API surface changes between minor versions — pinned with rationale.
+  - Async MCP server, single process (considered: multi-process, thread pool). Tradeoff: CPU-bound reindex offloaded to a background task with progress events.
+  - Hybrid search instead of vector-only. Tradeoff: two indexes kept consistent by a single write path.
+
+### Gemma Agent
+
+- Language: Python | Stack: Python, Telegram, LLM, Agents
+- Tagline: Telegram assistant for a small trusted circle
+- Description: Telegram assistant with memory, routing, and tools when needed — built for a small trusted circle, not as a Google Gemma product.
+- Highlights:
+  - Persistent memory across sessions
+  - Intent routing before tool dispatch
+  - Tool use gated by permission scope
+- Decision log: Memory as first-class state, not chat context stuffing. Tradeoff: summarization can drop context — mitigated by key-based retrieval.
+
+### MSPortfolio (this site)
+
+- Language: TypeScript | Stack: React, TypeScript, Vite, Tailwind, MCP, Fastify
+- Tagline: The MCP-native portfolio you are reading right now
+- Description: A portfolio that is simultaneously a static dashboard, an MCP server about its owner's experience, and an interactive proof-of-work engine.
+- Highlights:
+  - MCP server endpoint: any AI agent can query the CV
+  - Browser agent-loop demo showing tool calls live
+  - Live metrics with freshness + static fallback
+  - Architecture simulator with break-it scenarios
+- Decision log:
+  - One repo: static site + MCP server, shared data files. Tradeoff: GitHub Pages cannot host the MCP process itself.
+  - Browser-side agent demo instead of hosted LLM chat. Tradeoff: no free-form dialogue — mitigated by intent-matched canned dialogues.
+
+## Engineering principles
+
+1. Fail-closed by default — when the system can't verify a condition, it refuses rather than guesses.
+2. Async-first I/O, offload CPU — no blocking calls on the request path; CPU-bound work has progress reporting.
+3. Single write path for derived state — indexes, caches and fused rankings are written through one code path.
+4. Measure, don't assume — performance claims come from benchmarks with a command line and raw output.
+5. Autonomous self-healing — deterministic recovery is done by the system itself (watchdogs, reindex triggers).
+6. Agent-agnostic surfaces — tooling speaks protocols (MCP), not personalities.
+
+## Decision timeline
+
+- 2026-08 — MSPortfolio: the portfolio that is also an MCP server. Built a portfolio whose CV is machine-readable via MCP and whose claims are backed by live metrics and a browser agent-loop demo.
+- 2026 — MSCodeBase Intelligence: hybrid search for code. Chose LanceDB + BM25 hybrid search over SQLite FTS5/Elasticsearch for an embedded, zero-ops, memory-safe code search MCP server for Zed.
+- 2026 — Gemma Agent: memory-first assistant. Designed the Telegram assistant around extracted memory (flat token cost) instead of full-transcript replay.
+- 2014 — Joined GitHub as ManSio. Started the public engineering record that this portfolio verifies live.
+
+## Antipatterns (what the mistakes taught)
+
+- Claimed a fork as my own work — verify ownership before claiming credit.
+- Hardcoded dark-theme colors broke the light theme — design tokens are invariants, enforcement must be global.
+- Passed raw JSON Schema to an SDK that wanted zod — compile-time acceptance is not runtime acceptance.
+- A live data source broke and nothing noticed — smoke tests must exercise real tool calls, not just discovery.
+- Asserted against the wrong wire format — look at the output before asserting.
+- Fire-and-forget work silently vanished in production — background work in Workers needs ctx.waitUntil.
+- Assumed a platform feature was enforced — configuration acceptance and runtime enforcement are different contracts.
+
+## Live MCP server
+
+- Endpoint (Streamable HTTP): https://msp-portfolio.mansio-dev.workers.dev/mcp
+- Health: https://msp-portfolio.mansio-dev.workers.dev/mcp/health
+- MCP discovery: https://msp-portfolio.mansio-dev.workers.dev/.well-known/mcp.json
+- REST data (read-only, same source as the tools): https://msp-portfolio.mansio-dev.workers.dev/api/{projects|principles|timeline|antipatterns}
+- Add to Claude Code: `claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp`
+- Tools (16): get_profile, get_projects, get_engineering_principles, get_timeline, get_articles, get_commit_history, get_antipatterns, get_experiments, get_diary, get_known_issues, analyze_stack, simulate_architecture, verify_claim, verify_repo, verify_article, verify_package
+
+## Lab (evidence trail)
+
+The `#/lab` page renders the diaries, experiments, known issues, test suites and **commit logs** from the same JSON/snapshot files that feed the MCP tools (`get_experiments`, `get_diary`, `get_known_issues`, `get_commit_history`), with a per-project filter:
+
+- 12 experiments with hypothesis → command → verdict (8 confirmed, 3 partial, 1 refuted) + 6 negative results
+- 20 diary entries (incidents, root causes, fixes, guards) — per project
+- 12 known issues (KI-101..KI-112) with status and temperature — per project
+- 10 test suites / 101 tests
+- Per-project decision logs (considered → chosen → why → cost) and commit logs (from the hourly metrics snapshot)
+- Projects without lab logs show an honest note — their evidence is decision log + commit history
