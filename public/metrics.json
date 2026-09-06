@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-06T17:01:58.897Z",
+  "fetchedAt": "2026-09-06T19:10:06.494Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-06T14:10:17Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-05T12:22:19Z",
+      "pushedAt": "2026-09-06T19:05:46Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-06T17:02:05Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "c3e5e4d175",
-      "date": "2026-09-05T08:09:50Z",
-      "message": "﻿fix(subprocess): kill git process tree on TimeoutExpired; offload async sync-blocks",
+      "sha": "c929fe07e6",
+      "date": "2026-09-06T19:02:46Z",
+      "message": "fix(tools): wrap sync subprocess in asyncio.to_thread for async MCP tools (context_tool, system_tools)",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "986c9be73e",
-      "date": "2026-09-04T08:26:09Z",
-      "message": "ci(pre-commit): add ruff lint gate closing CI-red recurrence",
+      "sha": "f302cdd40f",
+      "date": "2026-09-06T18:46:26Z",
+      "message": "docs(diary): record lock_guard 60s->900s timeout fix (INC-CD6E) + open sync-subprocess audit",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "52952aadee",
-      "date": "2026-09-04T07:09:16Z",
-      "message": "refactor(graph_resolver): stdlib via sys.stdlib_module_names",
+      "sha": "78d5516e4f",
+      "date": "2026-09-06T18:31:05Z",
+      "message": "unlock: tests/test_probe_lock.txt (verify timeout fix full cycle)",
       "author": "MSCodeBase Agent"
     },
     {
