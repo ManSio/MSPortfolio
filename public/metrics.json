@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-06T19:10:06.494Z",
+  "fetchedAt": "2026-09-06T21:20:32.104Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-06T19:05:46Z",
+      "pushedAt": "2026-09-06T19:30:52Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-06T17:02:05Z",
+      "pushedAt": "2026-09-06T19:10:13Z",
       "language": "TypeScript"
     },
     {
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "32bc586266",
+      "date": "2026-09-06T19:27:34Z",
+      "message": "fix(subprocess): add CREATE_NO_WINDOW to powershell/nvidia-smi spawns (P-001 reoccurrence); real guard test",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "c929fe07e6",
       "date": "2026-09-06T19:02:46Z",
       "message": "fix(tools): wrap sync subprocess in asyncio.to_thread for async MCP tools (context_tool, system_tools)",
@@ -209,13 +216,6 @@
       "sha": "f302cdd40f",
       "date": "2026-09-06T18:46:26Z",
       "message": "docs(diary): record lock_guard 60s->900s timeout fix (INC-CD6E) + open sync-subprocess audit",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "78d5516e4f",
-      "date": "2026-09-06T18:31:05Z",
-      "message": "unlock: tests/test_probe_lock.txt (verify timeout fix full cycle)",
       "author": "MSCodeBase Agent"
     },
     {
