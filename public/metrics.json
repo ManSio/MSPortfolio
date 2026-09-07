@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-09-07T19:57:18.197Z",
+  "fetchedAt": "2026-09-07T22:50:04.549Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
-    "followers": 66,
+    "followers": 65,
     "following": 89
   },
   "repos": [
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-07T15:53:50Z",
+      "pushedAt": "2026-09-07T19:57:24Z",
       "language": "TypeScript"
     },
     {
