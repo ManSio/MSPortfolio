@@ -106,6 +106,17 @@ const WELL_KNOWN_MCP = {
   ],
 };
 
+/**
+ * Glama (glama.ai) connector ownership verification for io.github.ManSio/msp-portfolio:
+ * a public claim token served at /.well-known/glama.json. Publishing the token
+ * is the point of the challenge — it proves control of this origin and holds
+ * no personal data.
+ */
+const GLAMA_CLAIM = {
+  $schema: 'https://glama.ai/mcp/schemas/connector.json',
+  claim: 'glama_claim_ZDdwp2-e96HjcvIxB0-dntvxX1F9aJhM',
+};
+
 /** Read-only REST surface: canonical portfolio datasets (/api/<resource>). */
 const API_RESOURCES: Record<string, unknown> = {
   projects: projectsData,
@@ -630,6 +641,15 @@ export default {
         return finalize(new Response('Method not allowed', { status: 405 }), cors);
       }
       return finalize(Response.json(WELL_KNOWN_MCP), cors);
+    }
+
+    // Glama connector ownership verification (io.github.ManSio/msp-portfolio) —
+    // Glama fetches this URL and checks the claim token against its records.
+    if (url.pathname === '/.well-known/glama.json') {
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        return finalize(new Response('Method not allowed', { status: 405 }), cors);
+      }
+      return finalize(Response.json(GLAMA_CLAIM), cors);
     }
 
     if (url.pathname === '/openapi.json') {
