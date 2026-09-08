@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-08T01:12:17.688Z",
+  "fetchedAt": "2026-09-08T03:53:31.000Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-07T22:50:11Z",
+      "pushedAt": "2026-09-08T03:53:10Z",
       "language": "TypeScript"
     },
     {
@@ -197,6 +197,20 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "b3a793b171",
+      "date": "2026-09-08T03:52:37Z",
+      "message": "fix(mcp): raise anonymous monthly quota from 100 to 1000 calls/IP",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "6825362b18",
+      "date": "2026-09-08T03:52:11Z",
+      "message": "feat(worker): serve Glama claim at /.well-known/glama.json",
+      "author": "ManSio"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "32bc586266",
@@ -392,13 +406,6 @@
       "date": "2026-06-15T16:04:26Z",
       "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
       "author": "Mikhail"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "a4ebcda881",
-      "date": "2026-06-15T06:23:15Z",
-      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
-      "author": "dependabot[bot]"
     }
   ]
 }
