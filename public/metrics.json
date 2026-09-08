@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-08T05:58:08.737Z",
+  "fetchedAt": "2026-09-08T11:17:55.684Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-08T03:53:37Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-06T19:30:52Z",
+      "pushedAt": "2026-09-08T09:04:44Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-08T05:58:15Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,39 +198,32 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "e51764a084",
+      "date": "2026-09-08T09:04:44Z",
+      "message": "docs(diary): rotate August 2026 entries into AGENT_DIARY_2026_08.md (#28)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "c3cec2a0bf",
+      "date": "2026-09-08T08:28:43Z",
+      "message": "Merge pull request #27 from ManSio/fix/cypher-receipts",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "001f7d3a41",
+      "date": "2026-09-08T03:37:19Z",
+      "message": "fix(write): record ActionReceipt in all write paths and fix Cypher anonymous nodes",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "MSPortfolio",
       "sha": "b3a793b171",
       "date": "2026-09-08T03:52:37Z",
       "message": "fix(mcp): raise anonymous monthly quota from 100 to 1000 calls/IP",
       "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "6825362b18",
-      "date": "2026-09-08T03:52:11Z",
-      "message": "feat(worker): serve Glama claim at /.well-known/glama.json",
-      "author": "ManSio"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "32bc586266",
-      "date": "2026-09-06T19:27:34Z",
-      "message": "fix(subprocess): add CREATE_NO_WINDOW to powershell/nvidia-smi spawns (P-001 reoccurrence); real guard test",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "c929fe07e6",
-      "date": "2026-09-06T19:02:46Z",
-      "message": "fix(tools): wrap sync subprocess in asyncio.to_thread for async MCP tools (context_tool, system_tools)",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "f302cdd40f",
-      "date": "2026-09-06T18:46:26Z",
-      "message": "docs(diary): record lock_guard 60s->900s timeout fix (INC-CD6E) + open sync-subprocess audit",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "MCP-Lite",
@@ -406,6 +399,13 @@
       "date": "2026-06-15T16:04:26Z",
       "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
       "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "a4ebcda881",
+      "date": "2026-06-15T06:23:15Z",
+      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
+      "author": "dependabot[bot]"
     }
   ]
 }
