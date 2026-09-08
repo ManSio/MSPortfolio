@@ -275,7 +275,7 @@ async function bumpAgentCounter(stats: KVNamespaceLike, tool: string): Promise<v
  * quota fallback that works on Cloudflare's free tier (KI-007: the CF Rate
  * Limiting API binding does not enforce until a paid plan).
  */
-const DEFAULT_ANON_MONTHLY_QUOTA = 100;
+const DEFAULT_ANON_MONTHLY_QUOTA = 1000;
 const QUOTA_TTL_SECONDS = 60 * 60 * 24 * 31;
 
 async function checkAndIncrementQuota(
@@ -678,7 +678,7 @@ export default {
 - Add to Claude Code: claude mcp add --transport http msp-portfolio ${PUBLIC_BASE}/mcp
 - Plain-text CV: ${PUBLIC_BASE}/resume.txt
 - OpenAPI: ${PUBLIC_BASE}/openapi.json
-- Anonymous quota: 100 calls/IP/month (X-RateLimit-* headers)
+- Anonymous quota: 1000 calls/IP/month (X-RateLimit-* headers)
 
 ## Tools (${TOOLS.length})
 ${tools}
@@ -758,7 +758,7 @@ Source: https://github.com/ManSio/MSPortfolio
       quota = await checkAndIncrementQuota(stats, request.headers.get('cf-connecting-ip') ?? 'unknown');
       if (quota && !quota.allowed) {
         return finalize(
-          new Response('Anonymous monthly quota exceeded (100 calls/IP/month). See /llms.txt.', {
+          new Response('Anonymous monthly quota exceeded (1000 calls/IP/month). See /llms.txt.', {
             status: 429,
             headers: { 'X-RateLimit-Limit': String(quota.limit), 'X-RateLimit-Remaining': '0' },
           }),

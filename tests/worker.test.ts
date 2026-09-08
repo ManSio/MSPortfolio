@@ -274,13 +274,13 @@ describe('worker /mcp integration', () => {
     const env = makeEnv({ MCP_STATS: { get: async (k) => kv.get(k) ?? null, put: async (k, v) => { kv.set(k, v); } } });
     const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(res.status).toBe(200);
-    expect(res.headers.get('x-ratelimit-limit')).toBe('100');
-    expect(res.headers.get('x-ratelimit-remaining')).toBe('99');
+    expect(res.headers.get('x-ratelimit-limit')).toBe('1000');
+    expect(res.headers.get('x-ratelimit-remaining')).toBe('999');
   });
 
   it('quota (D4): returns 429 when the anonymous monthly quota is exceeded', async () => {
     const env = makeEnv({
-      MCP_STATS: { get: async (k) => (k.startsWith('quota:') ? '100' : null), put: async () => {} },
+      MCP_STATS: { get: async (k) => (k.startsWith('quota:') ? '1000' : null), put: async () => {} },
     });
     const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(res.status).toBe(429);
