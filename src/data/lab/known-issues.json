@@ -119,6 +119,16 @@
       "deadline": null,
       "owner": "owner",
       "link": "src/core/database_lock.py"
+    },
+    {
+      "id": "KI-113",
+      "project": "mscodebase-intelligence",
+      "problem": "Memory verification was lazy-by-hand: VOR ran only from intel_get_project_memory (1 call site); 42/136 ACTIVE nodes had no verified_at since 2026-08-11; INCONCLUSIVE nodes (no anchors) never became STALE/REFUTED. FIXED (H1, 2026-09-09): idle background VOR wired into _check_index_health (cooldown 120s) via server-injected hook set_idle_vor_callback -> layer.run_background_verify (budget=250ms, locked()-guard, shared _write_lock/get_verifier registry).",
+      "status": "Fixed",
+      "temperature": "stable",
+      "deadline": "2026-09-15 (was)",
+      "owner": "owner",
+      "link": "src/core/task_queue.py, src/core/intelligence/layer.py"
     }
   ]
 }
