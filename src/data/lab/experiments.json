@@ -1281,6 +1281,20 @@
       "links": [
         "exp-30"
       ]
+    },
+    {
+      "id": "exp-32",
+      "date": "2026-09-10",
+      "project": "mscodebase-intelligence",
+      "title": "system_alerts chain (file changed -> STALE -> VOR -> one-shot alert) + idle background stale-sweep",
+      "hypothesis": "The 'file changed -> STALE -> VOR -> alert agent' chain did not exist in any link (audit 2026-09-09, Exhibit #23): VOR ran only from a manual read, mark_stale('memory') was never called, and no deliverable alert existed. Closing it needs (H1) an idle ticker driving background VOR, plus (A) one-shot system alerts with dedup-by-kind+payload pushed on the first STALE transition and on starved nodes, delivered into memory reads without token buildup.",
+      "command": "python -m pytest tests/test_alert_store.py tests/test_ui_formatter_memory.py -q (14 new) + full python -m pytest tests/ -q (1689 passed / 5 skipped / 91 deselected) + scripts/architecture_linter.py '(all invariants)' + verify_diary 20/0 through pre-commit.",
+      "result": "H1: idle-ticker hook set_idle_vor_callback() drives run_background_verify(budget_ms=250) with locked()-guard against agent-VOR (shared _write_lock, get_verifier registry); _check_index_health no longer empty. A: AlertStore (JSON outside project at <data_root>/projects/<hash>/intelligence/, threading.Lock across event loops, atomic collect_and_clear limit=5); memory_stale pushed on first UNKNOWN/CONSISTENT->STALE in notify_change (not per-save), memory_starved from idle VOR and intel_get_project_memory for nodes visible >=2 cycles (MATCHED>0, DELIVERED=0); delivered via format_system_alerts prepend in intel_get_project_memory and a section in intel_explain_project_state. 31 test runs + concurrency race test (20 alerts, 2 threads) stay lossless.",
+      "verdict": "confirmed",
+      "finding": "A one-shot alert store with atomic collect_and_clear is the right granularity: dedup by kind+payload prevents a spam-per-save alert, the atomic clear guarantees that a race between two MCP tools delivers the alert once and only once, and limit=5 caps token budget. Idle VOR is cheap enough to run in background without blocking a tool call (budget 250ms + 120s cooldown).",
+      "chart": null,
+      "conclusion": "The full chain is now assembled and under test: H1 completes the earlier open gap (background stale-sweep with no agent invocation) and A delivers an observable one-shot signal to the agent. Full suite green (1689 passed), all architecture invariants hold, verify_diary 20/0.",
+      "links": []
     }
   ],
   "negativeResults": [

@@ -1281,6 +1281,20 @@
       "links": [
         "exp-30"
       ]
+    },
+    {
+      "id": "exp-32",
+      "date": "2026-09-10",
+      "project": "mscodebase-intelligence",
+      "title": "system_alerts цепь (файл изменён -> STALE -> VOR -> одноразовый alert) + фоновая idle-перепроверка",
+      "hypothesis": "Цепь «файл изменён -> STALE -> VOR -> alert агента» не существует ни в одном звене (аудит 2026-09-09, Exhibit #23): VOR вызывался только из ручного чтения, mark_stale('memory') никогда не вызывался, доставляемого alert'а не было. Закрытие требует (H1) idle-тикера, запускающего фоновый VOR, плюс (A) одноразовых system_alerts с дедупом по kind+payload, пушимых при первом переходе в STALE и на голодающие узлы, с доставкой в чтения памяти без накопления токенов.",
+      "command": "python -m pytest tests/test_alert_store.py tests/test_ui_formatter_memory.py -q (14 новых) + полный python -m pytest tests/ -q (1689 passed / 5 skipped / 91 deselected) + scripts/architecture_linter.py 'все инварианты' + verify_diary 20/0 через pre-commit.",
+      "result": "H1: idle-hook set_idle_vor_callback() ведёт run_background_verify(budget_ms=250) с locked()-guard против agent-VOR (общий _write_lock, get_verifier регистр); _check_index_health больше не пуст. A: AlertStore (JSON вне проекта в <data_root>/projects/<hash>/intelligence/, threading.Lock между event-loop'ами, атомарный collect_and_clear limit=5); memory_stale пушится при первом UNKNOWN/CONSISTENT->STALE в notify_change (не на каждый save), memory_starved — из idle VOR и intel_get_project_memory для узлов, видимых >=2 циклов (MATCHED>0, DELIVERED=0); доставка через format_system_alerts prepend в intel_get_project_memory и секцию в intel_explain_project_state. 31 тестовый прогон + гонка двух потоков (20 alerts) без потерь.",
+      "verdict": "confirmed",
+      "finding": "Одноразовый alert-store с атомарным collect_and_clear — правильная гранулярность: дедуп по kind+payload исключает спам-на-каждый-save, атомарный clear гарантирует, что гонка двух MCP-тулов доставит alert ровно один раз, limit=5 ограничивает токен-оверхед. Idle-VOR достаточно дёшев для фонового запуска без блокировки вызова тула (бюджет 250ms + cooldown 120s).",
+      "chart": null,
+      "conclusion": "Полная цепь собрана и под тестом: H1 закрывает прежний открытый гэп (фоновая перепроверка без вызова агента), A даёт агенту наблюдаемый одноразовый сигнал. Полный набор зелёный (1689 passed), все архитектурные инварианты соблюдены, verify_diary 20/0.",
+      "links": []
     }
   ],
   "negativeResults": [
