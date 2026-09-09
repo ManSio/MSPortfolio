@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-09T16:37:31.763Z",
+  "fetchedAt": "2026-09-09T19:45:28.901Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-09T11:21:34Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-08T15:27:12Z",
+      "pushedAt": "2026-09-09T19:27:08Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-09T16:37:38Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "ed0f88004b",
+      "date": "2026-09-09T18:03:35Z",
+      "message": "feat(mcp): graph-backed sections in get_context with structured handoff and VOR filter (#30)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "abc5b0da4c",
       "date": "2026-09-08T15:26:53Z",
       "message": "fix(cypher): translate collect() to json_group_array with typed decode (#31)",
@@ -209,13 +216,6 @@
       "sha": "6e63f85ac3",
       "date": "2026-09-08T13:05:59Z",
       "message": "fix(cypher): translate collect() to json_group_array with typed decode (#29)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "e51764a084",
-      "date": "2026-09-08T09:04:44Z",
-      "message": "docs(diary): rotate August 2026 entries into AGENT_DIARY_2026_08.md (#28)",
       "author": "Mikhail"
     },
     {
