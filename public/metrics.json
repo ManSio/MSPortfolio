@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-10T16:23:24.862Z",
+  "fetchedAt": "2026-09-10T18:02:05.198Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,15 +13,15 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-10T11:18:14Z",
+      "pushedAt": "2026-09-10T18:01:43Z",
       "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-10T02:39:51Z",
+      "openIssues": 1,
+      "pushedAt": "2026-09-10T18:01:10Z",
       "language": "Python"
     },
     {
@@ -197,6 +197,13 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "eafe561bd6",
+      "date": "2026-09-10T18:01:04Z",
+      "message": "chore(lab): add exp-33/exp-34 VOR catch-up and HEAD-polling results",
+      "author": "ManSio"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "4fd3b5cd15",
