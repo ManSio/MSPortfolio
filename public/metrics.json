@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-10T01:03:52.825Z",
+  "fetchedAt": "2026-09-10T05:57:54.824Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-10T02:39:51Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-09T22:33:23Z",
+      "pushedAt": "2026-09-10T01:03:58Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-09-09T21:49:24Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -198,11 +198,11 @@
   ],
   "commits": [
     {
-      "repo": "MSPortfolio",
-      "sha": "557cb72670",
-      "date": "2026-09-09T21:40:36Z",
-      "message": "docs(lab): add exp-32 system_alerts chain (2026-09-10)",
-      "author": "ManSio"
+      "repo": "mscodebase-intelligence",
+      "sha": "4fd3b5cd15",
+      "date": "2026-09-10T02:39:47Z",
+      "message": "chore(experiments): E-S1/E-S2 live-repo results + Exhibit #23 audit docs (#32)",
+      "author": "Mikhail"
     },
     {
       "repo": "mscodebase-intelligence",
@@ -216,13 +216,6 @@
       "sha": "abc5b0da4c",
       "date": "2026-09-08T15:26:53Z",
       "message": "fix(cypher): translate collect() to json_group_array with typed decode (#31)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "6e63f85ac3",
-      "date": "2026-09-08T13:05:59Z",
-      "message": "fix(cypher): translate collect() to json_group_array with typed decode (#29)",
       "author": "Mikhail"
     },
     {
