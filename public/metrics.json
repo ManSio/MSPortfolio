@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-09T22:33:16.339Z",
+  "fetchedAt": "2026-09-10T01:03:52.825Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-09T21:41:17Z",
+      "pushedAt": "2026-09-09T22:33:23Z",
       "language": "TypeScript"
     },
     {
@@ -202,13 +202,6 @@
       "sha": "557cb72670",
       "date": "2026-09-09T21:40:36Z",
       "message": "docs(lab): add exp-32 system_alerts chain (2026-09-10)",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "db9eb19dd5",
-      "date": "2026-09-09T19:19:21Z",
-      "message": "docs(lab): add KI-113 idle background VOR fix (2026-09-09)",
       "author": "ManSio"
     },
     {
@@ -406,6 +399,13 @@
       "date": "2026-06-15T16:04:26Z",
       "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
       "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "a4ebcda881",
+      "date": "2026-06-15T06:23:15Z",
+      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
+      "author": "dependabot[bot]"
     }
   ]
 }
