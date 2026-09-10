@@ -1295,6 +1295,34 @@
       "chart": null,
       "conclusion": "Полная цепь собрана и под тестом: H1 закрывает прежний открытый гэп (фоновая перепроверка без вызова агента), A даёт агенту наблюдаемый одноразовый сигнал. Полный набор зелёный (1689 passed), все архитектурные инварианты соблюдены, verify_diary 20/0.",
       "links": []
+    },
+    {
+      "id": "exp-33",
+      "date": "2026-09-10",
+      "project": "mscodebase-intelligence",
+      "title": "VOR Catch-up Rate (H1): пропускная способность по бюджетам и cycles-to-finish",
+      "hypothesis": "VerifyOnRead обязан проверить ACTIVE-узлы в пределах budget_ms=50 (read-path default) и 250 (фоновый idle-VOR); догон не должен превышать 1-2 прохода. Систематическое голодание начинается только на тысячах узлов, а не на реалистичных размерах (~250).",
+      "command": "venv/Scripts/python.exe <tmp>/exp1_vor_catchup.py (scratch; synthetic-узлы N in {200,500,2000,5000}, бюджеты 50/250ms, циклы catch-up, бэкапы восстанавливаются в finally).",
+      "result": "budget=50ms: N=200 -> 200/200 проверено (0 exceeded, 36ms), N=500 -> 492/500 (8 exceeded), N=2000 -> 420/2000 (1580 exceeded), N=5000 -> 457/5000 (4543 exceeded). budget=250ms: N=2000 -> 1580/2000 (0 exceeded, 311ms), N=5000 -> 1889/5000 (2654 exceeded, starved=2654, latency 560ms); догон заканчивает N=2000 за 1 проход, N=5000 за 2 прохода. Второй прогон при том же HEAD даёт checked=0 (cache-hit вердиктов в verify_cache.json) — артефакт замера.",
+      "verdict": "confirmed",
+      "finding": "Реальный проект (~247 узлов) далёк от лимитов бюджета: read-path покрывает ~420-490 узлов/проход, background ~1600-1900 узлов/проход. N<=2000 укладывается в один 250ms проход; N=5000 требует 2 прохода. Систематическое голодание (MATCHED>0/DELIVERED=0) появляется только при N≈5000.",
+      "chart": null,
+      "conclusion": "H1 подтверждена с оговоркой: бюджет VOR выдерживается на реалистичных размерах памяти; порог голодания — тысячи узлов. Счётчик budget_exceeded_nodes — обязательный ресипт: иначе потребитель молча получает непроверенные узлы как факты.",
+      "links": []
+    },
+    {
+      "id": "exp-34",
+      "date": "2026-09-10",
+      "project": "mscodebase-intelligence",
+      "title": "VOR HEAD-polling ловит внешнее git-изменение без notify_change (H3)",
+      "hypothesis": "VOR перерезолвит HEAD (git rev-parse, TTL 30s) на следующем проходе; per-node cache key hash(node_id|head) инвалидируется при смене HEAD, поэтому узлы, затронутые внешним git pull (без notify_change), перепроверяются сами собой.",
+      "command": "venv/Scripts/python.exe <tmp>/exp3b_head_polling.py (изолированный temp-репо, не рабочий проект): commit v1 с foo.py+gone.py, 2 memory-узла с file-якорями, run#1 -> оба VERIFIED; затем ВНЕШНЕЕ изменение без notify_change (foo.py модифицирован, gone.py удалён, commit v2); run#2 свежим verifier.",
+      "result": "run#1: verified=2 refuted=0 -> A=VERIFIED B=VERIFIED. external change (no notify_change): HEAD -> 67f9ea3c, gone.py удалён. run#2: verified=1 refuted=1 cache_hits=0 -> A=VERIFIED B=REFUTED. HEAD-инвалидация: True | B->REFUTED: True | A выжил: True. VERDICT H3: CONFIRMED.",
+      "verdict": "confirmed",
+      "finding": "HEAD-инвалидация per-node ключа — честный детектор внешнего дрифта кода в git-репо: узел с удалённым якорем ушёл в REFUTED, узел с изменённым, но живым файлом остался VERIFIED. Первый прогон exp3 дал ложный REFUTED из-за чтения статусов из pre-run memory вместо store после transitions — баг измерителя, не системы.",
+      "chart": null,
+      "conclusion": "H3 подтверждена: для коммиченных внешних изменений OS-watchdog не нужен; незакоммиченные правки (dirty tree) всё ещё зависят от fingerprint mtime / notify_change — задокументированный открытый интервал (HEAD TTL 30s).",
+      "links": []
     }
   ],
   "negativeResults": [

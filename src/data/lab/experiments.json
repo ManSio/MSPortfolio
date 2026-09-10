@@ -1295,6 +1295,34 @@
       "chart": null,
       "conclusion": "The full chain is now assembled and under test: H1 completes the earlier open gap (background stale-sweep with no agent invocation) and A delivers an observable one-shot signal to the agent. Full suite green (1689 passed), all architecture invariants hold, verify_diary 20/0.",
       "links": []
+    },
+    {
+      "id": "exp-33",
+      "date": "2026-09-10",
+      "project": "mscodebase-intelligence",
+      "title": "VOR Catch-up Rate (H1): throughput per budget and cycles-to-finish",
+      "hypothesis": "VerifyOnRead must verify ACTIVE nodes within budget_ms=50 (read-path default) and 250 (background idle-VOR); catch-up must not exceed 1-2 cycles. Systematic starvation starts only at thousands of nodes, not at realistic sizes (~250 nodes).",
+      "command": "venv/Scripts/python.exe <tmp>/exp1_vor_catchup.py (scratch; synthetic nodes N in {200,500,2000,5000}, budgets 50/250ms, catch-up cycles, backups restored in finally).",
+      "result": "budget=50ms: N=200 -> 200/200 checked (0 exceeded, 36ms), N=500 -> 492/500 (8 exceeded), N=2000 -> 420/2000 (1580 exceeded), N=5000 -> 457/5000 (4543 exceeded). budget=250ms: N=2000 -> 1580/2000 (0 exceeded, 311ms), N=5000 -> 1889/5000 (2654 exceeded, starved=2654, latency 560ms); catch-up finishes N=2000 in 1 pass and N=5000 in 2 passes. Second run on same HEAD gives checked=0 (verdict cache hit in verify_cache.json) - measurement artifact.",
+      "verdict": "confirmed",
+      "finding": "Real project (~247 nodes) is far from budget limits: read-path covers ~420-490 nodes/pass, background ~1600-1900 nodes/pass. N<=2000 fits one 250ms pass; N=5000 needs 2 passes. Systematic starvation (MATCHED>0/DELIVERED=0) appears only around N=5000.",
+      "chart": null,
+      "conclusion": "H1 confirmed with caveat: VOR budget holds at realistic memory sizes; starvation threshold is thousands of nodes. budget_exceeded_nodes counter is a mandatory receipt - otherwise consumers silently receive unchecked nodes as facts.",
+      "links": []
+    },
+    {
+      "id": "exp-34",
+      "date": "2026-09-10",
+      "project": "mscodebase-intelligence",
+      "title": "VOR HEAD-polling catches external git changes without notify_change (H3)",
+      "hypothesis": "VOR re-resolves HEAD (git rev-parse, 30s TTL) on the next pass; the per-node cache key hash(node_id|head) is invalidated on HEAD change, so nodes touched by an external git pull (no notify_change) are re-verified by themselves.",
+      "command": "venv/Scripts/python.exe <tmp>/exp3b_head_polling.py (isolated temp repo, not the working project): v1 commit with foo.py+gone.py, 2 memory nodes with file anchors, run#1 -> both VERIFIED; then EXTERNAL change without notify_change (foo.py modified, gone.py deleted, commit v2); fresh-verifier run#2.",
+      "result": "run#1: verified=2 refuted=0 -> A=VERIFIED B=VERIFIED. external change (no notify_change): HEAD -> 67f9ea3c, gone.py deleted. run#2: verified=1 refuted=1 cache_hits=0 -> A=VERIFIED B=REFUTED. HEAD invalidation: True | B->REFUTED: True | A survived: True. VERDICT H3: CONFIRMED.",
+      "verdict": "confirmed",
+      "finding": "Head-invalidation per node key is an honest detector of external code drift in a git repo: the node whose file anchor was removed went REFUTED, the node whose file changed but still exists stayed VERIFIED. First exp3 run gave a false REFUTED because statuses were read from pre-run memory instead of the store after transitions - a bug in the measurer, not the system.",
+      "chart": null,
+      "conclusion": "H3 confirmed: no OS watchdog is needed for committed external changes; uncommitted edits (dirty tree) still depend on fingerprint mtime / notify_change - documented open interval (HEAD TTL 30s).",
+      "links": []
     }
   ],
   "negativeResults": [
