@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-10T19:40:57.543Z",
+  "fetchedAt": "2026-09-10T22:35:14.916Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-10T19:44:32Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-10T18:02:11Z",
+      "pushedAt": "2026-09-10T19:41:04Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-09-10T19:00:27Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -198,11 +198,11 @@
   ],
   "commits": [
     {
-      "repo": "MSPortfolio",
-      "sha": "eafe561bd6",
-      "date": "2026-09-10T18:01:04Z",
-      "message": "chore(lab): add exp-33/exp-34 VOR catch-up and HEAD-polling results",
-      "author": "ManSio"
+      "repo": "mscodebase-intelligence",
+      "sha": "2ab54795af",
+      "date": "2026-09-10T19:44:31Z",
+      "message": "fix(search): get_symbol_info AMBIGUOUS + docs + README badge (#33)",
+      "author": "Mikhail"
     },
     {
       "repo": "mscodebase-intelligence",
@@ -219,11 +219,11 @@
       "author": "Mikhail"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "abc5b0da4c",
-      "date": "2026-09-08T15:26:53Z",
-      "message": "fix(cypher): translate collect() to json_group_array with typed decode (#31)",
-      "author": "Mikhail"
+      "repo": "MSPortfolio",
+      "sha": "eafe561bd6",
+      "date": "2026-09-10T18:01:04Z",
+      "message": "chore(lab): add exp-33/exp-34 VOR catch-up and HEAD-polling results",
+      "author": "ManSio"
     },
     {
       "repo": "MCP-Lite",
