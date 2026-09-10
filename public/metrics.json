@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-10T05:57:54.824Z",
+  "fetchedAt": "2026-09-10T11:18:07.619Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-10T05:58:00Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-09-10T02:39:51Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-10T01:03:58Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
