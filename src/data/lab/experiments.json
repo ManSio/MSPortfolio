@@ -1338,6 +1338,20 @@
       "chart": null,
       "conclusion": "Confirmed with partial coverage: the queue is small but the contamination is dominated by prose-path junk plus alias (rename) refutes. The landed production fix (extract_anchors parametrised read_path=True; explicit anchors trusted on read-path, legacy prose scan kept for nodes without anchors - backward compat verified by test) removes the alias contamination class in practice while body-hash stays the open candidate for the sweep case.",
       "links": []
+    },
+    {
+      "id": "exp-36",
+      "date": "2026-09-11",
+      "project": "mscodebase-intelligence",
+      "title": "H3 TTL-rotation for verify-on-read: last_checked for every checked node + stale_ttl label (closes the \"hangs forever\" class)",
+      "hypothesis": "Verify-On-Read writes a date only on a VERIFIED transition, so INCONCLUSIVE/unexercised nodes drift \"forever\" with no check trace (live 2026-09-11: 70 ACTIVE nodes without verified_at). Writing a check-trace (last_checked) for EVERY checked node (cache-hit and fresh check, INCLUDING INCONCLUSIVE) plus a stale_ttl label for nodes whose trace is older than N days - \"not confirmed for N days\" - makes eternal-hanging impossible without changing status (protects the 0.0968% false-retraction benchmark).",
+      "command": "python <tmp>/vor_ttl_audit.py (scratch; live distribution of verified_at in project_memory.json bfe9644b) -> python -m pytest tests/test_verify_on_read_ttl.py -v (9 new) -> python -m pytest tests/ -q (full)",
+      "result": "audit: ACTIVE 70 (all without verified_at), REFUTED 28 (27 without, oldest 28d), SUPERSEDED 4 (3 without, 7d), VERIFIED 50 (2 without; verified_at 0..31d, mean 20.5, median 22) -> N=30 = median+~1 daily-commit cycle. Physical write of last_checked is rate-limited (VOR_LAST_CHECKED_INTERVAL_SEC=6h) so the H1 idle pass does not rewrite project_memory.json every tick. tests/test_verify_on_read_ttl.py: 9 passed (1.25s). full suite: 1725 passed, 5 skipped, 91 deselected (180.67s). ruff clean.",
+      "verdict": "confirmed",
+      "finding": "A TTL needs a trace for nodes WITHOUT verdicts, not only for VERIFIED ones: INCONCLUSIVE nodes now get last_checked and it refreshes on every idle pass (H1), so \"no dates at all\" is replaced by \"checked every 6h, labelled stale after 30d\". stale_ttl is a computational label - no status change, the false-retraction guard stays intact. Nodes with NO trace at all are NOT flagged (new-node protection); systematic starvation is caught separately by the starved signal.",
+      "chart": null,
+      "conclusion": "H3 confirmed: N=30 justified from the live verified_at distribution (median 22 / ceiling 31), and the stale_ttl label makes \"hangs forever\" impossible while keeping the 0.0968% false-retraction floor. Together with H1 (idle renewal) and H2 (per-node HEAD invalidation, Exp 3) the verify-on-read study (research doc 10) is closed.",
+      "links": []
     }
   ],
   "negativeResults": [

@@ -1338,6 +1338,20 @@
       "chart": null,
       "conclusion": "Подтверждена частично: очередь мала, но доминирует загрязнение prose-path плюс alias (rename) отзывы. Приземлённый production-фикс (extract_anchors с параметром read_path=True; явные якоря доверяются на read-path, legacy prose-скан сохранён для узлов без якорей - backward compat проверен тестом) убирает класс alias-загрязнения на практике; body-hash остаётся открытым кандидатом для случая sweep.",
       "links": []
+    },
+    {
+      "id": "exp-36",
+      "date": "2026-09-11",
+      "project": "mscodebase-intelligence",
+      "title": "H3 TTL-ротация для verify-on-read: last_checked для каждого проверенного узла + label stale_ttl (закрывает класс «висящих вечно»)",
+      "hypothesis": "Verify-On-Read записывает дату ТОЛЬКО при VERIFIED-переходе, поэтому INCONCLUSIVE/непроверяемые узлы «висят вечно» без следа проверки (live 2026-09-11: 70 ACTIVE без verified_at). Запись следа (last_checked) для КАЖДОГО реально проверенного узла (cache-hit и fresh check, ВКЛЮЧАЯ INCONCLUSIVE) плюс label stale_ttl для узлов, чей след старше N дней — «не подтверждён за N дней» — делает «висеть вечно» невозможным без смены статуса (охраняет бенчмарк false_retraction 0.0968%).",
+      "command": "python <tmp>/vor_ttl_audit.py (scratch; live-распределение verified_at в project_memory.json bfe9644b) -> python -m pytest tests/test_verify_on_read_ttl.py -v (9 новых) -> python -m pytest tests/ -q (полный)",
+      "result": "аудит: ACTIVE 70 (все без verified_at), REFUTED 28 (27 без, старейший 28д), SUPERSEDED 4 (3 без, 7д), VERIFIED 50 (2 без; verified_at 0..31д, mean 20.5, median 22) -> N=30 = median+~1 ежедневный коммитовый цикл. Физическая запись last_checked rate-limited (VOR_LAST_CHECKED_INTERVAL_SEC=6ч), чтобы idle-проход H1 не переписывал project_memory.json каждый тик. tests/test_verify_on_read_ttl.py: 9 passed (1.25s). Полный прогон: 1725 passed, 5 skipped, 91 deselected (180.67s). ruff чисто.",
+      "verdict": "confirmed",
+      "finding": "Для TTL нужен след у узлов БЕЗ вердиктов, а не только у VERIFIED: INCONCLUSIVE-узлы теперь получают last_checked, и он освежается при каждом idle-проходе (H1) — «вообще без дат» заменено на «проверяются каждые 6ч, stale после 30д». stale_ttl — чисто вычислительная метка, статус не меняется, guard false_retraction цел. Узлы ВООБЩЕ без следа не флагаются (защита новых узлов); систематическое голодание ловится отдельным сигналом starved.",
+      "chart": null,
+      "conclusion": "H3 подтверждена: N=30 обоснован live-распределением verified_at (median 22 / потолок 31), label stale_ttl делает «висеть вечно» невозможным при сохранении потолка false_retraction 0.0968%. Вместе с H1 (idle-проход) и H2 (per-node HEAD-инвалидация, Exp 3) исследование continuous-verification (research doc 10) закрыто.",
+      "links": []
     }
   ],
   "negativeResults": [
