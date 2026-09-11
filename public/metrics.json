@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-10T22:35:14.916Z",
+  "fetchedAt": "2026-09-11T01:04:15.972Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-10T22:35:21Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-09-10T19:44:32Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-10T19:41:04Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -217,13 +217,6 @@
       "date": "2026-09-09T18:03:35Z",
       "message": "feat(mcp): graph-backed sections in get_context with structured handoff and VOR filter (#30)",
       "author": "Mikhail"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "eafe561bd6",
-      "date": "2026-09-10T18:01:04Z",
-      "message": "chore(lab): add exp-33/exp-34 VOR catch-up and HEAD-polling results",
-      "author": "ManSio"
     },
     {
       "repo": "MCP-Lite",
