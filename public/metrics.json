@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-11T16:27:36.065Z",
+  "fetchedAt": "2026-09-11T19:41:48.150Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-11T11:19:38Z",
-      "language": "TypeScript"
-    },
-    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-10T19:44:32Z",
+      "pushedAt": "2026-09-11T19:22:53Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-11T16:27:42Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -154,7 +154,7 @@
         "mcp"
       ],
       "reactions": 19,
-      "comments": 45,
+      "comments": 52,
       "coverImage": null,
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh5tdgd82gnvqwwvx9m7s.png",
       "readablePublishDate": "Aug 11"
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "8a05b599f6",
+      "date": "2026-09-11T19:22:53Z",
+      "message": "fix(intelligence): VOR read-path skips prose scan when explicit anchors exist (#34)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "2ab54795af",
       "date": "2026-09-10T19:44:31Z",
       "message": "fix(search): get_symbol_info AMBIGUOUS + docs + README badge (#33)",
@@ -209,13 +216,6 @@
       "sha": "4fd3b5cd15",
       "date": "2026-09-10T02:39:47Z",
       "message": "chore(experiments): E-S1/E-S2 live-repo results + Exhibit #23 audit docs (#32)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "ed0f88004b",
-      "date": "2026-09-09T18:03:35Z",
-      "message": "feat(mcp): graph-backed sections in get_context with structured handoff and VOR filter (#30)",
       "author": "Mikhail"
     },
     {
