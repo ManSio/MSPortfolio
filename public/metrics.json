@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-11T11:19:31.992Z",
+  "fetchedAt": "2026-09-11T16:27:36.065Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-11T05:58:28Z",
+      "pushedAt": "2026-09-11T11:19:38Z",
       "language": "TypeScript"
     },
     {
@@ -154,7 +154,7 @@
         "mcp"
       ],
       "reactions": 19,
-      "comments": 39,
+      "comments": 45,
       "coverImage": null,
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh5tdgd82gnvqwwvx9m7s.png",
       "readablePublishDate": "Aug 11"
