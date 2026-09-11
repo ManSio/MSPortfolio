@@ -1324,6 +1324,21 @@
       "conclusion": "H3 confirmed: no OS watchdog is needed for committed external changes; uncommitted edits (dirty tree) still depend on fingerprint mtime / notify_change - documented open interval (HEAD TTL 30s).",
       "links": []
     }
+,
+    {
+      "id": "exp-35",
+      "date": "2026-09-11",
+      "project": "mscodebase-intelligence",
+      "title": "Burst-rename vs fail-closed VOR: prose-path anchoring causes false REFUTED (1-B/1-C/RT)",
+      "hypothesis": "Fail-closed VOR (ADR-0003) re-verifies NODE path anchors against HEAD. After one refactor-commit with mass move/rename it refutes ALL touched nodes (queue=100%) though files are alive - false refutes; a body-hash anchor (limpet/OpenLore) survives rename losslessly. And: prose-scanned anchors in ADR body contaminate the set, so read-path should trust EXPLICIT data.anchors only when present.",
+      "command": "python experiments/1V_memory_contamination/burst_rename_audit.py (real memory: 24 auto-REFUTED) -> burst_sweep_exp.py (synthetic: 30 files git mv, 1 commit) -> redteam_burst.py (batch-hazard/starve/present-trap). Then fix extract_anchors(read_path=True) + tests/test_verify_on_read.py.",
+      "result": "[1-B real] auto-REFUTED=24: anchor_junk 13, TRUE_REFUTE_deleted 10, FALSE_REFUTE_renamed 1 (9.1%): ADR-7232a6e2ba34 (alive, revoked by OLD path src/utils/paths.py, R083). [1-C synth N=30] baseline VERIFIED 30/0; sweep (git mv src/mod src/moved): REFUTED 30/30 (100%); body-hash carry 30/30 survived. [RT-1 batch-hazard] commit e661861f = D+rename: batch-by-commit saves truth AND deletion. [RT-3 starve] budget 0.05ms @N=40: checked=1 inconclusive=39. [RT-4 present-trap] recreate on same path: path-anchor VERIFIED (stale), body-hash honest delete+add. [AFTER FIX] ADR-7232a6e2ba34 replica VERIFIED (was REFUTED); 53+28 tests passed.",
+      "verdict": "confirmed",
+      "finding": "Real queue is NOT huge (24 accumulated auto-refutes/month) but is DOMINATED by junk anchors from prose scanning (13/24 import:for/file/path regex hits), not by renames - renames caused only 1 FALSE_REFUTE (ADR-7232a6e2ba34: live node revoked by historical path from prose body). Synthetic sweep shows the pattern: one rename-sweep = 100% of the queue. Batch-by-commit does NOT solve it (blends move with delete, e661861f); body-identity (exact-body/exact-signature, OpenLore PR#206) or a reviewer aligning a failed anchor with R* rename sources in git history (rename_sources) is the deeper fix. This commit lands the conservative half: read-path skips prose scan when explicit anchors exist.",
+      "chart": null,
+      "conclusion": "Confirmed with partial coverage: the queue is small but the contamination is dominated by prose-path junk plus alias (rename) refutes. The landed production fix (extract_anchors parametrised read_path=True; explicit anchors trusted on read-path, legacy prose scan kept for nodes without anchors - backward compat verified by test) removes the alias contamination class in practice while body-hash stays the open candidate for the sweep case.",
+      "links": []
+    }
   ],
   "negativeResults": [
     {
