@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-13T14:26:50.930Z",
+  "fetchedAt": "2026-09-13T18:12:23.118Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-13T10:16:55Z",
+      "pushedAt": "2026-09-13T14:26:57Z",
       "language": "TypeScript"
     },
     {
@@ -197,13 +197,6 @@
     }
   ],
   "commits": [
-    {
-      "repo": "MSPortfolio",
-      "sha": "e3e3d5d19b",
-      "date": "2026-09-13T09:48:26Z",
-      "message": "chore(lab): add exp-37 H4 dev.to KB capture bottleneck (EN+RU)",
-      "author": "ManSio"
-    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "081fa18fc9",
