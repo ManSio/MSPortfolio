@@ -1323,8 +1323,7 @@
       "chart": null,
       "conclusion": "H3 подтверждена: для коммиченных внешних изменений OS-watchdog не нужен; незакоммиченные правки (dirty tree) всё ещё зависят от fingerprint mtime / notify_change — задокументированный открытый интервал (HEAD TTL 30s).",
       "links": []
-    }
-,
+    },
     {
       "id": "exp-35",
       "date": "2026-09-11",
@@ -1352,6 +1351,47 @@
       "chart": null,
       "conclusion": "H3 подтверждена: N=30 обоснован live-распределением verified_at (median 22 / потолок 31), label stale_ttl делает «висеть вечно» невозможным при сохранении потолка false_retraction 0.0968%. Вместе с H1 (idle-проход) и H2 (per-node HEAD-инвалидация, Exp 3) исследование continuous-verification (research doc 10) закрыто.",
       "links": []
+    },
+    {
+      "id": "exp-37",
+      "date": "2026-09-13",
+      "project": "mscodebase-intelligence",
+      "title": "H4 Жизненный цикл памяти агента в масштабе: латентность capture при росте графа dev.to 3.4x (треды 5.5x) + точность stale",
+      "hypothesis": "На базе dev.to, выросшей с 3,989 до 13,519 статей (3.4x), при росте корней тредов 9,106 -> 19,101 (2.1x) по снапшотам, латентность capture деградирует с размером графа сильнее, чем предсказывает число статей.",
+      "command": "community-memory start_refresh(own) -> job_status -> get_trend(all) -> get_statistics(all) -> rebuild_derived(all) -> get_statistics(focus)",
+      "result": "refresh own: старт 09:15:13Z финиш 09:25:50Z = 10м38с на 13,519 статей / 82,527 комментов / 50,498 тредов (134 сетевых вызова), snapshot 16. rebuild_derived: 50,498 тредов за ~3с (09:41:27->09:41:30), snapshot 17. comment_status: live=2,030, gone=80,494 (97.5% из 82,527), edited_since_capture=3. focus: 91 статья, 723 автора, 537 кластеров.",
+      "verdict": "confirmed",
+      "finding": "Латентность capture растёт с размером графа (раньше own refresh на ~9k тредов завершался за ~2 мин против 10м38с сейчас), хотя числовая дельта между снапшотами мала (треды 19,056 -> 19,101, +45). Стоимость — фаза сетевого capture (134 вызова dev.to API), а не локальная пересборка графа: rebuild_derived построил 50,498 тред-объектов за ~3с. Точность stale: 97.5% хранимых комментариев gone против live dev.to (live=2,030, gone=80,494 из 82,527) — verify-on-read на частично обновлённом графе пропускает реальные обновления до следующего capture.",
+      "chart": {
+        "type": "bar",
+        "title": "Корни тредов против статей по снапшотам",
+        "data": [
+          {
+            "label": "треды 09-05",
+            "value": 9106,
+            "color": "#6366f1"
+          },
+          {
+            "label": "треды 09-13",
+            "value": 19101,
+            "color": "#6366f1"
+          },
+          {
+            "label": "статьи 09-05",
+            "value": 11980,
+            "color": "#22c55e"
+          },
+          {
+            "label": "статьи 09-13",
+            "value": 13519,
+            "color": "#22c55e"
+          }
+        ]
+      },
+      "conclusion": "бутылочное горлышко = сетевой capture (rate-limited dev.to API), не локальный граф. Свежесть, а не read-path — риск точности в масштабе: инкрементальный/осознанный refresh важнее оптимизации сборки графа. Верифицированные узлы точность сохраняют; доля gone 97.5% ограничивает глобальный recall.",
+      "links": [
+        "exp-36"
+      ]
     }
   ],
   "negativeResults": [

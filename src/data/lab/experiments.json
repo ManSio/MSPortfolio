@@ -1323,8 +1323,7 @@
       "chart": null,
       "conclusion": "H3 confirmed: no OS watchdog is needed for committed external changes; uncommitted edits (dirty tree) still depend on fingerprint mtime / notify_change - documented open interval (HEAD TTL 30s).",
       "links": []
-    }
-,
+    },
     {
       "id": "exp-35",
       "date": "2026-09-11",
@@ -1352,6 +1351,47 @@
       "chart": null,
       "conclusion": "H3 confirmed: N=30 justified from the live verified_at distribution (median 22 / ceiling 31), and the stale_ttl label makes \"hangs forever\" impossible while keeping the 0.0968% false-retraction floor. Together with H1 (idle renewal) and H2 (per-node HEAD invalidation, Exp 3) the verify-on-read study (research doc 10) is closed.",
       "links": []
+    },
+    {
+      "id": "exp-37",
+      "date": "2026-09-13",
+      "project": "mscodebase-intelligence",
+      "title": "H4 Agent-memory lifecycle at scale: capture latency on a dev.to graph grown 3.4x (threads 5.5x) + stale precision",
+      "hypothesis": "On a dev.to KB grown from 3,989 to 13,519 articles (3.4x) while thread roots grew 9,106 -> 19,101 (2.1x) across snapshots, capture latency degrades with graph size more than raw article count would predict.",
+      "command": "community-memory start_refresh(own) -> job_status -> get_trend(all) -> get_statistics(all) -> rebuild_derived(all) -> get_statistics(focus)",
+      "result": "refresh own started 09:15:13Z finished 09:25:50Z = 10m38s on 13,519 articles / 82,527 comments / 50,498 threads (134 network calls), snapshot 16. rebuild_derived: 50,498 threads in ~3s (09:41:27->09:41:30), snapshot 17. comment_status: live=2,030, gone=80,494 (97.5% of 82,527), edited_since_capture=3. focus: 91 articles, 723 authors, 537 clusters.",
+      "verdict": "confirmed",
+      "finding": "Capture latency grew with graph size (earlier own refresh on ~9k threads completed in ~2 min vs 10m38s now) even though the numeric delta between snapshots was small (threads 19,056 -> 19,101, +45). The cost is the network capture phase (134 dev.to API calls), not the local graph rebuild: rebuild_derived built 50,498 thread objects in ~3s. Stale precision: 97.5% of stored comments are gone vs live dev.to (live=2,030, gone=80,494 of 82,527), so verify-on-read on a partially-refreshed graph misses real updates until the next capture.",
+      "chart": {
+        "type": "bar",
+        "title": "Thread roots vs articles across snapshots",
+        "data": [
+          {
+            "label": "threads 09-05",
+            "value": 9106,
+            "color": "#6366f1"
+          },
+          {
+            "label": "threads 09-13",
+            "value": 19101,
+            "color": "#6366f1"
+          },
+          {
+            "label": "articles 09-05",
+            "value": 11980,
+            "color": "#22c55e"
+          },
+          {
+            "label": "articles 09-13",
+            "value": 13519,
+            "color": "#22c55e"
+          }
+        ]
+      },
+      "conclusion": "bottleneck = network capture (rate-limited dev.to API), not local graph. Freshness, not read-path, is the accuracy risk at scale: incremental/aware refresh matters more than optimizing the graph build. Verified nodes keep precision; the 97.5% gone-share limits global recall.",
+      "links": [
+        "exp-36"
+      ]
     }
   ],
   "negativeResults": [
