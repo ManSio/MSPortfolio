@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-13T04:46:00.334Z",
+  "fetchedAt": "2026-09-13T09:05:21.370Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-13T09:04:34Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-09-13T04:25:45Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-13T00:02:05Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -197,6 +197,20 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "dec58811ab",
+      "date": "2026-09-11T21:20:17Z",
+      "message": "chore(lab): add exp-36 H3 TTL-rotation for verify-on-read",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "cec3abe8b1",
+      "date": "2026-09-11T18:52:05Z",
+      "message": "chore(lab): add exp-35 VOR prose-path contamination results (EN+RU)",
+      "author": "ManSio"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "ed82301eb2",
@@ -392,13 +406,6 @@
       "date": "2026-06-15T16:04:26Z",
       "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
       "author": "Mikhail"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "a4ebcda881",
-      "date": "2026-06-15T06:23:15Z",
-      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
-      "author": "dependabot[bot]"
     }
   ]
 }
