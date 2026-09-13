@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-13T09:50:06.305Z",
+  "fetchedAt": "2026-09-13T10:16:49.000Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-13T09:49:35Z",
+      "pushedAt": "2026-09-13T09:50:19Z",
       "language": "TypeScript"
     },
     {
@@ -202,13 +202,6 @@
       "sha": "e3e3d5d19b",
       "date": "2026-09-13T09:48:26Z",
       "message": "chore(lab): add exp-37 H4 dev.to KB capture bottleneck (EN+RU)",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "dec58811ab",
-      "date": "2026-09-11T21:20:17Z",
-      "message": "chore(lab): add exp-36 H3 TTL-rotation for verify-on-read",
       "author": "ManSio"
     },
     {
@@ -406,6 +399,13 @@
       "date": "2026-06-15T16:04:26Z",
       "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
       "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "a4ebcda881",
+      "date": "2026-06-15T06:23:15Z",
+      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
+      "author": "dependabot[bot]"
     }
   ]
 }
