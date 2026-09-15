@@ -1392,6 +1392,78 @@
       "links": [
         "exp-36"
       ]
+    },
+    {
+      "id": "exp-38",
+      "date": "2026-09-15",
+      "project": "mscodebase-intelligence",
+      "title": "Bootstrap pipeline: test->function linking ? static name/import vs dynamic sys.settrace trace (89.8% vs 0%/77.9%)",
+      "hypothesis": "For bootstrap extraction of business logic in a fresh repo, step 3 (tests as ground truth) is feasible deterministically. Name-based static linking test->function will fail (test names != impl names); import-based gives file-level only; running the suite with a sys.settrace plugin while recording executed src functions gives per-function ground truth at acceptable overhead.",
+      "command": "python -m pytest tests/ -p experiments.bootstrap.dynamic_trace_plugin -q --no-header (full 1727-test run); A/B no-trace same session; static checks via grep/ripgrep on 163 test files + 30-file sample",
+      "result": "dynamic: 1551/1727 tests (89.8%) execute >=1 src function; 1212 unique src functions; avg 10.1 (median 6, range 1-118; 1-3:558, 4-10:520, 11-30:353, 31+:120); exact-name target inside dynamic set only 47/1727 (2.7%). static-name sample: 0/109 (0%). static-import: 127/163 files (77.9%), 465 import-lines. A/B same session: no-trace 174.8s vs trace 198.6s -> +13.6% overhead. 176 tests (10.2%) execute zero src functions (mocked).",
+      "verdict": "confirmed",
+      "finding": "Dynamic trace (sys.settrace around pytest_runtest_call) is the only viable deterministic test->function linker: 89.8% vs 0% (name) and 77.9% (import, file-level only). Overhead +13.6% on a full run is fine for a one-off bootstrap pass. Entry points (@mcp_app.tool, 22 in src) are NOT yet emitted as DECORATES edges (decorator parser slices name correctly, node exists, tool-edges absent) ? step 2 needs graph-side enrichment; step 4 (git->ADR) already works via intel_auto_collect_adrs.",
+      "chart": {
+        "type": "bar",
+        "title": "Test->function linkage by method (%)",
+        "data": [
+          {
+            "label": "dynamic_trace",
+            "value": 89.8,
+            "color": "#22c55e"
+          },
+          {
+            "label": "imports_file_level",
+            "value": 77.9,
+            "color": "#6366f1"
+          },
+          {
+            "label": "name_static",
+            "value": 0.0,
+            "color": "#ef4444"
+          }
+        ]
+      },
+      "conclusion": "Bootstrap pipeline is realizable: step 3 as a dynamic-trace pass (not static), step 1 via dataclass/NamedTuple signal (46 clean; pydantic/TypedDict absent; Table( regex is 90% noise), step 2 via parser+edge enrichment, step 4 already implemented. Recommend implementing the pipeline as a plugin + enrich indexer edges (tool decorators), scoped to one-off project bootstrap.",
+      "links": [
+        "exp-37"
+      ]
+    },
+    {
+      "id": "exp-39",
+      "date": "2026-09-15",
+      "project": "mscodebase-intelligence",
+      "title": "Bootstrap follow-up: Tarantula ranking for test->function annotation — recall refuted (22.6% rank<=3), precision confirmed; dev.to cross-check",
+      "hypothesis": "Tarantula heuristic (a function called frequently by this test and rarely by others is the target) gives >=60-70% of tests an unambiguous best candidate (rank<=3) computed from trace_result.json without mutations — enough to annotate test->target-function.",
+      "command": "python experiments/bootstrap/tarantula_analysis.py; tarantula_analysis2.py; tarantula_noise_filter.py on trace_result.json (1727 tests, 1551 with src, 1212 unique symbols); hand-validation of 5 low-rank examples",
+      "result": "unambiguous single best: 1192/1551 (76.9%); BUT best-candidate rank<=3 only 391/1727 (22.6%) vs 60-70% hoped. rank histogram: rank=1:130 (7.5%),=2:133 (7.7%),=3:128 (7.4%). Global noise cutoff (<=N callers) does not help: specific<=3 stays flat ~16% for any cutoff. File-level rank<=3: 1.8% (files universally shared). Noisiest: safe_mkdir (234 callers), get_data_root (234), project_hash (223). Hand-validation 5/5 low-rank candidates = correct targets.",
+      "verdict": "refuted",
+      "finding": "Vanilla Tarantula cannot select the target function for most tests: recall is 22.6% rank<=3, far below the 60-70% recall target — shared utils (autouse fixtures safe_mkdir/get_data_root with 200+ callers) is the barrier, the same noise source TRUE Coverage reports (shared utility files reachable from 50+ tests). Precision of low ranks is high (5/5 hand-validated correct). Pragmatic consequence: TESTS-edge is built from the full dynamic trace and is correct by construction (no ranking needed); Tarantula ranks are only a confidence annotation for ~16% of tests, not a selection mechanism. dev.to cross-check (2026-09-15): (1) TRUE Coverage (Dawson) independently confirms static approaches fail and per-test coverage->reverse file->tests map cuts CI 43min->4min; (2) Empirical Failure Modes (adevbelgium) confirms Pass-Through Mirage (our phantom code) and Python 3.14 sys.monitoring low-overhead reachability (same backend as our coverage core=sysmon). Niche of TESTS-edges for LLM context remains unclaimed.",
+      "chart": {
+        "type": "bar",
+        "title": "Tests with specific best candidate (rank<=3) by level (%)",
+        "data": [
+          {
+            "label": "function_rank<=3",
+            "value": 22.6,
+            "color": "#f59e0b"
+          },
+          {
+            "label": "file_rank<=3",
+            "value": 1.8,
+            "color": "#ef4444"
+          },
+          {
+            "label": "recall_target_60-70",
+            "value": 65.0,
+            "color": "#22c55e"
+          }
+        ]
+      },
+      "conclusion": "Do not rely on Tarantula as a selection/oracle for the bootstrap pipeline: recall is insufficient (22.6% vs 60-70%). Build TESTS edges from the raw dynamic trace (ground truth by construction) and treat Tarantula as a high-precision-but-low-recall confidence annotation for LLM context.",
+      "links": [
+        "exp-38"
+      ]
     }
   ],
   "negativeResults": [
