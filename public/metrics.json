@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-15T18:11:35.904Z",
+  "fetchedAt": "2026-09-15T21:19:48.623Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-15T19:25:10Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-15T13:32:54Z",
+      "pushedAt": "2026-09-15T18:11:42Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-09-15T17:20:07Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "a327aa486a",
+      "date": "2026-09-15T19:25:10Z",
+      "message": "fix(ui): resolve actual TTL days in stale_ttl label (#35)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "081fa18fc9",
       "date": "2026-09-13T09:48:13Z",
       "message": "docs(diary): H4 experiment - dev.to KB capture bottleneck + exp-37 record",
@@ -209,13 +216,6 @@
       "sha": "ed82301eb2",
       "date": "2026-09-13T04:22:13Z",
       "message": "docs(diary): H3 mark verified_from_clean_state via CI run 34737070903",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "7429daad57",
-      "date": "2026-09-11T21:23:10Z",
-      "message": "feat(intelligence): H3 TTL-rotation for verify-on-read (last_checked + stale_ttl)",
       "author": "MSCodeBase Agent"
     },
     {
