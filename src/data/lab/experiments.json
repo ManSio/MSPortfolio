@@ -1481,6 +1481,23 @@
         "exp-38",
         "exp-39"
       ]
+    },
+    {
+      "id": "exp-41",
+      "date": "2026-09-16",
+      "project": "mscodebase-intelligence",
+      "title": "Bootstrap Step B: Static Score Engine (AST calls/lexical/imports) vs dynamic trace ground truth",
+      "hypothesis": "Static 3-level mapping (L1 AST direct calls, L2 lexical tokens, L3 imports) against trace_result.json gives functional hit-rate >=50% but aggregate recall <=30% -> static is only a companion; dynamic remains the driver. (Exp 7 measured ONLY the 'test name == function name' signal -> 0%; the call-level signal was never measured.)",
+      "command": "python experiments/bootstrap/static_vs_dynamic.py (v2 per-test; v1 measured calls at file level -> inflated L1 hit by neighboring tests; v2 extracts calls strictly from the current test function's body via AST)",
+      "result": "L1 (direct calls from test body): hit 88.4% / recall 30.3% / precision 68.0% (avg 2.9 candidates). L2 (name tokens): 17.7% / 3.8% / 12.1%. L3 (imports): 91.6% / 72.0% / 21.8% (avg 41.4). union: 90.4% / 70.0% / 20.6%. Static candidates for dynamically-empty tests: 88/176. |G| per linked test: avg 10.1, max 118. 1212 unique src functions.",
+      "verdict": "refuted",
+      "finding": "Hit >=50% confirmed (union 90.4%), but recall <=30% REFUTED: union recall is 70.0%. Static is much stronger than Exp 7 implied, because Exp 7 measured the weak name-signal (L2 reconfirms it: 17.7%). The call-level signal (L1) is a precise, narrow anchor: precision 68.0% with avg 2.9 candidates, recall 30.3%. L3 (imports) provides breadth (recall 72%) at the cost of noise (21.8% precision, avg 41.4 candidates). CORRECTS interpretation: hit != recall (hit 90% does not mean 90% coverage).",
+      "chart": null,
+      "conclusion": "Dynamic trace remains the TESTS-edge driver (recall 100% on linked). Static is a companion layer, not a replacement: L1 = tier-1 ranking anchor, L3 = wide candidate pool, L2 = ignore. Bonus: static gives candidates for 88/176 dynamically-empty (mock) tests. Also shuts Step B2: DECORATES edges for @mcp_app.tool are already in the live graph (mcp.tool->14, mcp_app.tool->20 edges, source commit 19378296).",
+      "links": [
+        "exp-38",
+        "exp-40"
+      ]
     }
   ],
   "negativeResults": [
