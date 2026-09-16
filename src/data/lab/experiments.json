@@ -1464,6 +1464,23 @@
       "links": [
         "exp-38"
       ]
+    },
+    {
+      "id": "exp-40",
+      "date": "2026-09-16",
+      "project": "mscodebase-intelligence",
+      "title": "Bootstrap A1: coverage.py sysmon driver overhead vs our sys.settrace plugin — sysmon refuted (+19.96% vs +13.6%)",
+      "hypothesis": "`coverage run --rcfile=.coveragerc` with dynamic_context=test_function on Python 3.14 uses sys.monitoring (sysmon core), so overhead should drop below ~5% vs our sys.settrace plugin (+13.6%, Exp 7) — making coverage the standard driver for `mscodebase bootstrap`.",
+      "command": "python experiments/bootstrap/a1_sysmon_ab.py (same methodology as Exp 7: pytest tests/ -q --no-header -p no:cacheprovider, same session, warmup + 2 alternating pairs, min taken); then a1_check_contexts.py + a1_ctx_quality.py on the produced .coverage",
+      "result": "baseline: [184.88, 200.30]s; coverage: [221.78, 232.07]s; min baseline 184.88 vs min coverage 221.78 -> overhead +19.96% (target <5% NOT met). Context capture quality is excellent: 1549 contexts (1548 non-empty), 160/179 src files with context-lines, 15781/20897 src lines (75.5%) tied to real test contexts (e.g. test_action_receipt.test_build_receipt_generates_id_and_steps, TestCypherAccess.test_decorates_queryable), empty context only on import-time lines (24.5%).",
+      "verdict": "refuted",
+      "finding": "sysmon is ~1.5x slower than our hand-rolled sys.settrace plugin on the full suite (+19.96% vs +13.6% in the same session, same methodology), so coverage.py is NOT adopted as the production driver. The earlier research estimate of 'sysmon ~3-7% median loss' (KNOWN_ISSUES:249) is rejected by this full-suite measurement. Context mechanism itself works well and remains a validation oracle for sample A/B cross-checks.",
+      "chart": null,
+      "conclusion": "Keep dynamic_trace_plugin.py (sys.settrace, +13.6%) as the engine for `mscodebase bootstrap`; build TESTS-edges from trace_result.json. Use coverage.py dynamic_context only as a validation oracle on samples, not for full runs.",
+      "links": [
+        "exp-38",
+        "exp-39"
+      ]
     }
   ],
   "negativeResults": [

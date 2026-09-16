@@ -1464,6 +1464,23 @@
       "links": [
         "exp-38"
       ]
+    },
+    {
+      "id": "exp-40",
+      "date": "2026-09-16",
+      "project": "mscodebase-intelligence",
+      "title": "Bootstrap A1: sysmon (coverage run) драйвер overhead vs наш sys.settrace плагин — sysmon опровергнут (+19.96% vs +13.6%)",
+      "hypothesis": "`coverage run --rcfile=.coveragerc` с `dynamic_context=test_function` на Python 3.14 использует sys.monitoring (sysmon core), поэтому overhead должен упасть ниже ~5% по сравнению с нашим sys.settrace-плагином (+13.6%, Exp 7) — сделав coverage штатным драйвером для `mscodebase bootstrap`.",
+      "command": "python experiments/bootstrap/a1_sysmon_ab.py (та же методика Exp 7: pytest tests/ -q --no-header -p no:cacheprovider, та же сессия, warmup + 2 чередующиеся пары, min); затем a1_check_contexts.py + a1_ctx_quality.py на созданном .coverage",
+      "result": "baseline: [184.88, 200.30]s; coverage: [221.78, 232.07]s; min baseline 184.88 vs min coverage 221.78 -> overhead +19.96% (цель <5% НЕ достигнута). Качество контекстов отличное: 1549 контекстов (1548 непустых), 160/179 src-файлов с контекстными строками, 15781/20897 src-строк (75.5%) привязаны к реальным тест-контекстам (test_action_receipt.test_build_receipt_generates_id_and_steps, TestCypherAccess.test_decorates_queryable), пустой контекст только на import-time строках (24.5%).",
+      "verdict": "refuted",
+      "finding": "sysmon примерно в 1.5 раза медленнее нашего кастомного sys.settrace-плагина на полном прогоне (+19.96% против +13.6% в той же сессии, той же методикой), поэтому coverage.py НЕ взят как штатный драйвер. Прошлая оценка «sysmon ≈3-7% медианного проигрыша» (KNOWN_ISSUES:249) опровергнута замером на полном наборе. Механизм контекстов при этом работает хорошо и остаётся валидационным оракулом для A/B кросс-чека на сэмплах.",
+      "chart": null,
+      "conclusion": "Остаёмся на dynamic_trace_plugin.py (sys.settrace, +13.6%) как движке для `mscodebase bootstrap`; TESTS-рёбра строятся из trace_result.json. Coverage.py dynamic_context используется только как валидационный оракул на сэмплах, не для полных прогонов.",
+      "links": [
+        "exp-38",
+        "exp-39"
+      ]
     }
   ],
   "negativeResults": [
