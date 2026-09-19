@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-09-19T18:00:25.069Z",
+  "fetchedAt": "2026-09-19T20:38:59.121Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
-    "publicRepos": 11,
+    "publicRepos": 12,
     "followers": 71,
     "following": 90
   },
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-19T14:24:46Z",
+      "pushedAt": "2026-09-19T18:00:31Z",
       "language": "TypeScript"
     },
     {
@@ -197,6 +197,27 @@
     }
   ],
   "commits": [
+    {
+      "repo": "Stanford-Town-AI-Project",
+      "sha": "b95d634297",
+      "date": "2023-12-16T09:44:36Z",
+      "message": "Project Report for Adv AI CS-5660",
+      "author": "Arpit Vaishya"
+    },
+    {
+      "repo": "Stanford-Town-AI-Project",
+      "sha": "7374cd5129",
+      "date": "2023-12-16T08:41:16Z",
+      "message": "Updated Experimental result image",
+      "author": "Arpit Vaishya"
+    },
+    {
+      "repo": "Stanford-Town-AI-Project",
+      "sha": "1e8ddd8255",
+      "date": "2023-12-16T08:39:55Z",
+      "message": "Update README.md",
+      "author": "Arpit Vaishya"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "15ce15d7df",
@@ -385,20 +406,6 @@
       "date": "2026-06-15T17:11:50Z",
       "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
       "author": "Mikhail"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "97e6014d06",
-      "date": "2026-06-15T16:04:26Z",
-      "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "a4ebcda881",
-      "date": "2026-06-15T06:23:15Z",
-      "message": "deps: update httpx2 requirement from >=2.0.0 to >=2.4.0",
-      "author": "dependabot[bot]"
     }
   ]
 }
