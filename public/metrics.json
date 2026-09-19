@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-19T05:52:21.966Z",
+  "fetchedAt": "2026-09-19T10:57:21.863Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-19T03:30:46Z",
+      "pushedAt": "2026-09-19T08:18:24Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-19T00:20:21Z",
+      "pushedAt": "2026-09-19T05:52:29Z",
       "language": "TypeScript"
     },
     {
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
+      "sha": "15ce15d7df",
+      "date": "2026-09-19T08:18:23Z",
+      "message": "fix(indexing): lancedb migration guards + E10 negative result (#36)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
       "sha": "4b6be1a85c",
       "date": "2026-09-19T03:27:23Z",
       "message": "feat(indexing): incremental hot-reload for index freshness",
@@ -209,13 +216,6 @@
       "sha": "b684c41dce",
       "date": "2026-09-18T17:34:59Z",
       "message": "feat(bootstrap): add bootstrap_pipeline command (step 3) for MCP+CLI",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "11c88afca6",
-      "date": "2026-09-17T03:06:25Z",
-      "message": "feat(bootstrap): auto-detect source root instead of hardcoded src/",
       "author": "MSCodeBase Agent"
     },
     {
