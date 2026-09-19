@@ -1,28 +1,28 @@
 {
-  "fetchedAt": "2026-09-19T00:20:15.263Z",
+  "fetchedAt": "2026-09-19T05:52:21.966Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 11,
     "followers": 70,
-    "following": 89
+    "following": 90
   },
   "repos": [
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-18T21:40:58Z",
-      "language": "TypeScript"
-    },
     {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-15T19:25:10Z",
+      "pushedAt": "2026-09-19T03:30:46Z",
       "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-19T00:20:21Z",
+      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "a327aa486a",
-      "date": "2026-09-15T19:25:10Z",
-      "message": "fix(ui): resolve actual TTL days in stale_ttl label (#35)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "081fa18fc9",
-      "date": "2026-09-13T09:48:13Z",
-      "message": "docs(diary): H4 experiment - dev.to KB capture bottleneck + exp-37 record",
+      "sha": "4b6be1a85c",
+      "date": "2026-09-19T03:27:23Z",
+      "message": "feat(indexing): incremental hot-reload for index freshness",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "ed82301eb2",
-      "date": "2026-09-13T04:22:13Z",
-      "message": "docs(diary): H3 mark verified_from_clean_state via CI run 34737070903",
+      "sha": "b684c41dce",
+      "date": "2026-09-18T17:34:59Z",
+      "message": "feat(bootstrap): add bootstrap_pipeline command (step 3) for MCP+CLI",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "11c88afca6",
+      "date": "2026-09-17T03:06:25Z",
+      "message": "feat(bootstrap): auto-detect source root instead of hardcoded src/",
       "author": "MSCodeBase Agent"
     },
     {
