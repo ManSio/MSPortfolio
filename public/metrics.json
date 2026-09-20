@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-20T11:27:51.341Z",
+  "fetchedAt": "2026-09-20T16:05:04.214Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-20T11:55:19Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-20T06:15:08Z",
+      "pushedAt": "2026-09-20T11:27:57Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-09-20T10:41:05Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "01042854f7",
+      "date": "2026-09-20T11:55:19Z",
+      "message": "fix: resume-incremental write + role-specific ubatch (INC-6C62) (#37)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "15ce15d7df",
+      "date": "2026-09-19T08:18:23Z",
+      "message": "fix(indexing): lancedb migration guards + E10 negative result (#36)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "4b6be1a85c",
+      "date": "2026-09-19T03:27:23Z",
+      "message": "feat(indexing): incremental hot-reload for index freshness",
+      "author": "MSCodeBase Agent"
+    },
+    {
       "repo": "Stanford-Town-AI-Project",
       "sha": "b95d634297",
       "date": "2023-12-16T09:44:36Z",
@@ -217,27 +238,6 @@
       "date": "2023-12-16T08:39:55Z",
       "message": "Update README.md",
       "author": "Arpit Vaishya"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "15ce15d7df",
-      "date": "2026-09-19T08:18:23Z",
-      "message": "fix(indexing): lancedb migration guards + E10 negative result (#36)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "4b6be1a85c",
-      "date": "2026-09-19T03:27:23Z",
-      "message": "feat(indexing): incremental hot-reload for index freshness",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "b684c41dce",
-      "date": "2026-09-18T17:34:59Z",
-      "message": "feat(bootstrap): add bootstrap_pipeline command (step 3) for MCP+CLI",
-      "author": "MSCodeBase Agent"
     },
     {
       "repo": "MCP-Lite",
