@@ -1498,6 +1498,62 @@
         "exp-38",
         "exp-40"
       ]
+    },
+    {
+      "id": "exp-42",
+      "date": "2026-09-18",
+      "project": "mscodebase-intelligence",
+      "title": "E7: ленивая stat-сверка (mtime+size) против sha256-сверки для «всегда свежего» индекса (hot-reload FreshnessChecker)",
+      "hypothesis": "Проверка stat-метаданных (mtime_ns + size, без чтения содержимого) по ПОЛНОМУ корпусу INDEX_EXTENSIONS достаточно быстра (<50ms), чтобы гонять синхронно перед каждым search_code — индекс самосвежий без notify_change и без полного reindex (fallback «3 точки»).",
+      "command": "python experiments/freshness_lazy/measure_stat_vs_hashes.py",
+      "result": "stat-сверка полного корпуса (1100 файлов): 17.83 ms. sha256-сверка (.py, 545 файлов): 214.8 ms. Полный reindex: ~5 s. quality-поиск: ~300 ms. Чтение метаданных таблицы (lancedb 0.34): to_lance().to_pandas(columns=[...]) 102.2 ms / 10366 строк / 574 файла",
+      "verdict": "confirmed",
+      "finding": "stat-сверка в 12 раз быстрее sha256 по тому же корпусу и ~2% от полного reindex. (деталь lancedb 0.34: table.to_pandas(columns=[...]) падает, table.to_lance().to_pandas(columns=[...]) — рабочий API.) Это сделало синхронную pre-search проверку свежести жизнеспособной: stat-first с fallback на sha256-подтверждение при несовпадении.",
+      "chart": null,
+      "conclusion": "Переписан FreshnessChecker (Фаза 1, hot-reload): verify() = stat-first быстрый путь (skip без чтения содержимого), sha256-подтверждение при несовпадении stat или legacy-схеме, НОВЫЕ файлы индексируются (закрытие KI-109), debounce FRESHNESS_INTERVAL_SEC (default 30, 0=выкл) + Lock + is_reindexing-гейт. Подключён к search_code через _maybe_hot_reload. Полный reindex остаётся fallback (только при пустом индексе). 6 новых тестов green + 233 регресс-прохода.",
+      "links": []
+    },
+    {
+      "id": "exp-43",
+      "date": "2026-09-19",
+      "project": "mscodebase-intelligence",
+      "title": "E10: full-text эмбеддинг чанка + e5-префиксы + пул reranker'а 50 против плато pure-vector",
+      "hypothesis": "Три одновременных «переключателя» качества поиска поднимают hit@1/hit@5 на 10-задачной панели: (1) эмбеддинг полного текста чанка вместо компактного сниппета, (2) e5-префиксы query:/passage: в llama.cpp-ветке эмбеддера (ONNX/OpenVINO уже имели _ensure_prefix), (3) пул кандидатов reranker'а 30->50.",
+      "command": "python experiments/search_quality/E10_full_text_embed.py (чистый реиндекс: 599 файлов / 9514 чанков за 799.9s)",
+      "result": "fast: hit@1=0%, hit@5=50% | quality: hit@1=20%, hit@5=40% (чистый индекс). Грязный первый прогон: fast 0/60%, quality 30/50%. Baseline автора: fast 0/50%, quality 30/30%.",
+      "verdict": "refuted",
+      "finding": "Ни одного подтверждаемого сдвига в пределах шума N=10: quality hit@1 30%->20% (хуже/шум), hit@5 30%->40% (шум). Переключатели, требующие полного реиндекса прода (~13 мин), дают ноль -> плато pure-vector подтверждено повторно (ср. Exp-29 потолок search-only ~0.23). Следующий ход: AST/Graph-hybrid re-ranking (graph_query scope_id + text-match), а не эмбеддинговые твики.",
+      "chart": null,
+      "conclusion": "Код E10 откачен к HEAD; выжил только нейтральный остаток: env-тумблер MAX_RERANKER_INPUT (default 30). Бонус: расследование вскрыло реальный прод-инцидент - миграции колонок lanceDB молча падали (ImportError: методы класса импортировались как module-level функции) и db_writer разрушительно пересоздавал БД при schema-mismatch - оба исправлены вместе с +200 регрессионных тестов (12 passed). Диагностический харнесс scripts/e2e_quality_search.py оставлен в репо.",
+      "links": []
+    },
+    {
+      "id": "exp-44",
+      "date": "2026-09-19",
+      "project": "mscodebase-intelligence",
+      "title": "E11: AST/Graph-hybrid re-ranking - подъём символьного лукапа над плато pure-vector",
+      "hypothesis": "NL-запросы кода содержат идентификаторы (file_mtime_ns, notify, bm25), которые embedding+BM25 не находят (hit@5 ~20-30%); в репо уже есть SymbolIndex (PropertyGraph search_symbols), знающий их детерминированно, но _graph_stage срабатывает только на чистый identifier-токен. Извлечение символьных подстрок из NL-запроса, search_symbols и подъём graph-хитов в fused топ должны спасать кейсы, которые векторный путь теряет.",
+      "command": "python experiments/search_quality/E11_graph_hybrid_arms.py (read-only; live embed/rerank 8080/8081; та же сессия/БД/индекс, 2 стабильных прогона)",
+      "result": "baseline quality: hit@1=2/10 (20%), hit@5=2/10 (20%), MRR=0.200. A-prepend (graph-файлы в топ): hit@5=4/10 (40%), MRR=0.253. B-RRF (reciprocal_rank_fusion): hit@5=3/10 (30%), MRR=0.225. C-graph: hit@5=4/10 (40%), MRR=0.253. +6ms/запрос graph-lookup против 1978ms baseline.",
+      "verdict": "confirmed",
+      "finding": "Подъём графа спас 2/10 эталонных кейсов (project_indexer_registry.py, indexing_tools.py), которые quality-baseline терял; оба target присутствовали в выводе search_symbols. Стоимость лукапа незначительна (+6ms). Сигнал условен (граф даёт шум - MRR остаётся низким, hit@1 не меняется), что соответствует оговорке RAG-codebase YellowDuck о том, что graph-rerank помогает только на специфическом коде. N=10 - уровень шума; для прод-интеграции нужна панель 30+ задач.",
+      "chart": null,
+      "conclusion": "A-prepend или взвешенный B-RRF - кандидат в прод: стадия внутри engine.hybrid_search_async - извлечение символов из NL, search_symbols, prepend топ-k graph-хитов (за флагом). Не зашито продакшн - интеграция за владельцем; N=10 дал сигнал, расширенная панель обязана перевалидировать до фиксации кодового пути.",
+      "links": []
+    },
+    {
+      "id": "exp-45",
+      "date": "2026-09-22",
+      "project": "mscodebase-intelligence",
+      "title": "E14: EmbeddingGemma 300M vs multilingual-e5-small - Hit@1 0.062->0.688 ценой ~4x CPU",
+      "hypothesis": "EmbeddingGemma 300M (768-dim, ctx 2048, MRL 768/512/256/128) значимо сильнее продовой multilingual-e5-small Q8 (384-dim, ctx 512) на кодовом ретривале на реальном корпусе MSCodeBase ценой ~3-4x медленнее на CPU (10 потоков, Ryzen 5600H).",
+      "command": "python experiments/embeddinggemma/bench.py <пресет> --port <p> --out results/<key>.json (флаги llama-server 1:1 с продом: batch 2048/ubatch 512/threads 10/KV q4_0/pooling mean/raw text/L2; корпус 27 src-файлов -> 81 чанк ~400 токенов, 16 русских NL-запросов; cosine Hit@1/Hit@5/MRR file+chunk; свипы батча/чанка/MRL; RAM WSS через psapi). Пресеты gemma - с --ubatch 2048.",
+      "result": "e5: hit@1=0.062, hit@5=0.250, MRR=0.210, 10.1 ch/s (3860 tok/s), 91MB. gemma Q8_0: 0.688/0.812/0.774, 2.4 ch/s (953 tok/s), 176MB. gemma Q4_0: 0.625/0.812/0.695, 3.4 ch/s (1359 tok/s), 178MB. gemma QAT-Q4_0: 0.562/0.812/0.653, 3.4 ch/s (1357 tok/s), 177MB. MRL 256 сохраняет MRR (0.74 Q8 / 0.71 Q4); 128 проседает на Q4 (hit@1 0.44).",
+      "verdict": "confirmed",
+      "finding": "Реальный воспроизводимый разрыв качества на кодовом корпусе: gemma Q8 даёт +62.6 п.п. Hit@1 и +56.4 п.п. MRR против продового e5 при удвоенном RAM (176 против 91MB) и 4.2x медленнее. QAT-Q4 (ggml-org) НЕ лучше обычного Q4_0 (unsloth): 0.653 против 0.695 MRR - рекламный клэйм не подтверждён. Размер батча не помогает ни одной модели (плато 1..32). Оптимум чанк-свипа - маленькие чанки (128 ток) по ch/s; качество ретривала от размера чанка НЕ мерилось - отдельный вопрос. ПРОД-ограничение: ubatch=512 потолкает ЛЮБОЙ вход эмбеддера 512 токенами; e5-клиент уже режет на 480 (LLAMA_EMBED_MAX_TOKENS), gemma не достигнет своих 2048 в прод-конфиге без правки llama_install.py resolve_ubatch.",
+      "chart": null,
+      "conclusion": "Подтверждено - gemma 300M Q8 кратно сильнее для кодового ретривала (замер, N=16 запросов/81 чанк на реальных src-файлах). Но смена прода = полный чистый реиндекс (урок E10): при 4x медленнее (~32ч на 68M токенов против ~8ч на e5) это решение владельца, не автофикс. Следующая проверка-кандидат: качество ретривала от размера чанка и панель 30+ запросов до любой смены прода.",
+      "links": []
     }
   ],
   "negativeResults": [
