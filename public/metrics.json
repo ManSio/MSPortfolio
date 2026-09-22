@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-22T09:56:58.793Z",
+  "fetchedAt": "2026-09-22T14:52:43.591Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-22T09:50:48Z",
+      "pushedAt": "2026-09-22T11:58:20Z",
       "language": "Python"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-22T04:54:13Z",
+      "pushedAt": "2026-09-22T09:57:05Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "910156136f",
-      "date": "2026-09-22T09:50:47Z",
-      "message": "docs(blog): final article versions for CoderLegion (HTML) and DEV.to (Markdown)",
+      "sha": "f5b431e7de",
+      "date": "2026-09-22T11:57:34Z",
+      "message": "fix(search): normalize file_path in get_tests_for_symbol",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "7eda03bb91",
-      "date": "2026-09-22T09:36:01Z",
-      "message": "docs(blog): apply full draft review - add Wide Panel, Language Coverage, Red Team, update risks",
+      "sha": "85c908da57",
+      "date": "2026-09-22T11:18:51Z",
+      "message": "fix(blog): correct DEV.to cross-check - no overclaiming about niche",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "eaf01c95ca",
-      "date": "2026-09-22T09:32:58Z",
-      "message": "fix(blog): add explicit text color to table cells for dark themes",
+      "sha": "19a551fd94",
+      "date": "2026-09-22T10:21:53Z",
+      "message": "fix(blog): replace HTML code blocks with markdown",
       "author": "MSCodeBase Agent"
     },
     {
