@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-22T04:54:07.158Z",
+  "fetchedAt": "2026-09-22T09:56:58.793Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-22T09:50:48Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-22T00:06:20Z",
+      "pushedAt": "2026-09-22T04:54:13Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-09-21T20:33:07Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -199,23 +199,23 @@
   "commits": [
     {
       "repo": "mscodebase-intelligence",
-      "sha": "01042854f7",
-      "date": "2026-09-20T11:55:19Z",
-      "message": "fix: resume-incremental write + role-specific ubatch (INC-6C62) (#37)",
-      "author": "Mikhail"
+      "sha": "910156136f",
+      "date": "2026-09-22T09:50:47Z",
+      "message": "docs(blog): final article versions for CoderLegion (HTML) and DEV.to (Markdown)",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "15ce15d7df",
-      "date": "2026-09-19T08:18:23Z",
-      "message": "fix(indexing): lancedb migration guards + E10 negative result (#36)",
-      "author": "Mikhail"
+      "sha": "7eda03bb91",
+      "date": "2026-09-22T09:36:01Z",
+      "message": "docs(blog): apply full draft review - add Wide Panel, Language Coverage, Red Team, update risks",
+      "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "4b6be1a85c",
-      "date": "2026-09-19T03:27:23Z",
-      "message": "feat(indexing): incremental hot-reload for index freshness",
+      "sha": "eaf01c95ca",
+      "date": "2026-09-22T09:32:58Z",
+      "message": "fix(blog): add explicit text color to table cells for dark themes",
       "author": "MSCodeBase Agent"
     },
     {
