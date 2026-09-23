@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-23T17:56:28.562Z",
+  "fetchedAt": "2026-09-23T17:58:30.635Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-23T17:56:08Z",
+      "pushedAt": "2026-09-23T17:58:03Z",
       "language": "TypeScript"
     },
     {
@@ -199,23 +199,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "62e5e38f65",
+      "date": "2026-09-23T17:57:54Z",
+      "message": "docs(diary): record MCP worker staleness guard",
+      "author": "ManSio"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "9354f086fc",
       "date": "2026-09-23T17:55:57Z",
       "message": "ci(deploy): assert MCP worker serves fresh lab data in smoke",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "189dafc729",
-      "date": "2026-09-23T17:20:55Z",
-      "message": "docs(lab): sync September experiments (exp-46..exp-50) and KI-114",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "16d7a5aa07",
-      "date": "2026-09-22T04:02:07Z",
-      "message": "docs(lab): exp-45 E14 equal-prod-conditions follow-up (EN+RU)",
       "author": "ManSio"
     },
     {
@@ -405,6 +398,13 @@
       "sha": "e5c361360c",
       "date": "2026-08-12T20:43:07Z",
       "message": "chore: release v0.26.1",
+      "author": "Sidd27"
+    },
+    {
+      "repo": "infrawise",
+      "sha": "b7ad6f3b05",
+      "date": "2026-08-12T20:42:43Z",
+      "message": "fix(s3): walk buckets concurrently, and stop reporting unread config as off",
       "author": "Sidd27"
     }
   ]
