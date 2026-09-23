@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-23T18:18:13.107Z",
+  "fetchedAt": "2026-09-23T20:21:38.044Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-23T18:17:51Z",
+      "pushedAt": "2026-09-23T18:18:20Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 2,
       "forks": 0,
       "openIssues": 1,
-      "pushedAt": "2026-09-23T03:32:02Z",
+      "pushedAt": "2026-09-23T18:50:22Z",
       "language": "Python"
     },
     {
@@ -202,13 +202,6 @@
       "sha": "d5bd818992",
       "date": "2026-09-23T18:12:22Z",
       "message": "docs: document CI MCP freshness guards (CHANGELOG + README)",
-      "author": "ManSio"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "37ab1379b1",
-      "date": "2026-09-23T18:08:32Z",
-      "message": "docs(diary): add P-### pattern registry, tag freshness guards as P-003",
       "author": "ManSio"
     },
     {
@@ -405,6 +398,13 @@
       "sha": "b7ad6f3b05",
       "date": "2026-08-12T20:42:43Z",
       "message": "fix(s3): walk buckets concurrently, and stop reporting unread config as off",
+      "author": "Sidd27"
+    },
+    {
+      "repo": "infrawise",
+      "sha": "47c7684e74",
+      "date": "2026-08-12T19:29:13Z",
+      "message": "chore: release v0.26.0",
       "author": "Sidd27"
     }
   ]
