@@ -128,7 +128,18 @@ publish to `gh-pages`. The MCP server itself needs a process host (GitHub Pages
 is static-only) — see [`server/README.md`](server/README.md) for options
 (Docker / Workers / local).
 
+The Cloudflare Worker is deployed by the `deploy-worker` job on every push
+(requires the `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` secrets). A
+`smoke` job then checks the public endpoint is healthy **and serving fresh
+data** — see [Verification](#verification).
+
 ## Verification
+
+CI runs the smoke checks on every push to `main` (and hourly): the endpoint is
+healthy, `tools/list` is wired, and the data is fresh — the live
+`get_experiments` / `get_known_issues` counts must match the repo JSON, and
+`get_articles` must be non-empty with a metrics snapshot younger than 120
+minutes. A Worker lagging `origin/main` or a stopped metrics cron fails the run.
 
 ```sh
 # MCP smoke test against the running server
