@@ -128,6 +128,30 @@ jobs:
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' | grep -q count
           echo 'get_articles works ✔'
+      - name: Check MCP articles freshness
+        # Regression guard: get_articles silently falls back to a stale snapshot
+        # (or an empty payload) without failing the count check above. Assert it
+        # serves live-or-fresh data, and that the hourly metrics cron is alive.
+        run: |
+          set -euo pipefail
+          MCP=https://msp-portfolio.mansio-dev.workers.dev/mcp
+          METRICS=https://mansio.github.io/MSPortfolio/metrics.json
+          sse_text() { sed -n 's/^data: //p' | jq -r '.result.content[0].text'; }
+          art=$(curl -fsS -X POST "$MCP" \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' \
+            | sse_text)
+          echo "get_articles: source=$(echo "$art" | jq -r '.source') count=$(echo "$art" | jq -r '.count')"
+          echo "$art" | jq -e '.source != "unavailable" and (.count >= 1)' >/dev/null \
+            || { echo "::error::get_articles is empty or unavailable"; exit 1; }
+          fetched=$(curl -fsS "$METRICS" | jq -r '.fetchedAt')
+          server_date=$(curl -fsSI "$METRICS" | sed -n 's/^[Dd]ate: //p' | tr -d '\r')
+          age_min=$(python3 -c 'import sys,email.utils,datetime as d; s=d.datetime.fromisoformat(sys.argv[1].replace("Z","+00:00")); n=email.utils.parsedate_to_datetime(sys.argv[2]); print(int((n-s).total_seconds()//60))' "$fetched" "$server_date")
+          echo "metrics snapshot age: ${age_min} min (fetchedAt=$fetched)"
+          [ "$age_min" -le 120 ] \
+            || { echo "::error::metrics snapshot stale (${age_min} min > 120) — hourly cron not refreshing"; exit 1; }
+          echo 'MCP articles are fresh ✔'
 
   deploy-worker:
     # Auto-deploys the MCP worker on every push once the Cloudflare API token
