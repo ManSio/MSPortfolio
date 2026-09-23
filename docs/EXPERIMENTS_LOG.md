@@ -96,3 +96,13 @@
 - Примеры верных спасений: p-05 `principles.json#fail-closed`, p-04 `projects.json#gemma_agent`, p-02 `projects.json#mscodebase-intelligence` — рука находит правильный источник.
 **Вердикт:** ❌ опровергнута для free tier. DoD-гейты держат: recall 38-42% < 80%; p95 18-65s >> 3s (очереди free-провайдеров). false-acceptance 0/9 (3 конфига × 3 контроля) — precision-guard §5 доказан. Этап 2 (интеграция в тул) заблокирован по плану — не включаем то, что не проходит гейты.
 **Урок:** бесплатный тариф OpenRouter структурно непригоден для синхронной проверки (очереди, 429, нестабильный JSON). Путь вперёд — платная модель (оценка ~$0.01-0.10 на 11 запросов) или остаться на детерминированном v1 (arm — офлайн-инструмент).
+
+## [2026-09-23] — Эксперимент: freshness-ассерт для get_articles в smoke (dev.to live/snapshot) — что даёт и есть ли эффект
+**Гипотеза:** сегодняшний smoke (`grep -q count`, deploy.yml:96) не умеет падать на «мёртвом» ответе get_articles (`source:"unavailable", count:0`); ассерт `source != unavailable && count >= 1` закроет дыру, а возраст snapshot (`metrics.json.fetchedAt`) — валидный сигнал живости часового cron.
+**Эксперимент:** (1) live MCP `get_articles`; (2) негативный контроль — прогнать текущий и новый ассерт на подделанном SSE-payload `source:unavailable,count:0`; (3) возраст snapshot по серверному `Date`-заголовку GitHub Pages (без локального clock skew).
+**Сырой вывод (сокращённо):**
+- live MCP: `source=live, count=8` — dev.to из CF egress сейчас работает.
+- current smoke on STALE payload: **True** (прошёл) — дыра подтверждена; new assert on STALE: **False** (поймал).
+- metrics.json: `fetchedAt=2026-09-23T17:58:30Z`, server Date `18:02:39Z` → age **4.1 мин**; `fetchedAt` входит в snapshot → cron коммитит ежечасно (отсюда `behind 61`), значит возраст = сигнал остановки cron.
+**Вердикт:** ✅ подтверждена. Дыра реальна (smoke зелёный при count:0), минимальный ассерт её закрывает; snapshot-age валиден как доп. сигнал.
+**Урок:** «поле count есть» ≠ «данные живые» — тот же класс, что lab-дрейф. Минимального ассерта (source/count) достаточно для катастрофы; возраст snapshot добавляет покрытие отказа cron ценой +1 запроса.
