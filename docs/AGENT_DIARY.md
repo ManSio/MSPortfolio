@@ -9,6 +9,13 @@
 **Guard:** ассерт падает при расхождении (проверен на протухшем: 37≠50, 13≠14) и проходит после деплоя Worker'а.
 **Pattern:** NEW
 
+## [2026-09-23] — get_articles freshness-guard (2-й случай того же класса)
+**Status:** ✅ Fixed (guard в CI, run 35900009281: source=live count=8, snapshot age 0 min)
+**Root Cause:** smoke `grep -q count` проходил на `source:"unavailable", count:0` — «поле есть» ≠ «данные живые» (тот же класс, что lab-дрейф выше).
+**Fix:** `deploy.yml` smoke + шаг «Check MCP articles freshness»: `source != unavailable && count >= 1` + возраст `metrics.json.fetchedAt` < 120 мин (по server `Date`). Замеры — EXPERIMENTS_LOG [2026-09-23].
+**Guard:** негативный контроль — ассерт падает на подделанном `unavailable/count:0`; реальный прогон зелёный.
+**Pattern:** RECURRING (2-й случай «guard не умеет падать» за сессию; кандидат в P-реестр).
+
 ## [2026-08-24] — Universal Gateway: .well-known/mcp.json + тонкий /api/* поверх SSOT (без форка данных)
 **Status:** ✅ Fixed (код + тесты 108/108, typecheck, lint-0-errors; деплой после коммита)
 **Root Cause:** — (решение владельца «continue» по review предложения Universal MCP Gateway: ~80% уже было, добавить два ценных пункта без форка single source of truth)
