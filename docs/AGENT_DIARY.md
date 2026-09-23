@@ -2,6 +2,13 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## [2026-09-23] — MCP ↔ репозиторий: Worker отставал на 6 недель + freshness-guard
+**Status:** ✅ Fixed (guard в CI; push f29210e..9354f08, run 35899012724 зелёный; живой MCP 50 exp / 14 KI)
+**Root Cause:** smoke-джоб проверял health/tools-list/get_articles — «эндпоинт жив», но не «данные свежие». Worker деплоится из origin/main, а 6 коммитов лабы (exp-38..exp-50, KI-114) не были запушены: live 37 exp / 13 KI против repo 50 / 14. Тот же класс, что «guard не умеет падать».
+**Fix:** `deploy.yml` smoke: `needs: [deploy, deploy-worker]` + checkout + шаг «Check MCP data freshness» — сверка live `get_experiments.experiments.length` и `get_known_issues.count` с repo JSON на равенство (без хардкод-порога, не требует ручного бампа). Плюс `git pull --rebase` и push 7 коммитов.
+**Guard:** ассерт падает при расхождении (проверен на протухшем: 37≠50, 13≠14) и проходит после деплоя Worker'а.
+**Pattern:** NEW
+
 ## [2026-08-24] — Universal Gateway: .well-known/mcp.json + тонкий /api/* поверх SSOT (без форка данных)
 **Status:** ✅ Fixed (код + тесты 108/108, typecheck, lint-0-errors; деплой после коммита)
 **Root Cause:** — (решение владельца «continue» по review предложения Universal MCP Gateway: ~80% уже было, добавить два ценных пункта без форка single source of truth)
