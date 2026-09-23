@@ -2,19 +2,27 @@
 
 Единственный дневник проекта. Формат «Вердикт-Сначала» (§4.8 AGENTS.md).
 
+## Паттерны (P-###)
+
+| ID | Паттерн (root-cause) | Guard |
+|----|----------------------|-------|
+| P-001 | Замена механизма не засчитана без замеренного качества | §5: A/B-замер до/после на одной методике |
+| P-002 | Сверить с живым источником, а не с доками/предположением (в т.ч. реальный wire-формат) | Проверка живого API/формата перед ассертом |
+| P-003 | Guard проверяет НАЛИЧИЕ поля/токена, а не живость данных («эндпоинт жив» ≠ «данные свежие») | Сверка с источником/эталоном + негативный контроль на пустом payload; ≥3 повторения → эскалация |
+
 ## [2026-09-23] — MCP ↔ репозиторий: Worker отставал на 6 недель + freshness-guard
 **Status:** ✅ Fixed (guard в CI; push f29210e..9354f08, run 35899012724 зелёный; живой MCP 50 exp / 14 KI)
 **Root Cause:** smoke-джоб проверял health/tools-list/get_articles — «эндпоинт жив», но не «данные свежие». Worker деплоится из origin/main, а 6 коммитов лабы (exp-38..exp-50, KI-114) не были запушены: live 37 exp / 13 KI против repo 50 / 14. Тот же класс, что «guard не умеет падать».
 **Fix:** `deploy.yml` smoke: `needs: [deploy, deploy-worker]` + checkout + шаг «Check MCP data freshness» — сверка live `get_experiments.experiments.length` и `get_known_issues.count` с repo JSON на равенство (без хардкод-порога, не требует ручного бампа). Плюс `git pull --rebase` и push 7 коммитов.
 **Guard:** ассерт падает при расхождении (проверен на протухшем: 37≠50, 13≠14) и проходит после деплоя Worker'а.
-**Pattern:** NEW
+**Pattern:** P-003 (1-й случай)
 
 ## [2026-09-23] — get_articles freshness-guard (2-й случай того же класса)
 **Status:** ✅ Fixed (guard в CI, run 35900009281: source=live count=8, snapshot age 0 min)
 **Root Cause:** smoke `grep -q count` проходил на `source:"unavailable", count:0` — «поле есть» ≠ «данные живые» (тот же класс, что lab-дрейф выше).
 **Fix:** `deploy.yml` smoke + шаг «Check MCP articles freshness»: `source != unavailable && count >= 1` + возраст `metrics.json.fetchedAt` < 120 мин (по server `Date`). Замеры — EXPERIMENTS_LOG [2026-09-23].
 **Guard:** негативный контроль — ассерт падает на подделанном `unavailable/count:0`; реальный прогон зелёный.
-**Pattern:** RECURRING (2-й случай «guard не умеет падать» за сессию; кандидат в P-реестр).
+**Pattern:** P-003 (2-й случай за сессию; ≥3 → эскалация)
 
 ## [2026-08-24] — Universal Gateway: .well-known/mcp.json + тонкий /api/* поверх SSOT (без форка данных)
 **Status:** ✅ Fixed (код + тесты 108/108, typecheck, lint-0-errors; деплой после коммита)
