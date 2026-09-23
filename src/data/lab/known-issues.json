@@ -129,6 +129,16 @@
       "deadline": "2026-09-15 (was)",
       "owner": "owner",
       "link": "src/core/task_queue.py, src/core/intelligence/layer.py"
+    },
+    {
+      "id": "KI-114",
+      "project": "mscodebase-intelligence",
+      "problem": "PRE-EXISTING (found 2026-09-18 during Phase 1 hot-reload): tests/test_lsp_vfs_indexing.py is 8/8 broken - a bare MagicMock().embedding_dim is truthy, so db_writer.py:59 `_target_dim = self.embedder.embedding_dim or 768` gets a MagicMock and truncates vectors to zero -> Zero vector skipping -> empty table -> all asserts fail. Invisible in CI: module is pytestmark=slow, addopts `-m not slow` -> never runs. Phase 1 detects-but-does-not-fix.",
+      "status": "Open",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "tests/test_lsp_vfs_indexing.py, src/core/indexing/db_writer.py"
     }
   ]
 }

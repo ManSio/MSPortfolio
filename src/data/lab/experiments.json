@@ -1554,6 +1554,174 @@
       "chart": null,
       "conclusion": "Confirmed - gemma 300M Q8 is dramatically better for code retrieval (measurement, N=16 queries/81 chunks on real src files). However switching prod embeds a full clean reindex (E10 lesson): at 4x slower embedding (~32h for 68M tokens vs ~8h on e5) this is an owner decision, not an automatic fix. Next candidate check: retrieval quality per chunk size and a 30+ query panel before any prod switch.",
       "links": []
+    },
+    {
+      "id": "exp-46",
+      "date": "2026-09-22",
+      "project": "mscodebase-intelligence",
+      "title": "E17: TESTS-signal in graph-stage (A/B) — covering tests added over function defs, hit@1/MRR unchanged (7/7)",
+      "hypothesis": "Turning the property-graph TESTS edges (built from a dynamic sys.settrace trace, exp-38/40/41) INTO a search consumer — appending covering tests to symbol-resolved definitions in the graph stage — yields new test references without displacing the function definitions in top-k.",
+      "command": "python experiments/bootstrap/e17_ab_tests_signal.py (real Searcher._graph_stage on live SQLite PropertyGraph bfe9644b, 16172 TESTS edges / 1595 Test nodes / 1132 covered functions; 7 golden functions with verified covering tests from trace_result.json; control tests_signal=False vs treatment True; hit@1/hit@3/MRR on function + new-test presence + retraction check)",
+      "result": "hit@1 off=7/7 on=7/7; hit@3 off=7/7 on=7/7; MRR(function) off=1.000 on=1.000; new tests in ON: 6/7 queries (safe_mkdir, shortest_path, get_neighbors, reciprocal_rank_fusion_3way, switch_db, calculate_token_savings); _graph_stage: 0 new (tests already in OFF via name-substring match, not a regression); graph_stage avg dt off=3.43ms on=3.27ms (overhead -4.6%, within noise); retraction: 0 broken file links on treatment.",
+      "verdict": "confirmed",
+      "finding": "Covering tests are appended as a separate result sort (graph_score 0.4 vs def 1.0, sentinel chunk_index -20M+line) AFTER completed function defs, so def-first invariant holds (MRR 1.0 in both arms). The flag is off by default (MSCODEBASE_TESTS_SIGNAL env, like late_enrichment), so production search is byte-identical without it. 1/7 case had tests already in baseline because search_symbols matches test-node names by substring — this saturates the signal for query==test-name, not a regression. Overhead is not statistically measurable at this scale (0.2ms, noise).",
+      "chart": null,
+      "conclusion": "TESTS edges become a useful search consumer: for identifier queries you now get the function AND its covering tests without losing top-1. Keep behind env flag (experiment toggle, no prod behavior change); next step is owner decision on default-on vs stay-off and a larger query panel with embedder before any prod enable.",
+      "links": [
+        "exp-38",
+        "exp-40",
+        "exp-41"
+      ]
+    },
+    {
+      "id": "exp-47",
+      "date": "2026-09-20",
+      "project": "mscodebase-intelligence",
+      "title": "E12: real-path embed throughput — chunk length sets the ~3.5k tok/s ceiling, not batch, ubatch or parallelism",
+      "hypothesis": "The \"156 ch/s\" figure (T3, batch=32) is an artifact of a synthetic corpus of ~10-token random_code texts. A real ~203-token chunk drops the true embedder ceiling far below it, and the ceiling is set by llama-server itself, not by the index_project_runner loop.",
+      "command": "python experiments/embed_real_path_vs_raw/exp_real_path.py + exp_feed_queue.py + exp_ubatch_threshold.py + exp_gc_cost.py (extension venv, real corpus from the MSCodeBase LanceDB, p50=712 chars / max=1009, live llama 8080)",
+      "result": "ARM A raw POST 640 chunks/35.8s = 18 ch/s; ARM B trunc+embed 640/34.6s = 18 ch/s (zero_vec 0/640). Corpus: 640 chunks, avg 203 tok, p90 266, max 340. tok/s raw 3652; E10 sustained 2414 (11.9 ch/s). Ceiling recompute 2000/3000/4000 tok/s -> 10/15/20 ch/s. gc.collect() per batch = 1ms/batch (~10s for the whole Stanford run) — refuted. ubatch=2048 shows no step, linear ~26ms/text. Token feed 512->8192, concurrency 1 vs 3: tok/s plateau 3032-3444, concurrency=3 always worse. 40/100/203 tok per chunk -> 36-67 / 28-33 / 17-19 ch/s. RAM: the active index keeps the whole corpus resident (_flat_chunks with texts plus _all_embeddings 335k x 384 x float64 = 0.96GB, up to 3.35GB with PyObject overhead).",
+      "verdict": "confirmed",
+      "finding": "The CPU embed ceiling (e5-small Q8, 10 threads, Ryzen 5600H) is ~3.4-3.7k tok/s — model physics, independent of batch size, token budget, parallelism or truncation. The old \"156 ch/s\" was synthetic (~1560 tok/s on 10-token texts). 335k chunks x 203 tok = 68M tokens -> ~5.7h of pure embed plus parse/write, so the ~8h reindex is expected, not a bug.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Embed throughput vs chunk length (ch/s, real corpus)",
+          "data": [
+            {
+              "label": "40 tok/chunk",
+              "value": 50,
+              "color": "#10b981"
+            },
+            {
+              "label": "100 tok/chunk",
+              "value": 30,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "203 tok/chunk",
+              "value": 18,
+              "color": "#ef4444"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Measure embedding throughput only on a real corpus — chunk length decides. \"100 ch/s sustained\" and \"156 ch/s\" were both artifacts of short synthetic inputs."
+    },
+    {
+      "id": "exp-48",
+      "date": "2026-09-20",
+      "project": "mscodebase-intelligence",
+      "title": "E13: text RAG (doc-chunks) vs code baseline — doc-chunks miss top-5 for 14 of 16 queries",
+      "hypothesis": "Text chunks (README + docs/en/ + docstrings) indexed and retrieved through search_with_mode quality are no worse than code chunks.",
+      "command": "python scripts/eval_text_chunks.py — 16 EN doc queries on the live index (18665 rows, 1197 files), Hit@1/Hit@5/MRR by direct metadata.file lookup (no LLM judge)",
+      "result": "hit@1 12.5% (2/16) vs code 0% / 20%; hit@5 12.5% (2/16) vs 50% / 40%; MRR 0.125 vs 0.200. README.md is retrieved only for a query about search modes; SEARCH_PIPELINE.md only for a query about the pipeline.",
+      "verdict": "refuted",
+      "finding": "Text RAG is far below code RAG: doc-chunks stay outside top-5 for 14 of 16 queries. The embedder packs code chunks (signatures, names) denser, doc-chunks are diffuse; the index is code-biased and queries without intent_hint='docs' route down the code path.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Doc-query hit@5: text RAG vs code baseline (%, E10/E11)",
+          "data": [
+            {
+              "label": "text RAG",
+              "value": 12.5,
+              "color": "#ef4444"
+            },
+            {
+              "label": "code · E10",
+              "value": 50,
+              "color": "#10b981"
+            },
+            {
+              "label": "code · E11",
+              "value": 40,
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Before shipping documentation RAG: add doc-query intent detection and raise the doc-bucket weight in soft-weighting. Without it text RAG is unreliable."
+    },
+    {
+      "id": "exp-49",
+      "date": "2026-09-23",
+      "project": "mscodebase-intelligence",
+      "title": "E15: bge-small-en / MiniLM / nomic in equal prod conditions — bge-small-en is quality without the 3x slowdown",
+      "hypothesis": "The E14 follow-up showed gemma gives MRR 0.691 vs 0.231 (e5) but is 3.3x slower. Is there an embedder that raises quality WITHOUT losing 3x speed? Candidates: bge-small-en-v1.5 (384-dim, 512 ctx), all-MiniLM-L6-v2 (384-dim), nomic-embed-text-v1.5 (768-dim, 8192 ctx), plus gemma_q4 (quality reference) and prod_e5 (baseline).",
+      "command": "same bench.py harness in strictly equal prod conditions (as the E14 follow-up): chunk ~203 tok, --ubatch 512, pooling mean, raw text, MRL sets, psapi RAM, same 16 RU queries / 81 chunks; nomic has two branches (raw vs task prefixes) since llama.cpp auto-inserts document/report prefixes.",
+      "result": "batch 32: prod_e5 23.9 ch/s (4208 tok/s), h1f 0.125, MRR 0.231, RAM 91MB; gemma_q4 7.2 ch/s, h1f 0.562, MRR 0.691, RAM 177MB; bge_small 28.2 ch/s (5024 tok/s), h1f 0.375, MRR 0.545, RAM 46MB; minilm_f16 60.7 ch/s (11089 tok/s), h1f 0.375, MRR 0.487, RAM 44MB; nomic_q8 5.6 ch/s, h1f 0.500, MRR 0.574, RAM 139MB.",
+      "verdict": "confirmed",
+      "finding": "bge-small-en-v1.5 Q8 is the only \"quality without losing speed\" candidate: MRR 0.545 (+136% vs e5) at 5024 tok/s (1.19x FASTER than e5) and dim=384 — same scheme, no reindex, RAM halved to 46MB. MiniLM is the fastest (2.6x) but MRR 0.487. nomic does not qualify: its 8192 ctx needs >512-token chunks and a reindex, and at the prod 512 cap it gives only 0.574 for a 3.1x slowdown. gemma_q4 stays the quality king (MRR 0.691) at 3.3x latency.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "MRR by embedder, equal prod conditions",
+          "data": [
+            {
+              "label": "gemma_q4",
+              "value": 0.691,
+              "color": "#10b981"
+            },
+            {
+              "label": "nomic_q8",
+              "value": 0.574,
+              "color": "#6366f1"
+            },
+            {
+              "label": "bge-small-en",
+              "value": 0.545,
+              "color": "#10b981"
+            },
+            {
+              "label": "minilm_f16",
+              "value": 0.487,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "prod_e5",
+              "value": 0.231,
+              "color": "#ef4444"
+            }
+          ]
+        }
+      ],
+      "conclusion": "bge-small-en-v1.5 is a drop-in upgrade: dim 384 / ctx 512 means no reindex. The \"gemma in prod implies reindex\" rule (E10) applies only if gemma (dim 768) is chosen."
+    },
+    {
+      "id": "exp-50",
+      "date": "2026-09-22",
+      "project": "mscodebase-intelligence",
+      "title": "E16: bootstrap-trace portability — dynamic trace transfers to foreign Python repos (97.3% / 100%)",
+      "hypothesis": "The dynamic trace (sys.settrace, src/core/bootstrap_trace_plugin.py) is not an artifact of our own code but reproduces on foreign Python repos; on non-Python (Go) the dynamic path is unavailable, though the test->function concept is portable by other means.",
+      "command": "same plugin unmodified, PYTHONPATH=MSCodeBase, TRACE_SRC_ROOT=<target>, TRACE_OUT in temp, pytest -p src.core.bootstrap_trace_plugin -p no:cacheprovider, run from the target workdir with its own venv python; source analysis filters src dirs (no venv/tests)",
+      "result": "MSCodeBase (ground truth) 1727 tests, linked 89.8%, 176 empty, avg/median 10.1/6; gemma_agent 2882 tests (2874 pass / 3 fail / 5 skip in 71.4s), linked 97.3%, 4020 unique src funcs, overhead +17.4% (71.40 vs 60.82s, same session); commit- 27 tests (27 pass in 0.45s), linked 100%; TorrServer-master (Go) pytest collected 0 tests; codebase-memory-mcp (Go pkg) go test coverage 51.0%, single-test coverprofile 22.2% -> per-test function map works.",
+      "verdict": "confirmed",
+      "finding": "The dynamic trace transfers to foreign Python repos unmodified: 97.3% on gemma_agent with 2.9k tests, 100% on commit-. Overhead scales with test activity (+17.4% on gemma_agent vs +13.6% on our larger corpus), not with corpus size. Non-Python: the pytest pipeline collects 0 tests, so dynamic tracing is CPython-only; the concept ports natively via go test -coverprofile (per-test function maps) at the cost of N runs instead of one pass.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Test-to-function link rate on foreign repos (%)",
+          "data": [
+            {
+              "label": "commit-",
+              "value": 100,
+              "color": "#10b981"
+            },
+            {
+              "label": "gemma_agent",
+              "value": 97.3,
+              "color": "#10b981"
+            },
+            {
+              "label": "MSCodeBase",
+              "value": 89.8,
+              "color": "#f59e0b"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Linked% grows on leaner (less mock-heavy) foreign projects, so the article numbers are honest and reproducible. Limitation: Python-only dynamics; Go/TS need a per-language tool (coverprofile / c8), while the PropertyGraph indexer stays statically multi-language."
     }
   ],
   "negativeResults": [
