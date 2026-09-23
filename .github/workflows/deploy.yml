@@ -61,10 +61,43 @@ jobs:
 
   smoke:
     runs-on: ubuntu-latest
-    # The MCP Worker is deployed manually (needs a Cloudflare account); this
-    # job verifies the public endpoint answers. Fails loudly when it doesn't.
-    needs: deploy
+    # Runs after deploy-worker so the freshness check below compares the live
+    # Worker against the same commit that was just deployed. Fails loudly when
+    # the endpoint is down or serves stale data.
+    needs: [deploy, deploy-worker]
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Check MCP data freshness
+        # Regression guard: a healthy endpoint can still serve stale lab data —
+        # the Worker lags origin/main until a push deploys it. Compare the live
+        # MCP payload against the repo JSON this commit ships (equality, not a
+        # hardcoded floor, so it never needs manual bumping).
+        run: |
+          MCP=https://msp-portfolio.mansio-dev.workers.dev/mcp
+          sse_text() { sed -n 's/^data: //p' | jq -r '.result.content[0].text'; }
+          call() {
+            curl -fsS -X POST "$MCP" \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              -d "{\"jsonrpc\":\"2.0\",\"id\":$1,\"method\":\"tools/call\",\"params\":{\"name\":\"$2\",\"arguments\":{}}}"
+          }
+          repo_exp=$(jq '.experiments | length' src/data/lab/experiments.json)
+          repo_ki=$(jq '.issues | length' src/data/lab/known-issues.json)
+          live_exp=$(call 3 get_experiments | sse_text | jq '.experiments | length')
+          live_ki=$(call 4 get_known_issues | sse_text | jq '.count')
+          echo "experiments: repo=$repo_exp live=$live_exp"
+          echo "known-issues: repo=$repo_ki live=$live_ki"
+          if [ "$live_exp" != "$repo_exp" ]; then
+            echo "::error::MCP serves stale experiments ($live_exp != $repo_exp) — the Worker is behind origin/main"
+            exit 1
+          fi
+          if [ "$live_ki" != "$repo_ki" ]; then
+            echo "::error::MCP serves stale known-issues ($live_ki != $repo_ki) — the Worker is behind origin/main"
+            exit 1
+          fi
+          echo 'MCP data is fresh ✔'
+
       - name: Check MCP endpoint health
         run: |
           curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"ok":true'
