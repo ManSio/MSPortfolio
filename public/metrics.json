@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-23T20:21:38.044Z",
+  "fetchedAt": "2026-09-23T23:41:06.696Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-23T18:18:20Z",
+      "pushedAt": "2026-09-23T20:21:45Z",
       "language": "TypeScript"
     },
     {
@@ -51,6 +51,24 @@
   ],
   "npm": [],
   "devto": [
+    {
+      "id": 4715154,
+      "title": "From a Test-Suite Trace to a Search Signal: the Bootstrap Pipeline Story",
+      "description": "Part 4 of MSCodeBase Intelligence — Field Notes. Full source-material: why bootstrap started, Exp 7 (dynamic link), 7b (Tarantula), 8 (sysmon), 9 (static), 16 (portability), 17/E17 (search consumer). Honest about what is still experimental and can break.",
+      "readingTimeMinutes": 9,
+      "url": "https://dev.to/mansio/from-a-test-suite-trace-to-a-search-signal-the-bootstrap-pipeline-story-407b",
+      "tags": [
+        "search",
+        "rag",
+        "codearchitecture",
+        "testing"
+      ],
+      "reactions": 5,
+      "comments": 0,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
+      "readablePublishDate": "Sep 22"
+    },
     {
       "id": 4535380,
       "title": "We Didn't Invent New AI Architecture. We Rediscovered 20-Year-Old Computer Science.",
@@ -176,24 +194,6 @@
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fj7md32hq3a2m3hbf05ao.png",
       "readablePublishDate": "Aug 9"
-    },
-    {
-      "id": 4347706,
-      "title": "I Asked One AI to Fact-Check Another AI's Audit of My Own Code",
-      "description": "I'm not a programmer. My background is construction engineering, and I got into programming almost by...",
-      "readingTimeMinutes": 5,
-      "url": "https://dev.to/mansio/i-asked-one-ai-to-fact-check-another-ais-audit-of-my-own-code-1ac3",
-      "tags": [
-        "ai",
-        "opensource",
-        "python",
-        "mcp"
-      ],
-      "reactions": 6,
-      "comments": 4,
-      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png",
-      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Flfl93vyclpghqf81qi7k.png",
-      "readablePublishDate": "Aug 8"
     }
   ],
   "commits": [
