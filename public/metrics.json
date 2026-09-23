@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-23T18:08:58.731Z",
+  "fetchedAt": "2026-09-23T18:18:13.107Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-23T18:08:35Z",
+      "pushedAt": "2026-09-23T18:17:51Z",
       "language": "TypeScript"
     },
     {
@@ -199,16 +199,16 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "37ab1379b1",
-      "date": "2026-09-23T18:08:32Z",
-      "message": "docs(diary): add P-### pattern registry, tag freshness guards as P-003",
+      "sha": "d5bd818992",
+      "date": "2026-09-23T18:12:22Z",
+      "message": "docs: document CI MCP freshness guards (CHANGELOG + README)",
       "author": "ManSio"
     },
     {
       "repo": "MSPortfolio",
-      "sha": "05c3befe79",
-      "date": "2026-09-23T18:06:45Z",
-      "message": "docs(diary): record get_articles freshness guard (recurring pattern)",
+      "sha": "37ab1379b1",
+      "date": "2026-09-23T18:08:32Z",
+      "message": "docs(diary): add P-### pattern registry, tag freshness guards as P-003",
       "author": "ManSio"
     },
     {
