@@ -8,6 +8,7 @@
 **Сырой результат:**
 - `dist/index.html` 58.29 kB (gzip 18.29 kB), `dist/index.md` 64.67 kB; репликатор `TOTAL 100`, findings нет; fallback затирается (`.agent-fallback` исчезает, h1 = приложения).
 - JSON-LD `@graph` (ProfilePage+Person) → SDATA 15/15.
+- Живой скан после деплоя (`?v=agent-ready-2`): `fromCache=false, total=100`, breakdown 25/20/15/15/15/10, findings нет; `https://mansio.github.io/MSPortfolio/index.md` → HTTP 200.
 **Вердикт:** подтверждена. Lab/интерактив остаются JS-only как UI, но их данные читаемы в raw HTML и через `index.md`; 100/100 сохраняется.
 
 ## [2026-09-24] — Гипотеза: семантический build-time fallback поднимет agent-readiness до 100/100 (сканер не исполняет JS)

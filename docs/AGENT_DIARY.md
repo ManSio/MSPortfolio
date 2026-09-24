@@ -11,7 +11,7 @@
 | P-003 | Guard проверяет НАЛИЧИЕ поля/токена, а не живость данных («эндпоинт жив» ≠ «данные свежие») | Сверка с источником/эталоном + негативный контроль на пустом payload; ≥3 повторения → эскалация |
 
 ## [2026-09-24] — Agent-readiness, шаг 2: лаборатория в raw HTML + markdown-зеркало + ProfilePage JSON-LD
-**Status:** ⚠️ Committed, not pushed (локально 100/100; реальный скан после деплоя)
+**Status:** ✅ Fixed (коммит 5b6bbf2; живой скан agentislux.io = 100/100, 0 findings; `index.md` отдаётся HTTP 200)
 **Root Cause:** — (продолжение: главная уже 100/100, но 50 экспериментов / 20 записей дневника / 29 claims оставались только в CSR-лаборатории `#/lab`; hash-роут на GitHub Pages отдаёт тот же index.html, отдельный raw HTML для `#/lab` технически невозможен).
 **Fix:** генератор `scripts/agent-static-html.ts` расширен секциями Experiments / Engineering diary / Verifiable claims / Test suites (из SSOT `src/data/lab/*.json`, усечение 280–400 симв.) + markdown-зеркало `index.md` (эмитится плагином, рекламируется `<link rel="alternate" type="text/markdown">`); JSON-LD переведён в `@graph` ProfilePage + Person.
 **Guard:** локальный репликатор скоринга 100/100; headless Edge подтвердил, что React затирает и увеличенный fallback; typecheck/lint/112 тестов зелёные.
