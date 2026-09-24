@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-24T04:48:54.895Z",
+  "fetchedAt": "2026-09-24T09:59:53.236Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-24T04:49:02Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "ManSio.github.io",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
       "pushedAt": "2026-09-24T03:39:41Z",
       "language": "HTML"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-24T03:28:11Z",
-      "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
@@ -219,13 +219,6 @@
       "author": "ManSio"
     },
     {
-      "repo": "MSPortfolio",
-      "sha": "5b6bbf21d9",
-      "date": "2026-09-24T03:24:38Z",
-      "message": "feat(seo): expose lab data and a Markdown mirror to non-JS agents",
-      "author": "ManSio"
-    },
-    {
       "repo": "mscodebase-intelligence",
       "sha": "f5b431e7de",
       "date": "2026-09-22T11:57:34Z",
@@ -406,6 +399,13 @@
       "date": "2026-08-12T19:29:13Z",
       "message": "chore: release v0.26.0",
       "author": "Sidd27"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "69ff333882",
+      "date": "2026-06-15T17:11:50Z",
+      "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
+      "author": "Mikhail"
     }
   ]
 }
