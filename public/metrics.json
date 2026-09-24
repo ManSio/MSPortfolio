@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-24T03:26:20.713Z",
+  "fetchedAt": "2026-09-24T04:48:54.895Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,11 +9,19 @@
   },
   "repos": [
     {
+      "name": "ManSio.github.io",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-24T03:39:41Z",
+      "language": "HTML"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-24T03:25:15Z",
+      "pushedAt": "2026-09-24T03:28:11Z",
       "language": "TypeScript"
     },
     {
@@ -23,14 +31,6 @@
       "openIssues": 1,
       "pushedAt": "2026-09-23T18:50:22Z",
       "language": "Python"
-    },
-    {
-      "name": "ManSio.github.io",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-08-24T18:04:01Z",
-      "language": "HTML"
     },
     {
       "name": "ManSio",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "ManSio.github.io",
+      "sha": "1da4c73bd6",
+      "date": "2026-09-24T03:39:40Z",
+      "message": "feat: make the redirect landing page readable by non-JS agents",
+      "author": "ManSio"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "177e898da7",
+      "date": "2026-08-24T18:04:01Z",
+      "message": "Revise sitemap.xml with updated URLs and metadata",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "0b7999fb01",
+      "date": "2026-08-24T16:44:29Z",
+      "message": "feat: add root MCP discovery and agent link beacons",
+      "author": "ManSio"
+    },
+    {
       "repo": "MSPortfolio",
       "sha": "5b6bbf21d9",
       "date": "2026-09-24T03:24:38Z",
@@ -322,27 +343,6 @@
       "date": "2026-08-31T19:52:52Z",
       "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
       "author": "Mikatoshi"
-    },
-    {
-      "repo": "ManSio.github.io",
-      "sha": "177e898da7",
-      "date": "2026-08-24T18:04:01Z",
-      "message": "Revise sitemap.xml with updated URLs and metadata",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "ManSio.github.io",
-      "sha": "0b7999fb01",
-      "date": "2026-08-24T16:44:29Z",
-      "message": "feat: add root MCP discovery and agent link beacons",
-      "author": "ManSio"
-    },
-    {
-      "repo": "ManSio.github.io",
-      "sha": "45fb383621",
-      "date": "2026-08-14T14:19:59Z",
-      "message": "feat: root sitemap (redirect page + portfolio)",
-      "author": "ManSio"
     },
     {
       "repo": "awesome-mcp-servers",
