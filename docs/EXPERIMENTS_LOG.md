@@ -2,6 +2,15 @@
 
 Гипотеза → замер → вывод. Правило §1.6 AGENTS.md: гипотеза без сырого вывода — не гипотеза.
 
+## [2026-09-24] — Гипотеза: семантический build-time fallback поднимет agent-readiness до 100/100 (сканер не исполняет JS)
+**Ожидание:** Agentis Lux на пустом SPA даёт 84/100 (SEM-002/003/004 + CONT-001); если вложить в сырой HTML семантический контент из тех же данных, закрываются все 6 категорий → 100.
+**Команда:** реверс open-source движка `perseus-clew` → локальный репликатор (`cheerio`) → `pnpm build`; затем живой `POST https://agentislux.io/api/scan` `{"type":"url","target":"https://mansio.github.io/MSPortfolio/?v=agent-ready"}` (cache-buster: кэш 24ч по нормализованному URL).
+**Сырой результат:**
+- Baseline live API: `total=84` (semantic 13/25, content 11/15, link 10/10 note «no links present», form 20/20, aria 15/15, structured 15/15); findings SEM-002/003/004, CONT-001. Локальный репликатор на живом HTML — **идентично** (84, те же findings).
+- После фикса локально: `TOTAL 100` (semantic 25/25, content 15/15), findings нет.
+- Живой скан после деплоя: `fromCache=false, total=100, rating=Agent-Ready`, breakdown 25/20/15/15/15/10, findings нет; heroLine: «can read all text, follow links, and understand the page structure completely».
+**Вердикт:** подтверждена. Сканер читает только сырой HTML; серверный fallback из SSOT закрывает все категории. Репликатор валиден (совпал с API на baseline) → итерации оффлайн без внешних прогонов.
+
 ## [2026-08-14] — Гипотеза: MCP-сервер на @modelcontextprotocol/server@2 + Fastify поднимается и отвечает без build-step
 **Ожидание:** Node 24 нативно запускает TS (type-stripping); официальный `@modelcontextprotocol/fastify` + `toNodeHandler(createMcpHandler(factory))` отвечает на `tools/list`, `tools/call`, `initialize` по Streamable HTTP; JSON Schema в `registerTool` принимать НЕ будет — нужен `z.fromJSONSchema`.
 **Команда:** `node server/index.ts` → `curl -X POST /mcp` (tools/list / tools/call / initialize) → проба `z.fromJSONSchema` (.zod-probe.mjs).

@@ -10,6 +10,13 @@
 | P-002 | Сверить с живым источником, а не с доками/предположением (в т.ч. реальный wire-формат) | Проверка живого API/формата перед ассертом |
 | P-003 | Guard проверяет НАЛИЧИЕ поля/токена, а не живость данных («эндпоинт жив» ≠ «данные свежие») | Сверка с источником/эталоном + негативный контроль на пустом payload; ≥3 повторения → эскалация |
 
+## [2026-09-24] — Agentis Lux: SPA отдавал агентам пустой #root (84/100) → 100/100
+**Status:** ✅ Fixed (коммит 2f7be53; живой скан agentislux.io/api/scan = 100/100, 0 findings; локальный репликатор движка совпал с API 1:1)
+**Root Cause:** сайт — client-rendered React SPA: сырой HTML = пустой `<div id="root">`, а сканер/retrieval-агенты не исполняют JS → нет nav/main/заголовков/текста/ссылок (SEM-002/003/004, CONT-001). Категории form/aria/link получали полный балл лишь как zero-instance («нечего проверять»).
+**Fix:** build-time генератор `scripts/agent-static-html.ts` + Vite-плагин `transformIndexHtml`: из тех же `src/data/*.json` (SSOT) собирает семантический HTML (skip-link, header>nav, один main, h1+h2/h3, ul/li, реальные href с rel, без форм и кликабельных div) и вкладывает в `#root`; React затирает его при монтировании (проверено в headless Edge: `.agent-fallback` исчезает, h1 = приложения).
+**Guard:** локальный репликатор детерминированного скоринга (копия open-source `perseus-clew`) — оффлайн-итерации; `typecheck`/`lint`/`test` 112 зелёных; реальный скан после деплоя.
+**Pattern:** NEW
+
 ## [2026-09-23] — MCP ↔ репозиторий: Worker отставал на 6 недель + freshness-guard
 **Status:** ✅ Fixed (guard в CI; push f29210e..9354f08, run 35899012724 зелёный; живой MCP 50 exp / 14 KI)
 **Root Cause:** smoke-джоб проверял health/tools-list/get_articles — «эндпоинт жив», но не «данные свежие». Worker деплоится из origin/main, а 6 коммитов лабы (exp-38..exp-50, KI-114) не были запушены: live 37 exp / 13 KI против repo 50 / 14. Тот же класс, что «guard не умеет падать».

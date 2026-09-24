@@ -8,6 +8,13 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Build-time semantic HTML fallback for non-JS agents
+  (`scripts/agent-static-html.ts` + a `transformIndexHtml` plugin in
+  `vite.config.ts`): the SPA's empty `#root` is filled with a data-driven,
+  semantic rendering (skip link, `header`/`nav`, a single `main`, a single `h1`,
+  lists, real links with `rel`). React replaces it on mount, so the human UI is
+  unchanged. Raises the Agentis Lux agent-readiness score from 84 to 100/100
+  (zero findings).
 - CI smoke guards for MCP data freshness (`.github/workflows/deploy.yml`):
   - the live `get_experiments` / `get_known_issues` counts are compared against
     the repo JSON, so a Worker lagging `origin/main` fails CI;
