@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-23T23:41:06.696Z",
+  "fetchedAt": "2026-09-24T02:51:40.762Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-23T20:21:45Z",
+      "pushedAt": "2026-09-24T02:51:11Z",
       "language": "TypeScript"
     },
     {
@@ -199,9 +199,9 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "d5bd818992",
-      "date": "2026-09-23T18:12:22Z",
-      "message": "docs: document CI MCP freshness guards (CHANGELOG + README)",
+      "sha": "2f7be53fc3",
+      "date": "2026-09-24T02:50:42Z",
+      "message": "feat(seo): serve semantic HTML fallback for non-JS agents",
       "author": "ManSio"
     },
     {
