@@ -2,6 +2,14 @@
 
 Гипотеза → замер → вывод. Правило §1.6 AGENTS.md: гипотеза без сырого вывода — не гипотеза.
 
+## [2026-09-24] — Гипотеза: лабораторию и интерактив можно отдать агентам через raw HTML + *.md, сохранив 100/100
+**Ожидание:** hash-роут `#/lab` не даёт отдельного серверного HTML (фрагмент не уходит на сервер) → включаем lab-контент в тот же fallback + markdown-зеркало; счёт сканера останется 100.
+**Команда:** `pnpm build` → локальный репликатор на `dist/index.html`; проверка `dist/index.md` и `<link rel="alternate" type="text/markdown">`; headless Edge DOM-check.
+**Сырой результат:**
+- `dist/index.html` 58.29 kB (gzip 18.29 kB), `dist/index.md` 64.67 kB; репликатор `TOTAL 100`, findings нет; fallback затирается (`.agent-fallback` исчезает, h1 = приложения).
+- JSON-LD `@graph` (ProfilePage+Person) → SDATA 15/15.
+**Вердикт:** подтверждена. Lab/интерактив остаются JS-only как UI, но их данные читаемы в raw HTML и через `index.md`; 100/100 сохраняется.
+
 ## [2026-09-24] — Гипотеза: семантический build-time fallback поднимет agent-readiness до 100/100 (сканер не исполняет JS)
 **Ожидание:** Agentis Lux на пустом SPA даёт 84/100 (SEM-002/003/004 + CONT-001); если вложить в сырой HTML семантический контент из тех же данных, закрываются все 6 категорий → 100.
 **Команда:** реверс open-source движка `perseus-clew` → локальный репликатор (`cheerio`) → `pnpm build`; затем живой `POST https://agentislux.io/api/scan` `{"type":"url","target":"https://mansio.github.io/MSPortfolio/?v=agent-ready"}` (cache-buster: кэш 24ч по нормализованному URL).

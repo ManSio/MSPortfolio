@@ -47,14 +47,29 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Mikhail",
-        "url": "https://ManSio.github.io/MSPortfolio/",
-        "sameAs": [
-          "https://github.com/ManSio",
-          "https://www.linkedin.com/in/ManSio"
-        ],
-        "knowsAbout": ["MCP", "Python", "TypeScript", "React", "AI Engineering"]
+        "@graph": [
+          {
+            "@type": "ProfilePage",
+            "name": "Mikhail (ManSio) — MCP-Native Engineering Portfolio",
+            "url": "https://ManSio.github.io/MSPortfolio/",
+            "inLanguage": "en",
+            "mainEntity": { "@id": "https://ManSio.github.io/MSPortfolio/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://ManSio.github.io/MSPortfolio/#person",
+            "name": "Mikhail",
+            "alternateName": "ManSio",
+            "jobTitle": "AI / Backend Engineer",
+            "url": "https://ManSio.github.io/MSPortfolio/",
+            "sameAs": [
+              "https://github.com/ManSio",
+              "https://www.linkedin.com/in/ManSio",
+              "https://dev.to/mansio"
+            ],
+            "knowsAbout": ["MCP", "Python", "TypeScript", "React", "AI Engineering"]
+          }
+        ]
       }
     </script>
   </head>

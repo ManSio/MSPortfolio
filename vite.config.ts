@@ -1,7 +1,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { buildAgentStaticHtml, AGENT_FALLBACK_CSS } from './scripts/agent-static-html.ts';
+import { buildAgentStaticHtml, buildAgentMarkdown, AGENT_FALLBACK_CSS } from './scripts/agent-static-html.ts';
 
 // Injects a build-time, data-driven semantic HTML fallback into #root so that
 // agents which do not execute JavaScript (retrieval crawlers, the Agentis Lux
@@ -16,9 +16,13 @@ function agentReadableHtml(): Plugin {
     },
     transformIndexHtml(html) {
       const fallback = buildAgentStaticHtml(root);
+      const mdLink = '<link rel="alternate" type="text/markdown" href="/MSPortfolio/index.md" title="Markdown mirror" />';
       return html
-        .replace('</head>', `<style>${AGENT_FALLBACK_CSS}</style></head>`)
+        .replace('</head>', `<style>${AGENT_FALLBACK_CSS}</style>${mdLink}</head>`)
         .replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
+    },
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'index.md', source: buildAgentMarkdown(root) });
     },
   };
 }

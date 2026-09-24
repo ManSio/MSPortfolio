@@ -10,6 +10,13 @@
 | P-002 | Сверить с живым источником, а не с доками/предположением (в т.ч. реальный wire-формат) | Проверка живого API/формата перед ассертом |
 | P-003 | Guard проверяет НАЛИЧИЕ поля/токена, а не живость данных («эндпоинт жив» ≠ «данные свежие») | Сверка с источником/эталоном + негативный контроль на пустом payload; ≥3 повторения → эскалация |
 
+## [2026-09-24] — Agent-readiness, шаг 2: лаборатория в raw HTML + markdown-зеркало + ProfilePage JSON-LD
+**Status:** ⚠️ Committed, not pushed (локально 100/100; реальный скан после деплоя)
+**Root Cause:** — (продолжение: главная уже 100/100, но 50 экспериментов / 20 записей дневника / 29 claims оставались только в CSR-лаборатории `#/lab`; hash-роут на GitHub Pages отдаёт тот же index.html, отдельный raw HTML для `#/lab` технически невозможен).
+**Fix:** генератор `scripts/agent-static-html.ts` расширен секциями Experiments / Engineering diary / Verifiable claims / Test suites (из SSOT `src/data/lab/*.json`, усечение 280–400 симв.) + markdown-зеркало `index.md` (эмитится плагином, рекламируется `<link rel="alternate" type="text/markdown">`); JSON-LD переведён в `@graph` ProfilePage + Person.
+**Guard:** локальный репликатор скоринга 100/100; headless Edge подтвердил, что React затирает и увеличенный fallback; typecheck/lint/112 тестов зелёные.
+**Pattern:** NEW
+
 ## [2026-09-24] — Agentis Lux: SPA отдавал агентам пустой #root (84/100) → 100/100
 **Status:** ✅ Fixed (коммит 2f7be53; живой скан agentislux.io/api/scan = 100/100, 0 findings; локальный репликатор движка совпал с API 1:1)
 **Root Cause:** сайт — client-rendered React SPA: сырой HTML = пустой `<div id="root">`, а сканер/retrieval-агенты не исполняют JS → нет nav/main/заголовков/текста/ссылок (SEM-002/003/004, CONT-001). Категории form/aria/link получали полный балл лишь как zero-instance («нечего проверять»).
