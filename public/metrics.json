@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-24T02:51:40.762Z",
+  "fetchedAt": "2026-09-24T03:26:20.713Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-24T02:51:11Z",
+      "pushedAt": "2026-09-24T03:25:15Z",
       "language": "TypeScript"
     },
     {
@@ -199,9 +199,9 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "2f7be53fc3",
-      "date": "2026-09-24T02:50:42Z",
-      "message": "feat(seo): serve semantic HTML fallback for non-JS agents",
+      "sha": "5b6bbf21d9",
+      "date": "2026-09-24T03:24:38Z",
+      "message": "feat(seo): expose lab data and a Markdown mirror to non-JS agents",
       "author": "ManSio"
     },
     {
