@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-25T01:29:30.424Z",
+  "fetchedAt": "2026-09-25T07:47:07.276Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,11 +9,19 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 3,
+      "forks": 1,
+      "openIssues": 1,
+      "pushedAt": "2026-09-24T22:10:55Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-24T22:23:35Z",
+      "pushedAt": "2026-09-25T01:29:37Z",
       "language": "TypeScript"
     },
     {
@@ -23,14 +31,6 @@
       "openIssues": 0,
       "pushedAt": "2026-09-24T03:39:41Z",
       "language": "HTML"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 0,
-      "openIssues": 1,
-      "pushedAt": "2026-09-24T22:10:55Z",
-      "language": "Python"
     },
     {
       "name": "ManSio",
@@ -64,7 +64,7 @@
         "testing"
       ],
       "reactions": 7,
-      "comments": 3,
+      "comments": 5,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "readablePublishDate": "Sep 22"
@@ -154,7 +154,7 @@
         "portfolio"
       ],
       "reactions": 18,
-      "comments": 1,
+      "comments": 2,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
       "readablePublishDate": "Aug 14"
@@ -198,27 +198,6 @@
   ],
   "commits": [
     {
-      "repo": "ManSio.github.io",
-      "sha": "1da4c73bd6",
-      "date": "2026-09-24T03:39:40Z",
-      "message": "feat: make the redirect landing page readable by non-JS agents",
-      "author": "ManSio"
-    },
-    {
-      "repo": "ManSio.github.io",
-      "sha": "177e898da7",
-      "date": "2026-08-24T18:04:01Z",
-      "message": "Revise sitemap.xml with updated URLs and metadata",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "ManSio.github.io",
-      "sha": "0b7999fb01",
-      "date": "2026-08-24T16:44:29Z",
-      "message": "feat: add root MCP discovery and agent link beacons",
-      "author": "ManSio"
-    },
-    {
       "repo": "mscodebase-intelligence",
       "sha": "f5b431e7de",
       "date": "2026-09-22T11:57:34Z",
@@ -238,6 +217,27 @@
       "date": "2026-09-22T10:21:53Z",
       "message": "fix(blog): replace HTML code blocks with markdown",
       "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "1da4c73bd6",
+      "date": "2026-09-24T03:39:40Z",
+      "message": "feat: make the redirect landing page readable by non-JS agents",
+      "author": "ManSio"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "177e898da7",
+      "date": "2026-08-24T18:04:01Z",
+      "message": "Revise sitemap.xml with updated URLs and metadata",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "0b7999fb01",
+      "date": "2026-08-24T16:44:29Z",
+      "message": "feat: add root MCP discovery and agent link beacons",
+      "author": "ManSio"
     },
     {
       "repo": "Stanford-Town-AI-Project",
