@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mikhail (ManSio) — MCP-Native Engineering Portfolio</title>
+    <meta
+      name="description"
+      content="Proof-of-Work portfolio of Mikhail (ManSio): live metrics, engineering decision logs and an MCP server any AI agent can query."
+    />
+    <meta name="author" content="Mikhail" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="canonical" href="https://ManSio.github.io/MSPortfolio/" />
+    <!-- Machine-discovery beacons for AI agents / MCP clients (non-standard community hints) -->
+    <link rel="mcp" href="https://ManSio.github.io/MSPortfolio/.well-known/mcp.json" />
+    <link rel="llms" href="https://ManSio.github.io/MSPortfolio/llms.txt" />
+    <link rel="alternate" type="text/markdown" href="/MSPortfolio/llms.txt" title="llms.txt" />
+    <meta name="google-site-verification" content="i-2QL89Rr4RmiVI_TMliNGYz_UfkxIOyMZdp7V9CWrU" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Mikhail (ManSio) — Engineering Portfolio" />
+    <meta
+      property="og:description"
+      content="Live metrics, decision logs, interactive architecture simulator and an MCP server about my experience."
+    />
+    <meta property="og:url" content="https://ManSio.github.io/MSPortfolio/" />
+    <meta property="og:image" content="https://ManSio.github.io/MSPortfolio/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Mikhail (ManSio) — AI / Backend Engineer — MCP-native portfolio: live metrics, decision logs, interactive architecture simulator"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mikhail (ManSio) — Engineering Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Live metrics, decision logs, interactive architecture simulator and an MCP server about my experience."
+    />
+    <meta name="twitter:image" content="https://ManSio.github.io/MSPortfolio/og-cover.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="/MSPortfolio/favicon.svg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "ProfilePage",
+            "name": "Mikhail (ManSio) — MCP-Native Engineering Portfolio",
+            "url": "https://ManSio.github.io/MSPortfolio/",
+            "inLanguage": "en",
+            "mainEntity": { "@id": "https://ManSio.github.io/MSPortfolio/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://ManSio.github.io/MSPortfolio/#person",
+            "name": "Mikhail",
+            "alternateName": "ManSio",
+            "jobTitle": "AI / Backend Engineer",
+            "url": "https://ManSio.github.io/MSPortfolio/",
+            "sameAs": [
+              "https://github.com/ManSio",
+              "https://www.linkedin.com/in/ManSio",
+              "https://dev.to/mansio"
+            ],
+            "knowsAbout": ["MCP", "Python", "TypeScript", "React", "AI Engineering"]
+          }
+        ]
+      }
+    </script>
+    <script type="module" crossorigin src="/MSPortfolio/assets/index-BQgDT1_E.js"></script>
+    <link rel="stylesheet" crossorigin href="/MSPortfolio/assets/index-B3QK-zES.css">
+  <style>.agent-fallback{background:#0a0a0a;color:#e5e7eb;min-height:100vh;padding:2rem 1.25rem;font-family:Inter,system-ui,sans-serif;line-height:1.6}
+.agent-fallback a{color:#00d9ff}
+.agent-fallback h1{font-size:1.6rem;margin:0 0 .5rem}
+.agent-fallback h2{margin:1.5rem 0 .5rem;font-size:1.15rem}
+.agent-fallback h3{margin:1rem 0 .25rem;font-size:1rem}
+.agent-fallback ul{padding-left:1.1rem}
+.agent-fallback header,.agent-fallback main,.agent-fallback footer{max-width:60rem;margin:0 auto}
+.agent-fallback nav ul{display:flex;flex-wrap:wrap;gap:1rem;list-style:none;padding:0}</style><link rel="alternate" type="text/markdown" href="/MSPortfolio/index.md" title="Markdown mirror" /></head>
+  <body>
+    <div id="root"><div class="agent-fallback">
+      <a href="#main-content">Skip to main content</a>
+      <header>
+        <p>Mikhail (ManSio) — AI / Backend Engineer</p>
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#principles">Engineering principles</a></li>
+            <li><a href="#timeline">Timeline</a></li>
+            <li><a href="#experiments">Experiments</a></li>
+            <li><a href="#diary">Engineering diary</a></li>
+            <li><a href="#claims">Verifiable claims</a></li>
+            <li><a href="#tests">Test suites</a></li>
+            <li><a href="#known-issues">Known issues</a></li>
+            <li><a href="#for-agents">For AI agents</a></li>
+            <li><a href="#connect">Connect</a></li>
+          </ul>
+        </nav>
+      </header>
+      <main id="main-content">
+        <section id="about">
+          <h1>Mikhail (ManSio) — MCP-Native Engineering Portfolio</h1>
+          <p>Builds MCP-native tooling and AI infrastructure. Author of a production MCP server for codebase intelligence (LanceDB/BM25 hybrid search) in Zed.</p>
+          <p>Role: AI / Backend Engineer. Location: Remote-friendly.</p>
+        </section>
+        <section id="projects">
+          <h2>Projects</h2>
+          <ul>
+          <li>
+            <article>
+              <h3>MSCodeBase Intelligence</h3>
+              <p>Intelligent codebase search &amp; indexing for Zed. Async MCP server featuring LanceDB/BM25 hybrid search, multi-bucket RAG, and autonomous self-healing workflows. High-performance, memory-safe, production-ready codebase intelligence.</p>
+              <p>Language: Python. Stack: Python, MCP, LanceDB, BM25, RAG, Zed.</p>
+              <ul>
+              <li>Hybrid search (vector + BM25) with fused ranking</li>
+              <li>Multi-bucket RAG over code entities</li>
+              <li>Autonomous self-healing: watchdog + reindex recovery</li>
+              <li>Memory-safe indexing pipeline (no leaks under load)</li>
+              </ul>
+              <p><a href="https://github.com/ManSio/mscodebase-intelligence" rel="noopener noreferrer">View MSCodeBase Intelligence on GitHub</a></p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>Gemma Agent</h3>
+              <p>Telegram assistant for a small trusted circle. Telegram assistant with memory, routing, and tools when needed — built for a small trusted circle, not as a Google Gemma product.</p>
+              <p>Language: Python. Stack: Python, Telegram, LLM, Agents.</p>
+              <ul>
+              <li>Persistent memory across sessions</li>
+              <li>Intent routing before tool dispatch</li>
+              <li>Tool use gated by permission scope</li>
+              </ul>
+              <p><a href="https://github.com/ManSio/gemma_agent" rel="noopener noreferrer">View Gemma Agent on GitHub</a></p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>MSPortfolio (this site)</h3>
+              <p>The MCP-native portfolio you are reading right now. A portfolio that is simultaneously a static dashboard, an MCP server about its owner&#39;s experience, and an interactive proof-of-work engine.</p>
+              <p>Language: TypeScript. Stack: React, TypeScript, Vite, Tailwind, MCP, Fastify.</p>
+              <ul>
+              <li>MCP server endpoint: any AI agent can query the CV</li>
+              <li>Browser agent-loop demo showing tool calls live</li>
+              <li>Live metrics with freshness + static fallback</li>
+              <li>Architecture simulator with break-it scenarios</li>
+              </ul>
+              <p><a href="https://github.com/ManSio/MSPortfolio" rel="noopener noreferrer">View MSPortfolio (this site) on GitHub</a></p>
+            </article>
+          </li>
+          </ul>
+        </section>
+        <section id="principles">
+          <h2>Engineering principles</h2>
+          <ul>
+          <li>
+            <article>
+              <h3>Fail-closed by default</h3>
+              <p>When the system can&#39;t verify a condition, it must refuse rather than guess. Authorization, cache misses and unknown tool intents all default to &#39;no&#39;.</p>
+              <p>Example: In mscodebase-intelligence, a missing index returns a structured error to the agent instead of an empty result — the agent must not confuse &#39;nothing found&#39; with &#39;index empty&#39;.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>Async-first I/O, offload CPU</h3>
+              <p>I/O-bound work lives on the async loop; CPU-bound work is offloaded with explicit progress reporting. No blocking calls on the request path.</p>
+              <p>Example: The MCP tool server is fully async; reindex runs as a background task with progress notifications so the agent can poll instead of timing out.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>Single write path for derived state</h3>
+              <p>Any state that is derived from other state (indexes, caches, fused rankings) is written through one code path. No ad-hoc mutations.</p>
+              <p>Example: Hybrid search keeps a vector index and a BM25 index consistent because both are updated by the same ingestion pipeline.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>Measure, don&#39;t assume</h3>
+              <p>Performance and reliability claims come from benchmarks with a command line, a thread count and raw output — not from architecture diagrams.</p>
+              <p>Example: Every concurrency change in mscodebase-intelligence ships with a stress test that verifies both &#39;no exceptions&#39; and &#39;correct input → correct output&#39;.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>Autonomous self-healing</h3>
+              <p>Where recovery is deterministic, the system does it itself: watchdogs, reindex triggers, stale-state cleanup. Humans only get involved for decisions, not for chores.</p>
+              <p>Example: MSCodeBase Intelligence detects a corrupted/stale index and schedules a reindex automatically while serving from the last-good snapshot.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3>Agent-agnostic surfaces</h3>
+              <p>Tooling speaks protocols (MCP), not personalities. One server, consumed by Claude Code, Cursor, Copilot or any future agent.</p>
+              <p>Example: This portfolio&#39;s own MCP server speaks standard Streamable HTTP — the same endpoint works from Claude Code, Cursor and Copilot with zero per-IDE setup.</p>
+            </article>
+          </li>
+          </ul>
+        </section>
+        <section id="timeline">
+          <h2>Engineering timeline</h2>
+          <ul>
+          <li>
+            <h3>MSPortfolio: the portfolio that is also an MCP server</h3>
+            <p>2026-08 — Built a portfolio whose CV is machine-readable via MCP and whose claims are backed by live metrics and a browser agent-loop demo. <a href="https://github.com/ManSio/MSPortfolio" rel="noopener noreferrer">Repository for MSPortfolio: the portfolio that is also an MCP server</a></p>
+          </li>
+          <li>
+            <h3>MSCodeBase Intelligence: hybrid search for code</h3>
+            <p>2026 — Chose LanceDB + BM25 hybrid search over SQLite FTS5/Elasticsearch for an embedded, zero-ops, memory-safe code search MCP server for Zed. <a href="https://github.com/ManSio/mscodebase-intelligence" rel="noopener noreferrer">Repository for MSCodeBase Intelligence: hybrid search for code</a></p>
+          </li>
+          <li>
+            <h3>Gemma Agent: memory-first assistant</h3>
+            <p>2026 — Designed the Telegram assistant around extracted memory (flat token cost) instead of full-transcript replay. <a href="https://github.com/ManSio/gemma_agent" rel="noopener noreferrer">Repository for Gemma Agent: memory-first assistant</a></p>
+          </li>
+          <li>
+            <h3>Joined GitHub as ManSio</h3>
+            <p>2014 — Started the public engineering record that this portfolio verifies live.</p>
+          </li>
+          </ul>
+        </section>
+        <section id="experiments">
+          <h2>Experiments</h2>
+          <p>Every engineering experiment with its hypothesis, command and verdict (50 total), documented in the open. The interactive lab is at <a href="#/lab">the lab page</a>.</p>
+          <ul>
+          <li>
+            <h3>Memory Contamination Live-Arm: live LLM false-acceptance across 14 models</h3>
+            <p>2026-08-14 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>The fail-closed look was anchor bias, not model paranoia: with token-string evidence qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm) recall jumps to 0.88 at FA 0.02-0.04. CORRECTED: the earlier &#39;every remaining false-accept is prese…</p>
+          </li>
+          <li>
+            <h3>Memory Contamination proxy-control: retraction -88%, verify-on-read adoption to 0.0</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>The proxy always decides (unknown=0) and false_accept=0 by construction - the headline numbers are a property of the heuristic, not of LLM behavior; the live arm (exp-1) measures the real gap.</p>
+          </li>
+          <li>
+            <h3>Manifest anchoring (pkg: anchors, ADR-0005): closed-world manifest kills 7 false REFUTED</h3>
+            <p>2026-08-14 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>A closed-world manifest is a stronger evidence source than bare tokens; the fix was verified by 1-V-REP (0 false REFUTED of TRUE facts).</p>
+          </li>
+          <li>
+            <h3>Context aggregator vs multi-tool: 1 call instead of 4-5, -78% calls at recall parity</h3>
+            <p>2026-08-08 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>The B-scheme (intent filter) is the optimum: same recall as multi-tool at 1 request and 275 tokens; the earlier recall gap was noise, not signal.</p>
+          </li>
+          <li>
+            <h3>Multi-RAG ablation: FTS5-only beats the full pipeline by recall; H1 refuted</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>Recall comes from keyword tiers (FTS5/BM25), precision is bought by the reranker, and the vector tier is the weakest on symbol tasks. Production bug found: hybrid_search_async cache-hit silently skips the dense tier - cache isolation per arm is mandatory in ablations (first run…</p>
+          </li>
+          <li>
+            <h3>Shadow-canary fail-open: 5/5 attacks passed before the fix, 0 after</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Relative metrics are attackable: absence of signal (empty canary) must fail closed, and a quality floor must be absolute, not relative.</p>
+          </li>
+          <li>
+            <h3>Concurrency vs semantic correctness: &#39;0 errors&#39; != correct data under race</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>VC and VOR are complementary layers: consistency (VC) catches lost writes, semantics (VOR) catches lies. A verdict that flips when one scenario variable changes (A6) is an illustration, not a law.</p>
+          </li>
+          <li>
+            <h3>Mutation testing for the reranker grader: mutation score 8% -&gt; 100%</h3>
+            <p>2026-08-14 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Validate values, not just types - NaN/Infinity otherwise silently earn the maximum score.</p>
+          </li>
+          <li>
+            <h3>Root-cause prediction audit: top-1 accuracy 0.13 on 31 incidents</h3>
+            <p>2026-07-22 · mscodebase-intelligence · verdict: partial.</p>
+            <p>Root-cause prediction is far from solved: the audit dataset and gold standard are the baseline, and the engine&#39;s current top-1 accuracy is 13%.</p>
+          </li>
+          <li>
+            <h3>PID-lock self-healing: orphan lock wait 30s -&gt; 120ms</h3>
+            <p>2026-08-08 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Never block boot on a lock whose holder may be a zombie: classify the holder and self-heal instead of failing closed for 30 seconds.</p>
+          </li>
+          <li>
+            <h3>Late enrichment: imports metadata covers 0.0% of search chunks</h3>
+            <p>2026-08-08 · mscodebase-intelligence · verdict: partial.</p>
+            <p>Index-time enrichment produced nothing for search chunks: imports coverage is 0.0, so the late path is kept behind a flag until the hypothesis is re-probed.</p>
+          </li>
+          <li>
+            <h3>Benchmark 2.0 scaffold: 12 repository-reasoning tasks at levels L3-L5</h3>
+            <p>2026-08-08 · mscodebase-intelligence · verdict: partial.</p>
+            <p>A reasoning-quality benchmark needs L3-L5 tasks with evidence and checks; short keyword queries are a separate failure mode (CoREB) that must be measured independently.</p>
+          </li>
+          <li>
+            <h3>Server unavailable during reindex: sync update_all blocks the event loop (P0 root cause)</h3>
+            <p>2026-08-13 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>552s indexing + ~220s update_all = 771s unavailability, in line with the log. Indexing-in-executor (H1) refuted; fast-fail search while is_reindexing exists; the blocker was the sync update_all (same class as BS-11: run_full_diagnostic had already been moved to asyncio.to_thread…</p>
+          </li>
+          <li>
+            <h3>Vacuous-test scan: 1133/1143 tests are provable (hypothesis refuted in the good way)</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>The suite is almost fully provable - 1133/1143 (99.7%) contain a failing construct; the 3 &#39;vacuous&#39; are smoke tests that can still fail via exception propagation from helpers (discrimination weaker, not zero). MSCodeBase is NOT in the fintech state (7/40 proven) - which is preci…</p>
+          </li>
+          <li>
+            <h3>ln.strip() bug class replayed: broken assert-extractor gives 3/8 false passes</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Bug class replayed: valid Python that never executes, exit 0, &#39;verified:true&#39; for a wrong answer. The form count differs (3/8 vs fintech&#39;s 5/8) but the essence is identical - signature/exit-code verify the PROCESS, not the SEMANTICS (&#39;ask for the output, not the exit code&#39;).</p>
+          </li>
+          <li>
+            <h3>Population blind spot: &#39;0 eligible&#39; is indistinguishable from &#39;0 collected&#39;</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>(a) and (b) share the same failure signal (passed=0, same warning class) - and (a)&#39;s message claims &#39;empty/garbage chunks&#39; when raw results were 0, a false explanation. &#39;0 rows with 0 eligible&#39; (healthy idle) is indistinguishable from &#39;0 rows with N eligible&#39; (broken collector).…</p>
+          </li>
+          <li>
+            <h3>verify_clean_state.sh falsifiability: the drift-gate is structurally unable to fail</h3>
+            <p>2026-08-11 · mscodebase-intelligence · verdict: partial.</p>
+            <p>(B) confirmed: the gate prints PASSED for a suite with zero asserts - semantic blindness. (A) refuted in reverse: the drift-gate is STRUCTURALLY unable to fire - its grep -iE &#39;^pkg==&#39; requires the pin at line start, but pins live in a TOML array (&#39;    &quot;lancedb==0.34.0&quot;,&#39;) so PIN…</p>
+          </li>
+          <li>
+            <h3>Evidence Ladder E1-E3: evidence form (anchor -&gt; file fragment -&gt; graph) vs verification quality</h3>
+            <p>2026-08-15 · mscodebase-intelligence · verdict: partial.</p>
+            <p>Evidence form is a per-model knob, not a global answer: the file fragment is the strongest recall driver for all models; the graph closes the trap failure mode only for evidence-honest models (and on corrected labels the trap gap itself was a label issue). Fail-open models (glm…</p>
+          </li>
+          <li>
+            <h3>Evidence Ladder E3b+E4: file+graph hybrid is NOT additive; git-provenance distinguishes existed-then vs exists-now</h3>
+            <p>2026-08-15 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>Hybridity is NOT additive: with a file fragment present, token presence dominates and the graph adds nothing (acc 0.900 &lt; file 0.940) - VOR design must pick ONE evidence format: fragment for recall OR graph for trap-precision. Git-provenance is a cheap, powerful temporal signal…</p>
+          </li>
+          <li>
+            <h3>ONNX embedder down: off-by-one project paths (not the model or ports)</h3>
+            <p>2026-08-03 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Root cause is paths, not model/ports: (1) onnx_client looked for &#39;...src/src/core/embedder/onnx_server.py&#39; (duplicated src), (2) onnx_server looked for the model in &#39;.../src/.codebase_models/...&#39; (not the root). The off-by-one was copied between files (onnx_client &lt;- onnx_server…</p>
+          </li>
+          <li>
+            <h3>Evidence Ladder E5: extended trap category (N=20, subject-validated labels) - present-trap is mass, graph really helps deepseek (75%-&gt;40%)</h3>
+            <p>2026-08-16 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Present-trap is NOT a mislabel issue: on honest subject-validated labels file_content FA is 2-15/20 (10-75%) - the earlier &#39;residual trap hole&#39; was distorted by N=1. Graph evidence REALLY closes present-trap for deepseek (75%-&gt;40% FA); for glm it does not (14/20); qwen already h…</p>
+          </li>
+          <li>
+            <h3>Pinned-rerun on the corrected dataset (fp e6ce7b90): canonical series numbers, routing band removed</h3>
+            <p>2026-08-16 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Routing band removed but per-model conclusions unchanged: file_content is the best recall arm for qwen (0.88), graph for glm (0.84, FA trap 1), hybrid for deepseek (0.92); temporal present-trap is universal (NOW 12/12, 9/12, 12/12), past solved by formulation (40/40). glm stays…</p>
+          </li>
+          <li>
+            <h3>LSP live probe: call hierarchy + semantic tokens confirmed on pyright; type hierarchy / moniker NOT advertised</h3>
+            <p>2026-08-19 · mscodebase-intelligence · verdict: partial.</p>
+            <p>Spec-present != server-implemented. On the pyright family the graph really gets call hierarchy (compiler-accurate cross-file CALLS edges) and semantic tokens (exact spans/kinds); type hierarchy (3.17) and moniker (3.16) are NOT advertised by pyright -&gt; dormant until a server sup…</p>
+          </li>
+          <li>
+            <h3>M1: real tool telemetry — 5/62 MCP tools ever used; the working-set boundary is single-digit</h3>
+            <p>2026-08-25 · mscodebase-intelligence · verdict: partial.</p>
+            <p>Only 5 of 62 tools ever recorded a metric; dead-tool metrics are NOT measurable with current telemetry — a per-call counter in the error_handler path is required. The LSP toolkit (8 calls, 3 errors) is the top latency risk.</p>
+          </li>
+          <li>
+            <h3>M2: sub-agent in a fresh project — natural 0/5 MCP calls vs MCP-first 9 (4 wasted on unindexed files)</h3>
+            <p>2026-08-25 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Natural agent: 0/5 MCP; MCP-first: 9 calls, ~4 idle (2 search + get_symbol_info + find_path on unindexed lab), only read_live_file (disk) productive. New files are invisible until reindex -&gt; semantic layer on fresh code = zero. Correctness control: A found the root with exact fi…</p>
+          </li>
+          <li>
+            <h3>M3: latency matrix — search fast 75ms HIT vs quality 3666ms MISS; get_symbol_info misses a real symbol</h3>
+            <p>2026-08-25 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>quality was 49x slower than fast (3666 vs 75ms) and semantically worse; get_symbol_info misses exact names carrying a trailing hint. On short queries fast search + grep + read_live_file beat quality search + symbol info on time AND accuracy.</p>
+          </li>
+          <li>
+            <h3>E2: category pilot on the live index — fast 5/6 HIT (83%) vs quality 2/3 + leak to docs/JSON; index self-pollution discovered</h3>
+            <p>2026-08-26 · mscodebase-intelligence · verdict: partial.</p>
+            <p>fast is 83% and an order of magnitude cheaper; quality saved the only fast-MISS (Q4) at ~35x cost. The leak is confirmed (Q1 quality -&gt; JSON/CHANGELOG; Q4/Q6 quality top-1 incident datasets) but is NOT junk — semantically relevant docs; a category-priority filter is needed, not…</p>
+          </li>
+          <li>
+            <h3>E3: category router on tasks_v3.json (30 tasks) — cascade 0.233 &gt; fast 0.167 &gt; quality 0.133; 4 graph classes 0.00 across all arms</h3>
+            <p>2026-08-26 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Cascade is the winner; the winner depends on klass (git_history/bug/prepare -&gt; fast with quality 0.00 at bug; caller_callee/architecture -&gt; quality); find_test/find_impact/modify/verify_change = 0.00 across ALL arms — search does not replace graph/AST/impact stages.</p>
+          </li>
+          <li>
+            <h3>E4: deterministic per-class keyword router (PoC) — 0.200 &lt; cascade 0.233, klass_acc 0.40 (NEGATIVE)</h3>
+            <p>2026-08-26 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>klass_acc=0.40 — keyword rules are noisy (bug tasks contain &#39;callers&#39;, git tasks &#39;why&#39;); the union arm does not save the 4 graph classes — search cannot find what is not textually in the index (callers/callees/impact must come from the graph). The search-only ceiling on this dat…</p>
+          </li>
+          <li>
+            <h3>E4.1: the graph stage breaks the search-only ceiling — recall 0.433 (cascade 0.267), med 177ms (Track 1)</h3>
+            <p>2026-08-26 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>The graph stage added +0.166 recall on three of the four failing classes at ~15ms latency and lost nowhere (fallback to cascade by construction). Lessons: (1) has_symbol is an exact node-name — search_symbols(LIKE) + strict suffix is required; (2) graph navigation must go throug…</p>
+          </li>
+          <li>
+            <h3>E4.2: deterministic concept resolver (no LLM) — verify_change T9/T29 HIT on real graph.db, facts 4/4 &amp; 3/4 (Track 2)</h3>
+            <p>2026-08-26 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Both verify_change misses resolve to the correct file on the real graph.db (10748 nodes); graph rows now carry facts (graph_fact_text), not 0; regression is excluded by construction (klass-gating). A &#39;wordless&#39; prompt is an anchor-resolution problem, not classification — lexical…</p>
+          </li>
+          <li>
+            <h3>system_alerts chain (file changed -&gt; STALE -&gt; VOR -&gt; one-shot alert) + idle background stale-sweep</h3>
+            <p>2026-09-10 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>A one-shot alert store with atomic collect_and_clear is the right granularity: dedup by kind+payload prevents a spam-per-save alert, the atomic clear guarantees that a race between two MCP tools delivers the alert once and only once, and limit=5 caps token budget. Idle VOR is ch…</p>
+          </li>
+          <li>
+            <h3>VOR Catch-up Rate (H1): throughput per budget and cycles-to-finish</h3>
+            <p>2026-09-10 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Real project (~247 nodes) is far from budget limits: read-path covers ~420-490 nodes/pass, background ~1600-1900 nodes/pass. N&lt;=2000 fits one 250ms pass; N=5000 needs 2 passes. Systematic starvation (MATCHED&gt;0/DELIVERED=0) appears only around N=5000.</p>
+          </li>
+          <li>
+            <h3>VOR HEAD-polling catches external git changes without notify_change (H3)</h3>
+            <p>2026-09-10 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Head-invalidation per node key is an honest detector of external code drift in a git repo: the node whose file anchor was removed went REFUTED, the node whose file changed but still exists stayed VERIFIED. First exp3 run gave a false REFUTED because statuses were read from pre-r…</p>
+          </li>
+          <li>
+            <h3>Burst-rename vs fail-closed VOR: prose-path anchoring causes false REFUTED (1-B/1-C/RT)</h3>
+            <p>2026-09-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Real queue is NOT huge (24 accumulated auto-refutes/month) but is DOMINATED by junk anchors from prose scanning (13/24 import:for/file/path regex hits), not by renames - renames caused only 1 FALSE_REFUTE (ADR-7232a6e2ba34: live node revoked by historical path from prose body).…</p>
+          </li>
+          <li>
+            <h3>H3 TTL-rotation for verify-on-read: last_checked for every checked node + stale_ttl label (closes the &quot;hangs forever&quot; class)</h3>
+            <p>2026-09-11 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>A TTL needs a trace for nodes WITHOUT verdicts, not only for VERIFIED ones: INCONCLUSIVE nodes now get last_checked and it refreshes on every idle pass (H1), so &quot;no dates at all&quot; is replaced by &quot;checked every 6h, labelled stale after 30d&quot;. stale_ttl is a computational label - no…</p>
+          </li>
+          <li>
+            <h3>H4 Agent-memory lifecycle at scale: capture latency on a dev.to graph grown 3.4x (threads 5.5x) + stale precision</h3>
+            <p>2026-09-13 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Capture latency grew with graph size (earlier own refresh on ~9k threads completed in ~2 min vs 10m38s now) even though the numeric delta between snapshots was small (threads 19,056 -&gt; 19,101, +45). The cost is the network capture phase (134 dev.to API calls), not the local grap…</p>
+          </li>
+          <li>
+            <h3>Bootstrap pipeline: test-&gt;function linking ? static name/import vs dynamic sys.settrace trace (89.8% vs 0%/77.9%)</h3>
+            <p>2026-09-15 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Dynamic trace (sys.settrace around pytest_runtest_call) is the only viable deterministic test-&gt;function linker: 89.8% vs 0% (name) and 77.9% (import, file-level only). Overhead +13.6% on a full run is fine for a one-off bootstrap pass. Entry points (@mcp_app.tool, 22 in src) are…</p>
+          </li>
+          <li>
+            <h3>Bootstrap follow-up: Tarantula ranking for test-&gt;function annotation — recall refuted (22.6% rank&lt;=3), precision confirmed; dev.to cross-check</h3>
+            <p>2026-09-15 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>Vanilla Tarantula cannot select the target function for most tests: recall is 22.6% rank&lt;=3, far below the 60-70% recall target — shared utils (autouse fixtures safe_mkdir/get_data_root with 200+ callers) is the barrier, the same noise source TRUE Coverage reports (shared utilit…</p>
+          </li>
+          <li>
+            <h3>Bootstrap A1: coverage.py sysmon driver overhead vs our sys.settrace plugin — sysmon refuted (+19.96% vs +13.6%)</h3>
+            <p>2026-09-16 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>sysmon is ~1.5x slower than our hand-rolled sys.settrace plugin on the full suite (+19.96% vs +13.6% in the same session, same methodology), so coverage.py is NOT adopted as the production driver. The earlier research estimate of &#39;sysmon ~3-7% median loss&#39; (KNOWN_ISSUES:249) is…</p>
+          </li>
+          <li>
+            <h3>Bootstrap Step B: Static Score Engine (AST calls/lexical/imports) vs dynamic trace ground truth</h3>
+            <p>2026-09-16 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>Hit &gt;=50% confirmed (union 90.4%), but recall &lt;=30% REFUTED: union recall is 70.0%. Static is much stronger than Exp 7 implied, because Exp 7 measured the weak name-signal (L2 reconfirms it: 17.7%). The call-level signal (L1) is a precise, narrow anchor: precision 68.0% with avg…</p>
+          </li>
+          <li>
+            <h3>E7: lazy stat-sweep (mtime+size) vs sha256-sweep for always-fresh index (FreshnessChecker hot-reload)</h3>
+            <p>2026-09-18 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>stat-sweep is 12x faster than sha256 over the same corpus and ~2% of a full reindex. (lancedb 0.34 detail: table.to_pandas(columns=[...]) crashes, table.to_lance().to_pandas(columns=[...]) is the correct API.) This made the synchronous pre-search freshness check viable: stat-fir…</p>
+          </li>
+          <li>
+            <h3>E10: full-text chunk embedding + e5-prefix + reranker pool 50 vs pure-vector plateau</h3>
+            <p>2026-09-19 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>No confirmed shift within N=10 noise: quality hit@1 30%-&gt;20% (worse/noise), hit@5 30%-&gt;40% (noise). Toggles requiring a full prod reindex (~13 min) deliver zero -&gt; pure-vector plateau reconfirmed (cf. Exp-29 search-only ceiling ~0.23). Next move: AST/Graph-hybrid re-ranking (gra…</p>
+          </li>
+          <li>
+            <h3>E11: AST/Graph-hybrid re-ranking - symbol-lookup lift above the pure-vector plateau</h3>
+            <p>2026-09-19 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Graph lift saved 2/10 target cases (project_indexer_registry.py, indexing_tools.py) that quality-vs-baseline lost; both targets were present in search_symbols output. Symbol-lookup cost is negligible (+6ms). Signal is conditional (loose graph files add noise - MRR stays small, h…</p>
+          </li>
+          <li>
+            <h3>E14: EmbeddingGemma 300M vs multilingual-e5-small - Hit@1 0.062-&gt;0.688 at ~4x CPU cost</h3>
+            <p>2026-09-22 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Real, reproducible quality gap on a code corpus: gemma Q8 gives +62.6pp Hit@1 and +56.4pp MRR over prod e5 at 2x RAM (176 vs 91MB) and 4.2x slower. QAT-Q4 (ggml-org) is NOT better than plain Q4_0 (unsloth): 0.653 vs 0.695 MRR - marketing claim not confirmed. Batch size does not…</p>
+          </li>
+          <li>
+            <h3>E17: TESTS-signal in graph-stage (A/B) — covering tests added over function defs, hit@1/MRR unchanged (7/7)</h3>
+            <p>2026-09-22 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>Covering tests are appended as a separate result sort (graph_score 0.4 vs def 1.0, sentinel chunk_index -20M+line) AFTER completed function defs, so def-first invariant holds (MRR 1.0 in both arms). The flag is off by default (MSCODEBASE_TESTS_SIGNAL env, like late_enrichment),…</p>
+          </li>
+          <li>
+            <h3>E12: real-path embed throughput — chunk length sets the ~3.5k tok/s ceiling, not batch, ubatch or parallelism</h3>
+            <p>2026-09-20 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>The CPU embed ceiling (e5-small Q8, 10 threads, Ryzen 5600H) is ~3.4-3.7k tok/s — model physics, independent of batch size, token budget, parallelism or truncation. The old &quot;156 ch/s&quot; was synthetic (~1560 tok/s on 10-token texts). 335k chunks x 203 tok = 68M tokens -&gt; ~5.7h of p…</p>
+          </li>
+          <li>
+            <h3>E13: text RAG (doc-chunks) vs code baseline — doc-chunks miss top-5 for 14 of 16 queries</h3>
+            <p>2026-09-20 · mscodebase-intelligence · verdict: refuted.</p>
+            <p>Text RAG is far below code RAG: doc-chunks stay outside top-5 for 14 of 16 queries. The embedder packs code chunks (signatures, names) denser, doc-chunks are diffuse; the index is code-biased and queries without intent_hint=&#39;docs&#39; route down the code path.</p>
+          </li>
+          <li>
+            <h3>E15: bge-small-en / MiniLM / nomic in equal prod conditions — bge-small-en is quality without the 3x slowdown</h3>
+            <p>2026-09-23 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>bge-small-en-v1.5 Q8 is the only &quot;quality without losing speed&quot; candidate: MRR 0.545 (+136% vs e5) at 5024 tok/s (1.19x FASTER than e5) and dim=384 — same scheme, no reindex, RAM halved to 46MB. MiniLM is the fastest (2.6x) but MRR 0.487. nomic does not qualify: its 8192 ctx nee…</p>
+          </li>
+          <li>
+            <h3>E16: bootstrap-trace portability — dynamic trace transfers to foreign Python repos (97.3% / 100%)</h3>
+            <p>2026-09-22 · mscodebase-intelligence · verdict: confirmed.</p>
+            <p>The dynamic trace transfers to foreign Python repos unmodified: 97.3% on gemma_agent with 2.9k tests, 100% on commit-. Overhead scales with test activity (+17.4% on gemma_agent vs +13.6% on our larger corpus), not with corpus size. Non-Python: the pytest pipeline collects 0 test…</p>
+          </li>
+          </ul>
+        </section>
+        <section id="diary">
+          <h2>Engineering diary</h2>
+          <p>Incidents and hard bugs: symptom, root cause, fix and guard (20 entries).</p>
+          <ul>
+          <li>
+            <h3>Custom Python LSP cannot register in Zed (WONTFIX)</h3>
+            <p>2026-07-05 · mscodebase-intelligence · status: fixed.</p>
+            <p>Zed settings.json can only override KNOWN LSPs; a pygls-based server is never started (verified on Zed 1.9.0 and 1.14.2).</p>
+          </li>
+          <li>
+            <h3>ONNX migration: 7 critical bugs fixed while moving off LM Studio</h3>
+            <p>2026-07-08 · mscodebase-intelligence · status: fixed.</p>
+            <p>LM Studio is an external process needing manual startup; the status API hardcoded &#39;lm_studio&#39; as the provider, so it lied when port 1234 was closed.</p>
+          </li>
+          <li>
+            <h3>Lock-zombie: MCP boot blocked up to 30s by a stale DB PID-lock</h3>
+            <p>2026-08-08 · mscodebase-intelligence · status: fixed.</p>
+            <p>Boot failed closed on the DB PID-lock for up to 30s, exceeding the Zed timeout; the server was killed, the zombie stayed, and _is_pid_alive could not tell a healthy MCP from an orphan.</p>
+          </li>
+          <li>
+            <h3>Probe script shadowed the production symbol build_call_graph</h3>
+            <p>2026-08-08 · mscodebase-intelligence · status: fixed.</p>
+            <p>run_experiment_pagerank.py defined the same name as the production build_call_graph; the probe silently shadowed it in the graph module.</p>
+          </li>
+          <li>
+            <h3>Context aggregator D1-D3 defects found by the harness</h3>
+            <p>2026-08-08 · mscodebase-intelligence · status: partial.</p>
+            <p>Intent filters git_history/verify_change silently returned empty in the B-scheme; harness gaps (D1-D3) hid the failures.</p>
+          </li>
+          <li>
+            <h3>Late enrichment: imports metadata = 0.0 on search chunks</h3>
+            <p>2026-08-08 · mscodebase-intelligence · status: partial.</p>
+            <p>Chunks from the search pipeline (~186 tokens) carry no import metadata; enrichment at query time had nothing to add.</p>
+          </li>
+          <li>
+            <h3>Memory contamination: the memory layer accepts false claims</h3>
+            <p>2026-08-11 · mscodebase-intelligence · status: fixed.</p>
+            <p>Project memory was add-only with no retraction and no validation against the code; false claims propagated into context.</p>
+          </li>
+          <li>
+            <h3>Shadow canary fail-open: 5/5 attacks passed</h3>
+            <p>2026-08-11 · mscodebase-intelligence · status: fixed.</p>
+            <p>The canary trusted empty responses and a failed baseline (fail-open); the quality metric was relative, so a collapse-to-constant passed.</p>
+          </li>
+          <li>
+            <h3>hybrid_search_async cache-hit skips the dense tier</h3>
+            <p>2026-08-11 · mscodebase-intelligence · status: partial.</p>
+            <p>An embedding cache hit returned early, silently skipping the vector search tier; repeat queries lost vector recall (the first multi-RAG run was fully distorted).</p>
+          </li>
+          <li>
+            <h3>Concurrency: 0 errors did not mean correct data</h3>
+            <p>2026-08-11 · mscodebase-intelligence · status: fixed.</p>
+            <p>Replacing a thread-safety primitive created a new race surface (shared results dict, shared correlation id, result swap between inputs) that exception-free runs do not expose.</p>
+          </li>
+          <li>
+            <h3>Memory v2: SUPERSEDED filter + false-retraction metric not committed</h3>
+            <p>2026-08-12 · mscodebase-intelligence · status: partial.</p>
+            <p>ADR-0004 cascade behavior (REFUTED propagation) was designed and validated but left uncommitted at session end.</p>
+          </li>
+          <li>
+            <h3>Server unreachable during/after indexing</h3>
+            <p>2026-08-13 · mscodebase-intelligence · status: fixed.</p>
+            <p>A sync update_all in the main loop blocked the server while indexing.</p>
+          </li>
+          <li>
+            <h3>extract_anchors produced garbage anchors -&gt; false VOR retractions</h3>
+            <p>2026-08-13 · mscodebase-intelligence · status: fixed.</p>
+            <p>Anchor extraction over-matched identifiers, so verify-on-read retracted valid memory.</p>
+          </li>
+          <li>
+            <h3>Reranker offline all day: PID-reuse in _is_pid_alive</h3>
+            <p>2026-08-13 · mscodebase-intelligence · status: fixed.</p>
+            <p>A completed process object was classified as alive via PID reuse, so the reranker process was treated as running when it was dead.</p>
+          </li>
+          <li>
+            <h3>Duplicate servers with two Zed windows</h3>
+            <p>2026-08-13 · mscodebase-intelligence · status: fixed.</p>
+            <p>The lock was taken before Popen, not before port readiness; the second window started a duplicate server.</p>
+          </li>
+          <li>
+            <h3>validate_scores grader: 11 holes (NaN/Infinity pass)</h3>
+            <p>2026-08-14 · mscodebase-intelligence · status: fixed.</p>
+            <p>Type validation without value validation: NaN/Infinity passed isinstance, clamped, and earned the maximum score.</p>
+          </li>
+          <li>
+            <h3>stale_detector MCP tool: 11 false drifts</h3>
+            <p>2026-08-14 · mscodebase-intelligence · status: fixed.</p>
+            <p>The stale detector reported drifts that were actually renames/reorders; severity_overrides has a Windows quirk.</p>
+          </li>
+          <li>
+            <h3>fastmcp dist-name vs import-path: 7 false REFUTED</h3>
+            <p>2026-08-14 · mscodebase-intelligence · status: fixed.</p>
+            <p>VOR anchors (file/import/env) could not tell a dist name from an import path; the fastmcp class was retracted as absent.</p>
+          </li>
+          <li>
+            <h3>CoT arm: glm-4.7 upstream EMPTY_CONTENT</h3>
+            <p>2026-08-15 · mscodebase-intelligence · status: partial.</p>
+            <p>In reasoning mode the upstream returns finish=stop with an empty body (reasoning_tokens ~6) for 16-26% of responses; the share is unstable between runs.</p>
+          </li>
+          <li>
+            <h3>VOR showed token strings instead of file fragments -&gt; recall 0.08 (anchor bias)</h3>
+            <p>2026-08-15 · mscodebase-intelligence · status: fixed.</p>
+            <p>The VOR layer presented bare pattern tokens (&#39;typesense&#39;) as evidence; a model honestly answers false/unknown because a token string proves nothing (diagnosed by the V4 arm file_content_first).</p>
+          </li>
+          </ul>
+        </section>
+        <section id="claims">
+          <h2>Verifiable claims</h2>
+          <p>Claims about the owner that can be grounded against the portfolio data (29 checks).</p>
+          <ul>
+            <li>production MCP server for codebase intelligence — supported</li>
+            <li>LanceDB and BM25 hybrid search — supported</li>
+            <li>Telegram assistant with memory and intent routing — supported</li>
+            <li>React TypeScript Vite portfolio — supported</li>
+            <li>Hybrid search with fused ranking — supported</li>
+            <li>must refuse rather than guess when it cannot verify — supported</li>
+            <li>performance claims come from benchmarks with a command line — supported</li>
+            <li>derived state written through a single write path — supported</li>
+            <li>watchdogs and reindex triggers recover deterministically — supported</li>
+            <li>one server consumed by Claude Code and Cursor — supported</li>
+            <li>chose LanceDB and BM25 over SQLite FTS5 — supported</li>
+            <li>joined GitHub as ManSio — supported</li>
+            <li>claimed a fork as my own work — supported</li>
+            <li>hardcoded dark theme colors broke the light theme — supported</li>
+            <li>mutation testing for the reranker grader — supported</li>
+            <li>FTS5 only beats the full pipeline by recall — supported</li>
+            <li>live LLM false-acceptance across 14 models — supported</li>
+            <li>zero errors did not mean correct data — supported</li>
+            <li>reranker was offline due to PID reuse — supported</li>
+            <li>OpenRouter routes one prompt across multiple upstreams — supported</li>
+            <li>two Zed windows can start duplicate servers — supported</li>
+            <li>late enrichment found no imports on search chunks — supported</li>
+            <li>worked at Google — refused</li>
+            <li>led a team of engineers at Meta — refused</li>
+            <li>built a mobile app for iOS — refused</li>
+            <li>ten years at Netflix as staff engineer — refused</li>
+            <li>contributed to the Linux kernel — refused</li>
+            <li>won a Turing Award — refused</li>
+            <li>CTO of a Series B startup — refused</li>
+          </ul>
+        </section>
+        <section id="tests">
+          <h2>Test suites</h2>
+          <ul>
+            <li>Intent matching (RU/EN) — 7 tests (Agent intent routing: projects, stack filters, principles, articles, timeline, fallback)</li>
+            <li>MCP tools + architecture models — 18 tests (Tool surface, get_profile nextSteps (D8), filters, analyze_stack honesty, simulation (5 points, validation, llm_saturation, events), commit snapshot, antipatterns, lab tools, annotations, all architectures × all scenarios)</li>
+            <li>Worker /mcp integration — 22 tests (tools/list (13 tools + annotations), health without rate limit, /mcp/stats (KV), tools/call counter, 429 MCP/CHAT, security headers, CORS allow/deny, 404, adversarial (malformed JSON, unknown tool/method), 8-way concurrency with filter correctness, /resume.txt + /llms.txt + 405, anonymous quota (D4: headers + 429), /openapi.json (D5))</li>
+            <li>Lab data integrity + SSR render + benchmarks snapshot — 10 tests (Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, test-suite sum = total, evidence ledger ids/verdicts/summary, LabPage SSR (7 sections + filter), EN-only projections (incl. evidence claims), benchmarks.json sanity (DoD gates: llm recall ≥80%, 0 false-accepts, p95 &lt; 3s))</li>
+            <li>Evidence Score v1 (D3 deterministic arm) + v2 stage-0 paraphrase set — 13 tests (verify_claim: 13th tool registration + required claim input, supported true-claim (profile evidence), project-traced claim, negative controls (Google/Meta refused), too-short/empty claim notes; computeEvidence: toolCalls/grounded/failed counts, ungrounded flag, null result = failed; evidence ledger: every canonical claim verdict matches verify_claim; v2 stage 0: 8 true paraphrases refused by v1 (recall-gap baseline, KI-017), 3 paraphrased negative controls stay refused, documented substring false-acceptance (search+engine))</li>
+            <li>v2 LLM arm decision logic (mocked provider) — 9 tests (verifyClaimLlmArm fail-closed guards (v2 plan §5): supported with valid cited record, refused passthrough, garbage response, supported without source, supported with source outside candidates, HTTP error, abort/timeout, too-short claim without network call, zero-overlap paraphrase reaches the LLM via padded core context (p-01 fix))</li>
+            <li>verify_claim + LLM arm integration (stage 2) — 5 tests (arm absent -&gt; deterministic v1 (arm:deterministic), arm rescues miss with cited source (arm:llm), arm refusal keeps refusal, arm error fail-closed, deterministic hit never consults the arm)</li>
+            <li>verify_repo live GitHub verification (mocked) — 9 tests (bare name defaults to ManSio + portfolio cross-check (languageMatches), full owner/name, honest language mismatch vs curated record, 404 = not exists, 403/429 rate limit reported honestly, network failure, github.com URL normalization, empty input without network call, readme:true returns actual README text)</li>
+            <li>verify_article live Dev.to verification (mocked) — 4 tests (title-fragment match with platform data, honest not-found, API failure honest error, short query refused without network call)</li>
+            <li>verify_package live npm verification (mocked) — 4 tests (existing package + maintainer check (case-insensitive), honest 404 not-found, registry failure honest error, empty input without network call)</li>
+          </ul>
+        </section>
+        <section id="known-issues">
+          <h2>Known issues</h2>
+          <p>Open engineering debt, tracked in the open with status and temperature.</p>
+          <ul>
+          <li>
+            <p><strong>KI-101</strong> (mscodebase-intelligence) — Fix in code, temperature: watching.</p>
+            <p>hybrid_search_async: an embedding cache-hit silently skips the dense tier - repeat queries lose vector recall (found by the multi-RAG ablation; the first run was fully distorted).</p>
+          </li>
+          <li>
+            <p><strong>KI-102</strong> (mscodebase-intelligence) — Open (by design), temperature: watching.</p>
+            <p>Present-trap blindness is structural: claims about an existing file/import with the wrong subject or value are not caught by anchor verification (memory_first adoption 0.24 in the proxy control).</p>
+          </li>
+          <li>
+            <p><strong>KI-103</strong> (mscodebase-intelligence) — Open (research), temperature: watching.</p>
+            <p>VOR fail-closed was anchor bias, not model paranoia: with token strings qwen3.6/3.7 accepted 2-5/25 true claims (recall 0.08-0.20); with a real file fragment (V4 arm, 2026-08-15) recall jumps to 0.88. CORRECTED (RED TEAM on ground truth, 2026-08-15): the apparent residual hole &#39;every remaining false-accept is present-trap (R45/R46)&#39; was a mislabeled-data issue - R43/R45/R46/R47 are TRUE facts (th…</p>
+          </li>
+          <li>
+            <p><strong>KI-104</strong> (mscodebase-intelligence) — Open (upstream), temperature: watching.</p>
+            <p>glm-4.7-flash in reasoning mode returns 16-26% EMPTY_CONTENT (finish=stop, empty body) - an upstream defect; its CoT numbers are qualitative only.</p>
+          </li>
+          <li>
+            <p><strong>KI-105</strong> (mscodebase-intelligence) — Open (by design), temperature: stable.</p>
+            <p>OpenRouter routes one prompt across &gt;=8 upstreams (Alibaba/DeepInfra/DigitalOcean/Cloudflare/Novita/Baidu/StreamLake/Bedrock): per-run verdict variance (FA +/-0.05-0.10) is expected; determinism under temp=0 is an illusion.</p>
+          </li>
+          <li>
+            <p><strong>KI-106</strong> (mscodebase-intelligence) — Open (research), temperature: watching.</p>
+            <p>Late enrichment: imports=0.0 on search chunks (~186 tokens/chunk); the MSCODEBASE_LATE_ENRICHMENT flag stays off until the hypothesis is re-probed.</p>
+          </li>
+          <li>
+            <p><strong>KI-107</strong> (mscodebase-intelligence) — Open (by design), temperature: stable.</p>
+            <p>The vector tier (multilingual-e5-small) is the weakest on symbol tasks (recall 0.083-0.167); recall is carried by keyword tiers, precision by the reranker.</p>
+          </li>
+          <li>
+            <p><strong>KI-108</strong> (mscodebase-intelligence) — Open (research), temperature: watching.</p>
+            <p>Graph enrichment adds metadata (callers/callees), not text: evidence metrics by text patterns do not see it; a separate graph-contribution protocol is needed.</p>
+          </li>
+          <li>
+            <p><strong>KI-109</strong> (mscodebase-intelligence) — Open (P1), temperature: watching.</p>
+            <p>P1: propagation_engine.py is invisible to code search and the symbol graph - the root cause is not yet established.</p>
+          </li>
+          <li>
+            <p><strong>KI-110</strong> (mscodebase-intelligence) — Open, temperature: watching.</p>
+            <p>Path storage is scattered and there is no GC: 2481 junk folders accumulated; a cleanup task is open.</p>
+          </li>
+          <li>
+            <p><strong>KI-111</strong> (mscodebase-intelligence) — Open, temperature: stable.</p>
+            <p>severity_overrides has a Windows quirk (stale_detector) - behavior differs between platforms.</p>
+          </li>
+          <li>
+            <p><strong>KI-112</strong> (mscodebase-intelligence) — Open (mitigated), temperature: stable.</p>
+            <p>Two Zed windows can start duplicate servers: the lock is taken before Popen, not before port readiness (mitigated 2026-08-13).</p>
+          </li>
+          <li>
+            <p><strong>KI-113</strong> (mscodebase-intelligence) — Fixed, temperature: stable.</p>
+            <p>Memory verification was lazy-by-hand: VOR ran only from intel_get_project_memory (1 call site); 42/136 ACTIVE nodes had no verified_at since 2026-08-11; INCONCLUSIVE nodes (no anchors) never became STALE/REFUTED. FIXED (H1, 2026-09-09): idle background VOR wired into _check_index_health (cooldown 120s) via server-injected hook set_idle_vor_callback -&gt; layer.run_background_verify (budget=250ms, lo…</p>
+          </li>
+          <li>
+            <p><strong>KI-114</strong> (mscodebase-intelligence) — Open, temperature: stable.</p>
+            <p>PRE-EXISTING (found 2026-09-18 during Phase 1 hot-reload): tests/test_lsp_vfs_indexing.py is 8/8 broken - a bare MagicMock().embedding_dim is truthy, so db_writer.py:59 `_target_dim = self.embedder.embedding_dim or 768` gets a MagicMock and truncates vectors to zero -&gt; Zero vector skipping -&gt; empty table -&gt; all asserts fail. Invisible in CI: module is pytestmark=slow, addopts `-m not slow` -&gt; nev…</p>
+          </li>
+          </ul>
+        </section>
+        <section id="for-agents">
+          <h2>For AI agents</h2>
+          <p>This portfolio exposes its content as a production MCP server. Any agent can query the same data behind this page using the standard Streamable HTTP transport.</p>
+          <ul>
+            <li><a href="https://msp-portfolio.mansio-dev.workers.dev/mcp" rel="noopener noreferrer">MCP server endpoint</a></li>
+            <li><a href="https://msp-portfolio.mansio-dev.workers.dev/openapi.json" rel="noopener noreferrer">OpenAPI description</a></li>
+            <li><a href="https://mansio.github.io/MSPortfolio/llms.txt">llms.txt curated index</a></li>
+            <li><a href="https://mansio.github.io/MSPortfolio/llms-full.txt">Full machine-readable content</a></li>
+            <li><a href="https://mansio.github.io/MSPortfolio/index.md">Markdown mirror of this page</a></li>
+            <li><a href="https://github.com/ManSio/MSPortfolio/blob/main/public/msp-portfolio.skill.md" rel="noopener noreferrer">Agent skill definition</a></li>
+          </ul>
+        </section>
+      </main>
+      <footer id="connect">
+        <h2>Connect</h2>
+        <ul>
+          <li><a href="https://github.com/ManSio" rel="noopener noreferrer">GitHub profile of ManSio</a></li>
+          <li><a href="https://www.linkedin.com/in/ManSio" rel="noopener noreferrer">LinkedIn profile of Mikhail</a></li>
+          <li><a href="https://dev.to/mansio" rel="noopener noreferrer">Dev.to articles by ManSio</a></li>
+          <li><a href="https://mansio.github.io/MSPortfolio/">Live portfolio site</a></li>
+        </ul>
+      </footer>
+    </div></div>
+  </body>
+</html>
