@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-27T21:28:44.833Z",
+  "fetchedAt": "2026-09-27T22:09:48.156Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,15 +13,15 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T21:28:14Z",
+      "pushedAt": "2026-09-27T21:28:50Z",
       "language": "TypeScript"
     },
     {
       "name": "mscodebase-intelligence",
       "stars": 3,
       "forks": 1,
-      "openIssues": 0,
-      "pushedAt": "2026-09-27T20:31:22Z",
+      "openIssues": 1,
+      "pushedAt": "2026-09-27T21:44:13Z",
       "language": "Python"
     },
     {
@@ -202,13 +202,6 @@
       "sha": "84260eb00e",
       "date": "2026-09-27T21:28:14Z",
       "message": "refactor(lab): pointer cards for decision logs and load curves, staleness banner, diary/issues catch-up sync (#3)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "c168104f33",
-      "date": "2026-09-27T20:11:41Z",
-      "message": "fix(lab-router-nav): lab sub-anchors, scroll reset, nav order (#2)",
       "author": "Mikhail"
     },
     {
@@ -405,6 +398,13 @@
       "sha": "b7ad6f3b05",
       "date": "2026-08-12T20:42:43Z",
       "message": "fix(s3): walk buckets concurrently, and stop reporting unread config as off",
+      "author": "Sidd27"
+    },
+    {
+      "repo": "infrawise",
+      "sha": "47c7684e74",
+      "date": "2026-08-12T19:29:13Z",
+      "message": "chore: release v0.26.0",
       "author": "Sidd27"
     }
   ]
