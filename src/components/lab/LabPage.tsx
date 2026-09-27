@@ -202,7 +202,7 @@ export function LabPage() {
   const projectHasNoLab = project !== ALL && !hasLabData;
 
   return (
-    <main id="top" className="mx-auto max-w-5xl px-5 pb-16">
+    <main id="lab-top" className="mx-auto max-w-5xl px-5 pb-16">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="pt-16 pb-10 sm:pt-24">
         <div className="reveal">
@@ -234,7 +234,7 @@ export function LabPage() {
         </div>
         <div className="mt-6 grid gap-5 md:grid-cols-3">
           {ui.lab.tlDr.items.map((f) => (
-            <a key={f.id} href={`#${f.id}`} className="group flex flex-col rounded-xl border border-line bg-surface/60 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50">
+            <a key={f.id} href={`#/lab/${f.id}`} className="group flex flex-col rounded-xl border border-line bg-surface/60 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50">
               <p className="font-mono text-[10px] text-accent">{f.id}</p>
               <h3 className="mt-1 text-sm font-semibold text-paper transition-colors group-hover:text-accent">{f.title}</h3>
               <p className="mt-2 flex-1 text-xs leading-relaxed text-muted">{f.text}</p>
