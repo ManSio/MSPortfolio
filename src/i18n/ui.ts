@@ -107,6 +107,9 @@ export const UI = {
       secDecisionLog: { kicker: '01 · decision logs', title: 'Architecture decisions, per project' },
       secDecisionLogNote:
         'From src/data/projects.json — the same single source of truth that feeds get_projects. Each entry: considered → chosen → why → what it cost.',
+      secDecisionLogPointer:
+        'Decision logs live with the work they explain — on the homepage projects section, next to the code they justify.',
+      secDecisionLogCta: 'Open decision logs on the homepage',
       secCommitLog: { kicker: '02 · commit log', title: 'What was shipped, per project' },
       secCommitLogNote:
         'From public/metrics.json — the hourly CI snapshot behind get_commit_history. Every project has its own commits here.',
@@ -126,6 +129,11 @@ export const UI = {
       secLoadCurves: { kicker: '09 · load curves', title: 'Watch latency degrade under load' },
       secLoadCurvesNote:
         'The same engine the simulate_architecture MCP tool exposes — real p50/p95 percentiles per load step, per project, per failure scenario.',
+      secLoadCurvesPointer:
+        'The interactive simulator lives on the homepage — same engine the simulate_architecture MCP tool exposes, with live controls.',
+      secLoadCurvesCta: 'Open the simulator on the homepage',
+      staleBanner:
+        'Lab data is {days} days behind the work — the snapshot predates the latest experiments and diary entries.',
       // chrome labels
       verdictDistribution: 'Verdict distribution',
       status: 'Status',
@@ -286,6 +294,9 @@ export const UI = {
       secDecisionLog: { kicker: '01 · журналы решений', title: 'Архитектурные решения, по проектам' },
       secDecisionLogNote:
         'Из src/data/projects.json — того же единого источника, что питает get_projects. Каждая запись: рассмотрено → выбрано → почему → цена.',
+      secDecisionLogPointer:
+        'Журналы решений живут рядом с работой, которую объясняют — в секции проектов на главной странице, рядом с кодом.',
+      secDecisionLogCta: 'Открыть журналы решений на главной',
       secCommitLog: { kicker: '02 · журнал коммитов', title: 'Что было выпущено, по проектам' },
       secCommitLogNote:
         'Из public/metrics.json — почасовой CI-снимок за get_commit_history. У каждого проекта здесь свои коммиты.',
@@ -305,6 +316,11 @@ export const UI = {
       secLoadCurves: { kicker: '09 · нагрузочные кривые', title: 'Наблюдайте, как латентность деградирует под нагрузкой' },
       secLoadCurvesNote:
         'Тот же движок, что отдаёт MCP-инструмент simulate_architecture — реальные p50/p95 перцентили по шагам нагрузки, по проектам, по сценариям отказа.',
+      secLoadCurvesPointer:
+        'Интерактивный симулятор живёт на главной странице — тот же движок, что отдаёт MCP-инструмент simulate_architecture, с живыми контролами.',
+      secLoadCurvesCta: 'Открыть симулятор на главной',
+      staleBanner:
+        'Данные лаборатории отстают от работы на {days} дн. — снимок старше последних экспериментов и записей дневника.',
       verdictDistribution: 'Распределение вердиктов',
       status: 'Статус',
       patterns: 'Паттерны',

@@ -139,6 +139,76 @@
       "deadline": null,
       "owner": "owner",
       "link": "tests/test_lsp_vfs_indexing.py, src/core/indexing/db_writer.py"
+    },
+    {
+      "id": "KI-115",
+      "project": "mscodebase-intelligence",
+      "problem": "Парсер вердиктов F5-судьи брал первый regex-матч, поэтому самокоррекция вердикта (incorrect … actually correct, финальный ответ correct) оценивалась инвертированно. Исправлено 2026-09-27 контрактом explicit-final (последний JSON-матч, иначе последнее verdict-слово) плюс сохранением текстов судьи и guard из 7 кейсов.",
+      "status": "Fixed",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "scripts/f5_judged_run.py, tests/test_f5_judged_verdict.py"
+    },
+    {
+      "id": "KI-116",
+      "project": "mscodebase-intelligence",
+      "problem": "Модель bge-reranker-v2-m3 оценивает целевой файл ниже порога фильтра (логит P3 −0.99 даёт 0.271 при 0.3): разрыв ранжирования модели, который не удержит ни один положительный порог, а не баг шкалы. Нужны holdout-калибровка или top-n политика.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/providers/reranker/multi_provider.py"
+    },
+    {
+      "id": "KI-117",
+      "project": "mscodebase-intelligence",
+      "problem": "Целевой файл P2 никогда не доходит до финального пула, хотя отдельный прогон BM25 ставит его на 0: потери внутри построения pre-rerank пула или RRF-слияния, причина не установлена. Не утверждать причину до разбора пути пула.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/search/engine.py"
+    },
+    {
+      "id": "KI-118",
+      "project": "mscodebase-intelligence",
+      "problem": "ETA и прогресс реиндекса покрывают только фазу эмбеддинга; фазы парсинга, записи, графа и финализации не измеряются (прецедент: ETA 18с против 552с факта). План: пофазная история, модели по фазам, честный None там, где нет драйвера.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/intelligence/layer.py, src/core/embed_progress.py"
+    },
+    {
+      "id": "KI-119",
+      "project": "mscodebase-intelligence",
+      "problem": "Зависание финализации IVF: timeout-guard не может сработать, потому что shutdown(wait=True) джойнит зависший optimize; фикс бросает воркер через bounded-хелпер, но зависший нативный поток всё равно утекает до рестарта процесса.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/index_project_runner.py, src/core/run_bounded.py"
+    },
+    {
+      "id": "KI-120",
+      "project": "mscodebase-intelligence",
+      "problem": "Жёсткая смерть сервера при двух окнах: фиксированные порты эмбеддинга делят два MCP-сервера без ref-count, второй душит первый (ledger показывает start без end). Запись исправлена; супервизор или динамические порты остаются открыты.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/reindex_ledger.py"
+    },
+    {
+      "id": "KI-121",
+      "project": "mscodebase-intelligence",
+      "problem": "TESTS-рёбра графа транзитивны, а не «тесты про функцию»: хелпер несёт 234 TESTS-ребра при нуле прямых вызовов, поэтому до ранжирования нужен фильтр специфичности (прямой вызов или малый coverage-сет).",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/bootstrap_tests.py"
     }
   ]
 }
