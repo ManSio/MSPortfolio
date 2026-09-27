@@ -20,9 +20,9 @@ import { useReveal } from './hooks/useReveal';
 import { useTheme } from './hooks/useTheme';
 import { useLang } from './i18n/LangContext';
 import { useUi } from './i18n/ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const NAV_IDS = ['metrics', 'projects', 'principles', 'blog', 'simulator', 'agent', 'timeline', 'lab', 'contact'] as const;
+const NAV_IDS = ['metrics', 'projects', 'principles', 'blog', 'simulator', 'agent', 'timeline', 'antipatterns', 'lab', 'contact'] as const;
 
 /** Hash routing: `#/lab` renders the Lab page, everything else is the one-page portfolio. */
 function useHashRoute() {
@@ -69,8 +69,27 @@ export default function App() {
   const revealRef = useReveal<HTMLDivElement>();
   const { dark, toggle } = useTheme();
   const hash = useHashRoute();
-  const isLab = hash === '#/lab';
+  const isLab = hash === '#/lab' || hash.startsWith('#/lab/');
   const ui = useUi();
+  const wasLab = useRef(isLab);
+
+  // Scroll policy: lab sub-anchors (`#/lab/<id>`) scroll to the matching
+  // element after mount; any other lab<->home route change resets to top.
+  // Same-page anchors (`#metrics`, …) keep native browser scrolling.
+  useEffect(() => {
+    if (hash.startsWith('#/lab/')) {
+      const id = hash.slice('#/lab/'.length);
+      const t = window.setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ block: 'start' });
+      }, 50);
+      wasLab.current = true;
+      return () => window.clearTimeout(t);
+    }
+    if (wasLab.current !== isLab) {
+      wasLab.current = isLab;
+      window.scrollTo(0, 0);
+    }
+  }, [hash, isLab]);
 
   return (
     <div ref={revealRef} className="min-h-screen">
@@ -203,6 +222,11 @@ export default function App() {
           <Timeline />
         </Section>
 
+        {/* ── Antipatterns ──────────────────────────────── */}
+        <Section id="antipatterns" kicker={ui.sections.antipatterns.kicker} title={ui.sections.antipatterns.title}>
+          <AntipatternsGrid />
+        </Section>
+
         {/* ── Contact ────────────────────────────────────────── */}
         <Section id="contact" kicker={ui.sections.contact.kicker} title={ui.sections.contact.title}>
           <div className="reveal glass mx-auto max-w-2xl rounded-xl p-8 text-center">
@@ -220,11 +244,6 @@ export default function App() {
               <span className="text-accent">claude mcp add --transport http msp-portfolio https://msp-portfolio.mansio-dev.workers.dev/mcp</span>
             </p>
           </div>
-        </Section>
-
-        {/* ── Antipatterns ──────────────────────────────── */}
-        <Section id="antipatterns" kicker={ui.sections.antipatterns.kicker} title={ui.sections.antipatterns.title}>
-          <AntipatternsGrid />
         </Section>
           </>
         )}
