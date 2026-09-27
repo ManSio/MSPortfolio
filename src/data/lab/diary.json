@@ -199,6 +199,106 @@
       "fix": "VOR must show the real file fragment around the anchor (+/-12-line window): recall(real) qwen3.6 0.08 -> 0.88, qwen3.7 0.20 -> 0.88 at FA 0.02-0.04. CORRECTED (RED TEAM on ground truth, 2026-08-15): the 'all remaining FA being present-trap (R45/R46)' phrasing was a mislabeled-data issue - R43/R45/R46/R47 are true facts, real trap-FA = 0; the corrected labels expose trap miss_true instead.",
       "guard": "exp-1L V4 arm + per-category metrics on the corrected dataset (29 true / 21 false, fp e5f7373d); next gap: trap miss_true (fail-closed models lose true usage-claims).",
       "pattern": "P-001"
+    },
+    {
+      "date": "2026-09-09",
+      "project": "mscodebase-intelligence",
+      "title": "Idle VOR ticker plus system alerts close the file-change loop",
+      "status": "fixed",
+      "rootCause": "VOR ran from exactly one call site (intel_get_project_memory); mark_stale never fired and no alert path reached the agent, so file changes never re-verified memory.",
+      "fix": "H1 idle ticker calls run_background_verify from _check_index_health (120s cooldown, 250ms budget, shared-lock guard) and a deduped AlertStore delivers stale/starved alerts into the memory read path and the state explainer.",
+      "guard": "14 new tests (alert store 11, formatter 3); full pytest 1689 passed.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-11",
+      "project": "mscodebase-intelligence",
+      "title": "VOR read-path rescanned prose history and refuted live nodes (PR #34)",
+      "status": "fixed",
+      "rootCause": "Read-path VOR re-scanned prose bodies for anchor-like paths even when explicit anchors existed, so stale historical paths revived at rename-sweep and falsely refuted a live node.",
+      "fix": "extract_anchors(read_path=True) skips the prose scan when explicit anchors exist; legacy anchorless nodes keep the prose scan for drift detection. Write path untouched.",
+      "guard": "3 regression tests pinning both branches; full pytest 1704 passed.",
+      "pattern": "P-001"
+    },
+    {
+      "date": "2026-09-11",
+      "project": "mscodebase-intelligence",
+      "title": "VOR timestamps every check; stale_ttl label flags long-unverified nodes",
+      "status": "fixed",
+      "rootCause": "VOR dated only VERIFIED transitions, so anchorless INCONCLUSIVE nodes left no trace and hung unverified forever (70 ACTIVE nodes without any date on 2026-09-11).",
+      "fix": "last_checked is persisted for every real check including cache hits (6h write throttle); nodes unseen beyond the 30-day TTL surface as stale_ttl with no terminal status change.",
+      "guard": "9 TTL tests; full pytest 1725 passed.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-15",
+      "project": "mscodebase-intelligence",
+      "title": "Static test-to-code linking falls short; dynamic trace links 89.8 percent (Exp 7/38)",
+      "status": "fixed",
+      "rootCause": "Name matching linked 0 percent of tests to functions and imports reached file level only (77.9 percent), so static signals cannot ground test-to-code edges.",
+      "fix": "A pytest sys.settrace plugin records test-to-function edges: 1551 of 1727 tests linked, 1212 unique functions, plus 13.6 percent overhead in the same session.",
+      "guard": "Frozen trace_result.json as ground truth; suite baseline parity 1725 passed.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-16",
+      "project": "mscodebase-intelligence",
+      "title": "sysmon tracing overhead refuted; TESTS edges land in the graph (Exp 8, A2)",
+      "status": "fixed",
+      "rootCause": "The claimed 3-7 percent sysmon overhead measured plus 19.96 percent against plus 13.6 percent for settrace, so coverage-based tracing lost as the bootstrap driver.",
+      "fix": "Kept the settrace driver; build_tests_edges writes 16172 TESTS edges (1595 Test nodes, 95.7 percent function match) via idempotent UPSERT without overwriting indexer labels.",
+      "guard": "6 unit tests plus a live smoke run on the real graph database.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-17",
+      "project": "mscodebase-intelligence",
+      "title": "AST entity detector plus automatic source-root resolution (Bootstrap Step 1)",
+      "status": "fixed",
+      "rootCause": "Regex Table( matches were 90 percent open_table call noise, and the detector hardcoded src/ while real layouts use core/, libraries/, or the project name.",
+      "fix": "AST dataclass/NamedTuple detector (49 entities, zero loss against the live graph) plus a resolve_src_root priority chain validated on 4 live projects.",
+      "guard": "14 tests including a venv-plus-tests directory trap for the statistical fallback.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-18",
+      "project": "mscodebase-intelligence",
+      "title": "bootstrap_pipeline command wires trace-to-edges end to end (Step 3)",
+      "status": "fixed",
+      "rootCause": "The trace plugin lived in experiments/ with no single entry point for an agent (MCP) or a script (CLI).",
+      "fix": "run_bootstrap_pipeline (resolve, detect, pytest trace, index, edges) exposed as an MCP tool and a CLI command, with BOM-safe reads and a namespace-shadow guard for the plugin import.",
+      "guard": "5 integration tests plus 3 edge-index tests; live CLI mini-project linked 1 of 1 in 672ms.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-19",
+      "project": "mscodebase-intelligence",
+      "title": "Silent LanceDB migration plus destructive rebuild fixed; E10 search tweak refuted",
+      "status": "fixed",
+      "rootCause": "Migration helpers were imported as module functions but defined as class methods, so the ImportError path skipped migration; a schema-mismatch message was then read as a missing table, triggering a full drop and re-embed.",
+      "fix": "Local migration helpers plus recreate-only-when-truly-missing; 200 lines of regression tests. The E10 full-text embedding plus rerank-pool-50 tweak measured no gain and was reverted to HEAD.",
+      "guard": "12 migration tests; focus group 43 passed.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-19",
+      "project": "mscodebase-intelligence",
+      "title": "Graph-hybrid rerank probe lifts hit at 5 as signal, not proof (E11)",
+      "status": "partial",
+      "rootCause": "Embedding and BM25 tiers drop exact code identifiers that the symbol index knows precisely, so deterministic targets never surface in natural-language queries.",
+      "fix": "A read-only probe prepends symbol-graph files over the same top-k: hit at 5 rises 2 of 10 to 4 of 10 with a 6ms lookup. A 30-plus panel and a noise filter are required before production.",
+      "guard": "Read-only probe scripts; production sources untouched.",
+      "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-27",
+      "project": "mscodebase-intelligence",
+      "title": "Reranker scale contract fixed with sigmoid; P3 target still below threshold",
+      "status": "fixed",
+      "rootCause": "The local rerank endpoint returns raw logits (about -11 to +11) while the 0.3 cutoff assumes a 0-1 range, so the filter cut 70-97 percent of candidates.",
+      "fix": "Sigmoid applied on the llama_cpp branch only with the threshold untouched; bisection proved only the reranker loses. The P3 target logit -0.99 maps to 0.271 and stays below threshold: a model ranking gap, not a scale bug.",
+      "guard": "7 reranker tests including a mutation check (7 failed, 38 passed under identity).",
+      "pattern": "NEW"
     }
   ]
 }

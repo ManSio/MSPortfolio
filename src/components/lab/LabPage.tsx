@@ -12,22 +12,24 @@ import evidenceRu from '../../data/lab/evidence.ru.json';
 import projectsData from '../../data/projects.json';
 import projectsRu from '../../data/projects.ru.json';
 import { loadFallbackSnapshot } from '../../lib/api';
-import { ARCHITECTURES, runSimulation, SCENARIOS } from '../../lib/mcp-tools';
 import type { Experiment, ExperimentVerdict, DiaryEntry, KnownIssue, Project, CommitEntry, LabChart, LabBarDatum, LabDonutSegment, LabLineSeries } from '../../lib/types';
 import { useLang } from '../../i18n/LangContext';
 import { useUi } from '../../i18n/ui';
 import { Badge } from '../ui/Badge';
 import { Card, CardHeader } from '../ui/Card';
 import { MetricCard } from '../metrics/MetricCard';
-import { BarList, Donut, LineChart, StackedBar, type BarDatum, type DonutSegment, type LineSeries } from './charts';
+import { BarList, Donut, LineChart, StackedBar, type BarDatum, type DonutSegment } from './charts';
 
 const ALL = 'all';
+
+/** Days of dataset age after which the lab shows a staleness banner. */
+const STALENESS_THRESHOLD_DAYS = 14;
 
 type ExperimentShape = { experiments: Experiment[]; negativeResults: { attempt: string; whyFailed: string; date: string; ref: string }[] };
 type DiaryShape = { entries: DiaryEntry[] };
 type IssuesShape = { issues: KnownIssue[] };
-type SuitesShape = { suites: { file: string; name: string; tests: number; covers: string; updatedAt: string }[]; total: number };
-type EvidenceShape = { claims: { id: string; claim: string; expected: 'supported' | 'refused' }[]; summary: { supported: number; refused: number; total: number } };
+type SuitesShape = { suites: { file: string; name: string; tests: number; covers: string; updatedAt: string }[]; total: number; updatedAt: string };
+type EvidenceShape = { claims: { id: string; claim: string; expected: 'supported' | 'refused' }[]; summary: { supported: number; refused: number; total: number }; updatedAt: string };
 
 interface ProjectsShape {
   projects: Project[];
@@ -58,7 +60,15 @@ function useLabData() {
   const evidenceClaims = (isRu ? ruEvidence : enEvidence).claims;
   const evidenceSummary = (isRu ? ruEvidence : enEvidence).summary;
   const projects = (isRu ? ruProjects : enProjects).projects;
-  return { experiments, negativeResults, diary, issues, suites, testTotal, evidenceClaims, evidenceSummary, projects };
+  // Freshness inputs for the staleness banner — newest date seen across datasets.
+  const datasetDates = [
+    ...experiments.map((e) => e.date),
+    ...(isRu ? ruDiary : enDiary).entries.map((d) => d.date),
+    ...(isRu ? ruSuites : enSuites).suites.map((s) => s.updatedAt),
+    (isRu ? ruSuites : enSuites).updatedAt,
+    (isRu ? ruEvidence : enEvidence).updatedAt,
+  ];
+  return { experiments, negativeResults, diary, issues, suites, testTotal, evidenceClaims, evidenceSummary, projects, datasetDates };
 }
 
 const VERDICT_COLORS: Record<ExperimentVerdict, string> = {
@@ -160,8 +170,32 @@ function useCommits() {
   return commits;
 }
 
+/** Days between the newest dataset date and today; null when no parseable date exists. */
+function datasetAgeDays(dates: string[]): number | null {
+  let newest = Number.NEGATIVE_INFINITY;
+  for (const d of dates) {
+    const t = Date.parse(d);
+    if (!Number.isNaN(t) && t > newest) newest = t;
+  }
+  if (newest === Number.NEGATIVE_INFINITY) return null;
+  return Math.floor((Date.now() - newest) / 86_400_000);
+}
+
+/** Banner shown only when the lab snapshot lags the work by more than the threshold. */
+function StalenessBanner({ dates }: { dates: string[] }) {
+  const ui = useUi();
+  const age = datasetAgeDays(dates);
+  if (age === null || age <= STALENESS_THRESHOLD_DAYS) return null;
+  return (
+    <div role="note" className="reveal mt-6 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm leading-relaxed text-muted">
+      <span className="font-mono text-[11px] text-amber-600 dark:text-amber-400">stale snapshot · </span>
+      {ui.lab.staleBanner.replace('{days}', String(age))}
+    </div>
+  );
+}
+
 export function LabPage() {
-  const { experiments, negativeResults, diary, issues, suites, testTotal, evidenceClaims, evidenceSummary, projects } = useLabData();
+  const { experiments, negativeResults, diary, issues, suites, testTotal, evidenceClaims, evidenceSummary, projects, datasetDates } = useLabData();
   const ui = useUi();
   const { techs, projects: projs } = stackMatrix(projects);
   const [project, setProject] = useState<string>(ALL);
@@ -203,6 +237,7 @@ export function LabPage() {
 
   return (
     <main id="lab-top" className="mx-auto max-w-5xl px-5 pb-16">
+      <StalenessBanner dates={datasetDates} />
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="pt-16 pb-10 sm:pt-24">
         <div className="reveal">
@@ -262,49 +297,20 @@ export function LabPage() {
         </span>
       </div>
 
-      {/* ── Decision logs per project ────────────────────────── */}
+      {/* ── Decision logs live on the homepage (canonical) ── */}
       <section className="pt-8 sm:pt-10">
         <div className="reveal">
           <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secDecisionLog.kicker}</p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secDecisionLog.title}</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secDecisionLogNote}</p>
         </div>
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {(project === ALL ? projs : projs.filter((p) => p.id === project)).map((p) => (
-            <div key={p.id} className="reveal">
-              <Card className="glass-card flex h-full flex-col p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.25)]">
-                <p className="font-mono text-[11px] text-accent">{p.id}</p>
-                <h3 className="mt-0.5 text-base font-semibold text-paper">{p.name}</h3>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {p.stack.map((s) => (
-                    <span key={s} className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 font-mono text-[10px] text-faint">
-                      {s}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-4 space-y-3 border-t border-line pt-3">
-                  {p.decisionLog.map((d, i) => (
-                    <div key={i} className="group">
-                      <p className="text-sm font-medium text-paper transition-colors group-hover:text-accent">▸ {d.decision}</p>
-                      <p className="mt-1 text-xs leading-relaxed text-faint">
-                        <span className="text-muted">{ui.lab.considered} </span>
-                        {d.alternatives.join(' · ')}
-                      </p>
-                      <p className="mt-0.5 text-xs leading-relaxed text-faint">
-                        <span className="text-muted">{ui.lab.why} </span>
-                        {d.reason}
-                      </p>
-                      <p className="mt-0.5 text-xs leading-relaxed text-amber-600/90 dark:text-amber-400/90">
-                        <span className="text-faint">{ui.lab.cost} </span>
-                        {d.tradeoff}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </div>
-          ))}
-        </div>
+        <a href="#projects" className="group reveal mt-8 flex items-center justify-between gap-4 rounded-xl border border-line bg-surface/60 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50">
+          <div>
+            <p className="font-mono text-[11px] text-accent">#projects</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{ui.lab.secDecisionLogPointer}</p>
+          </div>
+          <span className="shrink-0 font-mono text-xs text-accent transition-colors group-hover:text-paper">{ui.lab.secDecisionLogCta} →</span>
+        </a>
       </section>
 
       {/* ── Commit log per project ───────────────────────────── */}
@@ -629,106 +635,21 @@ export function LabPage() {
         </div>
       </section>
 
-      {/* ── Load curves ──────────────────────────────────────── */}
-      <LoadCurves />
+      {/* ── Load curves live on the homepage simulator (canonical) */}
+      <section className="pt-16 sm:pt-20">
+        <div className="reveal">
+          <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secLoadCurves.kicker}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secLoadCurves.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secLoadCurvesNote}</p>
+        </div>
+        <a href="#simulator" className="group reveal mt-8 flex items-center justify-between gap-4 rounded-xl border border-line bg-surface/60 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50">
+          <div>
+            <p className="font-mono text-[11px] text-accent">#simulator</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{ui.lab.secLoadCurvesPointer}</p>
+          </div>
+          <span className="shrink-0 font-mono text-xs text-accent transition-colors group-hover:text-paper">{ui.lab.secLoadCurvesCta} →</span>
+        </a>
+      </section>
     </main>
   );
-}
-
-/** Degradation curves from the same simulation engine as simulate_architecture. */
-function LoadCurves() {
-  const [projectId, setProjectId] = useState<string>(Object.keys(ARCHITECTURES)[0]);
-  const [scenario, setScenario] = useState<string>(SCENARIOS[0].id);
-  const { projects } = useLabData();
-  const ui = useUi();
-
-  const curves = useMemo(() => buildCurves(projectId, scenario), [projectId, scenario]);
-  const sim = useMemo(() => {
-    const model = ARCHITECTURES[projectId];
-    if (!model) return null;
-    return runSimulation(model, scenario);
-  }, [projectId, scenario]);
-  const scenarioDef = SCENARIOS.find((s) => s.id === scenario)!;
-
-  return (
-    <section className="pt-16 sm:pt-20">
-      <div className="reveal">
-        <p className="font-mono text-xs tracking-widest text-accent uppercase">{ui.lab.secLoadCurves.kicker}</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{ui.lab.secLoadCurves.title}</h2>
-        <p className="mt-2 max-w-2xl text-sm text-muted">{ui.lab.secLoadCurvesNote}</p>
-      </div>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-[240px_1fr]">
-        <div className="space-y-4">
-          <div>
-            <p className="mb-2 font-mono text-[11px] text-faint">{ui.lab.project}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {Object.keys(ARCHITECTURES).map((id) => (
-                <button
-                  key={id}
-                  onClick={() => setProjectId(id)}
-                  className={`inline-flex min-h-9 items-center rounded-full border px-3 text-xs transition-all duration-200 hover:-translate-y-0.5 ${
-                    id === projectId ? 'border-accent/60 bg-accent/10 text-accent' : 'border-line text-muted hover:border-accent/40'
-                  }`}
-                >
-                  {projectName(projects, id)}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="mb-2 font-mono text-[11px] text-faint">scenario</p>
-            <div className="space-y-1.5">
-              {SCENARIOS.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setScenario(s.id)}
-                  className={`block w-full rounded-lg border p-2.5 text-left transition-all duration-200 ${
-                    s.id === scenario ? 'border-accent/60 bg-accent/5' : 'border-line hover:border-accent/40'
-                  }`}
-                >
-                  <p className="text-xs font-semibold text-paper">{s.label}</p>
-                  <p className="mt-0.5 text-[11px] leading-snug text-faint">{s.description}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <Card className="glass-card p-5">
-            <LineChart series={curves} />
-          </Card>
-          {sim?.findings.length ? (
-            <Card className="glass-card mt-4 p-4">
-              <p className="font-mono text-xs text-accent">{scenarioDef.label} — findings</p>
-              <ul className="mt-2 space-y-1 text-sm text-muted">
-                {sim.findings.map((f, i) => (
-                  <li key={i}>• {f}</li>
-                ))}
-              </ul>
-            </Card>
-          ) : null}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function buildCurves(projectId: string, scenario: string): LineSeries[] {
-  const model = ARCHITECTURES[projectId];
-  if (!model) return [];
-  const { points } = runSimulation(model, scenario);
-  return [
-    {
-      label: 'p50',
-      color: 'var(--color-accent)',
-      points: points.map((p) => ({ x: p.load, y: p.p50 })),
-    },
-    {
-      label: 'p95',
-      color: '#f59e0b',
-      points: points.map((p) => ({ x: p.load, y: p.p95 })),
-    },
-  ];
 }

@@ -139,6 +139,76 @@
       "deadline": null,
       "owner": "owner",
       "link": "tests/test_lsp_vfs_indexing.py, src/core/indexing/db_writer.py"
+    },
+    {
+      "id": "KI-115",
+      "project": "mscodebase-intelligence",
+      "problem": "F5 judge verdict parser took the first regex match, so a self-corrected verdict (incorrect ... actually correct, final answer correct) was scored inverted. Fixed 2026-09-27 with an explicit-final contract (last JSON match, else last verdict word) plus persisted judge texts and a 7-case guard.",
+      "status": "Fixed",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "scripts/f5_judged_run.py, tests/test_f5_judged_verdict.py"
+    },
+    {
+      "id": "KI-116",
+      "project": "mscodebase-intelligence",
+      "problem": "The bge-reranker-v2-m3 model scores the true target file below the filter threshold (P3 logit -0.99 maps to 0.271 under 0.3): a model ranking gap that no positive threshold can hold, not a scale bug. Needs a holdout calibration or top-n policy.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/providers/reranker/multi_provider.py"
+    },
+    {
+      "id": "KI-117",
+      "project": "mscodebase-intelligence",
+      "problem": "P2 target file never reaches the final pool, yet a standalone BM25 run ranks it at 0: the loss sits inside pre-rerank pool construction or RRF merging and the root cause is unestablished. Do not assert a cause before dissecting the pool path.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/search/engine.py"
+    },
+    {
+      "id": "KI-118",
+      "project": "mscodebase-intelligence",
+      "problem": "Reindex ETA and progress cover only the embedding phase; parse, write, graph, and finalize phases are unmeasured (precedent: ETA 18s against 552s actual). Plan: per-phase history, per-phase models, honest None where no driver exists.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/intelligence/layer.py, src/core/embed_progress.py"
+    },
+    {
+      "id": "KI-119",
+      "project": "mscodebase-intelligence",
+      "problem": "IVF finalize hang: the timeout guard cannot fire because shutdown(wait=True) joins the stuck optimize call; the fix abandons the worker via a bounded helper, but the hung native thread still leaks until process restart.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/index_project_runner.py, src/core/run_bounded.py"
+    },
+    {
+      "id": "KI-120",
+      "project": "mscodebase-intelligence",
+      "problem": "Server hard-death under two windows: fixed embedding ports are shared by two MCP servers with no ref-count, so the second server starves the first (ledger shows start without end). Recording is fixed; supervision or dynamic ports remain open.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/reindex_ledger.py"
+    },
+    {
+      "id": "KI-121",
+      "project": "mscodebase-intelligence",
+      "problem": "TESTS graph edges are transitive, not tests-about-a-function: a helper carries 234 TESTS edges with zero direct calls, so a specificity filter (direct call or small coverage set) must land before the signal can rank.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "src/core/bootstrap_tests.py"
     }
   ]
 }
