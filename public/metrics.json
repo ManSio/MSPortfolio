@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-09-27T19:41:52.240Z",
+  "fetchedAt": "2026-09-27T20:12:01.532Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 12,
-    "followers": 72,
+    "followers": 73,
     "following": 90
   },
   "repos": [
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T19:41:31Z",
+      "pushedAt": "2026-09-27T20:11:41Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 3,
       "forks": 1,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T10:32:24Z",
+      "pushedAt": "2026-09-27T19:50:05Z",
       "language": "Python"
     },
     {
@@ -199,6 +199,13 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "c168104f33",
+      "date": "2026-09-27T20:11:41Z",
+      "message": "fix(lab-router-nav): lab sub-anchors, scroll reset, nav order (#2)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "41f7d14679",
       "date": "2026-09-27T19:41:14Z",
       "message": "docs(lab): cross-domain replication note (exp-1), proxy-pinning note (exp-22)",
@@ -206,23 +213,23 @@
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "d86a4a45d0",
-      "date": "2026-09-27T10:32:24Z",
-      "message": "Merge pull request #50 from ManSio/experiment/4a-unit-of-return",
+      "sha": "c04170ceff",
+      "date": "2026-09-27T19:50:05Z",
+      "message": "Merge pull request #51 from ManSio/docs/f5-ablation-and-refresh",
       "author": "Mikhail"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "0cec4a63c9",
-      "date": "2026-09-27T10:26:26Z",
-      "message": "style: fix 4 ruff errors failing CI lint",
+      "sha": "ce5e6c1c87",
+      "date": "2026-09-27T19:42:59Z",
+      "message": "docs(f5): D-ablation floor test, exp-54 plan, P-004, grader principle + README refresh",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "088ebdf744",
-      "date": "2026-09-27T09:54:12Z",
-      "message": "Merge remote-tracking branch 'origin/main' into experiment/4a-unit-of-return",
+      "sha": "03b97d8408",
+      "date": "2026-09-27T14:06:01Z",
+      "message": "fix(windows): run gate-zero pytest under pythonw to stop console popups",
       "author": "MSCodeBase Agent"
     },
     {
@@ -398,13 +405,6 @@
       "sha": "b7ad6f3b05",
       "date": "2026-08-12T20:42:43Z",
       "message": "fix(s3): walk buckets concurrently, and stop reporting unread config as off",
-      "author": "Sidd27"
-    },
-    {
-      "repo": "infrawise",
-      "sha": "47c7684e74",
-      "date": "2026-08-12T19:29:13Z",
-      "message": "chore: release v0.26.0",
       "author": "Sidd27"
     }
   ]
