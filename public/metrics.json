@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-27T20:12:01.532Z",
+  "fetchedAt": "2026-09-27T21:28:44.833Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T20:11:41Z",
+      "pushedAt": "2026-09-27T21:28:14Z",
       "language": "TypeScript"
     },
     {
@@ -21,7 +21,7 @@
       "stars": 3,
       "forks": 1,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T19:50:05Z",
+      "pushedAt": "2026-09-27T20:31:22Z",
       "language": "Python"
     },
     {
@@ -82,7 +82,7 @@
         "testing"
       ],
       "reactions": 7,
-      "comments": 9,
+      "comments": 11,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "readablePublishDate": "Sep 22"
@@ -199,37 +199,37 @@
   "commits": [
     {
       "repo": "MSPortfolio",
+      "sha": "84260eb00e",
+      "date": "2026-09-27T21:28:14Z",
+      "message": "refactor(lab): pointer cards for decision logs and load curves, staleness banner, diary/issues catch-up sync (#3)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "MSPortfolio",
       "sha": "c168104f33",
       "date": "2026-09-27T20:11:41Z",
       "message": "fix(lab-router-nav): lab sub-anchors, scroll reset, nav order (#2)",
       "author": "Mikhail"
     },
     {
-      "repo": "MSPortfolio",
-      "sha": "41f7d14679",
-      "date": "2026-09-27T19:41:14Z",
-      "message": "docs(lab): cross-domain replication note (exp-1), proxy-pinning note (exp-22)",
-      "author": "ManSio"
-    },
-    {
       "repo": "mscodebase-intelligence",
-      "sha": "c04170ceff",
-      "date": "2026-09-27T19:50:05Z",
-      "message": "Merge pull request #51 from ManSio/docs/f5-ablation-and-refresh",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "ce5e6c1c87",
-      "date": "2026-09-27T19:42:59Z",
-      "message": "docs(f5): D-ablation floor test, exp-54 plan, P-004, grader principle + README refresh",
+      "sha": "a027996e83",
+      "date": "2026-09-27T20:29:45Z",
+      "message": "data(frozen): track token_reduction_v3_lancedb frozen inputs",
       "author": "MSCodeBase Agent"
     },
     {
       "repo": "mscodebase-intelligence",
-      "sha": "03b97d8408",
-      "date": "2026-09-27T14:06:01Z",
-      "message": "fix(windows): run gate-zero pytest under pythonw to stop console popups",
+      "sha": "e52ca05a63",
+      "date": "2026-09-27T20:29:45Z",
+      "message": "fix(tests): script import no longer pollutes xdist worker environ",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "35aaf070ec",
+      "date": "2026-09-27T20:13:03Z",
+      "message": "fix(f5-judge): explicit-final verdict contract plus CoT backfill",
       "author": "MSCodeBase Agent"
     },
     {
