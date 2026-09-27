@@ -1722,6 +1722,136 @@
         }
       ],
       "conclusion": "Linked% grows on leaner (less mock-heavy) foreign projects, so the article numbers are honest and reproducible. Limitation: Python-only dynamics; Go/TS need a per-language tool (coverprofile / c8), while the PropertyGraph indexer stays statically multi-language."
+    },
+    {
+      "id": "exp-51",
+      "date": "2026-09-26",
+      "project": "mscodebase-intelligence",
+      "title": "F5 4-arm unit-of-return (judged reader): whole document beats top-k chunks 8x on code, direction-only on prose",
+      "hypothesis": "At tied objective retrieval (A=B=5/16 top-1), the unit of return acts on the READER: arm B (top-1 whole document) yields more correct judged answers than arm A (top-k chunks).",
+      "command": "scripts/f5_judged_run.py over frozen/f5/queries.jsonl (16 = 8 code + 8 prose, sha256 e048aa12...), 10 trials via opencode CLI; reader opencode-go/longcat-2.0, blind judge opencode-go/qwen3.7-plus (opaque token, same reference), binary majority rule strict >50%",
+      "result": "Judged n=160/arm: A 26 (16.3%, CI 0.11-0.23), B 55 (34.4%, CI 0.27-0.42), C 156 (97.5%), D 0. Code split (n=80/arm): A 5 (6.3%, CI 2.7-13.9) vs B 40 (50%, CI 39.3-60.7), CIs non-overlapping. Prose split: A 21 (26.3%, CI 17.9-36.8) vs B 15 (18.8%, CI 11.7-28.7), CIs overlapping. Majority per query (strict >50% of 10 trials): A 2/16, B 5/16 (one more B prose point was a 5/5 tie F5S-13/B, counted out), C 16/16, D 0/16. Judge non-unanimous on 6/64 query-arms (9.4%). 0 invalid answers in the trials=10 run (one invalid in the t5 pilot, F5S-03/B). Trials=5 and trials=10 agree (A 16.3%/16.3%, B 30%/34.4%, C 95%/97.5%).",
+      "verdict": "partial",
+      "finding": "The unit of return acts on the reader, not on gold-file retrieval: objective retrieval was tied (A=B=5/16 top-1) yet the reader answers 8x more code questions correctly from a whole document than from chunks — confirmed for the code unit effect. For prose the effect is direction-only and fragile (overlapping CIs, strict majority 2/8 vs 1/8). Prose whole-document still beats closed book (D=0 on both populations), so the predicted total prose failure was not observed.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Judged correct rate by arm and population (%)",
+          "data": [
+            {
+              "label": "A code",
+              "value": 6.3,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "B code",
+              "value": 50.0,
+              "color": "#10b981"
+            },
+            {
+              "label": "A prose",
+              "value": 26.3,
+              "color": "#10b981"
+            },
+            {
+              "label": "B prose",
+              "value": 18.8,
+              "color": "#f59e0b"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Return whole documents (or document-scale units) to the reader for code QA at ~4x context cost; for prose keep chunks until a larger-n replication. Pilot scale (n=16 queries) — percentages are direction, not effect sizes. Index snapshot 10106/716/14099, not hard-frozen; noise band not yet measured (repeat run open, F0c privacy-gate F7 pending)."
+    },
+    {
+      "id": "exp-52",
+      "date": "2026-09-27",
+      "project": "mscodebase-intelligence",
+      "title": "NodeRAG deterministic duel: chunked TF-IDF 8/10 vs PropertyGraph BFS 7/10 — graph does not win",
+      "hypothesis": "NodeRAG-style graph traversal beats chunked retrieval on long documents with rules buried inside (external claim); our diary/log corpus has exactly this shape.",
+      "command": "Deterministic 2-arm run, no LLM calls: Arm A = TF-IDF chunked retrieval top-10, Arm B = PropertyGraph BFS traversal depth=3; 16 frozen queries (10 rules + 3 positive + 3 NONE controls), experiments/noderag/frozen/rules.jsonl sha256 8657a7e3...",
+      "result": "Arm A 8/10 (80%) at 301,981 tokens; Arm B 7/10 (70%) at 170,140 tokens (-43.6% tokens). Positive controls 3/3 passed on A (graph arm missed P3); NONE controls 3/3 clean on both arms. A missed R1/R2 (TF-IDF top-10 miss); B missed R1/R2/R7 (symbols absent from the AST graph — no entry symbol means zero files returned). Corpus: AGENT_DIARY.md (669 lines) + EXPERIMENTS_LOG.md (2666 lines).",
+      "verdict": "refuted",
+      "finding": "No evidence graph traversal wins on this corpus: -1 hit at -43.6% tokens. The graph arm is entry-point fragile — a query whose symbols are not AST functions/classes returns nothing — while TF-IDF degrades gracefully. The token saving is real but buys lower recall here.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "Rule hits per arm (/10)",
+          "data": [
+            {
+              "label": "chunked TF-IDF",
+              "value": 8,
+              "color": "#10b981"
+            },
+            {
+              "label": "graph BFS d=3",
+              "value": 7,
+              "color": "#f59e0b"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Tokens per arm (thousands)",
+          "data": [
+            {
+              "label": "chunked TF-IDF",
+              "value": 302,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "graph BFS d=3",
+              "value": 170,
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Keep chunked retrieval as the default; graph traversal is a token-cheap complement only when entry symbols exist in the AST graph. Any threshold calibration needs a holdout, never the eval set."
+    },
+    {
+      "id": "exp-53",
+      "date": "2026-09-27",
+      "project": "mscodebase-intelligence",
+      "title": "Reranker scale fix: llama.cpp raw logits vs [0,1] threshold — sigmoid in the llama_cpp branch",
+      "hypothesis": "P2/P3 vanish at the reranker stage because MIN_RERANK_SCORE=0.3 (calibrated for [0,1]) is applied to raw llama.cpp logits (about [-11,+11]).",
+      "command": "Runtime stage bisection (monkeypatched MMR/dedupe/boost stages, intercepted apply_scores on the full pre-rerank pool, src/ untouched during measurement); fix: _sigmoid 1/(1+e^-x) applied in the llama_cpp branch of multi_provider.py only, threshold kept at 0.3; 7 regression tests in tests/test_reranker.py plus a _sigmoid-to-identity mutation control",
+      "result": "Stage losses 100% at the reranker (MMR/boost/dedupe transparent): P2 pool 10->3 (target never in pool), P3 10->2 (target rank 4 dropped), R2 10->1 (target rank 6 dropped), R2 at limit=30 also collapses 30->1. Raw value ranges (P3 -6.88..+1.65, R2 -3.72..+1.96) are impossible for a normalized [0,1] scale — the Cohere /v1/rerank contract is violated by llama.cpp (upstream example shows raw logits 5.97/-11.03). The filter was cutting 70-97% of ranked hits. After the fix: 7 regression tests green (4 parametrized + extremes + 2 integration); mutation control _sigmoid-to-identity fails 7 tests. Partial: the normalized P3 target reads 0.271 < 0.3 (the model rates the true file at logit -0.99) and R2 target 0.07 — a ranking/model defect, not a scale defect. P2/P3 stay open.",
+      "verdict": "partial",
+      "finding": "Scale-contract violation confirmed and fixed with a 21-line single-file change, but 'threshold = root cause of P2/P3' is refuted: the cross-encoder itself rates the true files with negative logits, so no positive threshold keeps them. A threshold sweep 0.05/0.02 on the same eval set was rejected as eval-set fitting (see do-not-repeat). Open: P2 target never enters the pre-rerank pool (recall problem; top hits are experiments/** artifacts); P3 target survives reranking but misses the threshold.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "P3 items kept per stage (pool of 10)",
+          "data": [
+            {
+              "label": "MMR",
+              "value": 10,
+              "color": "#10b981"
+            },
+            {
+              "label": "reranker",
+              "value": 2,
+              "color": "#ef4444"
+            },
+            {
+              "label": "boost",
+              "value": 2,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "dedupe",
+              "value": 2,
+              "color": "#f59e0b"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Normalize provider outputs at the branch boundary; never tune the threshold on the eval set (holdout only); measure filter effects on the full pre-rerank pool, never on survivors.",
+      "links": [
+        "exp-8",
+        "exp-43"
+      ]
     }
   ],
   "negativeResults": [
@@ -1808,6 +1938,12 @@
       "whyFailed": "klass_acc 0.40 — keyword rules are noisy (bug tasks contain 'callers', git tasks 'why'); the union fast+quality arm did not lift the 4 graph classes (0.00). The search-only ceiling on this dataset is ~0.23 at ANY routing — search cannot find what is not textually in the index.",
       "date": "2026-08-26",
       "ref": "exp-29"
+    },
+    {
+      "attempt": "Tuning MIN_RERANK_SCORE to 0.05/0.02 on the 16 frozen eval rules",
+      "whyFailed": "Sweeping the threshold on the same frozen set used to measure the result (7-8 hits vs 5) is overfitting the eval set — rejected by the owner; the constant was left unchanged. Thresholds may only be calibrated on a separate holdout.",
+      "date": "2026-09-27",
+      "ref": "exp-53"
     }
   ]
 }
