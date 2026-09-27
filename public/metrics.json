@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-27T18:22:52.075Z",
+  "fetchedAt": "2026-09-27T19:41:52.240Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T17:25:14Z",
+      "pushedAt": "2026-09-27T19:41:31Z",
       "language": "TypeScript"
     },
     {
@@ -63,7 +63,7 @@
         "python",
         "architecture"
       ],
-      "reactions": 4,
+      "reactions": 5,
       "comments": 2,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F2ls8srh9u8ekjlhiswbj.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F2ls8srh9u8ekjlhiswbj.png",
@@ -82,7 +82,7 @@
         "testing"
       ],
       "reactions": 7,
-      "comments": 8,
+      "comments": 9,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "readablePublishDate": "Sep 22"
@@ -199,9 +199,9 @@
   "commits": [
     {
       "repo": "MSPortfolio",
-      "sha": "fb7ba5295c",
-      "date": "2026-09-27T16:57:41Z",
-      "message": "docs(lab): add exp-51 F5 unit-of-return, exp-52 NodeRAG duel, exp-53 reranker scale fix",
+      "sha": "41f7d14679",
+      "date": "2026-09-27T19:41:14Z",
+      "message": "docs(lab): cross-domain replication note (exp-1), proxy-pinning note (exp-22)",
       "author": "ManSio"
     },
     {
