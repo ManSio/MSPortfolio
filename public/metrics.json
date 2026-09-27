@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-27T13:57:27.633Z",
+  "fetchedAt": "2026-09-27T17:25:07.713Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-27T17:24:40Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 3,
       "forks": 1,
       "openIssues": 0,
       "pushedAt": "2026-09-27T10:32:24Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-27T08:08:43Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -63,7 +63,7 @@
         "python",
         "architecture"
       ],
-      "reactions": 3,
+      "reactions": 4,
       "comments": 2,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F2ls8srh9u8ekjlhiswbj.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F2ls8srh9u8ekjlhiswbj.png",
@@ -82,7 +82,7 @@
         "testing"
       ],
       "reactions": 7,
-      "comments": 6,
+      "comments": 7,
       "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
       "readablePublishDate": "Sep 22"
@@ -197,6 +197,13 @@
     }
   ],
   "commits": [
+    {
+      "repo": "MSPortfolio",
+      "sha": "fb7ba5295c",
+      "date": "2026-09-27T16:57:41Z",
+      "message": "docs(lab): add exp-51 F5 unit-of-return, exp-52 NodeRAG duel, exp-53 reranker scale fix",
+      "author": "ManSio"
+    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "d86a4a45d0",
@@ -399,13 +406,6 @@
       "date": "2026-08-12T19:29:13Z",
       "message": "chore: release v0.26.0",
       "author": "Sidd27"
-    },
-    {
-      "repo": "gemma_agent",
-      "sha": "69ff333882",
-      "date": "2026-06-15T17:11:50Z",
-      "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
-      "author": "Mikhail"
     }
   ]
 }
