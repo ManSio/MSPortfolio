@@ -152,7 +152,7 @@
           ]
         }
       ],
-      "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). CORRECTED: the earlier claim 'the only remaining hole is present-trap (R45/R46)' was a mislabeled-data issue - real trap-FA = 0. The corrected labels expose the actual next gap: trap miss_true, fail-closed models silently lose true usage-claims - verify the claim's subject AND measure truth loss, not just false-acceptance.",
+      "conclusion": "Give the VOR layer real code: a +/-12-line file fragment around the anchor turns cheap qwen3.6/3.7 into 'catch lies and keep truth' (recall 0.88 at FA ~0.02-0.04). CORRECTED: the earlier claim 'the only remaining hole is present-trap (R45/R46)' was a mislabeled-data issue - real trap-FA = 0. The corrected labels expose the actual next gap: trap miss_true, fail-closed models silently lose true usage-claims - verify the claim's subject AND measure truth loss, not just false-acceptance. Cross-domain replication: analytics-assistant benchmark (Nishikanta Ray, 2026-09-27) shows the same two classes - fail-open invention vs fail-closed shrugs (nano called a -47% drop noise 73 times) - same order of magnitude as our FA 0.24-0.38 / trap miss_true (cf. nishikanta-2026-analyst-bench).",
       "links": [
         "exp-2",
         "exp-3"
@@ -1055,7 +1055,7 @@
           ]
         }
       ],
-      "conclusion": "Pinned-rerun confirmed every series conclusion is robust to routing; glm non-determinism is a model property (even on a single backend); StreamLake (top-1 unpinned for glm) pinned returns no JSON - volume does not equal quality, and pinning also protects against 'popular but broken' upstreams.",
+      "conclusion": "Pinned-rerun confirmed every series conclusion is robust to routing; glm non-determinism is a model property (even on a single backend); StreamLake (top-1 unpinned for glm) pinned returns no JSON - volume does not equal quality, and pinning also protects against 'popular but broken' upstreams. Proxy risk closed by pins (cf. unpinned-proxy variance lesson).",
       "links": [
         "exp-18",
         "exp-19",
