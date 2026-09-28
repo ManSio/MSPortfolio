@@ -299,6 +299,26 @@
       "fix": "Sigmoid applied on the llama_cpp branch only with the threshold untouched; bisection proved only the reranker loses. The P3 target logit -0.99 maps to 0.271 and stays below threshold: a model ranking gap, not a scale bug.",
       "guard": "7 reranker tests including a mutation check (7 failed, 38 passed under identity).",
       "pattern": "NEW"
+    },
+    {
+      "date": "2026-09-28",
+      "project": "msp-portfolio",
+      "title": "CI guards failed on a healthy deploy: publish race, unsatisfiable threshold, transport flake",
+      "status": "fixed",
+      "rootCause": "Four independent defects. (1) The metrics freshness check asserted wall-clock Age <= 120 min right after the deploy job, but GitHub Pages publishes 24-65 s later, so it scored the PREVIOUS run's snapshot (514 min) as stale even though the new one was on the way. (2) The bound was unsatisfiable: GitHub does not deliver the hourly pattern, and 46/46 measured age gaps exceeded 120 min (max 514). (3) update-metrics.ts set exitCode=1 on a failed 'chore: refresh' commit, which would have failed the whole deploy once main became protected. (4) The smoke job failed on a transient 'curl (35) Recv failure: Connection reset by peer' although the deploy had succeeded and the site was live.",
+      "fix": "Assert EQUALITY of fetchedAt against the value the deploy job exported instead of a wall-clock age bound; poll 30 x 30 s = 15 min to defeat the 600 s Pages CDN TTL (a query param does not bust it - measured via the growing Age header). Downgrade the bot's commit failure to a warning because the snapshot is written before build and ships in dist/. Add a read-only ci.yml for pull requests: deploy.yml holds pages: write, so a pull_request trigger there would publish untrusted PR code to the live site and Worker. Add retry_transport retrying only transport codes 7/28/35/52/55/56 while passing HTTP errors (22) straight through.",
+      "guard": "main is protected: PR required, 'verify' required check, force-push and deletions banned, merge commits disabled for linear history. Negative control: a deliberately broken build produced verify=FAILURE and a BLOCKED PR. Local curl bench: connection reset recovered (3 attempts, rc=0, body OK) and 403 was NOT retried (1 attempt, rc=22). 13/14 history runs green; 1/14 failed on the curl 35 transport error alone.",
+      "pattern": "P-004, P-005"
+    },
+    {
+      "date": "2026-09-28",
+      "project": "msp-portfolio",
+      "title": "Lab projections re-synced with logs; v1 paraphrase baseline moved by a real corpus entry",
+      "status": "fixed",
+      "rootCause": "lab JSON files had drifted from the markdown logs: test-suite counters were stale (101 vs the real 112 after the lab, mcp-tools and worker suites had grown) and two logs edited this session had no JSON projection. The paraphrase stage-0 test also encoded a frozen corpus: it demanded every true paraphrase stay refused, while the corpus itself is a living single source of truth.",
+      "fix": "Appended the diary entry and KI-019 to the EN and RU lab projections, refreshed test-suite counters and their prose to the measured per-file runs, and re-pinned the stage-0 basis so a grounded rescue is recorded instead of treated as a regression.",
+      "guard": "The stage-0 test requires a real record (source fragment plus token overlap) to accept p-06 and the other seven paraphrases must stay refused; the RU projections mirror EN ids, dates and counts by test, and the full suite is green on the corrected counters.",
+      "pattern": "NEW"
     }
   ]
 }

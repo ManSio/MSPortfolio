@@ -10,23 +10,23 @@
     {
      "file": "tests/mcp-tools.test.ts",
      "name": "MCP-инструменты + модели архитектуры",
-     "tests": 18,
+     "tests": 20,
      "covers": "Поверхность инструментов, get_profile nextSteps (D8), фильтры, честность analyze_stack, симуляция (5 точек, валидация, llm_saturation, события), снимок коммитов, антипаттерны, lab-инструменты, аннотации, все архитектуры × все сценарии",
-     "updatedAt": "2026-08-15"
+     "updatedAt": "2026-09-28"
     },
     {
       "file": "tests/worker.test.ts",
       "name": "Интеграция Worker /mcp",
-      "tests": 22,
-      "covers": "tools/list (13 инструментов + аннотации), health без rate limit, /mcp/stats (KV), счётчик tools/call, 429 MCP/CHAT, security-заголовки, CORS allow/deny, 404, adversarial (битый JSON, неизвестный инструмент/метод), 8-путевая конкурентность с корректностью фильтра, /resume.txt + /llms.txt + 405, анонимная квота (D4: заголовки + 429), /openapi.json (D5)",
-     "updatedAt": "2026-08-15"
+      "tests": 28,
+      "covers": "tools/list (18 инструментов + аннотации), health без rate limit, /mcp/stats (KV), счётчик tools/call, 429 MCP/CHAT, security-заголовки, CORS allow/deny, 404, adversarial (битый JSON, неизвестный инструмент/метод), 8-путевая конкурентность с корректностью фильтра, /resume.txt + /llms.txt + 405, анонимная квота (D4: заголовки + 429), /openapi.json (D5)",
+     "updatedAt": "2026-09-28"
     },
     {
      "file": "tests/lab.test.ts",
      "name": "Целостность lab-данных + SSR-рендер + снимок бенчмарков",
-     "tests": 10,
-     "covers": "Полнота/вердикты экспериментов + теги проектов, ссылки отрицательных результатов, полнота/статусы дневника + теги проектов, id/температуры KI + теги проектов, сумма test-suite = total, id/вердикты/сводка evidence-ledger, SSR LabPage (7 секций + фильтр), EN-only проекции (вкл. evidence-claims), sanity benchmarks.json (DoD-гейты: llm recall ≥80%, 0 ложных принятий, p95 < 3s)",
-     "updatedAt": "2026-08-15"
+     "tests": 13,
+     "covers": "Полнота/вердикты экспериментов + теги проектов, ссылки отрицательных результатов, полнота/статусы дневника + теги проектов, id/температуры KI + теги проектов, сумма test-suite = total, id/вердикты/сводка evidence-ledger, SSR LabPage (9 секций + фильтр), EN-only проекции (вкл. evidence-claims), sanity benchmarks.json (DoD-гейты: llm recall ≥80%, 0 ложных принятий, p95 < 3s)",
+     "updatedAt": "2026-09-28"
     },
     {
      "file": "tests/evidence-eval.test.ts",
@@ -71,6 +71,6 @@
      "updatedAt": "2026-08-15"
     }
    ],
-   "total": 101,
-  "updatedAt": "2026-08-15"
+   "total": 112,
+  "updatedAt": "2026-09-28"
 }
