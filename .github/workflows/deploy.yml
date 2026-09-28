@@ -20,6 +20,11 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      # Timestamp of the snapshot this run built. The smoke job asserts the
+      # DEPLOYED metrics.json matches it by equality — a wall-clock age check
+      # is both racy and unsatisfiable (see "Check deployed metrics snapshot").
+      metrics_fetched_at: ${{ steps.refresh_metrics.outputs.fetched_at }}
     steps:
       - uses: actions/checkout@v4
 
@@ -44,7 +49,12 @@ jobs:
       - name: Refresh metrics snapshot
         # Runs BEFORE build so the deployed dist/ ships the fresh snapshot
         # (commits, dev.to, GitHub metrics) instead of the previous one.
-        run: node scripts/update-metrics.ts
+        # Also exports fetchedAt so the smoke job can assert the deployed
+        # snapshot by equality instead of by wall-clock age.
+        id: refresh_metrics
+        run: |
+          node scripts/update-metrics.ts
+          echo "fetched_at=$(jq -r .fetchedAt public/metrics.json)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -131,11 +141,10 @@ jobs:
       - name: Check MCP articles freshness
         # Regression guard: get_articles silently falls back to a stale snapshot
         # (or an empty payload) without failing the count check above. Assert it
-        # serves live-or-fresh data, and that the hourly metrics cron is alive.
+        # serves live-or-fresh data.
         run: |
           set -euo pipefail
           MCP=https://msp-portfolio.mansio-dev.workers.dev/mcp
-          METRICS=https://mansio.github.io/MSPortfolio/metrics.json
           sse_text() { sed -n 's/^data: //p' | jq -r '.result.content[0].text'; }
           art=$(curl -fsS -X POST "$MCP" \
             -H 'Content-Type: application/json' \
@@ -145,13 +154,58 @@ jobs:
           echo "get_articles: source=$(echo "$art" | jq -r '.source') count=$(echo "$art" | jq -r '.count')"
           echo "$art" | jq -e '.source != "unavailable" and (.count >= 1)' >/dev/null \
             || { echo "::error::get_articles is empty or unavailable"; exit 1; }
-          fetched=$(curl -fsS "$METRICS" | jq -r '.fetchedAt')
-          server_date=$(curl -fsSI "$METRICS" | sed -n 's/^[Dd]ate: //p' | tr -d '\r')
-          age_min=$(python3 -c 'import sys,email.utils,datetime as d; s=d.datetime.fromisoformat(sys.argv[1].replace("Z","+00:00")); n=email.utils.parsedate_to_datetime(sys.argv[2]); print(int((n-s).total_seconds()//60))' "$fetched" "$server_date")
-          echo "metrics snapshot age: ${age_min} min (fetchedAt=$fetched)"
-          [ "$age_min" -le 120 ] \
-            || { echo "::error::metrics snapshot stale (${age_min} min > 120) — hourly cron not refreshing"; exit 1; }
           echo 'MCP articles are fresh ✔'
+
+      - name: Check deployed metrics snapshot
+        # Regression guard for the metrics snapshot reaching the live site.
+        #
+        # This used to assert `server Date - fetchedAt <= 120 min`. Both halves
+        # of that were wrong, and run 36443556281 failed because of it:
+        #   1. RACY — the check read mansio.github.io immediately after the
+        #      `deploy` job, but Pages publishes on its own schedule (observed
+        #      24-65 s later). It read the PREVIOUS run's snapshot and computed
+        #      514 min of "staleness" for a snapshot that was about to be
+        #      replaced 20 s later. A guard that fails on a healthy deploy is
+        #      worse than no guard.
+        #   2. UNSATISFIABLE — `17 * * * *` is not delivered hourly: 46 of the
+        #      last 46 inter-run gaps on this repo exceeded 120 min (max 514).
+        #      GitHub queues schedule events, so any age bound below the real
+        #      cadence fails by construction.
+        #
+        # The deploy job already refreshes the snapshot on EVERY run and exports
+        # the exact fetchedAt it built. So assert EQUALITY against that value:
+        # it is independent of cron cadence, needs no magic threshold, and
+        # cannot false-positive on scheduling jitter.
+        #
+        # The poll window must exceed the CDN TTL, not just the Pages build
+        # time: GH Pages serves with `Cache-Control: max-age=600`, and a
+        # `?cb=` query param does NOT bypass it (measured: `Age` kept growing
+        # across distinct query strings — same cached object). So the freshly
+        # published snapshot can stay invisible for up to 10 min. 30 x 30s =
+        # 15 min covers Pages build (measured 24-65 s) plus a full TTL cycle.
+        # Normal case matches on attempt 1-2; the loop is a bounded wait, not
+        # the common path.
+        env:
+          EXPECTED_FETCHED_AT: ${{ needs.deploy.outputs.metrics_fetched_at }}
+        run: |
+          set -euo pipefail
+          METRICS=https://mansio.github.io/MSPortfolio/metrics.json
+          if [ -z "$EXPECTED_FETCHED_AT" ]; then
+            echo "::error::deploy did not export metrics_fetched_at — snapshot freshness is unverifiable"
+            exit 1
+          fi
+          for i in $(seq 1 30); do
+            live=$(curl -fsS "$METRICS" | jq -r '.fetchedAt')
+            if [ "$live" = "$EXPECTED_FETCHED_AT" ]; then
+              echo "deployed metrics.json matches this run's snapshot ✔ (attempt $i)"
+              echo 'MCP articles are fresh ✔'
+              exit 0
+            fi
+            echo "attempt $i/30: deployed fetchedAt=$live, expected $EXPECTED_FETCHED_AT — waiting for Pages (TTL 600s)"
+            sleep 30
+          done
+          echo "::error::deployed metrics.json never matched this run's snapshot (live=$live, expected=$EXPECTED_FETCHED_AT) after 15 min"
+          exit 1
 
   deploy-worker:
     # Auto-deploys the MCP worker on every push once the Cloudflare API token
