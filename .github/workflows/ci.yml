@@ -1,0 +1,51 @@
+name: CI
+
+# Validation only — no publishing. This is the job required by branch
+# protection, so it must be the one that runs on pull requests.
+#
+# Deliberately separate from deploy.yml: that workflow holds pages: write /
+# contents: write and publishes to GitHub Pages and the Cloudflare Worker.
+# Triggering it on pull_request would deploy untrusted PR code to both live
+# surfaces, so PRs get this read-only pipeline instead.
+on:
+  pull_request:
+    branches: [main]
+
+# No secrets are needed here. Least privilege: read-only, no deploy rights.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Same gates as the deploy job, so a PR cannot be merged into a state
+      # that would then fail on main. Snapshot refresh and deploy are omitted
+      # on purpose: the metrics refresh writes files and needs a token, and a
+      # PR build should stay hermetic.
+      - name: Type-check server
+        run: npx tsc -p server/tsconfig.json
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
