@@ -203,7 +203,6 @@ jobs:
             live=$(curl -fsS "$METRICS" | jq -r '.fetchedAt')
             if [ "$live" = "$EXPECTED_FETCHED_AT" ]; then
               echo "deployed metrics.json matches this run's snapshot ✔ (attempt $i)"
-              echo 'MCP articles are fresh ✔'
               exit 0
             fi
             echo "attempt $i/30: deployed fetchedAt=$live, expected $EXPECTED_FETCHED_AT — waiting for Pages (TTL 600s)"
