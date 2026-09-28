@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-09-28T00:45:16.868Z",
+  "fetchedAt": "2026-09-28T06:52:30.612Z",
   "source": "fallback",
   "user": {
     "login": "ManSio",
     "publicRepos": 12,
-    "followers": 73,
+    "followers": 72,
     "following": 90
   },
   "repos": [
@@ -13,7 +13,7 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-27T22:09:54Z",
+      "pushedAt": "2026-09-28T00:45:23Z",
       "language": "TypeScript"
     },
     {
@@ -197,13 +197,6 @@
     }
   ],
   "commits": [
-    {
-      "repo": "MSPortfolio",
-      "sha": "84260eb00e",
-      "date": "2026-09-27T21:28:14Z",
-      "message": "refactor(lab): pointer cards for decision logs and load curves, staleness banner, diary/issues catch-up sync (#3)",
-      "author": "Mikhail"
-    },
     {
       "repo": "mscodebase-intelligence",
       "sha": "a027996e83",
@@ -406,6 +399,13 @@
       "date": "2026-08-12T19:29:13Z",
       "message": "chore: release v0.26.0",
       "author": "Sidd27"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "69ff333882",
+      "date": "2026-06-15T17:11:50Z",
+      "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
+      "author": "Mikhail"
     }
   ]
 }
