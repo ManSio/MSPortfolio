@@ -135,8 +135,14 @@ if (GITHUB_TOKEN) {
       git(['push', 'origin', 'HEAD']);
       console.log('[metrics] committed and pushed');
     } catch (e) {
-      console.error('[metrics] commit failed:', String(e));
-      process.exitCode = 1;
+      // Non-fatal on purpose. The snapshot file itself is already written
+      // above and the deploy ships it in dist/, so the site is correct
+      // regardless of whether this bookkeeping commit lands. Failing the
+      // process here broke the whole deploy: once main is protected the bot
+      // push is rejected, which killed the "Refresh metrics snapshot" step
+      // and with it the site. Surfaced as a warning instead — visible in the
+      // log, no longer able to take the deploy down.
+      console.warn('[metrics] commit/push failed (non-fatal, deploy unaffected):', String(e));
     }
   } else {
     console.log('[metrics] no changes');
