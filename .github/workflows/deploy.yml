@@ -84,10 +84,11 @@ jobs:
         # MCP payload against the repo JSON this commit ships (equality, not a
         # hardcoded floor, so it never needs manual bumping).
         run: |
+          source scripts/ci/smoke-lib.sh
           MCP=https://msp-portfolio.mansio-dev.workers.dev/mcp
           sse_text() { sed -n 's/^data: //p' | jq -r '.result.content[0].text'; }
           call() {
-            curl -fsS -X POST "$MCP" \
+            retry_transport curl -fsS -X POST "$MCP" \
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               -d "{\"jsonrpc\":\"2.0\",\"id\":$1,\"method\":\"tools/call\",\"params\":{\"name\":\"$2\",\"arguments\":{}}}"
@@ -110,20 +111,22 @@ jobs:
 
       - name: Check MCP endpoint health
         run: |
-          curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"ok":true'
-          curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"chatConfigured"'
+          source scripts/ci/smoke-lib.sh
+          retry_transport curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"ok":true'
+          retry_transport curl -fsS https://msp-portfolio.mansio-dev.workers.dev/mcp/health | grep -q '"chatConfigured"'
           echo 'MCP endpoint is healthy ✔'
       - name: Check MCP tools/list
         run: |
-          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+          source scripts/ci/smoke-lib.sh
+          retry_transport curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'simulate_architecture'
-          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+          retry_transport curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'get_commit_history'
-          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+          retry_transport curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -q 'get_antipatterns'
@@ -133,7 +136,8 @@ jobs:
         # Note: the tool payload nests JSON inside the SSE `text` field, so the
         # field name is escaped (\"count\") — match the bare token instead.
         run: |
-          curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
+          source scripts/ci/smoke-lib.sh
+          retry_transport curl -fsS -X POST https://msp-portfolio.mansio-dev.workers.dev/mcp \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' | grep -q count
@@ -144,9 +148,10 @@ jobs:
         # serves live-or-fresh data.
         run: |
           set -euo pipefail
+          source scripts/ci/smoke-lib.sh
           MCP=https://msp-portfolio.mansio-dev.workers.dev/mcp
           sse_text() { sed -n 's/^data: //p' | jq -r '.result.content[0].text'; }
-          art=$(curl -fsS -X POST "$MCP" \
+          art=$(retry_transport curl -fsS -X POST "$MCP" \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"get_articles","arguments":{}}}' \
