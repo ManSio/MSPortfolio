@@ -10,6 +10,11 @@
 // Single source of truth for both the stage-0 test (tests/evidence-eval.test.ts)
 // and the offline LLM-arm eval (scripts/eval-llm-arm.ts). Every phrase below was
 // empirically verified against the v1 tool when added.
+//
+// NOTE (2026-09-28): p-06 no longer stays refused — the diary sync added a real
+// record (lab/diary.json#2026-09-28, CI guard post-mortem) whose tokens
+// 'produced' + 'written' coincide with the phrase. That rescue is pinned in the
+// stage-0 test as a grounded SSOT concurrence, not the v2 arm.
 
 export interface ParaphraseCase {
   id: string;

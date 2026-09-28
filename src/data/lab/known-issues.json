@@ -209,6 +209,26 @@
       "deadline": null,
       "owner": "owner",
       "link": "src/core/bootstrap_tests.py"
+    },
+    {
+      "id": "KI-019",
+      "project": "msp-portfolio",
+      "problem": "The 'chore: refresh metrics snapshot [skip ci]' commit no longer lands in the repository: main is protected and rejects the bot's push (expected and non-fatal - update-metrics.ts logs a warning and the deploy continues). Live surfaces are unaffected because the snapshot is written before the build and ships inside dist/: the freshness guard compares the deployed fetchedAt, so the site and the Worker (source:snapshot) serve fresh data. Only the git copy of public/metrics.json drifts; to debug locally, read the deployed URL, not the working copy.",
+      "status": "Open",
+      "temperature": "stable",
+      "deadline": null,
+      "owner": "owner",
+      "link": "scripts/update-metrics.ts"
+    },
+    {
+      "id": "KI-020",
+      "project": "msp-portfolio",
+      "problem": "Only the mscodebase-intelligence corpus is projected into the lab pages; the msp-portfolio log entries live in the docs markdown and stay off the lab. Moving the older records over is postponed until the owner decides the boundary.",
+      "status": "Open",
+      "temperature": "watching",
+      "deadline": null,
+      "owner": "owner",
+      "link": "docs/KNOWN_ISSUES.md"
     }
   ]
 }
