@@ -76,8 +76,15 @@
      "tests": 4,
      "covers": "existing package + maintainer check (case-insensitive), honest 404 not-found, registry failure honest error, empty input without network call",
      "updatedAt": "2026-08-15"
-    }
+    },
+   {
+     "file": "tests/ui-parity.test.ts",
+     "name": "UI dictionary parity + metrics chrome localization",
+     "tests": 12,
+     "covers": "EN and RU expose exactly the same leaf keys, no translation is an empty string, every metrics component imports the dictionary (a new widget with hardcoded English fails), the RU freshness badge renders Russian rather than the English fallback, and fmt/fmtParts substitute values while leaving an unknown {key} visible",
+     "updatedAt": "2026-09-29"
+   }
    ],
- "total": 151,
+ "total": 163,
  "updatedAt": "2026-09-29"
 }

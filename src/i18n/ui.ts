@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useLang } from './LangContext';
 
 /**
@@ -192,6 +193,52 @@ export const UI = {
       fix: 'the fix:',
       lesson: 'lesson:',
     },
+    // metrics + benchmark chrome (KI-022: these cards were English-only)
+    metrics: {
+      unavailable: 'Metrics unavailable.',
+      stars: 'GitHub Stars',
+      acrossRepos: 'Across all public repos',
+      publicRepos: 'Public Repos',
+      languages: '{n} languages',
+      followers: 'Followers',
+      forks: 'Forks',
+      activity: 'GitHub activity',
+      freshness: {
+        live: 'Live · {when}',
+        partial: 'Partly live · {when}',
+        static: 'Static snapshot · {when}',
+      },
+      npm: {
+        title: 'npm downloads',
+        noPackages: 'No public packages yet — the',
+        mcpServers: 'MCP servers',
+        noPackagesTail: 'are the distribution channel instead.',
+        writing: 'Writing',
+        writingLead: 'Full articles live in the',
+        blog: 'Blog section',
+        writingTail: '— deep dives on AI memory, agents and RAG.',
+      },
+      bench: {
+        unavailable: 'Benchmarks unavailable — run {cmd} to generate {file}.',
+        claimVerification: 'Claim verification',
+        measured: 'measured',
+        llmRecall: 'LLM arm recall',
+        recallValue: '{recall} ({n} paraphrases)',
+        paraphraseSet: 'paraphrase set',
+        falseAccepts: 'False accepts',
+        ofControls: 'of {n} controls',
+        latencyP95: 'Latency p95',
+        v1Exact: 'v1 (exact words)',
+        deterministicArm: 'deterministic arm',
+        mutation: 'Mutation testing',
+        mutationNote:
+          'reranker grader mutation score after fixing value-validation ({case} silently passed type checks).',
+        noMutation: 'No mutation experiment recorded.',
+        concurrency: 'Concurrency correctness',
+        concurrencyNote: 'parallel tool calls: correct input → correct output (no cross-talk).',
+        reproduced: 'reproduced with `pnpm bench` · updated {at}',
+      },
+    },
     // footer
     footer: {
       livingCv: 'built as a living CV',
@@ -375,6 +422,52 @@ export const UI = {
       fix: 'фикс:',
       lesson: 'урок:',
     },
+    // метрики и бенчмарки (KI-022: карточки были только на английском)
+    metrics: {
+      unavailable: 'Метрики недоступны.',
+      stars: 'Звёзды GitHub',
+      acrossRepos: 'По всем публичным репозиториям',
+      publicRepos: 'Публичные репозитории',
+      languages: '{n} языков',
+      followers: 'Подписчики',
+      forks: 'Форки',
+      activity: 'Активность на GitHub',
+      freshness: {
+        live: 'Живые · {when}',
+        partial: 'Частично живые · {when}',
+        static: 'Статичный снимок · {when}',
+      },
+      npm: {
+        title: 'загрузки npm',
+        noPackages: 'Публичных пакетов пока нет — вместо них',
+        mcpServers: 'MCP-серверы',
+        noPackagesTail: 'и есть канал распространения.',
+        writing: 'Пишу',
+        writingLead: 'Полные статьи живут в разделе',
+        blog: 'Блог',
+        writingTail: '— глубокие разборы памяти агентов, агентов и RAG.',
+      },
+      bench: {
+        unavailable: 'Бенчмарки недоступны — выполните {cmd}, чтобы создать {file}.',
+        claimVerification: 'Проверка утверждений',
+        measured: 'измерено',
+        llmRecall: 'Recall LLM-руки',
+        recallValue: '{recall} ({n} перефраз)',
+        paraphraseSet: 'набор перефраз',
+        falseAccepts: 'Ложные подтверждения',
+        ofControls: 'из {n} контролей',
+        latencyP95: 'Задержка p95',
+        v1Exact: 'v1 (точные слова)',
+        deterministicArm: 'детерминированная рука',
+        mutation: 'Мутационное тестирование',
+        mutationNote:
+          'score мутационного теста грейдера ранкера после фикса валидации значений ({case} молча проходили проверку типов).',
+        noMutation: 'Мутационный эксперимент не зафиксирован.',
+        concurrency: 'Корректность конкурентности',
+        concurrencyNote: 'параллельные вызовы инструментов: верный вход → верный выход (без пересечений).',
+        reproduced: 'воспроизведено через `pnpm bench` · обновлено {at}',
+      },
+    },
     footer: {
       livingCv: 'создано как живое CV',
       source: 'исходники ↗',
@@ -389,4 +482,38 @@ export type UiDict = typeof UI.en;
 export function useUi(): UiDict {
   const { lang } = useLang();
   return UI[lang];
+}
+
+/**
+ * Substitute `{key}` placeholders in a UI string.
+ *
+ * Deliberately tiny: the portfolio has ~10 templated labels, and a real i18n
+ * dependency for that is a runtime cost with no payoff. An unknown `{key}` is
+ * left as-is so a missing variable is visible on the page instead of silently
+ * rendering an empty gap.
+ */
+export function fmt(template: string, vars: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => (key in vars ? String(vars[key]) : match));
+}
+
+/**
+ * Same substitution, but a variable may be a React node.
+ *
+ * A sentence that names a command or a file path wants the mono/accent styling
+ * kept, and returning a string cannot carry that. Splitting the template on the
+ * placeholders keeps the wording in the dictionary (still translatable) instead
+ * of pushing it back into JSX. An unknown `{key}` stays literal, same as `fmt`.
+ */
+export function fmtParts(
+  template: string,
+  vars: Record<string, string | number | ReactNode>,
+): ReactNode[] {
+  return template.split(/(\{\w+\})/).map((part) => {
+    const key = part.match(/^\{(\w+)\}$/)?.[1];
+    if (key !== undefined && key in vars) {
+      const v = vars[key];
+      return typeof v === 'string' || typeof v === 'number' ? String(v) : v;
+    }
+    return part;
+  });
 }
