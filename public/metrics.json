@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-29T05:13:34.852Z",
+  "fetchedAt": "2026-09-29T05:38:34.453Z",
   "source": "live",
   "user": {
     "login": "ManSio",
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-29T05:36:32Z",
+      "language": "TypeScript"
+    },
+    {
       "name": "mscodebase-intelligence",
       "stars": 2,
       "forks": 1,
       "openIssues": 1,
       "pushedAt": "2026-09-29T04:57:02Z",
       "language": "Python"
-    },
-    {
-      "name": "MSPortfolio",
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "pushedAt": "2026-09-29T04:56:10Z",
-      "language": "TypeScript"
     },
     {
       "name": "ManSio.github.io",
@@ -198,6 +198,27 @@
   ],
   "commits": [
     {
+      "repo": "MSPortfolio",
+      "sha": "db261b2fd3",
+      "date": "2026-09-29T05:36:01Z",
+      "message": "fix(metrics): keep forks and bots out of the published commit feed (#12)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "f7bd40d761",
+      "date": "2026-09-29T05:17:22Z",
+      "message": "fix(metrics): compute the snapshot source flag from real sources (#11)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "94b718102b",
+      "date": "2026-09-29T04:55:42Z",
+      "message": "docs: log KI-021 hardcoded metrics source flag (#10)",
+      "author": "Mikhail"
+    },
+    {
       "repo": "mscodebase-intelligence",
       "sha": "e5756f5530",
       "date": "2026-09-29T04:57:02Z",
@@ -216,27 +237,6 @@
       "sha": "e8811af1ab",
       "date": "2026-09-29T04:41:55Z",
       "message": "Merge pull request #56 from ManSio/fix/redteam-open-triple",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "94b718102b",
-      "date": "2026-09-29T04:55:42Z",
-      "message": "docs: log KI-021 hardcoded metrics source flag (#10)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "7a51e4cf6a",
-      "date": "2026-09-29T04:49:42Z",
-      "message": "refactor(lab): keep the lab corpus mscodebase-intelligence only (#9)",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "MSPortfolio",
-      "sha": "3da52dfa0a",
-      "date": "2026-09-28T19:20:18Z",
-      "message": "chore(lab): sync JSON projections with logs (#8)",
       "author": "Mikhail"
     },
     {
@@ -261,125 +261,6 @@
       "author": "ManSio"
     },
     {
-      "repo": "Stanford-Town-AI-Project",
-      "sha": "b95d634297",
-      "date": "2023-12-16T09:44:36Z",
-      "message": "Project Report for Adv AI CS-5660",
-      "author": "Arpit Vaishya"
-    },
-    {
-      "repo": "Stanford-Town-AI-Project",
-      "sha": "7374cd5129",
-      "date": "2023-12-16T08:41:16Z",
-      "message": "Updated Experimental result image",
-      "author": "Arpit Vaishya"
-    },
-    {
-      "repo": "Stanford-Town-AI-Project",
-      "sha": "1e8ddd8255",
-      "date": "2023-12-16T08:39:55Z",
-      "message": "Update README.md",
-      "author": "Arpit Vaishya"
-    },
-    {
-      "repo": "MCP-Lite",
-      "sha": "6f0a90d949",
-      "date": "2026-05-27T12:36:27Z",
-      "message": "Add Detailed Benchmark Report detailing mathematical and performance verification of AOM pruning",
-      "author": "UnitBuilds"
-    },
-    {
-      "repo": "MCP-Lite",
-      "sha": "14e82ee9a7",
-      "date": "2026-05-26T22:28:30Z",
-      "message": "Initial release of Agentic Browser MCP-Lite under GNU AGPL-v3",
-      "author": "UnitBuilds"
-    },
-    {
-      "repo": "opencode-mobile",
-      "sha": "646f9cbf77",
-      "date": "2026-08-19T06:17:33Z",
-      "message": "docs(retro): record the AGE-497 stale-SENTRY_ORG-secret lesson",
-      "author": "engineer"
-    },
-    {
-      "repo": "opencode-mobile",
-      "sha": "709aa97bad",
-      "date": "2026-08-19T06:16:52Z",
-      "message": "chore(ci): remove the AGE-497 throwaway Sentry egress probe workflow",
-      "author": "engineer"
-    },
-    {
-      "repo": "opencode-mobile",
-      "sha": "f1f61d0516",
-      "date": "2026-08-19T06:14:42Z",
-      "message": "debug(ci): test whether secrets.SENTRY_ORG (set 2026-07-22, same day as the stale product-intelligence token) is itself stale",
-      "author": "engineer"
-    },
-    {
-      "repo": "awakening-project",
-      "sha": "823c8a4755",
-      "date": "2026-08-30T09:18:15Z",
-      "message": "feat: add Layer 0 spec for entry-boundary and population manifest",
-      "author": "Mikhail"
-    },
-    {
-      "repo": "awakening-project",
-      "sha": "7093f25a87",
-      "date": "2026-07-17T12:29:59Z",
-      "message": "Delete personal awakening plan from README",
-      "author": "huikong"
-    },
-    {
-      "repo": "awakening-project",
-      "sha": "4f5f507800",
-      "date": "2026-06-14T04:19:20Z",
-      "message": "Update README.md for project name and formatting",
-      "author": "huikong"
-    },
-    {
-      "repo": "ARCLUX",
-      "sha": "2985008bce",
-      "date": "2026-08-31T20:20:05Z",
-      "message": "Merge pull request #619 from GSF-001/feat/mmo-directory-wire",
-      "author": "Mikatoshi"
-    },
-    {
-      "repo": "ARCLUX",
-      "sha": "733ab2c929",
-      "date": "2026-08-31T20:14:51Z",
-      "message": "feat(directory): wire — gate federation check + bridge directory endpoint + net directory lookup (not yatim)",
-      "author": "GSF-001"
-    },
-    {
-      "repo": "ARCLUX",
-      "sha": "b468782362",
-      "date": "2026-08-31T19:52:52Z",
-      "message": "Merge pull request #612 from GSF-001/feat/mmo-license-directory",
-      "author": "Mikatoshi"
-    },
-    {
-      "repo": "awesome-mcp-servers",
-      "sha": "cbcdf8f770",
-      "date": "2026-08-03T03:09:55Z",
-      "message": "Merge pull request #11415 from Fronesis-Labs/add-dcl-trust-oracle",
-      "author": "Frank Fiegel"
-    },
-    {
-      "repo": "awesome-mcp-servers",
-      "sha": "1ee742c7a7",
-      "date": "2026-08-03T02:28:02Z",
-      "message": "Add DCL Trust Oracle to Security",
-      "author": "KeyKeeper42"
-    },
-    {
-      "repo": "awesome-mcp-servers",
-      "sha": "375407c729",
-      "date": "2026-07-29T10:26:20Z",
-      "message": "Merge pull request #10893 from marccrutzen269-lab/add-departi-v2",
-      "author": "Frank Fiegel"
-    },
-    {
       "repo": "ManSio",
       "sha": "d3c6fc3bd6",
       "date": "2026-08-14T10:16:53Z",
@@ -401,11 +282,18 @@
       "author": "Mikhail"
     },
     {
-      "repo": "infrawise",
-      "sha": "e5c361360c",
-      "date": "2026-08-12T20:43:07Z",
-      "message": "chore: release v0.26.1",
-      "author": "Sidd27"
+      "repo": "gemma_agent",
+      "sha": "69ff333882",
+      "date": "2026-06-15T17:11:50Z",
+      "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "97e6014d06",
+      "date": "2026-06-15T16:04:26Z",
+      "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
+      "author": "Mikhail"
     }
   ]
 }
