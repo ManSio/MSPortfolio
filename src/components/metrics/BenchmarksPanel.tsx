@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { fmt, fmtParts, useUi } from '../../i18n/ui';
 import { Badge } from '../ui/Badge';
 import { Skeleton } from '../ui/Skeleton';
 
@@ -33,6 +34,8 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 }
 
 export function BenchmarksPanel() {
+  const t = useUi();
+  const b = t.metrics.bench;
   const [data, setData] = useState<BenchData | null>(null);
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
 
@@ -70,8 +73,10 @@ export function BenchmarksPanel() {
   if (state === 'error' || !data) {
     return (
       <div className="rounded-xl border border-dashed border-line p-4 text-sm text-muted">
-        Benchmarks unavailable — run <span className="font-mono text-accent">pnpm bench</span> to generate
-        <span className="font-mono"> public/benchmarks.json</span>.
+        {fmtParts(b.unavailable, {
+          cmd: <span className="font-mono text-accent">pnpm bench</span>,
+          file: <span className="font-mono"> public/benchmarks.json</span>,
+        })}
       </div>
     );
   }
@@ -82,47 +87,56 @@ export function BenchmarksPanel() {
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-line bg-surface/60 p-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-faint uppercase tracking-wide">Claim verification</p>
-            <Badge tone="success">measured</Badge>
+            <p className="text-xs font-medium text-faint uppercase tracking-wide">{b.claimVerification}</p>
+            <Badge tone="success">{b.measured}</Badge>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <Stat label="LLM arm recall" value={`${cv.llmArm ? cv.llmArm.recallPct + '%' : '—'} (${cv.paraphrases} paraphrases)`} hint="paraphrase set" />
-            <Stat label="False accepts" value={cv.llmArm ? String(cv.llmArm.falseAcceptance) : '—'} hint={`of ${cv.negativeControls} controls`} />
-            <Stat label="Latency p95" value={cv.llmArm ? `${cv.llmArm.p95Ms} ms` : '—'} hint={cv.llmArm?.model ?? ''} />
-            <Stat label="v1 (exact words)" value={`${cv.v1RecallPct}%`} hint="deterministic arm" />
+            <Stat
+              label={b.llmRecall}
+              value={fmt(b.recallValue, {
+                recall: cv.llmArm ? cv.llmArm.recallPct + '%' : '—',
+                n: cv.paraphrases,
+              })}
+              hint={b.paraphraseSet}
+            />
+            <Stat
+              label={b.falseAccepts}
+              value={cv.llmArm ? String(cv.llmArm.falseAcceptance) : '—'}
+              hint={fmt(b.ofControls, { n: cv.negativeControls })}
+            />
+            <Stat label={b.latencyP95} value={cv.llmArm ? `${cv.llmArm.p95Ms} ms` : '—'} hint={cv.llmArm?.model ?? ''} />
+            <Stat label={b.v1Exact} value={`${cv.v1RecallPct}%`} hint={b.deterministicArm} />
           </div>
           <p className="mt-2 font-mono text-[10px] text-faint">{cv.command}</p>
         </div>
 
         <div className="rounded-xl border border-line bg-surface/60 p-4">
-          <p className="text-xs font-medium text-faint uppercase tracking-wide">Mutation testing</p>
+          <p className="text-xs font-medium text-faint uppercase tracking-wide">{b.mutation}</p>
           {data.mutationTesting ? (
             <>
               <p className="mt-2 font-mono text-lg font-bold text-paper">
                 {data.mutationTesting.beforePct}% → {data.mutationTesting.afterPct}%
               </p>
               <p className="mt-1 text-xs text-muted">
-                reranker grader mutation score after fixing value-validation (<span className="font-mono">NaN/Infinity</span> silently passed type checks).
+                {fmtParts(b.mutationNote, { case: <span className="font-mono">NaN/Infinity</span> })}
               </p>
               <p className="mt-2 font-mono text-[10px] text-faint">{data.mutationTesting.command}</p>
             </>
           ) : (
-            <p className="mt-2 text-sm text-muted">No mutation experiment recorded.</p>
+            <p className="mt-2 text-sm text-muted">{b.noMutation}</p>
           )}
         </div>
 
         <div className="rounded-xl border border-line bg-surface/60 p-4">
-          <p className="text-xs font-medium text-faint uppercase tracking-wide">Concurrency correctness</p>
+          <p className="text-xs font-medium text-faint uppercase tracking-wide">{b.concurrency}</p>
           <p className="mt-2 font-mono text-lg font-bold text-paper">
             {data.concurrency.correct}/{data.concurrency.workers}
           </p>
-          <p className="mt-1 text-xs text-muted">parallel tool calls: correct input → correct output (no cross-talk).</p>
+          <p className="mt-1 text-xs text-muted">{b.concurrencyNote}</p>
           <p className="mt-2 font-mono text-[10px] text-faint">{data.concurrency.command}</p>
         </div>
       </div>
-      <p className="font-mono text-[10px] text-faint">
-        reproduced with `pnpm bench` · updated {data.updatedAt}
-      </p>
+      <p className="font-mono text-[10px] text-faint">{fmt(b.reproduced, { at: data.updatedAt })}</p>
     </div>
   );
 }

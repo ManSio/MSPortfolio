@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '../../lib/cn';
+import { fmt, useUi } from '../../i18n/ui';
 import { Badge } from '../ui/Badge';
 
 export function MetricCard({
@@ -52,16 +53,14 @@ function Sparkline({ data, className }: { data: number[]; className?: string }) 
 }
 
 export function FreshnessBadge({ source, fetchedAt }: { source: 'live' | 'partial' | 'fallback'; fetchedAt: string }) {
+  const t = useUi();
   const when = new Date(fetchedAt);
-  // The badge reads the snapshot's own field, not the UI status: a visitor who
-  // gets the committed file deserves to see what that file claims about itself,
-  // and a `partial` must be visibly different from both other states.
-  const label =
-    source === 'live'
-      ? `Live · ${when.toLocaleString()}`
-      : source === 'partial'
-        ? `Partly live · ${when.toLocaleString()}`
-        : `Static snapshot · ${when.toLocaleDateString()}`;
+  // The badge renders the state the visitor is actually looking at — which is
+  // why the caller passes `displayedSource(...)` and not `snapshot.source`. A
+  // `partial` must read differently from both other states either way.
+  const label = fmt(t.metrics.freshness[source === 'fallback' ? 'static' : source], {
+    when: source === 'fallback' ? when.toLocaleDateString() : when.toLocaleString(),
+  });
   const tone = source === 'live' ? 'success' : 'warn';
   return <Badge tone={tone}>{label}</Badge>;
 }

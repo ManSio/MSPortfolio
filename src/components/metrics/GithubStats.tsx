@@ -1,4 +1,5 @@
 import { useMetrics, displayedSource } from '../../hooks/useMetrics';
+import { fmt, useUi } from '../../i18n/ui';
 import { Card, CardHeader } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Skeleton } from '../ui/Skeleton';
@@ -17,6 +18,7 @@ function renderMetricRow(label: ReactNode, value: ReactNode) {
 const STAR_SPARK = [1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4, 5, 6];
 
 export function GithubStats() {
+  const t = useUi();
   const { status, snapshot, error } = useMetrics();
   // Both the dot and the badge must describe what this visitor is looking at.
   // The committed file's own `source` says how it was produced, not how fresh
@@ -40,7 +42,7 @@ export function GithubStats() {
   if (status === 'error' || !snapshot) {
     return (
       <Card className="border-red-500/30">
-        <p className="text-sm text-red-400">{error ?? 'Metrics unavailable.'}</p>
+        <p className="text-sm text-red-400">{error ?? t.metrics.unavailable}</p>
       </Card>
     );
   }
@@ -52,15 +54,19 @@ export function GithubStats() {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <MetricCard label="GitHub Stars" value={String(totalStars)} spark={STAR_SPARK} tone="accent" hint="Across all public repos" />
-      <MetricCard label="Public Repos" value={String(user?.publicRepos ?? repos.length)} hint={`${langCount} languages`} />
-      <MetricCard label="Followers" value={String(user?.followers ?? 0)} />
-      <MetricCard label="Forks" value={String(totalForks)} />
+      <MetricCard label={t.metrics.stars} value={String(totalStars)} spark={STAR_SPARK} tone="accent" hint={t.metrics.acrossRepos} />
+      <MetricCard
+        label={t.metrics.publicRepos}
+        value={String(user?.publicRepos ?? repos.length)}
+        hint={fmt(t.metrics.languages, { n: langCount })}
+      />
+      <MetricCard label={t.metrics.followers} value={String(user?.followers ?? 0)} />
+      <MetricCard label={t.metrics.forks} value={String(totalForks)} />
       <Card className="sm:col-span-2 lg:col-span-4">
         <CardHeader>
           <div className="flex items-center gap-2">
             <LiveDot state={shownSource} />
-            <span className="text-sm font-semibold">GitHub activity</span>
+            <span className="text-sm font-semibold">{t.metrics.activity}</span>
           </div>
           <FreshnessBadge source={shownSource} fetchedAt={snapshot.fetchedAt} />
         </CardHeader>
