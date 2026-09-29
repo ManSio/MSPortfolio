@@ -10,7 +10,7 @@
     {
      "file": "tests/mcp-tools.test.ts",
      "name": "MCP tools + architecture models",
-     "tests": 20,
+     "tests": 21,
      "covers": "Tool surface, get_profile nextSteps (D8), filters, analyze_stack honesty, simulation (5 points, validation, llm_saturation, events), commit snapshot, antipatterns, lab tools, annotations, all architectures × all scenarios",
      "updatedAt": "2026-09-28"
     },
@@ -85,6 +85,6 @@
      "updatedAt": "2026-09-29"
    }
    ],
- "total": 163,
+ "total": 164,
  "updatedAt": "2026-09-29"
 }

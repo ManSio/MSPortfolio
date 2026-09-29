@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ARCHITECTURES, getTool, runSimulation, TOOLS } from '../src/lib/mcp-tools';
+import { ARCHITECTURES, ageMinutes, getTool, runSimulation, TOOLS } from '../src/lib/mcp-tools';
 import type { StackAnalysis, SimulationResult } from '../src/lib/types';
 
 const call = (name: string, args: Record<string, unknown>) => {
@@ -128,14 +128,34 @@ describe('MCP tools', () => {
     );
     vi.stubGlobal('fetch', fakeFetch);
     try {
-      const res = (await call('get_commit_history', {})) as { count: number; commits: Array<{ repo: string; message: string }>; source: string };
+      const res = (await call('get_commit_history', {})) as {
+        count: number;
+        commits: Array<{ repo: string; message: string }>;
+        source: string;
+        snapshotSource: string;
+        fetchedAt: string;
+        ageMinutes: number | null;
+      };
       expect(res.count).toBe(1);
       expect(res.commits[0].repo).toBe('msp-portfolio');
       expect(res.commits[0].message).toBe('fix: hardening');
       expect(res.source).toBe('snapshot');
+      // The payload must answer "how old is this?" on its own: an agent
+      // cannot check the prose in the tool description.
+      expect(res.fetchedAt).toBe('2026-08-14T00:00:00Z');
+      expect(res.snapshotSource).toBe('fallback');
+      expect(res.ageMinutes).toBeGreaterThan(0);
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+
+  it('ageMinutes refuses to invent an age it cannot derive', () => {
+    expect(ageMinutes(undefined)).toBeNull();
+    expect(ageMinutes('not-a-date')).toBeNull();
+    expect(ageMinutes(new Date(Date.now() - 120000).toISOString())).toBe(2);
+    // A clock skewed into the future must not report a negative age.
+    expect(ageMinutes(new Date(Date.now() + 600000).toISOString())).toBe(0);
   });
 
   it('get_antipatterns returns the museum with lessons (closed world)', async () => {
