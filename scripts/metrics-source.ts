@@ -32,3 +32,28 @@ export function classifySnapshot(status: SourceStatus): MetricsSource {
   if (!status.devto && status.commitsOk === 0) return 'fallback';
   return 'partial';
 }
+
+/**
+ * Forks are other people's code: they were already filtered out of `repos`,
+ * but the commit feed kept pulling them, so 18 of 30 published commits were
+ * third-party (Stanford coursework, other people's MCP servers). A snapshot
+ * that answers "what has he been building lately" must not spend its window
+ * on commits the owner never wrote.
+ */
+export function selectPublishedRepos<T extends { name: string; fork?: boolean }>(repos: T[]): T[] {
+  return repos.filter((r) => r.fork !== true);
+}
+
+/**
+ * Keeps the commit feed readable as "what the owner has been building lately".
+ * The intent was always stated in the code ("real work, not bot commits") but
+ * only the cron-snapshot case was implemented, so a dependabot bump reached the
+ * published feed. Matched on the author name as well, because a bot's message
+ * depends on the bot.
+ */
+const CRON_COMMIT = /^chore: refresh metrics snapshot|\[skip ci\]/;
+const BOT_AUTHOR = /\[bot\]$|^dependabot$/i;
+
+export function isNoiseCommit(commit: { message: string; authorName?: string }): boolean {
+  return CRON_COMMIT.test(commit.message) || BOT_AUTHOR.test(commit.authorName ?? '');
+}

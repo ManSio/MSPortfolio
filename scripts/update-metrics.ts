@@ -9,7 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { classifySnapshot } from './metrics-source.ts';
+import { classifySnapshot, isNoiseCommit, selectPublishedRepos } from './metrics-source.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TARGET = join(ROOT, 'public', 'metrics.json');
@@ -59,19 +59,23 @@ try {
   console.warn('[metrics] dev.to unreachable - snapshot will be marked partial:', String(e));
 }
 
+// Forks belong to other people. They were already excluded from `repos`, but
+// the commit feed still fetched them, so 18 of the 30 published commits were
+// third-party work crowding out the owner's own history (measured 2026-09-29).
+const publishedRepos = selectPublishedRepos(repos);
+
 // Commit history (top 3 per repo) — powers the get_commit_history MCP tool.
-// Drops the cron snapshot noise so agents see real work, not bot commits.
-const COMMIT_FILTER = /^chore: refresh metrics snapshot|\[skip ci\]/;
+// Drops bot and cron-snapshot commits so agents see real work, not automation.
 let commitsOk = 0;
 const commitLists = await Promise.all(
-  repos.map(async (r) => {
+  publishedRepos.map(async (r) => {
     try {
       const res = await fetch(`https://api.github.com/repos/${OWNER}/${r.name}/commits?per_page=3`, { headers });
       if (!res.ok) return [];
       commitsOk += 1;
       const data = (await res.json()) as Array<{ sha: string; commit: { message: string; author?: { name?: string; date?: string } } }>;
       return data
-        .filter((c) => !COMMIT_FILTER.test(c.commit.message))
+        .filter((c) => !isNoiseCommit({ message: c.commit.message, authorName: c.commit.author?.name }))
         .map((c) => ({
           repo: r.name,
           sha: c.sha.slice(0, 10),
@@ -88,9 +92,9 @@ const commits = commitLists.flat().slice(0, 30);
 
 // A silent `return []` above is indistinguishable from "no commits" for the
 // reader, so the degradation is recorded in the snapshot itself (KI-021).
-const source = classifySnapshot({ github: true, devto: devtoOk, commitsOk, commitsTotal: repos.length });
+const source = classifySnapshot({ github: true, devto: devtoOk, commitsOk, commitsTotal: publishedRepos.length });
 if (source !== 'live') {
-  console.warn(`[metrics] degraded sources: devto=${devtoOk} commits=${commitsOk}/${repos.length} -> source=${source}`);
+  console.warn(`[metrics] degraded sources: devto=${devtoOk} commits=${commitsOk}/${publishedRepos.length} -> source=${source}`);
 }
 
 const snapshot = {
@@ -102,16 +106,14 @@ const snapshot = {
     followers: user.followers,
     following: user.following,
   },
-  repos: repos
-    .filter((r) => r.fork !== true)
-    .map((r) => ({
-      name: r.name,
-      stars: r.stargazers_count ?? 0,
-      forks: r.forks_count ?? 0,
-      openIssues: r.open_issues_count ?? 0,
-      pushedAt: r.pushed_at ?? '',
-      language: r.language ?? null,
-    })),
+  repos: publishedRepos.map((r) => ({
+    name: r.name,
+    stars: r.stargazers_count ?? 0,
+    forks: r.forks_count ?? 0,
+    openIssues: r.open_issues_count ?? 0,
+    pushedAt: r.pushed_at ?? '',
+    language: r.language ?? null,
+  })),
   npm: [],
   devto: devto.map((a) => ({
     id: a.id,
@@ -130,7 +132,7 @@ const snapshot = {
 };
 
 writeFileSync(TARGET, JSON.stringify(snapshot, null, 2) + '\n');
-console.log(`[metrics] wrote ${TARGET} (${repos.length} repos, source=${source}, commits=${commitsOk}/${repos.length} repos, devto=${devto.length})`);
+console.log(`[metrics] wrote ${TARGET} (${publishedRepos.length} repos published of ${repos.length} fetched, source=${source}, commits=${commitsOk}/${publishedRepos.length} repos, devto=${devto.length})`);
 
 // Commit + push (only when a token is present, i.e. in CI).
 if (GITHUB_TOKEN) {
