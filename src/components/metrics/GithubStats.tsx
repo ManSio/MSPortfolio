@@ -1,4 +1,4 @@
-import { useMetrics } from '../../hooks/useMetrics';
+import { useMetrics, displayedSource } from '../../hooks/useMetrics';
 import { Card, CardHeader } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Skeleton } from '../ui/Skeleton';
@@ -18,6 +18,10 @@ const STAR_SPARK = [1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4, 5, 6];
 
 export function GithubStats() {
   const { status, snapshot, error } = useMetrics();
+  // Both the dot and the badge must describe what this visitor is looking at.
+  // The committed file's own `source` says how it was produced, not how fresh
+  // it is here, so a live-looking snapshot served from disk reads as static.
+  const shownSource = displayedSource(status, snapshot?.source);
 
   if (status === 'loading') {
     return (
@@ -55,10 +59,10 @@ export function GithubStats() {
       <Card className="sm:col-span-2 lg:col-span-4">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <LiveDot />
+            <LiveDot state={shownSource} />
             <span className="text-sm font-semibold">GitHub activity</span>
           </div>
-          <FreshnessBadge source={status} fetchedAt={snapshot.fetchedAt} />
+          <FreshnessBadge source={shownSource} fetchedAt={snapshot.fetchedAt} />
         </CardHeader>
         <div className="grid gap-x-8 gap-y-1 sm:grid-cols-2">
           {repos.map((r) => (

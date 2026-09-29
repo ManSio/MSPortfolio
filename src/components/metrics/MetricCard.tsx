@@ -51,20 +51,38 @@ function Sparkline({ data, className }: { data: number[]; className?: string }) 
   );
 }
 
-export function FreshnessBadge({ source, fetchedAt }: { source: 'live' | 'fallback'; fetchedAt: string }) {
+export function FreshnessBadge({ source, fetchedAt }: { source: 'live' | 'partial' | 'fallback'; fetchedAt: string }) {
   const when = new Date(fetchedAt);
+  // The badge reads the snapshot's own field, not the UI status: a visitor who
+  // gets the committed file deserves to see what that file claims about itself,
+  // and a `partial` must be visibly different from both other states.
   const label =
     source === 'live'
       ? `Live · ${when.toLocaleString()}`
-      : `Static snapshot · ${when.toLocaleDateString()}`;
-  return <Badge tone={source === 'live' ? 'success' : 'warn'}>{label}</Badge>;
+      : source === 'partial'
+        ? `Partly live · ${when.toLocaleString()}`
+        : `Static snapshot · ${when.toLocaleDateString()}`;
+  const tone = source === 'live' ? 'success' : 'warn';
+  return <Badge tone={tone}>{label}</Badge>;
 }
 
-export function LiveDot() {
+/**
+ * `state` defaults to 'live' so unrelated callers (the agent connection dot)
+ * keep the pulsing green. A dot that pulses green above a static snapshot is
+ * the same lie as the badge would be, so the caller passes the real state.
+ */
+export function LiveDot({ state = 'live' }: { state?: 'live' | 'partial' | 'fallback' }) {
+  if (state === 'live') {
+    return (
+      <span className="relative flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+      </span>
+    );
+  }
   return (
     <span className="relative flex h-2 w-2">
-      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+      <span className={cn('relative inline-flex h-2 w-2 rounded-full', state === 'partial' ? 'bg-amber-400' : 'bg-slate-400')} />
     </span>
   );
 }
