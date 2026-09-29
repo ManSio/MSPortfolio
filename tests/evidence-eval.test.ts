@@ -126,11 +126,16 @@ describe('computeEvidence — chat grounding summary (deterministic)', () => {
  * These tests pin the CURRENT baseline (the gap the v2 LLM arm must close) and
  * guard against regressions. See docs/verify-claim-v2-llm-arm.md §6.
  *
- * The corpus is live: real log entries feed evidence. Since the 2026-09-28
- * diary sync (CI guard post-mortem), p-06 is rescued by v1 through two
- * coincidental but real tokens ('produced', 'written') in
- * lab/diary.json#2026-09-28 — a genuine SSOT record, not the v2 LLM arm.
- * Baseline: 1/8 rescued (p-06), 7/8 still the recall gap.
+ * Baseline: 0/8 rescued by v1 — every true paraphrase is still the recall gap.
+ *
+ * The baseline is only stable while the lab corpus stays a single project.
+ * On 2026-09-28 an msp-portfolio diary entry landed in the lab projections and
+ * v1 rescued p-06 for real ('produced' + 'written' in one record) — a
+ * coincidental token collision, not the v2 arm. The owner decided the lab
+ * stays mscodebase-intelligence-only, so that entry was removed; the
+ * purity guard in tests/lab.test.ts is what keeps this baseline honest. If you
+ * ever add a lab entry, expect this test to fail: re-run the baseline check
+ * instead of editing the expectation away.
  *
  * When the v2 LLM arm lands: flip ALL true paraphrases to 'supported' and
  * update the baseline count — that is the v2 Definition of Done.
@@ -139,24 +144,14 @@ describe('verify_claim — v2 stage 0: paraphrase eval set (recall gap baseline)
   // Paraphrase cases live in src/data/paraphrase-eval.ts (shared with the
   // offline LLM-arm eval scripts/eval-llm-arm.ts) — one source of truth.
 
-  it('true paraphrases stay refused except the v1-rescued p-06 (recall-gap baseline)', async () => {
-    // p-06 is now grounded in a real corpus record. If it ever becomes
-    // unsupported — or extra paraphrases get rescued — something about the
-    // corpus or v1 changed and must be documented, not silently absorbed.
-    const rescuedByV1 = new Map([
-      ['p-06', { minTokens: 2, sourceFrag: 'lab/diary.json#2026-09-28', reason: "'produced' + 'written' in the CI post-mortem diary entry" }],
-    ]);
+  it('true paraphrases are currently refused — this is the v1 recall gap (baseline)', async () => {
     for (const p of TRUE_PARAPHRASES) {
       const res = await verify(p.paraphrase);
-      const expected = rescuedByV1.get(p.id);
-      if (expected) {
-        const hit = res.evidence?.find((e) => e.source.includes(expected.sourceFrag) && e.matchedTokens.length >= expected.minTokens);
-        expect(hit, `${p.id} must be grounded by the recorded corpus entry: ${expected.reason}`).toBeTruthy();
-      } else {
-        expect(res.supported, `${p.id} became supported unexpectedly`).toBe(false);
-      }
+      // Baseline: v1 misses every paraphrase. Flip to `true` when the v2 LLM arm lands.
+      // A rescue here means the corpus changed, not that v1 got smarter.
+      expect(res.supported, `${p.id} became supported unexpectedly — check the lab corpus purity guard`).toBe(false);
     }
-    console.log(`[v2-stage-0] paraphrase recall baseline: ${rescuedByV1.size}/${TRUE_PARAPHRASES.length} rescued by v1 (${[...rescuedByV1.keys()].join(', ')})`);
+    console.log(`[v2-stage-0] paraphrase recall baseline: 0/${TRUE_PARAPHRASES.length} rescued by v1`);
   });
 
   it('paraphrased negative controls stay refused (no false-acceptance from recall work)', async () => {

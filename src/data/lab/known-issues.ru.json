@@ -209,26 +209,6 @@
       "deadline": null,
       "owner": "owner",
       "link": "src/core/bootstrap_tests.py"
-    },
-    {
-      "id": "KI-019",
-      "project": "msp-portfolio",
-      "problem": "Коммит «chore: refresh metrics snapshot [skip ci]» больше не попадает в репозиторий: main защищена и отклоняет push бота (ожидаемо и нефатально - update-metrics.ts пишет warning, деплой продолжается). Живые поверхности не страдают: снимок пишется до сборки и едет в dist/, а freshness-guard сравнивает деплойный fetchedAt, поэтому сайт и Worker (source:snapshot) отдают свежие данные. Устаревает только git-копия public/metrics.json: для локальной отладки читайте развёрнутый URL, а не рабочую копию.",
-      "status": "Open",
-      "temperature": "stable",
-      "deadline": null,
-      "owner": "owner",
-      "link": "scripts/update-metrics.ts"
-    },
-    {
-      "id": "KI-020",
-      "project": "msp-portfolio",
-      "problem": "В lab-страницы спроецирован только корпус mscodebase-intelligence; записи логов msp-portfolio лежат в docs-разметке и не попадают в лабораторию. Полный перенос ранних записей отложен до решения владельца о границах.",
-      "status": "Open",
-      "temperature": "watching",
-      "deadline": null,
-      "owner": "owner",
-      "link": "docs/KNOWN_ISSUES.md"
     }
   ]
 }

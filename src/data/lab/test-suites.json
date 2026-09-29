@@ -24,9 +24,9 @@
     {
      "file": "tests/lab.test.ts",
      "name": "Lab data integrity + SSR render + benchmarks snapshot",
-     "tests": 13,
-     "covers": "Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, test-suite sum = total, evidence ledger ids/verdicts/summary, LabPage SSR (9 sections + filter), EN-only projections (incl. evidence claims), benchmarks.json sanity (DoD gates: llm recall ≥80%, 0 false-accepts, p95 < 3s)",
-     "updatedAt": "2026-09-28"
+     "tests": 14,
+     "covers": "Experiment completeness/verdicts + project tags, negative results refs, diary completeness/statuses + project tags, KI ids/temperatures + project tags, single-project corpus purity guard (lab = mscodebase-intelligence only, owner decision 2026-09-28), test-suite sum = total, evidence ledger ids/verdicts/summary, LabPage SSR (9 sections + filter), EN-only projections (incl. evidence claims), benchmarks.json sanity (DoD gates: llm recall ≥80%, 0 false-accepts, p95 < 3s)",
+     "updatedAt": "2026-09-29"
     },
     {
      "file": "tests/evidence-eval.test.ts",
@@ -71,6 +71,6 @@
      "updatedAt": "2026-08-15"
     }
    ],
-   "total": 112,
-  "updatedAt": "2026-09-28"
+ "total": 113,
+ "updatedAt": "2026-09-29"
 }
