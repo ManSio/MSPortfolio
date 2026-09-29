@@ -11,10 +11,12 @@
 // and the offline LLM-arm eval (scripts/eval-llm-arm.ts). Every phrase below was
 // empirically verified against the v1 tool when added.
 //
-// NOTE (2026-09-28): p-06 no longer stays refused — the diary sync added a real
-// record (lab/diary.json#2026-09-28, CI guard post-mortem) whose tokens
-// 'produced' + 'written' coincide with the phrase. That rescue is pinned in the
-// stage-0 test as a grounded SSOT concurrence, not the v2 arm.
+// NOTE (2026-09-28): the baseline below assumes a single-project lab corpus.
+// An msp-portfolio entry briefly landed in the lab projections and v1 rescued
+// p-06 for real ('produced' + 'written' in one record). The owner decided the
+// lab stays mscodebase-intelligence-only, so that entry was removed and the
+// stage-0 test asserts 0/8 again. Adding a lab entry is a deliberate act:
+// re-run the baseline check before relaxing any expectation here.
 
 export interface ParaphraseCase {
   id: string;

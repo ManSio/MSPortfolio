@@ -159,6 +159,22 @@ describe('lab data integrity', () => {
     }
   });
 
+  it('lab corpus is single-project: only mscodebase-intelligence (owner decision, 2026-09-28)', () => {
+    // The lab pages are the mscodebase-intelligence showcase; this portfolio's
+    // own logs live in docs/*.md. Mixing projects in here silently moves the
+    // v2 stage-0 paraphrase baseline (an msp entry rescued p-06 for real), so
+    // the boundary is enforced here instead of by convention.
+    const expected = 'mscodebase-intelligence';
+    const projects = [
+      ...(experimentsData as { experiments: { project: string }[] }).experiments.map((e) => e.project),
+      ...(diaryData as { entries: { project: string }[] }).entries.map((e) => e.project),
+      ...(knownIssuesData as { issues: { project: string }[] }).issues.map((i) => i.project),
+    ];
+    const foreign = [...new Set(projects.filter((p) => p !== expected))];
+    expect(foreign, `lab corpus leaked other projects: ${foreign.join(', ')} — msp-portfolio logs belong in docs/ only`).toEqual([]);
+    expect(projects.length).toBeGreaterThan(0);
+  });
+
   it('evidence: ids unique, expected verdicts valid, summary sums to the claim set', () => {
     const claims = (evidenceData as { claims: { id: string; claim: string; expected: string }[] }).claims;
     const summary = (evidenceData as { summary: { supported: number; refused: number; total: number } }).summary;
