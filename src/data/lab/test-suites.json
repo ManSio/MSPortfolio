@@ -44,9 +44,9 @@
     },
     {
      "file": "tests/metrics-source.test.ts",
-      "name": "Metrics snapshot source flag (KI-021)",
-      "tests": 7,
-      "covers": "classifySnapshot over every state: all sources answered -> live, Dev.to down -> partial, one failed commit history -> partial, all commit histories failed -> partial, only identity data -> fallback, GitHub failed -> fallback, zero repos is not a degradation; each result must fit the MetricsSnapshot source union",
+      "name": "Snapshot source flag + published-repo and commit filters (KI-021)",
+      "tests": 21,
+      "covers": "classifySnapshot over every state: all sources answered -> live, Dev.to down -> partial, one failed commit history -> partial, all commit histories failed -> partial, only identity data -> fallback, GitHub failed -> fallback, zero repos is not a degradation; each result must fit the MetricsSnapshot source union. selectPublishedRepos: only owned repos reach the commit feed (measured: 18 of 30 published commits were other people's), a missing fork flag counts as owned, a fork-only account yields an empty list, an empty account stays empty. isNoiseCommit: drops the snapshot cron, [skip ci], dependabot[bot], renovate[bot], github-actions[bot]; keeps the owner, the owner's own agent, a human whose handle contains bot, an empty message, and an unknown author",
       "updatedAt": "2026-09-29"
      },
      {
@@ -78,6 +78,6 @@
      "updatedAt": "2026-08-15"
     }
    ],
- "total": 120,
+ "total": 134,
  "updatedAt": "2026-09-29"
 }
