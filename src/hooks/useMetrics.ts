@@ -4,9 +4,39 @@ import { FALLBACK_ARTICLES } from '../data/articles';
 import type { GithubRepoMetric, MetricsSnapshot } from '../lib/types';
 
 export interface MetricsState {
-  status: 'loading' | 'live' | 'fallback' | 'error';
+  status: 'loading' | 'live' | 'partial' | 'fallback' | 'error';
   snapshot: MetricsSnapshot | null;
   error?: string;
+}
+
+/**
+ * A `partial` source is not the same as a fallback for a visitor: the GitHub
+ * numbers still came from GitHub, so the dashboard stays interactive. Only a
+ * full fallback clears the live path.
+ */
+export function isLiveCall(status: MetricsState['status']): boolean {
+  return status === 'live' || status === 'partial';
+}
+
+/**
+ * GitHub is always fetched live on this path, so the only question is the
+ * articles: live Dev.to, then the committed snapshot, then the bundled copy.
+ * The last one is not even a snapshot, hence `fallback` rather than `partial`.
+ */
+export function resolveSource(devtoCount: number, snapshotArticleCount: number): MetricsSnapshot['source'] {
+  if (devtoCount > 0) return 'live';
+  return snapshotArticleCount > 0 ? 'partial' : 'fallback';
+}
+
+/**
+ * What the freshness badge is allowed to claim. The committed file's own
+ * `source` describes how that file was produced, not how fresh it is for this
+ * visitor: a snapshot captured while live would otherwise announce "Live" to
+ * someone reading a static file.
+ */
+export function displayedSource(status: MetricsState['status'], snapshotSource?: MetricsSnapshot['source']): MetricsSnapshot['source'] {
+  if (!isLiveCall(status)) return 'fallback';
+  return snapshotSource ?? 'fallback';
 }
 
 /**
@@ -32,9 +62,14 @@ export function useMetrics(): MetricsState {
         // Layered fallback: live Dev.to -> snapshot -> bundled copy (never empty)
         const articles =
           devto.length > 0 ? devto : fallback?.devto?.length ? fallback.devto : FALLBACK_ARTICLES;
+        // The GitHub half always comes from a live call here, but the articles
+        // may not. Stamping `live` over a half-substituted payload is the same
+        // lie KI-021 found in the snapshot, only on the client, and the badge
+        // is the one thing a visitor can check the numbers against.
+        const source = resolveSource(devto.length, fallback?.devto?.length ?? 0);
         const live: MetricsSnapshot = {
           fetchedAt: new Date().toISOString(),
-          source: 'live',
+          source,
           user: {
             login: String(user.login),
             publicRepos: Number(user.public_repos),
@@ -46,7 +81,7 @@ export function useMetrics(): MetricsState {
           devto: articles,
           commits: [], // frontend doesn't consume commits — the MCP tool reads the committed snapshot
         };
-        setState({ status: 'live', snapshot: live });
+        setState({ status: source === 'fallback' ? 'fallback' : source, snapshot: live });
       } catch {
         if (cancelled) return;
         if (fallback) {
