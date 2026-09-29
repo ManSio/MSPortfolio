@@ -527,6 +527,9 @@ export const TOOLS: MCPTool[] = [
               tags: a.tags ?? [],
             })),
             source: 'snapshot',
+            snapshotSource: snap.source,
+            fetchedAt: snap.fetchedAt,
+            ageMinutes: ageMinutes(snap.fetchedAt),
           };
         }
         return {
@@ -540,15 +543,31 @@ export const TOOLS: MCPTool[] = [
   },
   {
     name: 'get_commit_history',
-    description: "Get recent commit history across the owner's public repos (hourly snapshot). Use it to answer 'what has he been building lately' or 'show the hardest bugs he has fixed'.",
+    description:
+      "Get recent commit history across the owner's public repos. Reads the deployed snapshot and reports its `fetchedAt` and `ageMinutes`, so 'how current is this?' is answered by the payload instead of by trusting this description. Use it to answer 'what has he been building lately' or 'show the hardest bugs he has fixed'.",
     inputSchema: { type: 'object', properties: {} },
     annotations: { readOnlyHint: true, openWorldHint: true },
     async execute() {
       const snap = await fetchCommittedMetrics();
       if (!snap?.commits || snap.commits.length === 0) {
-        return { count: 0, commits: [], source: 'unavailable', error: 'Commit snapshot unavailable.' };
+        return {
+          count: 0,
+          commits: [],
+          source: 'unavailable',
+          error: 'Commit snapshot unavailable.',
+        };
       }
-      return { count: snap.commits.length, commits: snap.commits, source: 'snapshot' };
+      // `source: 'snapshot'` says what KIND of data this is; without the
+      // timestamp an agent cannot tell an hour-old answer from a day-old one,
+      // and the description's "hourly" is prose it has no way to check.
+      return {
+        count: snap.commits.length,
+        commits: snap.commits,
+        source: 'snapshot',
+        snapshotSource: snap.source,
+        fetchedAt: snap.fetchedAt,
+        ageMinutes: ageMinutes(snap.fetchedAt),
+      };
     },
   },
   {
@@ -997,10 +1016,24 @@ export function getTool(name: string): MCPTool | undefined {
 export { runSimulation, ARCHITECTURES };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Committed metrics snapshot (hourly-refreshed in CI → public/metrics.json)
+// Deployed metrics snapshot (refreshed hourly in CI → public/metrics.json)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const METRICS_SNAPSHOT_URL = 'https://mansio.github.io/MSPortfolio/metrics.json';
+
+/**
+ * Age of a snapshot timestamp, in whole minutes.
+ *
+ * Returns null rather than a fabricated number when the timestamp is missing or
+ * unparseable: a tool that guesses an age is worse than one that admits it does
+ * not know, and the caller already has the raw `fetchedAt` to inspect.
+ */
+export function ageMinutes(fetchedAt: string | undefined): number | null {
+  if (!fetchedAt) return null;
+  const t = Date.parse(fetchedAt);
+  if (Number.isNaN(t)) return null;
+  return Math.max(0, Math.round((Date.now() - t) / 60000));
+}
 
 /** Fetches the committed metrics snapshot. Returns null on any failure. */
 async function fetchCommittedMetrics(): Promise<MetricsSnapshot | null> {
