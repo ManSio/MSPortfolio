@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-09-28T17:40:14.053Z",
-  "source": "fallback",
+  "fetchedAt": "2026-09-29T05:13:34.852Z",
+  "source": "live",
   "user": {
     "login": "ManSio",
     "publicRepos": 12,
@@ -9,20 +9,20 @@
   },
   "repos": [
     {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 1,
+      "openIssues": 1,
+      "pushedAt": "2026-09-29T04:57:02Z",
+      "language": "Python"
+    },
+    {
       "name": "MSPortfolio",
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "pushedAt": "2026-09-28T17:39:30Z",
+      "pushedAt": "2026-09-29T04:56:10Z",
       "language": "TypeScript"
-    },
-    {
-      "name": "mscodebase-intelligence",
-      "stars": 2,
-      "forks": 1,
-      "openIssues": 2,
-      "pushedAt": "2026-09-28T17:37:42Z",
-      "language": "Python"
     },
     {
       "name": "ManSio.github.io",
@@ -198,32 +198,46 @@
   ],
   "commits": [
     {
+      "repo": "mscodebase-intelligence",
+      "sha": "e5756f5530",
+      "date": "2026-09-29T04:57:02Z",
+      "message": "Merge pull request #57 from ManSio/fix/redteam-tails",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "b88e4f68eb",
+      "date": "2026-09-29T04:49:21Z",
+      "message": "fix(redteam): wire silent_subprocess into entry point, close red-team tails",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "e8811af1ab",
+      "date": "2026-09-29T04:41:55Z",
+      "message": "Merge pull request #56 from ManSio/fix/redteam-open-triple",
+      "author": "Mikhail"
+    },
+    {
       "repo": "MSPortfolio",
-      "sha": "10dc36d2d1",
-      "date": "2026-09-28T17:39:03Z",
-      "message": "fix(ci): assert metrics snapshot by equality, not age",
-      "author": "ManSio"
+      "sha": "94b718102b",
+      "date": "2026-09-29T04:55:42Z",
+      "message": "docs: log KI-021 hardcoded metrics source flag (#10)",
+      "author": "Mikhail"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "a027996e83",
-      "date": "2026-09-27T20:29:45Z",
-      "message": "data(frozen): track token_reduction_v3_lancedb frozen inputs",
-      "author": "MSCodeBase Agent"
+      "repo": "MSPortfolio",
+      "sha": "7a51e4cf6a",
+      "date": "2026-09-29T04:49:42Z",
+      "message": "refactor(lab): keep the lab corpus mscodebase-intelligence only (#9)",
+      "author": "Mikhail"
     },
     {
-      "repo": "mscodebase-intelligence",
-      "sha": "e52ca05a63",
-      "date": "2026-09-27T20:29:45Z",
-      "message": "fix(tests): script import no longer pollutes xdist worker environ",
-      "author": "MSCodeBase Agent"
-    },
-    {
-      "repo": "mscodebase-intelligence",
-      "sha": "35aaf070ec",
-      "date": "2026-09-27T20:13:03Z",
-      "message": "fix(f5-judge): explicit-final verdict contract plus CoT backfill",
-      "author": "MSCodeBase Agent"
+      "repo": "MSPortfolio",
+      "sha": "3da52dfa0a",
+      "date": "2026-09-28T19:20:18Z",
+      "message": "chore(lab): sync JSON projections with logs (#8)",
+      "author": "Mikhail"
     },
     {
       "repo": "ManSio.github.io",
@@ -391,20 +405,6 @@
       "sha": "e5c361360c",
       "date": "2026-08-12T20:43:07Z",
       "message": "chore: release v0.26.1",
-      "author": "Sidd27"
-    },
-    {
-      "repo": "infrawise",
-      "sha": "b7ad6f3b05",
-      "date": "2026-08-12T20:42:43Z",
-      "message": "fix(s3): walk buckets concurrently, and stop reporting unread config as off",
-      "author": "Sidd27"
-    },
-    {
-      "repo": "infrawise",
-      "sha": "47c7684e74",
-      "date": "2026-08-12T19:29:13Z",
-      "message": "chore: release v0.26.0",
       "author": "Sidd27"
     }
   ]

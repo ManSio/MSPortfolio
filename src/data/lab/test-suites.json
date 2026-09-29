@@ -43,7 +43,14 @@
      "updatedAt": "2026-08-15"
     },
     {
-     "file": "tests/llm-arm-integration.test.ts",
+     "file": "tests/metrics-source.test.ts",
+      "name": "Metrics snapshot source flag (KI-021)",
+      "tests": 7,
+      "covers": "classifySnapshot over every state: all sources answered -> live, Dev.to down -> partial, one failed commit history -> partial, all commit histories failed -> partial, only identity data -> fallback, GitHub failed -> fallback, zero repos is not a degradation; each result must fit the MetricsSnapshot source union",
+      "updatedAt": "2026-09-29"
+     },
+     {
+      "file": "tests/llm-arm-integration.test.ts",
      "name": "verify_claim + LLM arm integration (stage 2)",
      "tests": 5,
      "covers": "arm absent -> deterministic v1 (arm:deterministic), arm rescues miss with cited source (arm:llm), arm refusal keeps refusal, arm error fail-closed, deterministic hit never consults the arm",
@@ -71,6 +78,6 @@
      "updatedAt": "2026-08-15"
     }
    ],
- "total": 113,
+ "total": 120,
  "updatedAt": "2026-09-29"
 }
