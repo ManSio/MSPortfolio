@@ -116,7 +116,7 @@ export interface CommitEntry {
 
 export interface MetricsSnapshot {
   fetchedAt: string;
-  source: 'live' | 'fallback';
+  source: 'live' | 'partial' | 'fallback';
   user: {
     login: string;
     publicRepos: number;

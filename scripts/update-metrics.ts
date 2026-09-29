@@ -9,6 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { classifySnapshot } from './metrics-source.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TARGET = join(ROOT, 'public', 'metrics.json');
@@ -44,22 +45,30 @@ let devto: {
   social_image?: string | null;
   readable_publish_date?: string;
 }[] = [];
+let devtoOk = false;
 try {
   // per_page=8 (was 6): real param, busts stale dev.to Varnish entries and leaves headroom (2026-08-15)
   const res = await fetch('https://dev.to/api/articles?username=mansio&per_page=8&state=published', { headers: { 'User-Agent': 'msp-portfolio-ci' } });
-  if (res.ok) devto = (await res.json()) as typeof devto;
-} catch {
-  devto = [];
+  if (res.ok) {
+    devto = (await res.json()) as typeof devto;
+    devtoOk = true;
+  } else {
+    console.warn(`[metrics] dev.to answered ${res.status} - snapshot will be marked partial`);
+  }
+} catch (e) {
+  console.warn('[metrics] dev.to unreachable - snapshot will be marked partial:', String(e));
 }
 
 // Commit history (top 3 per repo) — powers the get_commit_history MCP tool.
 // Drops the cron snapshot noise so agents see real work, not bot commits.
 const COMMIT_FILTER = /^chore: refresh metrics snapshot|\[skip ci\]/;
+let commitsOk = 0;
 const commitLists = await Promise.all(
   repos.map(async (r) => {
     try {
       const res = await fetch(`https://api.github.com/repos/${OWNER}/${r.name}/commits?per_page=3`, { headers });
       if (!res.ok) return [];
+      commitsOk += 1;
       const data = (await res.json()) as Array<{ sha: string; commit: { message: string; author?: { name?: string; date?: string } } }>;
       return data
         .filter((c) => !COMMIT_FILTER.test(c.commit.message))
@@ -77,9 +86,16 @@ const commitLists = await Promise.all(
 );
 const commits = commitLists.flat().slice(0, 30);
 
+// A silent `return []` above is indistinguishable from "no commits" for the
+// reader, so the degradation is recorded in the snapshot itself (KI-021).
+const source = classifySnapshot({ github: true, devto: devtoOk, commitsOk, commitsTotal: repos.length });
+if (source !== 'live') {
+  console.warn(`[metrics] degraded sources: devto=${devtoOk} commits=${commitsOk}/${repos.length} -> source=${source}`);
+}
+
 const snapshot = {
   fetchedAt: new Date().toISOString(),
-  source: 'fallback' as const,
+  source,
   user: {
     login: user.login,
     publicRepos: user.public_repos,
@@ -114,7 +130,7 @@ const snapshot = {
 };
 
 writeFileSync(TARGET, JSON.stringify(snapshot, null, 2) + '\n');
-console.log(`[metrics] wrote ${TARGET} (${repos.length} repos)`);
+console.log(`[metrics] wrote ${TARGET} (${repos.length} repos, source=${source}, commits=${commitsOk}/${repos.length} repos, devto=${devto.length})`);
 
 // Commit + push (only when a token is present, i.e. in CI).
 if (GITHUB_TOKEN) {
