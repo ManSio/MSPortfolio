@@ -1,0 +1,299 @@
+{
+  "fetchedAt": "2026-10-03T19:57:10.198Z",
+  "source": "live",
+  "user": {
+    "login": "ManSio",
+    "publicRepos": 13,
+    "followers": 71,
+    "following": 89
+  },
+  "repos": [
+    {
+      "name": "mscodebase-intelligence",
+      "stars": 2,
+      "forks": 1,
+      "openIssues": 2,
+      "pushedAt": "2026-10-03T17:53:54Z",
+      "language": "Python"
+    },
+    {
+      "name": "MSPortfolio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-10-03T17:16:04Z",
+      "language": "TypeScript"
+    },
+    {
+      "name": "ManSio.github.io",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-09-24T03:39:41Z",
+      "language": "HTML"
+    },
+    {
+      "name": "ManSio",
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "pushedAt": "2026-08-14T10:16:54Z",
+      "language": null
+    },
+    {
+      "name": "gemma_agent",
+      "stars": 2,
+      "forks": 0,
+      "openIssues": 11,
+      "pushedAt": "2026-08-05T08:34:20Z",
+      "language": "Python"
+    }
+  ],
+  "npm": [],
+  "devto": [
+    {
+      "id": 4755680,
+      "title": "The Unit of Return: a 4-Arm Retrieval Experiment on a Real Codebase",
+      "description": "Where It Started   The problem to which everything traces back: RAG search across an...",
+      "readingTimeMinutes": 12,
+      "url": "https://dev.to/mansio/the-unit-of-return-a-4-arm-retrieval-experiment-on-a-real-codebase-6n8",
+      "tags": [
+        "ai",
+        "rag",
+        "python",
+        "architecture"
+      ],
+      "reactions": 8,
+      "comments": 2,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F2ls8srh9u8ekjlhiswbj.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F2ls8srh9u8ekjlhiswbj.png",
+      "readablePublishDate": "Sep 27"
+    },
+    {
+      "id": 4715154,
+      "title": "From a Test-Suite Trace to a Search Signal: the Bootstrap Pipeline Story",
+      "description": "Part 4 of MSCodeBase Intelligence — Field Notes. Full source-material: why bootstrap started, Exp 7 (dynamic link), 7b (Tarantula), 8 (sysmon), 9 (static), 16 (portability), 17/E17 (search consumer). Honest about what is still experimental and can break.",
+      "readingTimeMinutes": 9,
+      "url": "https://dev.to/mansio/from-a-test-suite-trace-to-a-search-signal-the-bootstrap-pipeline-story-407b",
+      "tags": [
+        "search",
+        "rag",
+        "codearchitecture",
+        "testing"
+      ],
+      "reactions": 7,
+      "comments": 11,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fyhj29ysunid3qgzd5pgc.png",
+      "readablePublishDate": "Sep 22"
+    },
+    {
+      "id": 4535380,
+      "title": "We Didn't Invent New AI Architecture. We Rediscovered 20-Year-Old Computer Science.",
+      "description": "The AI industry isn't inventing a new paradigm. It is frantically rediscovering classical computer science from 20 years ago.",
+      "readingTimeMinutes": 4,
+      "url": "https://dev.to/mansio/we-didnt-invent-new-ai-architecture-we-rediscovered-20-year-old-computer-science-1f6m",
+      "tags": [
+        "ai",
+        "agents",
+        "architecture",
+        "discuss"
+      ],
+      "reactions": 16,
+      "comments": 1,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fkommpokr69ya292cxhoy.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fkommpokr69ya292cxhoy.png",
+      "readablePublishDate": "Aug 31"
+    },
+    {
+      "id": 4409809,
+      "title": "The Dataset Was Lying: 4 of 6 \"False\" Facts Were True",
+      "description": "We red-teamed our own memory-verification experiment: 4 of 6 'false' trap facts were true, the conclusions inverted, and the real fix for temporal claims was a verb tense.",
+      "readingTimeMinutes": 9,
+      "url": "https://dev.to/mansio/the-dataset-was-lying-4-of-6-false-facts-were-true-13ok",
+      "tags": [
+        "ai",
+        "agents",
+        "testing",
+        "mcp"
+      ],
+      "reactions": 10,
+      "comments": 9,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F57605e2h5xibzf3vns9i.png",
+      "readablePublishDate": "Aug 16"
+    },
+    {
+      "id": 4405950,
+      "title": "Went down a rabbit hole testing whether LLMs can actually verify agent memory claims on their own. Turns out the evidence format matters way more than the model — bare token strings barely work, real code context changes everything.",
+      "description": "Bare tokens vs real code: an 11x recall jump in LLM memory verification (3400 calls, 14...",
+      "readingTimeMinutes": 1,
+      "url": "https://dev.to/mansio/went-down-a-rabbit-hole-testing-whether-llms-can-actually-verify-agent-memory-claims-on-their-own-2la2",
+      "tags": [
+        "agents",
+        "ai",
+        "llm",
+        "testing"
+      ],
+      "reactions": 1,
+      "comments": 0,
+      "coverImage": null,
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fpc9y2wlmad35ybzu67et.png",
+      "readablePublishDate": "Aug 15"
+    },
+    {
+      "id": 4399317,
+      "title": "Bare tokens vs real code: an 11x recall jump in LLM memory verification (3400 calls, 14 models)",
+      "description": "14 models, 4 arms, ~3400 API calls. No model balanced false-accept and recall with pattern strings. With real file snippets: recall 0.08→0.88 at FA=0.02. The problem was the evidence, not the model.",
+      "readingTimeMinutes": 10,
+      "url": "https://dev.to/mansio/your-memory-layer-is-lying-to-you-and-your-llm-agrees-1oia",
+      "tags": [
+        "llm",
+        "memorylayer",
+        "agents",
+        "benchmark"
+      ],
+      "reactions": 12,
+      "comments": 4,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fa1ouf2n8oh712ky5tpd4.png",
+      "readablePublishDate": "Aug 14"
+    },
+    {
+      "id": 4397130,
+      "title": "I turned my portfolio into an MCP server (and I'm not a programmer)",
+      "description": "A civil engineer who directs AI agents built a portfolio that answers questions from other AI agents. Here's what broke, what worked, and why.",
+      "readingTimeMinutes": 4,
+      "url": "https://dev.to/mansio/i-turned-my-portfolio-into-an-mcp-server-and-im-not-a-programmer-4h0a",
+      "tags": [
+        "mcp",
+        "ai",
+        "cloudflare",
+        "portfolio"
+      ],
+      "reactions": 18,
+      "comments": 2,
+      "coverImage": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fraw.githubusercontent.com%2FManSio%2FMSPortfolio%2Fmain%2Fdocs%2Fdevto-cover1.png",
+      "readablePublishDate": "Aug 14"
+    },
+    {
+      "id": 4371984,
+      "title": "The Mechanical vs. The Semantic: What Happens When AI Memory is Wrong?",
+      "description": "An empirical look at memory contamination in AI agents. I ran an experiment to see how agents handle false facts, tested a retraction mechanism, and closed the final gap with verify-on-read.",
+      "readingTimeMinutes": 7,
+      "url": "https://dev.to/mansio/the-mechanical-vs-the-semantic-what-happens-when-ai-memory-is-wrong-38ko",
+      "tags": [
+        "ai",
+        "agents",
+        "architecture",
+        "mcp"
+      ],
+      "reactions": 19,
+      "comments": 52,
+      "coverImage": null,
+      "socialImage": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fh5tdgd82gnvqwwvx9m7s.png",
+      "readablePublishDate": "Aug 11"
+    }
+  ],
+  "commits": [
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "cfacdba3d1",
+      "date": "2026-10-03T17:53:54Z",
+      "message": "Merge pull request #70 from ManSio/fix/gate-kwargs-and-claims-t17",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "3ffbdb22a0",
+      "date": "2026-10-03T17:48:35Z",
+      "message": "fix(hooks): keep the spawn stub local to the hook module",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "mscodebase-intelligence",
+      "sha": "fcdc07096a",
+      "date": "2026-10-03T17:41:26Z",
+      "message": "chore(tests): drop the duplicated ruff-gate contract test",
+      "author": "MSCodeBase Agent"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "3ab5995e5b",
+      "date": "2026-09-29T06:31:08Z",
+      "message": "fix(mcp): report snapshot age in tool payloads (#16)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "6190441982",
+      "date": "2026-09-29T06:21:05Z",
+      "message": "fix(i18n): translate the metrics and benchmark chrome (KI-022) (#15)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "MSPortfolio",
+      "sha": "adc3be3e3c",
+      "date": "2026-09-29T05:50:51Z",
+      "message": "fix(metrics): let the client and the badge tell the truth about partial data (#14)",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "1da4c73bd6",
+      "date": "2026-09-24T03:39:40Z",
+      "message": "feat: make the redirect landing page readable by non-JS agents",
+      "author": "ManSio"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "177e898da7",
+      "date": "2026-08-24T18:04:01Z",
+      "message": "Revise sitemap.xml with updated URLs and metadata",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "ManSio.github.io",
+      "sha": "0b7999fb01",
+      "date": "2026-08-24T16:44:29Z",
+      "message": "feat: add root MCP discovery and agent link beacons",
+      "author": "ManSio"
+    },
+    {
+      "repo": "ManSio",
+      "sha": "d3c6fc3bd6",
+      "date": "2026-08-14T10:16:53Z",
+      "message": "style: profile in MSPortfolio dark theme (content unchanged)",
+      "author": "ManSio"
+    },
+    {
+      "repo": "ManSio",
+      "sha": "940820015c",
+      "date": "2026-08-08T12:53:37Z",
+      "message": "Update README.md",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "ManSio",
+      "sha": "5eb244ddaf",
+      "date": "2026-08-08T12:52:46Z",
+      "message": "Update README.ru.md",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "69ff333882",
+      "date": "2026-06-15T17:11:50Z",
+      "message": "Merge pull request #26 from ManSio/dependabot/pip/pypdf-gte-6.13.2",
+      "author": "Mikhail"
+    },
+    {
+      "repo": "gemma_agent",
+      "sha": "97e6014d06",
+      "date": "2026-06-15T16:04:26Z",
+      "message": "Merge pull request #33 from ManSio/dependabot/pip/httpx2-gte-2.4.0",
+      "author": "Mikhail"
+    }
+  ]
+}
