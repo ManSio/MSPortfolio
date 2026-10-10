@@ -1852,6 +1852,213 @@
         "exp-8",
         "exp-43"
       ]
+    },
+    {
+      "id": "exp-54",
+      "date": "2026-10-08",
+      "project": "mscodebase-intelligence",
+      "title": "E24: fast-режим умирает без эмбеддингов (10/10 ERR), тогда как quality деградирует мягко",
+      "hypothesis": "If the embedder is unavailable, fast mode raises RuntimeError per query while quality mode silently degrades to FTS5+graph.",
+      "command": "experiments/search_quality/e24_driver.py over 10 frozen questions in both modes, with the embedder forced into fallback mode (ov_compiled=False, onnx_client=False); raw logs in experiments/search_quality/results/e24_no_vector.json and e24_with_vector.json",
+      "result": "fast: 10/10 ERR (h1 0/10, h5 0/10); quality: 0/10 ERR, h1 4/10, h5 7/10. With a live embedder: fast 0 errors (h1 0/10, h5 19/20), quality h1 3/10, h5 5/10. Fix = wrap the fast query-embed in try/except mirroring the quality contract; re-run gives h1 4/10, h5 6/10, ERR 0/10.",
+      "verdict": "confirmed",
+      "finding": "Graceful degradation is a property of the query path, not of the mode: fast mode had no try/except around query embedding, so a dead embedder surfaced as a RuntimeError per query instead of degrading.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "E24: 10 queries, embedder down (errors vs hits@5)",
+          "data": [
+            {
+              "label": "fast: errors",
+              "value": 10,
+              "color": "#ef4444"
+            },
+            {
+              "label": "fast: hit@5",
+              "value": 0,
+              "color": "#ef4444"
+            },
+            {
+              "label": "quality: errors",
+              "value": 0,
+              "color": "#10b981"
+            },
+            {
+              "label": "quality: hit@5",
+              "value": 7,
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Every embedding call site needs the same degradation contract; fast mode was the one path that lacked it.",
+      "links": [
+        "exp-58"
+      ]
+    },
+    {
+      "id": "exp-55",
+      "date": "2026-10-08",
+      "project": "mscodebase-intelligence",
+      "title": "E25: on-demand реранк вектор-фри кандидатов — косинус по живым эмбеддингам, без хранимых векторов",
+      "hypothesis": "Top-N lexical candidates can be re-ranked by embedding them live at query time, removing stored vectors from the rerank stage.",
+      "command": "experiments/e25_ondemand/e25_candidates.py then e25_rerank.py over 10 questions; three embedding arms (Q4 raw, Q4+coderet, e5-small); raw logs in experiments/e25_ondemand/results/",
+      "result": "Vector-free candidate recall@10 = 6/10. On-demand cosine rerank: Q4 raw h1 4/10 h5 6/10 p50 2211ms; Q4+coderet h1 5/10 h5 6/10 p50 2327ms; e5-small h1 3/10 h5 6/10 p50 573ms.",
+      "verdict": "partial",
+      "finding": "Live reranking is cheap enough to be viable (0.5-2.3s p50) but on this 10-question panel it does not beat the existing pipeline, and the small embedder trades accuracy for a 4x speedup.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "E25 on-demand rerank hit@1 of 10 and p50 latency",
+          "data": [
+            {
+              "label": "Q4 raw h1",
+              "value": 4,
+              "color": "#f59e0b"
+            },
+            {
+              "label": "Q4+coderet h1",
+              "value": 5,
+              "color": "#10b981"
+            },
+            {
+              "label": "e5 h1",
+              "value": 3,
+              "color": "#3b82f6"
+            }
+          ]
+        }
+      ],
+      "conclusion": "On-demand rerank is a viable mechanism, not yet a replacement: 6/10 candidate recall caps everything downstream.",
+      "links": [
+        "exp-58"
+      ]
+    },
+    {
+      "id": "exp-56",
+      "date": "2026-10-08",
+      "project": "mscodebase-intelligence",
+      "title": "E26: AST-обогащение на уровне файла (префикс FILE/SYMBOLS/DOC) поднимает hit@1 с 8/17 до 10/17",
+      "hypothesis": "Chunks that carry their file path, exported symbols and docstring context embed closer to natural-language questions than bare code slices.",
+      "command": "experiments/e26_ast/e26_bm25.py over 17 frozen questions x 81 chunks, raw vs augmented; template frozen in experiments/e26_ast/frozen/AUG_TEMPLATE.md; raw log experiments/e26_ast/results/e26.json",
+      "result": "raw: hit@1 8/17 (0.471), hit@5 16/17 (0.941), MRR 0.659. augmented: hit@1 10/17 (0.588), hit@5 16/17 (0.941), MRR 0.709. No regression on any query.",
+      "verdict": "confirmed",
+      "finding": "Two extra hits with zero regressions: the augmentation fixes queries whose evidence is a file-level fact (indexer, registry) rather than a single function body.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "E26 hit@1 of 17, raw vs AST augmentation",
+          "data": [
+            {
+              "label": "raw hit@1",
+              "value": 8,
+              "color": "#6b7280"
+            },
+            {
+              "label": "augmented hit@1",
+              "value": 10,
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Cheap structural augmentation is a real, regression-free recall gain; it ships behind MSCODEBASE_AUGMENT_CHUNKS (default off; chunk hashes change, so the embeddings are rebuilt).",
+      "links": [
+        "exp-57"
+      ]
+    },
+    {
+      "id": "exp-57",
+      "date": "2026-10-08",
+      "project": "mscodebase-intelligence",
+      "title": "E27: описания Doc2Query не меняют ни одного rank-1",
+      "hypothesis": "LLM-written one-line descriptions per chunk will help natural-language questions more than the static augmentation does.",
+      "command": "experiments/e27_doc2query/e27_gen.py then e27_measure.py over the same 17 questions; raw log experiments/e27_doc2query/results/e27.json",
+      "result": "Per-query hit@1 columns are identical between the static (RD2) and Doc2Query (D) arms: 10/17 both. Doc2Query alone reaches h1 6/17, hit@5 8/17, MRR 0.388 - worse than the static augmentation it was supposed to improve on.",
+      "verdict": "refuted",
+      "finding": "The generated descriptions carry weaker signal than the deterministic FILE/SYMBOLS/DOC prefix they were meant to improve on; one chunk yielded an empty description.",
+      "chart": null,
+      "conclusion": "Отрицательный результат, который стоит сохранить: детерминированное структурное обогащение победило LLM-описания на той же панели.",
+      "links": [
+        "exp-56"
+      ]
+    },
+    {
+      "id": "exp-58",
+      "date": "2026-10-10",
+      "project": "mscodebase-intelligence",
+      "title": "EXP-28: dense-off A/B — LanceDB это primary store чанков, а не векторный индекс",
+      "hypothesis": "Dense retrieval (query embedding + LanceDB vector search) can be switched off without quality loss, which would justify removing the LanceDB dependency (Phase 3 of the migration). 6 hypotheses frozen, 3 written to be expected to fail.",
+      "command": "MSCODEBASE_DENSE_OFF=true/false with the same code and index; 33-question panel frozen before the run (sha256 f31e594e, union of three pre-existing frozen sets); 2 runs per arm; raw logs in experiments/e28_denseoff/results/",
+      "result": "A dense ON: hit@1 11/33 (33.3%), hit@5 15/33 (45.5%), 0 errors. B dense OFF: hit@1 12/33 (36.4%), hit@5 16/33 (48.5%), 0 errors. Per case 2 better / 1 worse / 30 same. Harness proven: _vector_search_async call counter 1 -> 0 with the embedder alive.",
+      "verdict": "partial",
+      "finding": "Of 52 table-API call sites in 13 src files only 5 are vector search; the chunk table is read to build the lexical index and to write/delete chunks, so LanceDB is the chunk primary store. Deleting it is a store migration, not a cleanup. No quality case for switching dense off.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "EXP-28 hit@1 of 33, dense on vs dense off",
+          "data": [
+            {
+              "label": "dense ON",
+              "value": 11,
+              "color": "#6b7280"
+            },
+            {
+              "label": "dense OFF",
+              "value": 12,
+              "color": "#10b981"
+            }
+          ]
+        }
+      ],
+      "conclusion": "Phase 3 rejected as stated: dense stays, LanceDB stays, MSCODEBASE_DENSE_OFF ships as an operational kill-switch (default off).",
+      "links": [
+        "exp-55",
+        "exp-59"
+      ]
+    },
+    {
+      "id": "exp-59",
+      "date": "2026-10-10",
+      "project": "mscodebase-intelligence",
+      "title": "EXP-29: разрез symbol/NL закрывает непроверяемую гипотезу EXP-28 и снимает ложное число 18%",
+      "hypothesis": "EXP-28 could not test whether symbolic queries suffer without dense (no labelling in the panel). Freeze a deterministic labelling rule first, then re-run both arms twice. 5 hypotheses, 3 expected to fail.",
+      "command": "experiments/e29_symbol_ab/e29_label.py (rule frozen before the run) then e29_run.py with E29_PROJECT_ROOT pointing at the indexed project; 2 runs per arm; raw logs in experiments/e29_symbol_ab/results/",
+      "result": "A dense ON: NL 3/18 (16.7%), symbolic 8/15 (53.3%), 0 errors, mean 2559/2555ms. B dense OFF: NL 5/18 (27.8%), symbolic 7/15 (46.7%), 0 errors, mean 2375/2354ms. NL 2 better / 0 worse; symbolic 0 better / 1 worse. Speedup 7.2% and 7.9% (stable, 0.2% spread).",
+      "verdict": "partial",
+      "finding": "Both improvements are NL queries where dense pulled top-1 into a document; the single regression is lexical. CORRECTED: EXP-28 published an 18.0% speedup that was inflated by one noisy run (21% spread) — the live figure is 7.5%. The first run from a worktree printed hit1=0/33 with rc=0 (silent zero on a per-project-path index); the guard now exits 2 on all-empty input.",
+      "chart": [
+        {
+          "type": "bar",
+          "title": "EXP-29 hit@1 by subset and arm",
+          "data": [
+            {
+              "label": "NL dense ON",
+              "value": 3,
+              "color": "#6b7280"
+            },
+            {
+              "label": "NL dense OFF",
+              "value": 5,
+              "color": "#10b981"
+            },
+            {
+              "label": "symbolic dense ON",
+              "value": 8,
+              "color": "#3b82f6"
+            },
+            {
+              "label": "symbolic dense OFF",
+              "value": 7,
+              "color": "#f59e0b"
+            }
+          ]
+        }
+      ],
+      "conclusion": "H5 closed with a frozen labelling rule; dense-off decision unchanged. Also a measured lesson: a number that does not reproduce on a second run is dead on arrival for publication.",
+      "links": [
+        "exp-58"
+      ]
     }
   ],
   "negativeResults": [
