@@ -186,10 +186,10 @@ jobs:
         # time: GH Pages serves with `Cache-Control: max-age=600`, and a
         # `?cb=` query param does NOT bypass it (measured: `Age` kept growing
         # across distinct query strings — same cached object). So the freshly
-        # published snapshot can stay invisible for up to 10 min. 30 x 30s =
-        # 15 min covers Pages build (measured 24-65 s) plus a full TTL cycle.
-        # Normal case matches on attempt 1-2; the loop is a bounded wait, not
-        # the common path.
+        # published snapshot can stay invisible for up to 10 min. 60 x 30s =
+        # 30 min covers Pages build plus multiple TTL cycles and slow Pages
+        # publication (run 39789851365 took >15 min). Normal case matches on
+        # attempt 1-2; the loop is a bounded wait, not the common path.
         env:
           EXPECTED_FETCHED_AT: ${{ needs.deploy.outputs.metrics_fetched_at }}
         run: |
@@ -199,16 +199,16 @@ jobs:
             echo "::error::deploy did not export metrics_fetched_at — snapshot freshness is unverifiable"
             exit 1
           fi
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             live=$(curl -fsS "$METRICS" | jq -r '.fetchedAt')
             if [ "$live" = "$EXPECTED_FETCHED_AT" ]; then
               echo "deployed metrics.json matches this run's snapshot ✔ (attempt $i)"
               exit 0
             fi
-            echo "attempt $i/30: deployed fetchedAt=$live, expected $EXPECTED_FETCHED_AT — waiting for Pages (TTL 600s)"
+            echo "attempt $i/60: deployed fetchedAt=$live, expected $EXPECTED_FETCHED_AT — waiting for Pages (TTL 600s)"
             sleep 30
           done
-          echo "::error::deployed metrics.json never matched this run's snapshot (live=$live, expected=$EXPECTED_FETCHED_AT) after 15 min"
+          echo "::error::deployed metrics.json never matched this run's snapshot (live=$live, expected=$EXPECTED_FETCHED_AT) after 30 min"
           exit 1
 
   deploy-worker:
