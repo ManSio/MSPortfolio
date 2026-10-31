@@ -1,0 +1,11 @@
+{
+  "name": "MSPortfolio",
+  "description": "MCP-native engineering portfolio: projects with decision logs, engineering principles, stack-fit analysis, architecture failure simulation and the lab (experiments, diary, known issues).",
+  "endpoints": [
+    {
+      "url": "https://msp-portfolio.mansio-dev.workers.dev/mcp",
+      "transport": "streamable-http",
+      "description": "MCP Streamable HTTP endpoint (JSON-RPC 2.0) for Claude Code, Cursor, Zed, etc."
+    }
+  ]
+}
