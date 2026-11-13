@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" width="900" height="640" role="img" aria-label="Quality passport of mscodebase-intelligence, sheet 7">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#d9d4c3" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  <style>
+    .sans{font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif}
+    .mono{font-family:"Liberation Mono","DejaVu Sans Mono","Courier New",monospace}
+    .ink{fill:#1b2a3a}
+    .line{stroke:#1b2a3a;fill:none}
+    .h{font-size:10px;letter-spacing:1px;fill:#5a6a7a}
+    .t{font-size:10.5px;fill:#5a6a7a}
+    .ok{stroke:#1f6f4a;fill:none;stroke-width:2.5}
+    .okt{fill:#1f6f4a;font-weight:700}
+    .snap{stroke:#2b5b84;fill:none;stroke-width:2.5}
+    .snapt{fill:#2b5b84;font-weight:700}
+    .rej{stroke:#4a5568;fill:none;stroke-width:2.5}
+    .rejt{fill:#4a5568;font-weight:700}
+    .bad{stroke:#b3261e;fill:none;stroke-width:2.5}
+    .badt{fill:#b3261e;font-weight:700}
+  </style>
+
+  <rect width="900" height="640" fill="#f6f3ea"/>
+  <rect width="900" height="640" fill="url(#grid)"/>
+  <rect x="10" y="10" width="880" height="620" class="line" stroke-width="2.5"/>
+  <rect x="18" y="18" width="864" height="604" class="line" stroke-width="0.8"/>
+  <text x="36" y="50" class="ink sans" font-size="20" font-weight="700">OBJECT QUALITY PASSPORT</text>
+  <text x="36" y="68" class="h sans">QUALITY PASSPORT · mscodebase-intelligence · ManSio · EN</text>
+  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">SHEET 7 / 7</text>
+  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">ACCEPTANCE</text>
+  <line x1="18" y1="82" x2="882" y2="82" class="line" stroke-width="1.5"/>
+  <text x="36" y="118" class="ink sans" font-size="11" font-weight="700">SUBMITTED FOR ACCEPTANCE</text>
+  <text x="36" y="134" class="sans" font-size="9.5" fill="#1b2a3a">mscodebase-intelligence v3.5.0, revision main @ 1c4062d of 13.11.2026. The set is 7</text>
+  <text x="36" y="146" class="sans" font-size="9.5" fill="#1b2a3a">sheets; the passport revision matches the object revision.</text>
+  <text x="36" y="178" class="ink sans" font-size="11" font-weight="700">ACCEPTED</text>
+  <text x="36" y="194" class="sans" font-size="9.5" fill="#1b2a3a">Visible tools 17 of 69 — matches FACTS §2.</text>
+  <text x="36" y="208" class="sans" font-size="9.5" fill="#1b2a3a">31 grammars loaded — matches FACTS §4.</text>
+  <text x="36" y="222" class="sans" font-size="9.5" fill="#1b2a3a">Rerankers: 4 tested, 0 adopted — E38/E39, the decision is closed.</text>
+  <text x="36" y="250" class="ink sans" font-size="11" font-weight="700">ACCEPTED WITH CAVEATS</text>
+  <text x="36" y="266" class="sans" font-size="9.5" fill="#1b2a3a">hit@5 0.900 and 0.729 — a snapshot from 25.10; 15 commits to the search path since.</text>
+  <text x="36" y="280" class="sans" font-size="9.5" fill="#1b2a3a">Docs channel: hit@1 0.000 — an open defect, sheet 6, D-01.</text>
+  <text x="512" y="118" class="ink sans" font-size="11" font-weight="700">NOT CHECKED</text>
+  <text x="512" y="134" class="sans" font-size="9.5" fill="#1b2a3a">Build signature: there is no release, no attestation was</text>
+  <text x="512" y="146" class="sans" font-size="9.5" fill="#1b2a3a">issued.</text>
+  <text x="512" y="160" class="sans" font-size="9.5" fill="#1b2a3a">External accuracy: 2 repositories, 65 commits; other corpora</text>
+  <text x="512" y="172" class="sans" font-size="9.5" fill="#1b2a3a">were not measured.</text>
+  <text x="512" y="186" class="sans" font-size="9.5" fill="#1b2a3a">Latency under parallel load: the panel's p50, not a stress</text>
+  <text x="512" y="198" class="sans" font-size="9.5" fill="#1b2a3a">test.</text>
+  <text x="512" y="226" class="ink sans" font-size="11" font-weight="700">THE VERDICT CHANGES IF</text>
+  <text x="512" y="242" class="sans" font-size="9.5" fill="#1b2a3a">A re-measurement on the current code matches FACTS §5 — the</text>
+  <text x="512" y="254" class="sans" font-size="9.5" fill="#1b2a3a">caveat is lifted.</text>
+  <text x="512" y="268" class="sans" font-size="9.5" fill="#1b2a3a">A release with attestation ships — the «BUILD» line becomes</text>
+  <text x="512" y="280" class="sans" font-size="9.5" fill="#1b2a3a">signed.</text>
+  <line x1="18" y1="304" x2="882" y2="304" class="line" stroke-width="0.8"/>
+  <text x="36" y="330" class="ink sans" font-size="11.5" font-weight="700">DECISION: accepted with 2 caveats; 3 items were not checked.</text>
+  <text x="36" y="356" class="ink mono" font-size="9.5">HANDED OVER  ________  M. ManSio  __.__.____</text>
+  <text x="512" y="356" class="ink mono" font-size="9.5">ACCEPTED BY  ________  customer  __.__.____</text>
+  <text x="36" y="456" class="ink sans" font-size="12" font-weight="600">How to read</text>
+  <text x="36" y="472" class="t sans" font-size="10">The act closes the set: it does not say «all good»,</text>
+  <text x="36" y="486" class="t sans" font-size="10">but «what exactly is accepted, with what, and what was not checked».</text>
+  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Basis</text>
+  <text x="36" y="524" class="t sans" font-size="10">A signature does not lift a caveat; a re-measurement does.</text>
+  <text x="36" y="538" class="t sans" font-size="10">Every line of the act points to a sheet or a FACTS section.</text>
+  <text x="36" y="566" class="ink mono" font-size="9.5">Source: sheets 2-6 of this set.</text>
+  <rect x="540" y="442" width="330" height="154" class="line" stroke-width="1.5"/>
+  <line x1="540" y1="464" x2="870" y2="464" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="486" x2="870" y2="486" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="508" x2="870" y2="508" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="530" x2="870" y2="530" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="552" x2="870" y2="552" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="574" x2="870" y2="574" class="line" stroke-width="0.8"/>
+  <line x1="632" y1="442" x2="632" y2="596" class="line" stroke-width="0.8"/>
+  <text x="548" y="457" class="h sans" font-size="10">OBJECT</text>
+  <text x="640" y="457" class="ink mono" font-size="10">mscodebase-intelligence</text>
+  <text x="548" y="479" class="h sans" font-size="10">VERSION</text>
+  <text x="640" y="479" class="ink mono" font-size="10">v3.5.0 / Python 3.14</text>
+  <text x="548" y="501" class="h sans" font-size="10">REVISION</text>
+  <text x="640" y="501" class="ink mono" font-size="10">main @ 1c4062d · 13.11.2026</text>
+  <text x="548" y="523" class="h sans" font-size="10">FILE</text>
+  <text x="640" y="523" class="ink mono" font-size="10">docs/FACTS.md · 5,222 B</text>
+  <text x="548" y="545" class="h sans" font-size="10">SHA-256</text>
+  <text x="640" y="545" class="ink mono" font-size="10">a93abe59…05794985</text>
+  <text x="548" y="567" class="h sans" font-size="10">BUILD</text>
+  <text x="640" y="567" class="ink mono" font-size="10">unsigned · before release</text>
+  <text x="548" y="589" class="h sans" font-size="10">CHECKED BY</text>
+  <text x="640" y="589" class="ink mono" font-size="9.5">________  M. ManSio  __.__.____</text>
+</svg>

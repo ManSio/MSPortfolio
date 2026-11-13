@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" width="900" height="640" role="img" aria-label="Паспорт качества объекта mscodebase-intelligence, лист 5">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#d9d4c3" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  <style>
+    .sans{font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif}
+    .mono{font-family:"Liberation Mono","DejaVu Sans Mono","Courier New",monospace}
+    .ink{fill:#1b2a3a}
+    .line{stroke:#1b2a3a;fill:none}
+    .h{font-size:10px;letter-spacing:1px;fill:#5a6a7a}
+    .t{font-size:10.5px;fill:#5a6a7a}
+    .ok{stroke:#1f6f4a;fill:none;stroke-width:2.5}
+    .okt{fill:#1f6f4a;font-weight:700}
+    .snap{stroke:#2b5b84;fill:none;stroke-width:2.5}
+    .snapt{fill:#2b5b84;font-weight:700}
+    .rej{stroke:#4a5568;fill:none;stroke-width:2.5}
+    .rejt{fill:#4a5568;font-weight:700}
+    .bad{stroke:#b3261e;fill:none;stroke-width:2.5}
+    .badt{fill:#b3261e;font-weight:700}
+  </style>
+
+  <rect width="900" height="640" fill="#f6f3ea"/>
+  <rect width="900" height="640" fill="url(#grid)"/>
+  <rect x="10" y="10" width="880" height="620" class="line" stroke-width="2.5"/>
+  <rect x="18" y="18" width="864" height="604" class="line" stroke-width="0.8"/>
+  <text x="36" y="50" class="ink sans" font-size="20" font-weight="700">ПАСПОРТ КАЧЕСТВА ОБЪЕКТА</text>
+  <text x="36" y="68" class="h sans">QUALITY PASSPORT · mscodebase-intelligence · ManSio</text>
+  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">ЛИСТ 5 / 7</text>
+  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">УСЛОВИЯ ЭКСПЛУАТАЦИИ</text>
+  <line x1="18" y1="82" x2="882" y2="82" class="line" stroke-width="1.5"/>
+  <text x="30" y="102" class="h sans" font-size="10">№</text>
+  <text x="78" y="102" class="h sans" font-size="10">ОГРАНИЧЕНИЕ</text>
+  <text x="292" y="102" class="h sans" font-size="10">В ЧЁМ ПРОЯВЛЯЕТСЯ</text>
+  <text x="584" y="102" class="h sans" font-size="10">ЧТО ДЕЛАТЬ</text>
+  <line x1="18" y1="110" x2="882" y2="110" class="line" stroke-width="1"/>
+  <text x="30" y="138" class="ink mono" font-size="10">О-01</text>
+  <text x="78" y="138" class="ink sans" font-size="11" font-weight="600">docs-gold и язык документа</text>
+  <text x="292" y="138" class="sans" font-size="9" fill="#1b2a3a">канал может вернуть docs/ru/X.md, когда золото —</text>
+  <text x="292" y="149" class="sans" font-size="9" fill="#1b2a3a">docs/en/X.md</text>
+  <text x="584" y="138" class="sans" font-size="9" fill="#5a6a7a">нормализовать по basename при оценке</text>
+  <line x1="18" y1="164" x2="882" y2="164" class="line" stroke-width="0.6"/>
+  <text x="30" y="178" class="ink mono" font-size="10">О-02</text>
+  <text x="78" y="178" class="ink sans" font-size="11" font-weight="600">Авто-маршрут в docs — эвристика</text>
+  <text x="292" y="178" class="sans" font-size="9" fill="#1b2a3a">кодовый запрос с сильными docs-словами уедет в</text>
+  <text x="292" y="189" class="sans" font-size="9" fill="#1b2a3a">документацию</text>
+  <text x="584" y="178" class="sans" font-size="9" fill="#5a6a7a">intent="code" как выход</text>
+  <line x1="18" y1="204" x2="882" y2="204" class="line" stroke-width="0.6"/>
+  <text x="30" y="218" class="ink mono" font-size="10">О-03</text>
+  <text x="78" y="218" class="ink sans" font-size="11" font-weight="600">Полный векторный переиндекс</text>
+  <text x="78" y="230" class="ink sans" font-size="11" font-weight="600">заблокирован</text>
+  <text x="292" y="218" class="sans" font-size="9" fill="#1b2a3a">при MSCODEBASE_DENSE_OFF=true (дефолт проекта)</text>
+  <text x="584" y="218" class="sans" font-size="9" fill="#5a6a7a">rebuild_graph.py / reindex_text_only.py</text>
+  <line x1="18" y1="244" x2="882" y2="244" class="line" stroke-width="0.6"/>
+  <text x="30" y="258" class="ink mono" font-size="10">О-04</text>
+  <text x="78" y="258" class="ink sans" font-size="11" font-weight="600">95% не заявлено</text>
+  <text x="292" y="258" class="sans" font-size="9" fill="#1b2a3a">статика и локальные реранкеры до него не дотянули</text>
+  <text x="584" y="258" class="sans" font-size="9" fill="#5a6a7a">LLM-планировщик — отдельный опыт</text>
+  <line x1="18" y1="284" x2="882" y2="284" class="line" stroke-width="0.6"/>
+  <text x="30" y="298" class="ink mono" font-size="10">О-05</text>
+  <text x="78" y="298" class="ink sans" font-size="11" font-weight="600">Быстрый режим — не режим</text>
+  <text x="78" y="310" class="ink sans" font-size="11" font-weight="600">качества</text>
+  <text x="292" y="298" class="sans" font-size="9" fill="#1b2a3a">на смешанных вопросах заметно менее точен</text>
+  <text x="584" y="298" class="sans" font-size="9" fill="#5a6a7a">quality mode, когда нужна точность</text>
+  <line x1="18" y1="324" x2="882" y2="324" class="line" stroke-width="0.6"/>
+  <text x="30" y="338" class="ink mono" font-size="10">О-06</text>
+  <text x="78" y="338" class="ink sans" font-size="11" font-weight="600">Видимость инструментов — это</text>
+  <text x="78" y="350" class="ink sans" font-size="11" font-weight="600">профиль</text>
+  <text x="292" y="338" class="sans" font-size="9" fill="#1b2a3a">69 зарегистрировано, 17 видно по умолчанию</text>
+  <text x="584" y="338" class="sans" font-size="9" fill="#5a6a7a">tool_help(); переключить профиль</text>
+  <line x1="18" y1="364" x2="882" y2="364" class="line" stroke-width="0.6"/>
+  <text x="30" y="378" class="ink mono" font-size="10">О-07</text>
+  <text x="78" y="378" class="ink sans" font-size="11" font-weight="600">LSP-инструменты требуют</text>
+  <text x="78" y="390" class="ink sans" font-size="11" font-weight="600">basedpyright</text>
+  <text x="292" y="378" class="sans" font-size="9" fill="#1b2a3a">без него fail fast, результат кэшируется на 30 с</text>
+  <text x="584" y="378" class="sans" font-size="9" fill="#5a6a7a">поставить basedpyright</text>
+  <line x1="18" y1="404" x2="882" y2="404" class="line" stroke-width="0.6"/>
+  <text x="36" y="456" class="ink sans" font-size="12" font-weight="600">Как читать</text>
+  <text x="36" y="472" class="t sans" font-size="10">Ограничение — не оправдание, а условие эксплуатации:</text>
+  <text x="36" y="486" class="t sans" font-size="10">оно говорит, при каком входе результату верить нельзя.</text>
+  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Откуда взято</text>
+  <text x="36" y="524" class="t sans" font-size="10">7 пунктов README §Limitations, без пересказа и без смягчений.</text>
+  <text x="36" y="538" class="t sans" font-size="10">Пункт с docs-gold — свойство разметки, а не дефект поиска.</text>
+  <text x="36" y="566" class="ink mono" font-size="9.5">Источник: README.md §Limitations, docs/FACTS.md §8.</text>
+  <rect x="540" y="442" width="330" height="154" class="line" stroke-width="1.5"/>
+  <line x1="540" y1="464" x2="870" y2="464" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="486" x2="870" y2="486" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="508" x2="870" y2="508" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="530" x2="870" y2="530" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="552" x2="870" y2="552" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="574" x2="870" y2="574" class="line" stroke-width="0.8"/>
+  <line x1="632" y1="442" x2="632" y2="596" class="line" stroke-width="0.8"/>
+  <text x="548" y="457" class="h sans" font-size="10">ОБЪЕКТ</text>
+  <text x="640" y="457" class="ink mono" font-size="10">mscodebase-intelligence</text>
+  <text x="548" y="479" class="h sans" font-size="10">ВЕРСИЯ</text>
+  <text x="640" y="479" class="ink mono" font-size="10">v3.5.0 / Python 3.14</text>
+  <text x="548" y="501" class="h sans" font-size="10">РЕВИЗИЯ</text>
+  <text x="640" y="501" class="ink mono" font-size="10">main @ 1c4062d · 13.11.2026</text>
+  <text x="548" y="523" class="h sans" font-size="10">ФАЙЛ</text>
+  <text x="640" y="523" class="ink mono" font-size="10">docs/FACTS.md · 5 222 Б</text>
+  <text x="548" y="545" class="h sans" font-size="10">SHA-256</text>
+  <text x="640" y="545" class="ink mono" font-size="10">a93abe59…05794985</text>
+  <text x="548" y="567" class="h sans" font-size="10">СБОРКА</text>
+  <text x="640" y="567" class="ink mono" font-size="10">не подписана · до релиза</text>
+  <text x="548" y="589" class="h sans" font-size="10">ПРОВЕРИЛ</text>
+  <text x="640" y="589" class="ink mono" font-size="9.5">________  М. ManSio  __.__.2026</text>
+</svg>
