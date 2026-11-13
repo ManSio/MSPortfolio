@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" width="900" height="640" role="img" aria-label="Quality passport of mscodebase-intelligence, sheet 3">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#d9d4c3" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  <style>
+    .sans{font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif}
+    .mono{font-family:"Liberation Mono","DejaVu Sans Mono","Courier New",monospace}
+    .ink{fill:#1b2a3a}
+    .line{stroke:#1b2a3a;fill:none}
+    .h{font-size:10px;letter-spacing:1px;fill:#5a6a7a}
+    .t{font-size:10.5px;fill:#5a6a7a}
+    .ok{stroke:#1f6f4a;fill:none;stroke-width:2.5}
+    .okt{fill:#1f6f4a;font-weight:700}
+    .snap{stroke:#2b5b84;fill:none;stroke-width:2.5}
+    .snapt{fill:#2b5b84;font-weight:700}
+    .rej{stroke:#4a5568;fill:none;stroke-width:2.5}
+    .rejt{fill:#4a5568;font-weight:700}
+    .bad{stroke:#b3261e;fill:none;stroke-width:2.5}
+    .badt{fill:#b3261e;font-weight:700}
+  </style>
+
+  <rect width="900" height="640" fill="#f6f3ea"/>
+  <rect width="900" height="640" fill="url(#grid)"/>
+  <rect x="10" y="10" width="880" height="620" class="line" stroke-width="2.5"/>
+  <rect x="18" y="18" width="864" height="604" class="line" stroke-width="0.8"/>
+  <text x="36" y="50" class="ink sans" font-size="20" font-weight="700">OBJECT QUALITY PASSPORT</text>
+  <text x="36" y="68" class="h sans">QUALITY PASSPORT · mscodebase-intelligence · ManSio · EN</text>
+  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">SHEET 3 / 4</text>
+  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">CONCEALED WORKS</text>
+  <line x1="18" y1="82" x2="882" y2="82" class="line" stroke-width="1.5"/>
+  <text x="30" y="102" class="h sans" font-size="10">#</text>
+  <text x="78" y="102" class="h sans" font-size="10">ACT</text>
+  <text x="172" y="102" class="h sans" font-size="10">DECISION (ADR)</text>
+  <text x="470" y="102" class="h sans" font-size="10">STATUS</text>
+  <text x="570" y="102" class="h sans" font-size="10">WHAT IT HOLDS</text>
+  <text x="866" y="102" class="h sans" font-size="10" text-anchor="end">DATE</text>
+  <line x1="18" y1="110" x2="882" y2="110" class="line" stroke-width="1"/>
+  <text x="30" y="138" class="ink mono" font-size="10">ADR-0001</text>
+  <text x="172" y="138" class="ink sans" font-size="11.5" font-weight="600">Threat model for the execute_script sandbox</text>
+  <text x="470" y="138" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="138.0" class="sans" font-size="9.5" fill="#3d4b5a">what may be executed at all; bounds A1–A5</text>
+  <text x="866" y="138" class="ink mono" font-size="10" text-anchor="end">05.08</text>
+  <line x1="18" y1="166" x2="882" y2="166" class="line" stroke-width="0.6"/>
+  <text x="30" y="180" class="ink mono" font-size="10">ADR-0002</text>
+  <text x="172" y="180" class="ink sans" font-size="11.5" font-weight="600">RetractionReceipt: retracting SILENT memory</text>
+  <text x="172" y="193" class="ink sans" font-size="11.5" font-weight="600">facts</text>
+  <text x="470" y="180" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="180.0" class="sans" font-size="9.5" fill="#3d4b5a">memory is not «forever true»</text>
+  <text x="866" y="180" class="ink mono" font-size="10" text-anchor="end">11.08</text>
+  <line x1="18" y1="208" x2="882" y2="208" class="line" stroke-width="0.6"/>
+  <text x="30" y="222" class="ink mono" font-size="10">ADR-0003</text>
+  <text x="172" y="222" class="ink sans" font-size="11.5" font-weight="600">Verify-On-Read: check ACTIVE when reading</text>
+  <text x="470" y="222" class="sans" font-size="9" font-weight="700" fill="#b26a00">PROPOSED</text>
+  <text x="570" y="222.0" class="sans" font-size="9.5" fill="#3d4b5a">4 conditions; not implemented, awaits a run</text>
+  <text x="866" y="222" class="ink mono" font-size="10" text-anchor="end">11.08</text>
+  <line x1="18" y1="250" x2="882" y2="250" class="line" stroke-width="0.6"/>
+  <text x="30" y="264" class="ink mono" font-size="10">ADR-0004</text>
+  <text x="172" y="264" class="ink sans" font-size="11.5" font-weight="600">Typed dependency edges + retraction propagation</text>
+  <text x="470" y="264" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="264.0" class="sans" font-size="9.5" fill="#3d4b5a">a retracted fact reaches dependent nodes</text>
+  <text x="866" y="264" class="ink mono" font-size="10" text-anchor="end">12.08</text>
+  <line x1="18" y1="292" x2="882" y2="292" class="line" stroke-width="0.6"/>
+  <text x="30" y="306" class="ink mono" font-size="10">ADR-0005</text>
+  <text x="172" y="306" class="ink sans" font-size="11.5" font-weight="600">pkg: anchors: closed-world package checks</text>
+  <text x="470" y="306" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="306.0" class="sans" font-size="9.5" fill="#3d4b5a">version checks without trusting the network</text>
+  <text x="866" y="306" class="ink mono" font-size="10" text-anchor="end">14.08</text>
+  <line x1="18" y1="334" x2="882" y2="334" class="line" stroke-width="0.6"/>
+  <text x="30" y="348" class="ink mono" font-size="10">ADR-0006</text>
+  <text x="172" y="348" class="ink sans" font-size="11.5" font-weight="600">LSP graph enrichment: CALLS + semantic tokens</text>
+  <text x="470" y="348" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="348.0" class="sans" font-size="9.5" fill="#3d4b5a">exact call-sites; ! 0 consumers for two outputs</text>
+  <text x="866" y="348" class="ink mono" font-size="10" text-anchor="end">19.08</text>
+  <line x1="18" y1="376" x2="882" y2="376" class="line" stroke-width="0.6"/>
+  <text x="30" y="390" class="ink mono" font-size="10">ADR-0007</text>
+  <text x="172" y="390" class="ink sans" font-size="11.5" font-weight="600">Git locks: one writer per resource across</text>
+  <text x="172" y="403" class="ink sans" font-size="11.5" font-weight="600">agents</text>
+  <text x="470" y="390" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACTIVE</text>
+  <text x="570" y="390.0" class="sans" font-size="9.5" fill="#3d4b5a">parallel sessions do not trample the tree</text>
+  <text x="866" y="390" class="ink mono" font-size="10" text-anchor="end">24.08</text>
+  <line x1="18" y1="418" x2="882" y2="418" class="line" stroke-width="0.6"/>
+  <text x="36" y="456" class="ink sans" font-size="12" font-weight="600">How to read</text>
+  <text x="36" y="472" class="t sans" font-size="10">Concealed works are decisions invisible in the output, but the</text>
+  <text x="36" y="486" class="t sans" font-size="10">structure does not hold without them: trust, retraction, locks.</text>
+  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Act status</text>
+  <text x="36" y="524" class="t sans" font-size="10">ACCEPTED — in force. PROPOSED — not implemented.</text>
+  <text x="36" y="538" class="t sans" font-size="10">«! 0 consumers» — the act exists, the load does not.</text>
+  <text x="36" y="566" class="ink mono" font-size="9.5">Source: docs/adr/ (7 acts), KNOWN_ISSUES.md (ADR-0006 debt).</text>
+  <rect x="540" y="442" width="330" height="154" class="line" stroke-width="1.5"/>
+  <line x1="540" y1="464" x2="870" y2="464" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="486" x2="870" y2="486" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="508" x2="870" y2="508" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="530" x2="870" y2="530" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="552" x2="870" y2="552" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="574" x2="870" y2="574" class="line" stroke-width="0.8"/>
+  <line x1="632" y1="442" x2="632" y2="596" class="line" stroke-width="0.8"/>
+  <text x="548" y="457" class="h sans" font-size="10">OBJECT</text>
+  <text x="640" y="457" class="ink mono" font-size="10">mscodebase-intelligence</text>
+  <text x="548" y="479" class="h sans" font-size="10">VERSION</text>
+  <text x="640" y="479" class="ink mono" font-size="10">v3.5.0 / Python 3.14</text>
+  <text x="548" y="501" class="h sans" font-size="10">REVISION</text>
+  <text x="640" y="501" class="ink mono" font-size="10">main @ 1c4062d · 13.11.2026</text>
+  <text x="548" y="523" class="h sans" font-size="10">FILE</text>
+  <text x="640" y="523" class="ink mono" font-size="10">docs/FACTS.md · 5,222 B</text>
+  <text x="548" y="545" class="h sans" font-size="10">SHA-256</text>
+  <text x="640" y="545" class="ink mono" font-size="10">a93abe59…05794985</text>
+  <text x="548" y="567" class="h sans" font-size="10">BUILD</text>
+  <text x="640" y="567" class="ink mono" font-size="10">unsigned · before release</text>
+  <text x="548" y="589" class="h sans" font-size="10">CHECKED BY</text>
+  <text x="640" y="589" class="ink mono" font-size="9.5">________  M. ManSio  __.__.____</text>
+</svg>
