@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" width="900" height="640" role="img" aria-label="Паспорт качества объекта mscodebase-intelligence, лист 6">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#d9d4c3" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  <style>
+    .sans{font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif}
+    .mono{font-family:"Liberation Mono","DejaVu Sans Mono","Courier New",monospace}
+    .ink{fill:#1b2a3a}
+    .line{stroke:#1b2a3a;fill:none}
+    .h{font-size:10px;letter-spacing:1px;fill:#5a6a7a}
+    .t{font-size:10.5px;fill:#5a6a7a}
+    .ok{stroke:#1f6f4a;fill:none;stroke-width:2.5}
+    .okt{fill:#1f6f4a;font-weight:700}
+    .snap{stroke:#2b5b84;fill:none;stroke-width:2.5}
+    .snapt{fill:#2b5b84;font-weight:700}
+    .rej{stroke:#4a5568;fill:none;stroke-width:2.5}
+    .rejt{fill:#4a5568;font-weight:700}
+    .bad{stroke:#b3261e;fill:none;stroke-width:2.5}
+    .badt{fill:#b3261e;font-weight:700}
+  </style>
+
+  <rect width="900" height="640" fill="#f6f3ea"/>
+  <rect width="900" height="640" fill="url(#grid)"/>
+  <rect x="10" y="10" width="880" height="620" class="line" stroke-width="2.5"/>
+  <rect x="18" y="18" width="864" height="604" class="line" stroke-width="0.8"/>
+  <text x="36" y="50" class="ink sans" font-size="20" font-weight="700">ПАСПОРТ КАЧЕСТВА ОБЪЕКТА</text>
+  <text x="36" y="68" class="h sans">QUALITY PASSPORT · mscodebase-intelligence · ManSio</text>
+  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">ЛИСТ 6 / 7</text>
+  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">РЕЕСТР БРАКА</text>
+  <line x1="18" y1="82" x2="882" y2="82" class="line" stroke-width="1.5"/>
+  <text x="30" y="102" class="h sans" font-size="10">№</text>
+  <text x="74" y="102" class="h sans" font-size="10">ДЕФЕКТ / ГДЕ</text>
+  <text x="452" y="102" class="h sans" font-size="10">ВЛИЯНИЕ</text>
+  <text x="640" y="102" class="h sans" font-size="10">СТАТУС</text>
+  <text x="714" y="102" class="h sans" font-size="10">ЗАКРЫТИЕ / GUARD</text>
+  <line x1="18" y1="110" x2="882" y2="110" class="line" stroke-width="1"/>
+  <text x="30" y="136" class="ink mono" font-size="10">Б-01</text>
+  <text x="74" y="136" class="ink sans" font-size="11" font-weight="600">docs-канал: hit@1 0.000 при same-basename 0.750</text>
+  <text x="74" y="148.0" class="ink mono" font-size="8.5" fill="#5a6a7a">search_code(intent="docs")</text>
+  <text x="452" y="136.0" class="sans" font-size="9" fill="#1b2a3a">docs-вопросы почти не находятся</text>
+  <text x="640" y="136" class="sans" font-size="10" font-weight="700" fill="#b3261e">ОТКРЫТ</text>
+  <text x="714" y="136.0" class="sans" font-size="8.5" fill="#4a5568">E56: 0.750 после нормализации</text>
+  <text x="714" y="145.5" class="sans" font-size="8.5" fill="#4a5568">золота</text>
+  <line x1="18" y1="162" x2="882" y2="162" class="line" stroke-width="0.5"/>
+  <text x="30" y="174" class="ink mono" font-size="10">Б-02</text>
+  <text x="74" y="174" class="ink sans" font-size="11" font-weight="600">Таймаут канала не отменяет поток</text>
+  <text x="74" y="186.0" class="ink mono" font-size="8.5" fill="#5a6a7a">investigate · grep_tool</text>
+  <text x="452" y="174.0" class="sans" font-size="9" fill="#1b2a3a">после таймаутов 22–30 с на запрос</text>
+  <text x="640" y="174" class="sans" font-size="10" font-weight="700" fill="#b3261e">ОТКРЫТ</text>
+  <text x="714" y="174.0" class="sans" font-size="8.5" fill="#4a5568">нужен cooperative-cancel</text>
+  <line x1="18" y1="200" x2="882" y2="200" class="line" stroke-width="0.5"/>
+  <text x="30" y="212" class="ink mono" font-size="10">Б-03</text>
+  <text x="74" y="212" class="ink sans" font-size="11" font-weight="600">CLI-мост не умеет project-scoped инструменты</text>
+  <text x="74" y="224.0" class="ink mono" font-size="8.5" fill="#5a6a7a">python -m src.cli</text>
+  <text x="452" y="212.0" class="sans" font-size="9" fill="#1b2a3a">project_not_ready за ~5 с</text>
+  <text x="640" y="212" class="sans" font-size="10" font-weight="700" fill="#b3261e">ОТКРЫТ</text>
+  <text x="714" y="212.0" class="sans" font-size="8.5" fill="#4a5568">в allowlist не добавлен</text>
+  <line x1="18" y1="238" x2="882" y2="238" class="line" stroke-width="0.5"/>
+  <text x="30" y="250" class="ink mono" font-size="10">Б-04</text>
+  <text x="74" y="250" class="ink sans" font-size="11" font-weight="600">Multi-client write без лока</text>
+  <text x="74" y="262.0" class="ink mono" font-size="8.5" fill="#5a6a7a">src/remote_main.py</text>
+  <text x="452" y="250.0" class="sans" font-size="9" fill="#1b2a3a">два клиента портят индекс</text>
+  <text x="640" y="250" class="sans" font-size="10" font-weight="700" fill="#b3261e">ОТКРЫТ</text>
+  <text x="714" y="250.0" class="sans" font-size="8.5" fill="#4a5568">R-8 / E-10, лока нет</text>
+  <line x1="18" y1="276" x2="882" y2="276" class="line" stroke-width="0.5"/>
+  <text x="30" y="288" class="ink mono" font-size="10">Б-05</text>
+  <text x="74" y="288" class="ink sans" font-size="11" font-weight="600">При exact: 0 печатаются 8 «соседей»</text>
+  <text x="74" y="300.0" class="ink mono" font-size="8.5" fill="#5a6a7a">investigate</text>
+  <text x="452" y="288.0" class="sans" font-size="9" fill="#1b2a3a">ложное «нашёл» без совпадений</text>
+  <text x="640" y="288" class="sans" font-size="10" font-weight="700" fill="#b3261e">ОТКРЫТ</text>
+  <text x="714" y="288.0" class="sans" font-size="8.5" fill="#4a5568">кандидат: печать по флагу</text>
+  <line x1="18" y1="314" x2="882" y2="314" class="line" stroke-width="0.5"/>
+  <text x="30" y="326" class="ink mono" font-size="10">Б-06</text>
+  <text x="74" y="326" class="ink sans" font-size="11" font-weight="600">status=error рендерился как «Completed»</text>
+  <text x="74" y="338.0" class="ink mono" font-size="8.5" fill="#5a6a7a">src/core/error_envelope.py</text>
+  <text x="452" y="326.0" class="sans" font-size="9" fill="#1b2a3a">тихий успех при ошибке</text>
+  <text x="640" y="326" class="sans" font-size="10" font-weight="700" fill="#4a5568">ЗАКРЫТ</text>
+  <text x="714" y="326.0" class="sans" font-size="8.5" fill="#4a5568">tests/test_mcp_is_error.py ·</text>
+  <text x="714" y="335.5" class="sans" font-size="8.5" fill="#4a5568">19</text>
+  <line x1="18" y1="352" x2="882" y2="352" class="line" stroke-width="0.5"/>
+  <text x="30" y="364" class="ink mono" font-size="10">Б-07</text>
+  <text x="74" y="364" class="ink sans" font-size="11" font-weight="600">Frozen-панель проиндексирована</text>
+  <text x="74" y="376.0" class="ink mono" font-size="8.5" fill="#5a6a7a">chunks.db · experiments/4A</text>
+  <text x="452" y="364.0" class="sans" font-size="9" fill="#1b2a3a">числа E49–E51 загрязнены</text>
+  <text x="640" y="364" class="sans" font-size="10" font-weight="700" fill="#4a5568">ЗАКРЫТ</text>
+  <text x="714" y="364.0" class="sans" font-size="8.5" fill="#4a5568">E52: leakage 0/48</text>
+  <line x1="18" y1="390" x2="882" y2="390" class="line" stroke-width="0.5"/>
+  <text x="30" y="402" class="ink mono" font-size="10">Б-08</text>
+  <text x="74" y="402" class="ink sans" font-size="11" font-weight="600">4 slow-теста LSP/VFS падали на main</text>
+  <text x="74" y="414.0" class="ink mono" font-size="8.5" fill="#5a6a7a">tests/test_lsp_vfs_indexing.py</text>
+  <text x="452" y="402.0" class="sans" font-size="9" fill="#1b2a3a">дрейф API не видел CI</text>
+  <text x="640" y="402" class="sans" font-size="10" font-weight="700" fill="#4a5568">ЗАКРЫТ</text>
+  <text x="714" y="402.0" class="sans" font-size="8.5" fill="#4a5568">4 passed, addopts=""</text>
+  <line x1="18" y1="428" x2="882" y2="428" class="line" stroke-width="0.5"/>
+  <text x="36" y="456" class="ink sans" font-size="12" font-weight="600">Как читать</text>
+  <text x="36" y="472" class="t sans" font-size="10">ОТКРЫТ — дефект действует, красный. ЗАКРЫТ — есть guard,</text>
+  <text x="36" y="486" class="t sans" font-size="10">который падает на сломанном коде; проверка названа справа.</text>
+  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Красный цвет</text>
+  <text x="36" y="524" class="t sans" font-size="10">Красный живёт только на этом листе и только у ОТКРЫТ.</text>
+  <text x="36" y="538" class="t sans" font-size="10">8 записей из 19 в KNOWN_ISSUES.md; удалять записи нельзя.</text>
+  <text x="36" y="566" class="ink mono" font-size="9.5">Источник: KNOWN_ISSUES.md, CHANGELOG.md, EXPERIMENTS_LOG.md.</text>
+  <rect x="540" y="442" width="330" height="154" class="line" stroke-width="1.5"/>
+  <line x1="540" y1="464" x2="870" y2="464" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="486" x2="870" y2="486" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="508" x2="870" y2="508" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="530" x2="870" y2="530" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="552" x2="870" y2="552" class="line" stroke-width="0.8"/>
+  <line x1="540" y1="574" x2="870" y2="574" class="line" stroke-width="0.8"/>
+  <line x1="632" y1="442" x2="632" y2="596" class="line" stroke-width="0.8"/>
+  <text x="548" y="457" class="h sans" font-size="10">ОБЪЕКТ</text>
+  <text x="640" y="457" class="ink mono" font-size="10">mscodebase-intelligence</text>
+  <text x="548" y="479" class="h sans" font-size="10">ВЕРСИЯ</text>
+  <text x="640" y="479" class="ink mono" font-size="10">v3.5.0 / Python 3.14</text>
+  <text x="548" y="501" class="h sans" font-size="10">РЕВИЗИЯ</text>
+  <text x="640" y="501" class="ink mono" font-size="10">main @ 1c4062d · 13.11.2026</text>
+  <text x="548" y="523" class="h sans" font-size="10">ФАЙЛ</text>
+  <text x="640" y="523" class="ink mono" font-size="10">docs/FACTS.md · 5 222 Б</text>
+  <text x="548" y="545" class="h sans" font-size="10">SHA-256</text>
+  <text x="640" y="545" class="ink mono" font-size="10">a93abe59…05794985</text>
+  <text x="548" y="567" class="h sans" font-size="10">СБОРКА</text>
+  <text x="640" y="567" class="ink mono" font-size="10">не подписана · до релиза</text>
+  <text x="548" y="589" class="h sans" font-size="10">ПРОВЕРИЛ</text>
+  <text x="640" y="589" class="ink mono" font-size="9.5">________  М. ManSio  __.__.2026</text>
+</svg>

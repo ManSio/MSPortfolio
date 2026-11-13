@@ -27,67 +27,72 @@
   <rect x="18" y="18" width="864" height="604" class="line" stroke-width="0.8"/>
   <text x="36" y="50" class="ink sans" font-size="20" font-weight="700">ПАСПОРТ КАЧЕСТВА ОБЪЕКТА</text>
   <text x="36" y="68" class="h sans">QUALITY PASSPORT · mscodebase-intelligence · ManSio</text>
-  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">ЛИСТ 3 / 4</text>
-  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">АКТЫ СКРЫТЫХ РАБОТ</text>
+  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">ЛИСТ 3 / 7</text>
+  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">ЖУРНАЛ РАБОТ</text>
   <line x1="18" y1="82" x2="882" y2="82" class="line" stroke-width="1.5"/>
   <text x="30" y="102" class="h sans" font-size="10">№</text>
-  <text x="78" y="102" class="h sans" font-size="10">АКТ</text>
-  <text x="172" y="102" class="h sans" font-size="10">РЕШЕНИЕ (ADR)</text>
-  <text x="470" y="102" class="h sans" font-size="10">СТАТУС</text>
-  <text x="570" y="102" class="h sans" font-size="10">ЧТО ДЕРЖИТ</text>
-  <text x="866" y="102" class="h sans" font-size="10" text-anchor="end">ДАТА</text>
+  <text x="82" y="102" class="h sans" font-size="10">ДАТА</text>
+  <text x="152" y="102" class="h sans" font-size="10">РАБОТА</text>
+  <text x="478" y="102" class="h sans" font-size="10">РЕЗУЛЬТАТ (ИЗМЕРЕНО)</text>
+  <text x="706" y="102" class="h sans" font-size="10">АРТЕФАКТ</text>
   <line x1="18" y1="110" x2="882" y2="110" class="line" stroke-width="1"/>
-  <text x="30" y="138" class="ink mono" font-size="10">ADR-0001</text>
-  <text x="172" y="138" class="ink sans" font-size="11.5" font-weight="600">Модель угроз для песочницы execute_script</text>
-  <text x="470" y="138" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ПРИНЯТ</text>
-  <text x="570" y="138.0" class="sans" font-size="9.5" fill="#3d4b5a">что именно разрешено исполнять; границы A1–A5</text>
-  <text x="866" y="138" class="ink mono" font-size="10" text-anchor="end">05.08</text>
-  <line x1="18" y1="166" x2="882" y2="166" class="line" stroke-width="0.6"/>
-  <text x="30" y="180" class="ink mono" font-size="10">ADR-0002</text>
-  <text x="172" y="180" class="ink sans" font-size="11.5" font-weight="600">RetractionReceipt: отзыв SILENT-фактов памяти</text>
-  <text x="470" y="180" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ПРИНЯТ</text>
-  <text x="570" y="180.0" class="sans" font-size="9.5" fill="#3d4b5a">память не остаётся «навсегда верной»</text>
-  <text x="866" y="180" class="ink mono" font-size="10" text-anchor="end">11.08</text>
-  <line x1="18" y1="208" x2="882" y2="208" class="line" stroke-width="0.6"/>
-  <text x="30" y="222" class="ink mono" font-size="10">ADR-0003</text>
-  <text x="172" y="222" class="ink sans" font-size="11.5" font-weight="600">Verify-On-Read: проверка ACTIVE при чтении</text>
-  <text x="470" y="222" class="sans" font-size="9" font-weight="700" fill="#b26a00">ПРЕДЛОЖЕН</text>
-  <text x="570" y="222.0" class="sans" font-size="9.5" fill="#3d4b5a">4 условия; не реализовано — ждёт замера</text>
-  <text x="866" y="222" class="ink mono" font-size="10" text-anchor="end">11.08</text>
-  <line x1="18" y1="250" x2="882" y2="250" class="line" stroke-width="0.6"/>
-  <text x="30" y="264" class="ink mono" font-size="10">ADR-0004</text>
-  <text x="172" y="264" class="ink sans" font-size="11.5" font-weight="600">Типизированные рёбра зависимостей +</text>
-  <text x="172" y="277" class="ink sans" font-size="11.5" font-weight="600">распространение</text>
-  <text x="470" y="264" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ПРИНЯТ</text>
-  <text x="570" y="264.0" class="sans" font-size="9.5" fill="#3d4b5a">отзыв факта доходит до зависимых узлов</text>
-  <text x="866" y="264" class="ink mono" font-size="10" text-anchor="end">12.08</text>
-  <line x1="18" y1="292" x2="882" y2="292" class="line" stroke-width="0.6"/>
-  <text x="30" y="306" class="ink mono" font-size="10">ADR-0005</text>
-  <text x="172" y="306" class="ink sans" font-size="11.5" font-weight="600">pkg:-анкеры: closed-world проверка пакетов</text>
-  <text x="470" y="306" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ПРИНЯТ</text>
-  <text x="570" y="306.0" class="sans" font-size="9.5" fill="#3d4b5a">проверка версии без доверия к сети</text>
-  <text x="866" y="306" class="ink mono" font-size="10" text-anchor="end">14.08</text>
-  <line x1="18" y1="334" x2="882" y2="334" class="line" stroke-width="0.6"/>
-  <text x="30" y="348" class="ink mono" font-size="10">ADR-0006</text>
-  <text x="172" y="348" class="ink sans" font-size="11.5" font-weight="600">LSP-обогащение графа: CALLS + semantic tokens</text>
-  <text x="470" y="348" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ПРИНЯТ</text>
-  <text x="570" y="348.0" class="sans" font-size="9.5" fill="#3d4b5a">точные call-sites; ! 0 потребителей у двух выходов</text>
-  <text x="866" y="348" class="ink mono" font-size="10" text-anchor="end">19.08</text>
-  <line x1="18" y1="376" x2="882" y2="376" class="line" stroke-width="0.6"/>
-  <text x="30" y="390" class="ink mono" font-size="10">ADR-0007</text>
-  <text x="172" y="390" class="ink sans" font-size="11.5" font-weight="600">Git-локи: один писатель на ресурс между</text>
-  <text x="172" y="403" class="ink sans" font-size="11.5" font-weight="600">агентами</text>
-  <text x="470" y="390" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ДЕЙСТВУЕТ</text>
-  <text x="570" y="390.0" class="sans" font-size="9.5" fill="#3d4b5a">параллельные сессии не топчут дерево</text>
-  <text x="866" y="390" class="ink mono" font-size="10" text-anchor="end">24.08</text>
-  <line x1="18" y1="418" x2="882" y2="418" class="line" stroke-width="0.6"/>
+  <text x="30" y="134" class="ink mono" font-size="11">Р-01</text>
+  <text x="82" y="134" class="ink mono" font-size="10.5">11.11.2026</text>
+  <text x="152" y="134" class="ink sans" font-size="11.5">E73/P5: снят ложный отказ гейта доказательств</text>
+  <text x="478" y="134" class="sans" font-size="9" fill="#1b2a3a">6 из 13 пустых ответов восстановлены; 2</text>
+  <text x="478" y="144" class="sans" font-size="9" fill="#1b2a3a">отказа законны</text>
+  <text x="706" y="134" class="ink mono" font-size="9">experiments/</text>
+  <text x="706" y="144" class="ink mono" font-size="9">false_abstain_2026_11/</text>
+  <line x1="18" y1="158" x2="882" y2="158" class="line" stroke-width="0.6"/>
+  <text x="30" y="170" class="ink mono" font-size="11">Р-02</text>
+  <text x="82" y="170" class="ink mono" font-size="10.5">11.11.2026</text>
+  <text x="152" y="170" class="ink sans" font-size="11.5">smoke_e2e: шаг 4 падает в текстовый индекс</text>
+  <text x="478" y="170" class="sans" font-size="9" fill="#1b2a3a">4/4 проверки; режим назван в отчёте</text>
+  <text x="706" y="170" class="ink mono" font-size="9">scripts/smoke_e2e.py</text>
+  <line x1="18" y1="194" x2="882" y2="194" class="line" stroke-width="0.6"/>
+  <text x="30" y="206" class="ink mono" font-size="11">Р-03</text>
+  <text x="82" y="206" class="ink mono" font-size="10.5">10.11.2026</text>
+  <text x="152" y="206" class="ink sans" font-size="11.5">E70: внешний корпус psf/requests, 25 коммитов</text>
+  <text x="478" y="206" class="sans" font-size="9" fill="#1b2a3a">tool 12/25 · search 15/25 · grep 19/25</text>
+  <text x="706" y="206" class="ink mono" font-size="9">experiments/bench_2026_11/</text>
+  <line x1="18" y1="230" x2="882" y2="230" class="line" stroke-width="0.6"/>
+  <text x="30" y="242" class="ink mono" font-size="11">Р-04</text>
+  <text x="82" y="242" class="ink mono" font-size="10.5">10.11.2026</text>
+  <text x="152" y="242" class="ink sans" font-size="11.5">E65: fusion A/B, 53 задачи, 3 повтора</text>
+  <text x="478" y="242" class="sans" font-size="9" fill="#1b2a3a">top-1: weights 21 · rrf 15 · norm 20</text>
+  <text x="706" y="242" class="ink mono" font-size="9">EXPERIMENTS_LOG.md §E65</text>
+  <line x1="18" y1="266" x2="882" y2="266" class="line" stroke-width="0.6"/>
+  <text x="30" y="278" class="ink mono" font-size="11">Р-05</text>
+  <text x="82" y="278" class="ink mono" font-size="10.5">09.11.2026</text>
+  <text x="152" y="278" class="ink sans" font-size="11.5">RU→EN: перевод против dense на 12 вопросах</text>
+  <text x="478" y="278" class="sans" font-size="9" fill="#1b2a3a">12/12 · dense 8/12 · перевод 14 мс</text>
+  <text x="706" y="278" class="ink mono" font-size="9">EXPERIMENTS_LOG.md (09.11)</text>
+  <line x1="18" y1="302" x2="882" y2="302" class="line" stroke-width="0.6"/>
+  <text x="30" y="314" class="ink mono" font-size="11">Р-06</text>
+  <text x="82" y="314" class="ink mono" font-size="10.5">08.11.2026</text>
+  <text x="152" y="314" class="ink sans" font-size="11.5">XERJ: prefilter до tree-sitter в grep-канале</text>
+  <text x="478" y="314" class="sans" font-size="9" fill="#1b2a3a">23.0 с → 7.2–8.1 с; совпадения те же</text>
+  <text x="706" y="314" class="ink mono" font-size="9">src/mcp/tools/grep_tool.py</text>
+  <line x1="18" y1="338" x2="882" y2="338" class="line" stroke-width="0.6"/>
+  <text x="30" y="350" class="ink mono" font-size="11">Р-07</text>
+  <text x="82" y="350" class="ink mono" font-size="10.5">08.11.2026</text>
+  <text x="152" y="350" class="ink sans" font-size="11.5">Ошибки инструментов → типизированный конверт</text>
+  <text x="478" y="350" class="sans" font-size="9" fill="#1b2a3a">19 тестов; isError ставит обёртка</text>
+  <text x="706" y="350" class="ink mono" font-size="9">src/mcp/error_results.py</text>
+  <line x1="18" y1="374" x2="882" y2="374" class="line" stroke-width="0.6"/>
+  <text x="30" y="386" class="ink mono" font-size="11">Р-08</text>
+  <text x="82" y="386" class="ink mono" font-size="10.5">22.09.2026</text>
+  <text x="152" y="386" class="ink sans" font-size="11.5">v3.5.0: TESTS-сигнал в граф-стадии</text>
+  <text x="478" y="386" class="sans" font-size="9" fill="#1b2a3a">до 3 тестов на символ, вес 0.4</text>
+  <text x="706" y="386" class="ink mono" font-size="9">CHANGELOG.md §3.5.0</text>
+  <line x1="18" y1="410" x2="882" y2="410" class="line" stroke-width="0.6"/>
   <text x="36" y="456" class="ink sans" font-size="12" font-weight="600">Как читать</text>
-  <text x="36" y="472" class="t sans" font-size="10">Скрытые работы — решения, которых не видно в выдаче, но без них</text>
-  <text x="36" y="486" class="t sans" font-size="10">конструкция не держит: границы доверия, отзыв фактов, локи.</text>
-  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Статусы акта</text>
-  <text x="36" y="524" class="t sans" font-size="10">ПРИНЯТ — решение действует. ПРЕДЛОЖЕН — не реализовано.</text>
-  <text x="36" y="538" class="t sans" font-size="10">Пометка «! 0 потребителей» — акт есть, нагрузки нет.</text>
-  <text x="36" y="566" class="ink mono" font-size="9.5">Источник: docs/adr/ (7 актов), KNOWN_ISSUES.md (дебит ADR-0006).</text>
+  <text x="36" y="472" class="t sans" font-size="10">Запись фиксирует работу и её измеренный результат, а не приговор.</text>
+  <text x="36" y="486" class="t sans" font-size="10">Штампов на листе нет: журнал не принимает и не отклоняет.</text>
+  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Границы журнала</text>
+  <text x="36" y="524" class="t sans" font-size="10">Показаны 8 последних записей из 164 в EXPERIMENTS_LOG.md.</text>
+  <text x="36" y="538" class="t sans" font-size="10">Дата — дата опыта, не дата коммита.</text>
+  <text x="36" y="566" class="ink mono" font-size="9.5">Источник: EXPERIMENTS_LOG.md, CHANGELOG.md, KNOWN_ISSUES.md.</text>
   <rect x="540" y="442" width="330" height="154" class="line" stroke-width="1.5"/>
   <line x1="540" y1="464" x2="870" y2="464" class="line" stroke-width="0.8"/>
   <line x1="540" y1="486" x2="870" y2="486" class="line" stroke-width="0.8"/>

@@ -27,79 +27,69 @@
   <rect x="18" y="18" width="864" height="604" class="line" stroke-width="0.8"/>
   <text x="36" y="50" class="ink sans" font-size="20" font-weight="700">OBJECT QUALITY PASSPORT</text>
   <text x="36" y="68" class="h sans">QUALITY PASSPORT · mscodebase-intelligence · ManSio · EN</text>
-  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">SHEET 4 / 4</text>
-  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">DEFECT REGISTRY</text>
+  <text x="864" y="50" class="ink mono" font-size="12" text-anchor="end">SHEET 4 / 7</text>
+  <text x="864" y="68" class="h sans" font-size="10" text-anchor="end">CONCEALED WORKS</text>
   <line x1="18" y1="82" x2="882" y2="82" class="line" stroke-width="1.5"/>
   <text x="30" y="102" class="h sans" font-size="10">#</text>
-  <text x="74" y="102" class="h sans" font-size="10">DEFECT / WHERE</text>
-  <text x="452" y="102" class="h sans" font-size="10">IMPACT</text>
-  <text x="640" y="102" class="h sans" font-size="10">STATUS</text>
-  <text x="714" y="102" class="h sans" font-size="10">FIX / GUARD</text>
+  <text x="78" y="102" class="h sans" font-size="10">ACT</text>
+  <text x="172" y="102" class="h sans" font-size="10">DECISION (ADR)</text>
+  <text x="470" y="102" class="h sans" font-size="10">STATUS</text>
+  <text x="570" y="102" class="h sans" font-size="10">WHAT IT HOLDS</text>
+  <text x="866" y="102" class="h sans" font-size="10" text-anchor="end">DATE</text>
   <line x1="18" y1="110" x2="882" y2="110" class="line" stroke-width="1"/>
-  <text x="30" y="136" class="ink mono" font-size="10">D-01</text>
-  <text x="74" y="136" class="ink sans" font-size="11" font-weight="600">Docs channel: hit@1 0.000 at same-basename 0.750</text>
-  <text x="74" y="148.0" class="ink mono" font-size="8.5" fill="#5a6a7a">search_code(intent="docs")</text>
-  <text x="452" y="136.0" class="sans" font-size="9" fill="#1b2a3a">docs questions are not found</text>
-  <text x="640" y="136" class="sans" font-size="10" font-weight="700" fill="#b3261e">OPEN</text>
-  <text x="714" y="136.0" class="sans" font-size="8.5" fill="#4a5568">E56: 0.750 after gold</text>
-  <text x="714" y="145.5" class="sans" font-size="8.5" fill="#4a5568">canonicalisation</text>
-  <line x1="18" y1="162" x2="882" y2="162" class="line" stroke-width="0.5"/>
-  <text x="30" y="174" class="ink mono" font-size="10">D-02</text>
-  <text x="74" y="174" class="ink sans" font-size="11" font-weight="600">A channel timeout does not cancel its thread</text>
-  <text x="74" y="186.0" class="ink mono" font-size="8.5" fill="#5a6a7a">investigate · grep_tool</text>
-  <text x="452" y="174.0" class="sans" font-size="9" fill="#1b2a3a">22–30 s per call after timeouts</text>
-  <text x="640" y="174" class="sans" font-size="10" font-weight="700" fill="#b3261e">OPEN</text>
-  <text x="714" y="174.0" class="sans" font-size="8.5" fill="#4a5568">needs cooperative cancel</text>
-  <line x1="18" y1="200" x2="882" y2="200" class="line" stroke-width="0.5"/>
-  <text x="30" y="212" class="ink mono" font-size="10">D-03</text>
-  <text x="74" y="212" class="ink sans" font-size="11" font-weight="600">CLI bridge has no project-scoped tools</text>
-  <text x="74" y="224.0" class="ink mono" font-size="8.5" fill="#5a6a7a">python -m src.cli</text>
-  <text x="452" y="212.0" class="sans" font-size="9" fill="#1b2a3a">project_not_ready in ~5 s</text>
-  <text x="640" y="212" class="sans" font-size="10" font-weight="700" fill="#b3261e">OPEN</text>
-  <text x="714" y="212.0" class="sans" font-size="8.5" fill="#4a5568">not added to the allowlist</text>
-  <line x1="18" y1="238" x2="882" y2="238" class="line" stroke-width="0.5"/>
-  <text x="30" y="250" class="ink mono" font-size="10">D-04</text>
-  <text x="74" y="250" class="ink sans" font-size="11" font-weight="600">Multi-client write without a lock</text>
-  <text x="74" y="262.0" class="ink mono" font-size="8.5" fill="#5a6a7a">src/remote_main.py</text>
-  <text x="452" y="250.0" class="sans" font-size="9" fill="#1b2a3a">two clients corrupt the index</text>
-  <text x="640" y="250" class="sans" font-size="10" font-weight="700" fill="#b3261e">OPEN</text>
-  <text x="714" y="250.0" class="sans" font-size="8.5" fill="#4a5568">R-8 / E-10, no lock</text>
-  <line x1="18" y1="276" x2="882" y2="276" class="line" stroke-width="0.5"/>
-  <text x="30" y="288" class="ink mono" font-size="10">D-05</text>
-  <text x="74" y="288" class="ink sans" font-size="11" font-weight="600">With exact: 0 it still prints 8 «neighbours»</text>
-  <text x="74" y="300.0" class="ink mono" font-size="8.5" fill="#5a6a7a">investigate</text>
-  <text x="452" y="288.0" class="sans" font-size="9" fill="#1b2a3a">a false «found» with no match</text>
-  <text x="640" y="288" class="sans" font-size="10" font-weight="700" fill="#b3261e">OPEN</text>
-  <text x="714" y="288.0" class="sans" font-size="8.5" fill="#4a5568">candidate: print behind a flag</text>
-  <line x1="18" y1="314" x2="882" y2="314" class="line" stroke-width="0.5"/>
-  <text x="30" y="326" class="ink mono" font-size="10">D-06</text>
-  <text x="74" y="326" class="ink sans" font-size="11" font-weight="600">status=error rendered as «Completed»</text>
-  <text x="74" y="338.0" class="ink mono" font-size="8.5" fill="#5a6a7a">src/core/error_envelope.py</text>
-  <text x="452" y="326.0" class="sans" font-size="9" fill="#1b2a3a">silent success on failure</text>
-  <text x="640" y="326" class="sans" font-size="10" font-weight="700" fill="#4a5568">FIXED</text>
-  <text x="714" y="326.0" class="sans" font-size="8.5" fill="#4a5568">tests/test_mcp_is_error.py · 19</text>
-  <line x1="18" y1="352" x2="882" y2="352" class="line" stroke-width="0.5"/>
-  <text x="30" y="364" class="ink mono" font-size="10">D-07</text>
-  <text x="74" y="364" class="ink sans" font-size="11" font-weight="600">The frozen panel was indexed</text>
-  <text x="74" y="376.0" class="ink mono" font-size="8.5" fill="#5a6a7a">chunks.db · experiments/4A</text>
-  <text x="452" y="364.0" class="sans" font-size="9" fill="#1b2a3a">E49–E51 numbers contaminated</text>
-  <text x="640" y="364" class="sans" font-size="10" font-weight="700" fill="#4a5568">FIXED</text>
-  <text x="714" y="364.0" class="sans" font-size="8.5" fill="#4a5568">E52: leakage 0/48</text>
-  <line x1="18" y1="390" x2="882" y2="390" class="line" stroke-width="0.5"/>
-  <text x="30" y="402" class="ink mono" font-size="10">D-08</text>
-  <text x="74" y="402" class="ink sans" font-size="11" font-weight="600">4 slow LSP/VFS tests failed on main</text>
-  <text x="74" y="414.0" class="ink mono" font-size="8.5" fill="#5a6a7a">tests/test_lsp_vfs_indexing.py</text>
-  <text x="452" y="402.0" class="sans" font-size="9" fill="#1b2a3a">API drift invisible to CI</text>
-  <text x="640" y="402" class="sans" font-size="10" font-weight="700" fill="#4a5568">FIXED</text>
-  <text x="714" y="402.0" class="sans" font-size="8.5" fill="#4a5568">4 passed, addopts=""</text>
-  <line x1="18" y1="428" x2="882" y2="428" class="line" stroke-width="0.5"/>
+  <text x="30" y="138" class="ink mono" font-size="10">ADR-0001</text>
+  <text x="172" y="138" class="ink sans" font-size="11.5" font-weight="600">Threat model for the execute_script sandbox</text>
+  <text x="470" y="138" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="138.0" class="sans" font-size="9.5" fill="#3d4b5a">what may be executed at all; bounds A1–A5</text>
+  <text x="866" y="138" class="ink mono" font-size="10" text-anchor="end">05.08</text>
+  <line x1="18" y1="166" x2="882" y2="166" class="line" stroke-width="0.6"/>
+  <text x="30" y="180" class="ink mono" font-size="10">ADR-0002</text>
+  <text x="172" y="180" class="ink sans" font-size="11.5" font-weight="600">RetractionReceipt: retracting SILENT memory</text>
+  <text x="172" y="193" class="ink sans" font-size="11.5" font-weight="600">facts</text>
+  <text x="470" y="180" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="180.0" class="sans" font-size="9.5" fill="#3d4b5a">memory is not «forever true»</text>
+  <text x="866" y="180" class="ink mono" font-size="10" text-anchor="end">11.08</text>
+  <line x1="18" y1="208" x2="882" y2="208" class="line" stroke-width="0.6"/>
+  <text x="30" y="222" class="ink mono" font-size="10">ADR-0003</text>
+  <text x="172" y="222" class="ink sans" font-size="11.5" font-weight="600">Verify-On-Read: check ACTIVE when reading</text>
+  <text x="470" y="222" class="sans" font-size="9" font-weight="700" fill="#b26a00">PROPOSED</text>
+  <text x="570" y="222.0" class="sans" font-size="9.5" fill="#3d4b5a">4 conditions; not implemented, awaits a run</text>
+  <text x="866" y="222" class="ink mono" font-size="10" text-anchor="end">11.08</text>
+  <line x1="18" y1="250" x2="882" y2="250" class="line" stroke-width="0.6"/>
+  <text x="30" y="264" class="ink mono" font-size="10">ADR-0004</text>
+  <text x="172" y="264" class="ink sans" font-size="11.5" font-weight="600">Typed dependency edges + retraction</text>
+  <text x="172" y="277" class="ink sans" font-size="11.5" font-weight="600">propagation</text>
+  <text x="470" y="264" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="264.0" class="sans" font-size="9.5" fill="#3d4b5a">a retracted fact reaches dependent nodes</text>
+  <text x="866" y="264" class="ink mono" font-size="10" text-anchor="end">12.08</text>
+  <line x1="18" y1="292" x2="882" y2="292" class="line" stroke-width="0.6"/>
+  <text x="30" y="306" class="ink mono" font-size="10">ADR-0005</text>
+  <text x="172" y="306" class="ink sans" font-size="11.5" font-weight="600">pkg: anchors: closed-world package checks</text>
+  <text x="470" y="306" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="306.0" class="sans" font-size="9.5" fill="#3d4b5a">version checks without trusting the network</text>
+  <text x="866" y="306" class="ink mono" font-size="10" text-anchor="end">14.08</text>
+  <line x1="18" y1="334" x2="882" y2="334" class="line" stroke-width="0.6"/>
+  <text x="30" y="348" class="ink mono" font-size="10">ADR-0006</text>
+  <text x="172" y="348" class="ink sans" font-size="11.5" font-weight="600">LSP graph enrichment: CALLS + semantic</text>
+  <text x="172" y="361" class="ink sans" font-size="11.5" font-weight="600">tokens</text>
+  <text x="470" y="348" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACCEPTED</text>
+  <text x="570" y="348.0" class="sans" font-size="9.5" fill="#3d4b5a">exact call-sites; ! 0 consumers for two outputs</text>
+  <text x="866" y="348" class="ink mono" font-size="10" text-anchor="end">19.08</text>
+  <line x1="18" y1="376" x2="882" y2="376" class="line" stroke-width="0.6"/>
+  <text x="30" y="390" class="ink mono" font-size="10">ADR-0007</text>
+  <text x="172" y="390" class="ink sans" font-size="11.5" font-weight="600">Git locks: one writer per resource across</text>
+  <text x="172" y="403" class="ink sans" font-size="11.5" font-weight="600">agents</text>
+  <text x="470" y="390" class="sans" font-size="9" font-weight="700" fill="#1f6f4a">ACTIVE</text>
+  <text x="570" y="390.0" class="sans" font-size="9.5" fill="#3d4b5a">parallel sessions do not trample the tree</text>
+  <text x="866" y="390" class="ink mono" font-size="10" text-anchor="end">24.08</text>
+  <line x1="18" y1="418" x2="882" y2="418" class="line" stroke-width="0.6"/>
   <text x="36" y="456" class="ink sans" font-size="12" font-weight="600">How to read</text>
-  <text x="36" y="472" class="t sans" font-size="10">OPEN — the defect is live, red. FIXED — there is a guard</text>
-  <text x="36" y="486" class="t sans" font-size="10">that goes red on broken code; the check is named on the right.</text>
-  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">The red colour</text>
-  <text x="36" y="524" class="t sans" font-size="10">Red lives only on this sheet, and only on OPEN.</text>
-  <text x="36" y="538" class="t sans" font-size="10">8 entries of 19 in KNOWN_ISSUES.md; entries are not deleted.</text>
-  <text x="36" y="566" class="ink mono" font-size="9.5">Source: KNOWN_ISSUES.md, CHANGELOG.md, EXPERIMENTS_LOG.md.</text>
+  <text x="36" y="472" class="t sans" font-size="10">Concealed works are decisions invisible in the output, but the</text>
+  <text x="36" y="486" class="t sans" font-size="10">structure does not hold without them: trust, retraction, locks.</text>
+  <text x="36" y="508" class="ink sans" font-size="12" font-weight="600">Act status</text>
+  <text x="36" y="524" class="t sans" font-size="10">ACCEPTED — in force. PROPOSED — not implemented.</text>
+  <text x="36" y="538" class="t sans" font-size="10">«! 0 consumers» — the act exists, the load does not.</text>
+  <text x="36" y="566" class="ink mono" font-size="9.5">Source: docs/adr/ (7 acts), KNOWN_ISSUES.md (ADR-0006 debt).</text>
   <rect x="540" y="442" width="330" height="154" class="line" stroke-width="1.5"/>
   <line x1="540" y1="464" x2="870" y2="464" class="line" stroke-width="0.8"/>
   <line x1="540" y1="486" x2="870" y2="486" class="line" stroke-width="0.8"/>
