@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-08-15",
+  "claimVerification": {
+    "setSize": 11,
+    "paraphrases": 8,
+    "negativeControls": 3,
+    "v1RecallPct": 0,
+    "llmArm": {
+      "recallPct": 88,
+      "falseAcceptance": 0,
+      "p50Ms": 1578,
+      "p95Ms": 2237,
+      "model": "openai/gpt-4o-mini"
+    },
+    "command": "node scripts/bench-claims.ts"
+  },
+  "mutationTesting": {
+    "beforePct": 8,
+    "afterPct": 100,
+    "verdict": "confirmed",
+    "command": "python experiments/evalmut/probe_evalmut_transfer.py",
+    "source": "lab/experiments.json#exp-8"
+  },
+  "concurrency": {
+    "workers": 8,
+    "correct": 8,
+    "command": "pnpm test",
+    "source": "tests/worker.test.ts (concurrency: 8 parallel tools/call — правильный вход → правильный выход)"
+  }
+}
