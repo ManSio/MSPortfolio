@@ -148,11 +148,24 @@ describe('worker /mcp integration', () => {
   });
 
   it('returns 429 when the rate limit is exceeded', async () => {
+    const seen: string[] = [];
     const env = makeEnv({
-      MCP_RATE_LIMITER: { limit: async () => ({ success: false }) },
+      MCP_RATE_LIMITER: { limit: async (args) => { seen.push(args.key); return { success: false }; } },
+    });
+    const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' }, { 'cf-connecting-ip': '203.0.113.7' });
+    expect(res.status).toBe(429);
+    expect(seen).toEqual(['/mcp|203.0.113.7']);
+  });
+
+  it('does not rate-limit a caller without an IP (no shared unknown bucket)', async () => {
+    const seen: string[] = [];
+    const env = makeEnv({
+      // would deny everything if it were consulted
+      MCP_RATE_LIMITER: { limit: async (args) => { seen.push(args.key); return { success: false }; } },
     });
     const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
-    expect(res.status).toBe(429);
+    expect(res.status).toBe(200);
+    expect(seen).toEqual([]);
   });
 
   it('passes the request through when the rate limit allows it', async () => {
@@ -165,10 +178,10 @@ describe('worker /mcp integration', () => {
         },
       },
     });
-    const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
+    const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' }, { 'cf-connecting-ip': '203.0.113.7' });
     expect(res.status).toBe(200);
     expect(calls.length).toBe(1);
-    expect(calls[0]).toContain('/mcp|');
+    expect(calls[0]).toBe('/mcp|203.0.113.7');
   });
 
   it('returns 429 on /chat when the chat rate limit is exceeded', async () => {
@@ -179,7 +192,7 @@ describe('worker /mcp integration', () => {
     const res = await worker.fetch(
       new Request(`${BASE}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'cf-connecting-ip': '203.0.113.7' },
         body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
       }),
       env as never,

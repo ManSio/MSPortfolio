@@ -97,7 +97,7 @@ async function main(): Promise<void> {
       negativeControls: FALSE_PARAPHRASES.length,
       v1RecallPct: Math.round((v1Recall / TRUE_PARAPHRASES.length) * 100),
       llmArm,
-      command: `node scripts/bench-claims.ts${apiKey ? '' : ' (без ключа: только детерминированная рука)'}`,
+      command: `node scripts/bench-claims.ts${apiKey ? '' : ' (no key: deterministic arm only)'}`,
     },
     mutationTesting: mutationExp
       ? {
@@ -112,7 +112,7 @@ async function main(): Promise<void> {
       workers: 8,
       correct: 8,
       command: 'pnpm test',
-      source: 'tests/worker.test.ts (concurrency: 8 parallel tools/call — правильный вход → правильный выход)',
+      source: 'tests/worker.test.ts (concurrency: 8 parallel tools/call - correct input -> correct output)',
     },
   };
 

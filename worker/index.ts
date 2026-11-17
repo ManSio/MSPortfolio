@@ -220,7 +220,10 @@ function finalize(res: Response, cors: Record<string, string>): Response {
 async function enforceRateLimit(env: Env, pathname: string, request: Request): Promise<Response | null> {
   const limiter = pathname === '/chat' ? env.CHAT_RATE_LIMITER : env.MCP_RATE_LIMITER;
   if (!limiter) return null; // binding absent (local tests / misconfig) — fail open
-  const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
+  const ip = request.headers.get('cf-connecting-ip');
+  // No header means "not a visitor" (same rule as the KV quota): do not make
+  // all header-less callers share one 'unknown' limiter key.
+  if (!ip) return null;
   const { success } = await limiter.limit({ key: `${pathname}|${ip}` });
   if (!success) return new Response(`Rate limit exceeded for ${pathname}`, { status: 429 });
   return null;
