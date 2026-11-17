@@ -270,19 +270,23 @@ async function bumpAgentCounter(stats: KVNamespaceLike, tool: string): Promise<v
 }
 
 /**
- * Anonymous monthly quota per IP (KV-backed, eventually consistent — D4).
- * Fail-open when the binding is absent (local tests / misconfig). This is the
- * quota fallback that works on Cloudflare's free tier (KI-007: the CF Rate
- * Limiting API binding does not enforce until a paid plan).
+ * Anonymous monthly quota per IP (KV-backed, eventually consistent - D4).
+ * Fail-open when the binding is absent (local tests / misconfig) and when the
+ * caller has no IP: Cloudflare always sets `cf-connecting-ip`, so a missing
+ * header means "not a visitor" (tests, internal fetch). Bucketing those under a
+ * shared 'unknown' key let one such caller exhaust the quota of every other
+ * header-less caller. This is the quota fallback that works on Cloudflare's
+ * free tier (KI-007: the CF Rate Limiting API binding does not enforce until a
+ * paid plan).
  */
 const DEFAULT_ANON_MONTHLY_QUOTA = 1000;
 const QUOTA_TTL_SECONDS = 60 * 60 * 24 * 31;
 
 async function checkAndIncrementQuota(
   stats: KVNamespaceLike | undefined,
-  ip: string,
+  ip: string | null,
 ): Promise<{ allowed: boolean; used: number; limit: number } | null> {
-  if (!stats) return null;
+  if (!stats || !ip) return null;
   const month = new Date().toISOString().slice(0, 7);
   const key = `quota:${ip}:${month}`;
   try {
@@ -755,7 +759,7 @@ Source: https://github.com/ManSio/MSPortfolio
       const analytics = env.ANALYTICS;
       const stats = env.MCP_STATS;
       // Anonymous monthly quota per IP (D4) — counted BEFORE the request is served.
-      quota = await checkAndIncrementQuota(stats, request.headers.get('cf-connecting-ip') ?? 'unknown');
+      quota = await checkAndIncrementQuota(stats, request.headers.get('cf-connecting-ip'));
       if (quota && !quota.allowed) {
         return finalize(
           new Response('Anonymous monthly quota exceeded (1000 calls/IP/month). See /llms.txt.', {
