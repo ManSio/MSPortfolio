@@ -208,7 +208,7 @@ export function LabPage() {
       diary: isAll ? diary : diary.filter((d) => d.project === project),
       issues: isAll ? issues : issues.filter((i) => i.project === project),
     };
-  }, [project]);
+  }, [project, experiments, diary, issues]);
 
   const scopedCommits = useMemo(() => {
     if (!commits) return null;

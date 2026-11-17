@@ -21,6 +21,8 @@ dist-ssr
 
 # Agent working files (task state is ephemeral, see AGENTS.md §0.1)
 .agent_task_state.md
+# mscodebase-intelligence local index (regenerated, never committed)
+.mscodebase/
 .env
 # Editor directories and files
 .vscode/*

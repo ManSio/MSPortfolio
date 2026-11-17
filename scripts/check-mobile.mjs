@@ -92,7 +92,8 @@ async function main() {
     if (msg.id && cdp._pending.has(msg.id)) {
       const { resolve, reject } = cdp._pending.get(msg.id);
       cdp._pending.delete(msg.id);
-      msg.error ? reject(new Error(JSON.stringify(msg.error))) : resolve(msg.result);
+      if (msg.error) reject(new Error(JSON.stringify(msg.error)));
+      else resolve(msg.result);
     }
   };
 
