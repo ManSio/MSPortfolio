@@ -40,8 +40,10 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Type-check server
-        run: npx tsc -p server/tsconfig.json
+      - name: Type-check server and worker
+        # The worker is deployed by wrangler, whose bundler does not type-check:
+        # without this step a worker/ type error reaches production silently.
+        run: npx tsc -p server/tsconfig.json && npx tsc -p worker/tsconfig.json
 
       - name: Unit tests
         run: pnpm test

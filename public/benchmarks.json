@@ -25,6 +25,6 @@
     "workers": 8,
     "correct": 8,
     "command": "pnpm test",
-    "source": "tests/worker.test.ts (concurrency: 8 parallel tools/call — правильный вход → правильный выход)"
+    "source": "tests/worker.test.ts (concurrency: 8 parallel tools/call — correct input → correct output)"
   }
 }

@@ -105,8 +105,10 @@ agent that just learned about the owner knows how to continue the interview.
 
 The **Metrics** section includes a **Benchmarks** panel with the portfolio's
 measured numbers (LLM-arm claim verification 88% recall / 0 false accepts /
-p95 < 2.3 s, mutation testing 8% → 100%, concurrency 8/8) — every number is
-reproduced by `pnpm bench`, which writes `public/benchmarks.json`.
+p95 < 2.3 s, mutation testing 8% → 100%, concurrency 8/8). Each number carries
+the command that produced it in `public/benchmarks.json`: claim verification is
+`pnpm bench`, mutation testing is the Python probe recorded there (it lives in
+the mscodebase-intelligence repo), concurrency is `pnpm test`.
 
 ## Repository layout
 

@@ -41,8 +41,13 @@ jobs:
       # that would then fail on main. Snapshot refresh and deploy are omitted
       # on purpose: the metrics refresh writes files and needs a token, and a
       # PR build should stay hermetic.
-      - name: Type-check server
-        run: npx tsc -p server/tsconfig.json
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type-check app, server and worker
+        # `tsc -b` alone (inside build) never sees worker/: a type error there
+        # would only surface when wrangler compiles a release.
+        run: pnpm typecheck
 
       - name: Unit tests
         run: pnpm test
