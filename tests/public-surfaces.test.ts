@@ -30,13 +30,17 @@ const suites = testSuitesData as { suites: unknown[]; total: number };
 
 const count = (verdict: string) => experiments.experiments.filter((e) => e.verdict === verdict).length;
 
-/** Text of one `## <heading>` section, up to the next `## ` heading. */
+/** Text of one `## <exact heading>` section, up to the next `## ` heading. */
 function section(text: string, heading: string): string {
-  const start = text.indexOf(`\n## ${heading}`);
-  if (start === -1) throw new Error(`section "${heading}" not found`);
-  const rest = text.slice(start + 3);
-  const end = rest.indexOf('\n## ');
-  return end === -1 ? rest : rest.slice(0, end);
+  const marker = `## ${heading}`;
+  const lines = text.split(/\r?\n/);
+  const hits = lines.reduce<number[]>((acc, l, i) => (l === marker ? [...acc, i] : acc), []);
+  // Exactly one heading: a decoy `## Live MCP server (quick start)` placed above
+  // the real section used to win a prefix search and turn this guard green.
+  if (hits.length !== 1) throw new Error(`heading "${marker}": expected exactly 1, got ${hits.length}`);
+  const start = hits[0] + 1;
+  const end = lines.findIndex((l, i) => i >= start && l.startsWith('## '));
+  return lines.slice(start, end === -1 ? undefined : end).join('\n');
 }
 
 /** Exactly one match of `re` in `where`, returned as captured groups. */
@@ -60,7 +64,7 @@ describe('public/llms-full.txt matches the data it advertises', () => {
   });
 
   it('reports the lab counts that src/data/lab/*.json actually hold', () => {
-    const lab = section(text, 'Lab');
+    const lab = section(text, 'Lab (evidence trail)');
     const exps = once(
       lab,
       /^- (\d+) experiments with hypothesis .* \((\d+) confirmed, (\d+) partial, (\d+) refuted\) \+ (\d+) negative results$/m,
@@ -111,11 +115,16 @@ describe('the benchmark generator cannot write Cyrillic into the EN artifact', (
   // public/benchmarks.json is produced by scripts/bench-claims.ts. The artifact
   // was translated but its generator still emitted Russian, so the next
   // `pnpm bench` would silently undo the fix (found in review, 2026-11-17).
-  it('no Cyrillic in the source/command literals of the artifact builder', () => {
+  // Line-level, with an explicit escape hatch: the only Cyrillic this script may
+  // contain is a comment or console output. A `source:`/`command:` template that
+  // continues on the next line is caught, which a prefix filter missed.
+  it('no Cyrillic outside comments and console output', () => {
+    const cyrillic = /[\u0400-\u04FF]/;
     const src = read('../scripts/bench-claims.ts');
-    const lines = src.split(/\r?\n/).filter((l) => /^\s*(source|command):/.test(l));
-    expect(lines.length).toBeGreaterThanOrEqual(4); // the parser must actually see them
-    for (const line of lines) expect(line.match(/[а-яА-ЯёЁ]/)?.[0] ?? null).toBeNull();
+    const offenders = src
+      .split(/\r?\n/)
+      .filter((l) => cyrillic.test(l) && !/^\s*(\/\/|\*|\/\*)/.test(l) && !l.includes('console.log'));
+    expect(offenders).toEqual([]);
   });
 });
 
@@ -123,7 +132,7 @@ describe('English public surfaces stay English', () => {
   // The site language is EN; Russian belongs to docs/*.md and *.ru.json.
   // ⏳ Not covered: homoglyphs and HTML entities — a transliteration attack
   // would pass. Out of scope until such a surface is generated, not typed.
-  const cyrillic = /[а-яА-ЯёЁ]/;
+  const cyrillic = /[\u0400-\u04FF]/;
   for (const file of [
     '../public/llms-full.txt',
     '../public/llms.txt',

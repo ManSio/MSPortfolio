@@ -147,6 +147,19 @@ describe('worker /mcp integration', () => {
     expect(hasCounterKeys).toBe(false);
   });
 
+  it('quota (D4): an "unknown", oversized or non-IP header is not a bucket', async () => {
+    // A proxy that writes 'unknown', a 600-byte header (wider than a KV key),
+    // or junk must not create a bucket: each would be shared by everyone else.
+    const kv = new Map<string, string>();
+    const env = makeEnv({ MCP_STATS: { get: async (k) => kv.get(k) ?? null, put: async (k, v) => { kv.set(k, v); } } });
+    for (const ip of ['unknown', 'x'.repeat(200), 'not-an-ip']) {
+      const res = await postMcp(env, { jsonrpc: '2.0', id: 1, method: 'tools/list' }, { 'cf-connecting-ip': ip });
+      expect(res.status).toBe(200);
+      expect(res.headers.get('x-ratelimit-limit')).toBeNull();
+    }
+    expect([...kv.keys()].filter((k) => k.startsWith('quota:'))).toEqual([]);
+  });
+
   it('returns 429 when the rate limit is exceeded', async () => {
     const seen: string[] = [];
     const env = makeEnv({
