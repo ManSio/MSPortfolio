@@ -9,7 +9,7 @@ versioning follows [Semantic Versioning](https://semver.org/).
 ### Added
 
 - Agent-readiness round 2: the semantic fallback now also carries the lab data
-  (50 experiments, 20 diary entries, 29 verifiable claims, test suites) and a
+  (59 experiments, 30 diary entries, 29 verifiable claims, test suites) and a
   generated `/index.md` Markdown mirror advertised via
   `rel="alternate" type="text/markdown"`. JSON-LD is now a `@graph` of
   `ProfilePage` + `Person`. Homepage raw HTML grows to ~58 kB (18 kB gzip).

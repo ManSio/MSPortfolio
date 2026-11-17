@@ -1,0 +1,13 @@
+# Line endings are pinned so a file's worktree bytes do not depend on which
+# tool wrote it last. Without this, core.autocrlf=true + an editor that writes
+# LF makes git report files as modified while `git diff` is empty — on
+# 2026-11-17 that showed up as 73 phantom "M" entries and forced a manual
+# `git read-tree HEAD` to recover a trustworthy `git status`.
+* text=auto eol=lf
+
+# Binary assets: never normalised.
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
